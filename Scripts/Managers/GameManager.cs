@@ -80,7 +80,7 @@ public partial class GameManager : Node
 	{
 		switch(newState)
 		{
-			case GameState.TeamSelect,:
+			case GameState.TeamSelect:
 				currentSceneRoot = ResourceLoader.Load<PackedScene>(gameScenes[0].ResourcePath).Instantiate();
 				SpawnGameScene();
 				break;
