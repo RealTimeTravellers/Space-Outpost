@@ -8,6 +8,7 @@ public enum GameState
 	Loading,
 	// GamePlay Modes will be added here
     TeamSelect,
+    Battle,
     // GamePlay Modes End
 	Settings,
 	End
@@ -90,6 +91,10 @@ public partial class GameManager : Node
 
 				if(currentSceneRoot != null)
 					GetTree().QueueDelete(currentSceneRoot);	
+				break;
+			case GameState.Battle:
+				currentSceneRoot = ResourceLoader.Load<PackedScene>(gameScenes[1].ResourcePath).Instantiate();
+				SpawnGameScene();
 				break;
 			case GameState.End:
 				// TODO: execute closing procedure, for future
