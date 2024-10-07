@@ -1,7 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://df7r7we8vod1d"]
+[gd_scene load_steps=3 format=3 uid="uid://df7r7we8vod1d"]
+
+[ext_resource type="PackedScene" uid="uid://bixrkeysu0s5c" path="res://Scenes/Game/TestCharacter.tscn" id="1_fjct1"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ctc21"]
-size = Vector2(10, 10)
+size = Vector2(30, 30)
 
 [node name="BattleScreen" type="Node"]
 
@@ -9,10 +11,13 @@ size = Vector2(10, 10)
 mesh = SubResource("PlaneMesh_ctc21")
 
 [node name="CameraPivot" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.713324, -0.700835, 0, 0.700835, 0.713324, 0, 0.324471, 2.78935)
+transform = Transform3D(1, 0, 0, 0, 0.713324, -0.700835, 0, 0.700835, 0.713324, 0, 1.04405, 0.0697777)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.40144, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.132412, 0.991195, 0, -0.991195, 0.132412, 0, 3.58046, 0)
+transform = Transform3D(0.812379, 2.54894e-08, -0.58313, 0.58313, -3.55102e-08, 0.812379, 0, -1, -4.37114e-08, 0, 7.16023, 0)
+shadow_enabled = true
+
+[node name="TestCharacter" parent="." instance=ExtResource("1_fjct1")]

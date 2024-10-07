@@ -18,3 +18,10 @@ config/icon="res://icon.svg"
 [dotnet]
 
 project/assembly_name="Space Outpost"
+
+[input]
+
+"End Game"={
+"deadzone": 0.5,
+"events": []
+}
