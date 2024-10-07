@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://df7r7we8vod1d"]
 
-[ext_resource type="PackedScene" uid="uid://bixrkeysu0s5c" path="res://Scenes/Game/TestCharacter.tscn" id="1_fjct1"]
+[ext_resource type="PackedScene" uid="uid://bixrkeysu0s5c" path="res://Subscenes/Character/TestCharacter.tscn" id="1_fjct1"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ctc21"]
 size = Vector2(30, 30)
