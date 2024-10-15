@@ -15,6 +15,7 @@ public partial class Enemy : Unit
     [Export]
     public EnemyType EnemyType { get; set; }
     private EnemyAIController _aiController;
+    public PrimaryWeapon PrimaryWeapon { get; private set; }
 
     public override void _Ready()
     {
@@ -42,13 +43,22 @@ public partial class Enemy : Unit
     {
         return type switch
         {
-            EnemyType.Telepath => new SoldierStats(),
-            EnemyType.Creeper => new EngineerStats(),
+            EnemyType.Telepath => new TelepathStats(),
+            EnemyType.Creeper => new CreeperStats(),
             EnemyType.Seperatist => new MedicStats(),
-            EnemyType.Ranger => new HeavyStats(),
-            EnemyType.Rebel => new HeavyStats(),
-            EnemyType.Boss => new HeavyStats(),
+            EnemyType.Ranger => new RangerStats(),
+            EnemyType.Rebel => new RebelStats(),
+            EnemyType.Boss => new BossStats(),
             _ => new UnitStats() // Default case
         };
+    }
+
+    public void EquipPrimaryWeapon(PrimaryWeapon weapon)
+    {
+        if (PrimaryWeapon != null)
+            PrimaryWeapon.RemoveEffects(Stats);
+        
+        PrimaryWeapon = weapon;
+        PrimaryWeapon.ApplyEffects(Stats);
     }
 }
