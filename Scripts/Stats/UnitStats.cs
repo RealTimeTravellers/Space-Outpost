@@ -63,6 +63,21 @@ public partial class UnitStats : Resource
         return ActionPoints.GetValue() > 0;
     }
 
+    public bool DecreaseActionPoints(int amount = 1)
+    {
+        ActionPoints.DecreaseValue(amount);
+    }
+
+    public bool DepleteActionPoints(int amount = 1)
+    {
+        ActionPoints.SetCurrentValue(0);
+    }
+
+    public bool CanPerformAction()
+    {
+        return ActionPoints.GetValue() > 0;
+    }
+
     public bool CalculateCriticalHitChance()
     {
         return GD.Randf() * 100 <= CriticalHitChance.GetValue();
