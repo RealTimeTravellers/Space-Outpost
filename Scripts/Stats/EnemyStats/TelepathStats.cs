@@ -8,7 +8,7 @@ public partial class TelepathStats : EnemyStats
         Armor.SetDefaultValue(2);
         Accuracy.SetDefaultValue(75);
         MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(7);
+        Morale.SetDefaultValue(40);
         ActionPoints.SetDefaultValue(2);
         Evasion.SetDefaultValue(20);
         CriticalHitChance.SetDefaultValue(30);

@@ -7,7 +7,7 @@ public partial class BossStats : EnemyStats
         Armor.SetDefaultValue(5);
         Accuracy.SetDefaultValue(85);
         MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(10);
+        Morale.SetDefaultValue(40);
         ActionPoints.SetDefaultValue(3);
         Evasion.SetDefaultValue(30);
         CriticalHitChance.SetDefaultValue(50);

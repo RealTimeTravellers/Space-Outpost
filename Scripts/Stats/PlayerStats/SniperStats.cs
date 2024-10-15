@@ -6,7 +6,7 @@ public partial class SniperStats : UnitStats
         Armor.SetDefaultValue(2);
         Accuracy.SetDefaultValue(85);
         MovementRange.SetDefaultValue(6);
-        Morale.SetDefaultValue(7);
+        Morale.SetDefaultValue(16);
         ActionPoints.SetDefaultValue(2);
         Evasion.SetDefaultValue(15);
         CriticalHitChance.SetDefaultValue(50);

@@ -4,18 +4,35 @@ public partial class SecondaryWeapon : Equipment
 {
     [Export] public int AmmoClip { get; set; }
     [Export] public int Accuracy { get; set; }
-    [Export] public int Damage { get; set; }
+    [Export] public int MinDamage { get; set; }
+    [Export] public int MaxDamage { get; set; }
     [Export] public int Impact { get; set; }
+    [Export] public int CritChance { get; set; }
 
     public override void ApplyEffects(UnitStats stats)
     {
         stats.AddModifier("Accuracy", Accuracy);
-        // Add other effects as needed
+        stats.AddModifier("CriticalHitChance", CritChance);
     }
 
     public override void RemoveEffects(UnitStats stats)
     {
         stats.RemoveModifier("Accuracy", Accuracy);
-        // Remove other effects as needed
+        stats.RemoveModifier("CriticalHitChance", CritChance);
+    }
+
+    public int DealDamage(bool isCritical = false)
+    {
+        int damageDealt = GD.RandRange(MinDamage, MaxDamage);
+        if (isCritical)
+        {
+            damageDealt *= 2; 
+        }
+        return damageDealt;
+    }
+
+    public int DealImpact()
+    {
+        return Impact;
     }
 }

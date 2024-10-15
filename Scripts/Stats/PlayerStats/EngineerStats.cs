@@ -6,7 +6,7 @@ public partial class EngineerStats : UnitStats
         Armor.SetDefaultValue(4);
         Accuracy.SetDefaultValue(60);
         MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(6);
+        Morale.SetDefaultValue(18);
         ActionPoints.SetDefaultValue(2);
         Evasion.SetDefaultValue(10);
         CriticalHitChance.SetDefaultValue(30);

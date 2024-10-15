@@ -6,7 +6,7 @@ public partial class SoldierStats : UnitStats
         Armor.SetDefaultValue(3);
         Accuracy.SetDefaultValue(70);
         MovementRange.SetDefaultValue(7);
-        Morale.SetDefaultValue(8);
+        Morale.SetDefaultValue(22);
         ActionPoints.SetDefaultValue(2);
         Evasion.SetDefaultValue(12);
         CriticalHitChance.SetDefaultValue(40);

@@ -8,7 +8,7 @@ public partial class RangerStats : EnemyStats
         Armor.SetDefaultValue(2);
         Accuracy.SetDefaultValue(80);
         MovementRange.SetDefaultValue(7);
-        Morale.SetDefaultValue(7);
+        Morale.SetDefaultValue(22);
         ActionPoints.SetDefaultValue(3);
         Evasion.SetDefaultValue(25);
         CriticalHitChance.SetDefaultValue(40);

@@ -8,7 +8,7 @@ public partial class SeperatistStats : EnemyStats
         Armor.SetDefaultValue(3);
         Accuracy.SetDefaultValue(70);
         MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(6);
+        Morale.SetDefaultValue(16);
         ActionPoints.SetDefaultValue(2);
         Evasion.SetDefaultValue(15);
         CriticalHitChance.SetDefaultValue(35);

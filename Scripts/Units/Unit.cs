@@ -66,4 +66,9 @@ public abstract partial class Unit : Node3D
     {
         Stats.DecreaseMorale(amount);
     }
+
+    public virtual float GetDistanceTo(Unit other)
+    {
+        return 1f;
+    }
 }

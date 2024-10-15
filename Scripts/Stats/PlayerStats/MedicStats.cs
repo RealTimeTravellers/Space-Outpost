@@ -6,7 +6,7 @@ public partial class MedicStats : UnitStats
         Armor.SetDefaultValue(3);
         Accuracy.SetDefaultValue(50);
         MovementRange.SetDefaultValue(6);
-        Morale.SetDefaultValue(7);
+        Morale.SetDefaultValue(18);
         ActionPoints.SetDefaultValue(2);
         Evasion.SetDefaultValue(10);
         CriticalHitChance.SetDefaultValue(20);

@@ -8,7 +8,7 @@ public partial class RebelStats : EnemyStats
         Armor.SetDefaultValue(3);
         Accuracy.SetDefaultValue(70);
         MovementRange.SetDefaultValue(6);
-        Morale.SetDefaultValue(8);
+        Morale.SetDefaultValue(12);
         ActionPoints.SetDefaultValue(2);
         Evasion.SetDefaultValue(20);
         CriticalHitChance.SetDefaultValue(30);
