@@ -1,8 +1,17 @@
 using System.Collections.Generic;
 using Godot;
 
+public enum UnitType
+{
+    Alien,
+    Human
+}
+
+
 public class UnitStats
 {
+
+    public UnitType unitType;    
     public Stat Health { get; private set; }
     public Stat Armor { get; private set; }
     public Stat Accuracy { get; private set; }
@@ -15,6 +24,7 @@ public class UnitStats
 
     public UnitStats()
     {
+        unitType = UnitType.Human;
         Health = new Stat(0, 8);
         Armor = new Stat(0, 6);
         Accuracy = new Stat(30, 100);

@@ -17,4 +17,13 @@ public class FleeState : BaseState
     {
         GD.Print("Exiting Flee State");
     }
+
+    public override AIState CheckState(Enemy enemy)
+    {
+        if (!PlayerInSight(enemy))
+        {
+            return AIState.Tactical;
+        }
+        return AIState.Flee;
+    }
 }

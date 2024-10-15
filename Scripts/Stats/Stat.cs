@@ -7,7 +7,6 @@ public class Stat
     private int baseValue;
     private int currentValue;
     public List<int> modifiers = new List<int>();
-
     public int MinValue { get; private set; }
     public int MaxValue { get; private set; }
 

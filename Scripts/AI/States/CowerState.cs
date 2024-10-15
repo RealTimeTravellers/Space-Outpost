@@ -17,4 +17,13 @@ public class CowerState : BaseState
     {
         GD.Print("Exiting Cower State");
     }
+
+    public override AIState CheckState(Enemy enemy)
+    {
+        if (EnemyInSight(enemy))
+        {
+            return AIState.Tactical;
+        }
+        return AIState.Cower;
+    }
 }

@@ -10,11 +10,32 @@ public class PatrolState : BaseState
     public override AIState Process(Enemy enemy)
     {
         GD.Print("Patrolling!");
-        return AIState.Patrol;
+        return CheckState(enemy);
     }
 
     public override void Exit(Enemy enemy)
     {
         GD.Print("Exiting Patrol State");
+    }
+
+    public override AIState CheckState(Enemy enemy)
+    {
+        if (enemy.Stats.unitType == UnitType.Alien && PlayerInSight(enemy))
+        {
+            return AIState.Aggression;
+        }
+        else if (enemy.Stats.unitType == UnitType.Human && PlayerInSight(enemy))
+        {
+            return AIState.Tactical;
+        }
+        else if (enemy.Stats.unitType == UnitType.Human && enemy.Stats.Morale.GetValue() < 20)
+        {
+            return AIState.Cower;
+        }
+        else if (enemy.Stats.unitType == UnitType.Human && enemy.Stats.Health.GetValue() <= 2)
+        {
+            return AIState.Flee;
+        }
+        return AIState.Patrol;
     }
 }

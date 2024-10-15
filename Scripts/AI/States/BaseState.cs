@@ -14,4 +14,20 @@ public abstract class BaseState : IBaseState
     {
         
     }
+
+    public virtual AIState CheckState(Enemy enemy)
+    {
+        return AIState.Patrol;
+    }
+
+    protected bool PlayerInSight(Enemy enemy)
+    {
+        // Oyuncuyu görme mantığı burada uygulanmalı
+        return false; // Şimdilik her zaman false dönüyor
+    }
+
+    protected bool EnemyInSight(Enemy enemy){
+        // Etrafındaki düşmanları görme mantığı burada uygulanmalı
+        return false; // Şimdilik her zaman false dönüyor
+    }
 }
