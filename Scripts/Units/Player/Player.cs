@@ -16,6 +16,24 @@ public partial class Player : Unit
     public SecondaryWeapon SecondaryWeapon { get; private set; }
     public Accessory Accessory { get; private set; }
 
+    private Equipment _currentWeapon;
+    public Equipment CurrentWeapon
+    {
+        get => _currentWeapon;
+        private set
+        {
+            if (_currentWeapon != null)
+            {
+                _currentWeapon.RemoveEffects(Stats);
+            }
+            _currentWeapon = value;
+            if (_currentWeapon != null)
+            {
+                _currentWeapon.ApplyEffects(Stats);
+            }
+        }
+    }
+
     public Player()
     {
         InitializeStats();  
@@ -40,30 +58,28 @@ public partial class Player : Unit
         };
     }
 
-    public void EquipPrimaryWeapon(PrimaryWeapon weapon)
+    public void SetInitialEquipment(PrimaryWeapon primaryWeapon, SecondaryWeapon secondaryWeapon, Accessory accessory)
     {
-        if (PrimaryWeapon != null)
-            PrimaryWeapon.RemoveEffects(Stats);
-        
-        PrimaryWeapon = weapon;
-        PrimaryWeapon.ApplyEffects(Stats);
-    }
+        PrimaryWeapon = primaryWeapon;
+        SecondaryWeapon = secondaryWeapon;
+        CurrentWeapon = PrimaryWeapon;
 
-    public void EquipSecondaryWeapon(SecondaryWeapon weapon)
-    {
-        if (SecondaryWeapon != null)
-            SecondaryWeapon.RemoveEffects(Stats);
-        
-        SecondaryWeapon = weapon;
-        SecondaryWeapon.ApplyEffects(Stats);
+        EquipAccessory(accessory);
     }
 
     public void EquipAccessory(Accessory accessory)
     {
         if (Accessory != null)
+        {
             Accessory.RemoveEffects(Stats);
-        
+        }
+
         Accessory = accessory;
         Accessory.ApplyEffects(Stats);
+    }
+
+    public void SwitchWeapon()
+    {
+        CurrentWeapon = CurrentWeapon == PrimaryWeapon ? SecondaryWeapon : PrimaryWeapon;
     }
 }
