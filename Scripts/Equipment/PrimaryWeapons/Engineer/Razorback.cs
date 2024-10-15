@@ -7,6 +7,7 @@ public partial class Razorback : PrimaryWeapon
         PlayerType = PlayerType.Engineer;
         AmmoClip = 2;
         Accuracy = 6;
+        Range = 10;
         MinDamage = 2;
         MaxDamage = 7;
         Impact = 7;

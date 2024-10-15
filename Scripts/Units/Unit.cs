@@ -69,6 +69,30 @@ public abstract partial class Unit : Node3D
 
     public virtual float GetDistanceTo(Unit other)
     {
-        return 1f;
+        return (int)(Mathf.Abs(this.GlobalPosition.X - this.GlobalPosition.X) + 
+                     Mathf.Abs(unit1.GlobalPosition.Y - unit2.GlobalPosition.Y));
+    }
+
+    private int CalculateDistance(Unit unit1, Unit unit2)
+    {
+        return (int)(Mathf.Abs(unit1.GlobalPosition.X - unit2.GlobalPosition.X) + 
+                     Mathf.Abs(unit1.GlobalPosition.Y - unit2.GlobalPosition.Y));
+    }
+
+    public bool CanInteract(Unit target, Equipment equipment)
+    {
+        if (equipment == null)
+        {
+            return false;
+        }
+
+        int distance = CalculateDistance(this, target);
+        return equipment.Range >= distance;
+    }
+
+    public bool CanAttack(Unit target)
+    {
+        int distance = CalculateDistance(this, target);
+        return Equipment.PrimaryWeapon.IsInRange(distance);
     }
 }

@@ -7,6 +7,7 @@ public partial class Suppressor : PrimaryWeapon
         PlayerType = PlayerType.Medic;
         AmmoClip = 2;
         Accuracy = 6;
+        Range = 15;
         MinDamage = 3;
         MaxDamage = 4;
         Impact = 7;

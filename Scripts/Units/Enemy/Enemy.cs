@@ -15,12 +15,14 @@ public partial class Enemy : Unit
     [Export]
     public EnemyType EnemyType { get; set; }
     private EnemyAIController _aiController;
-    public PrimaryWeapon PrimaryWeapon { get; private set; }
+    public EnemyEquipment EnemyEquipment { get; private set; }
 
     public override void _Ready()
     {
         _aiController = new EnemyAIController();
-        Stats = new UnitStats();
+        InitializeStats();
+        EnemyEquipment = new EnemyEquipment(Stats);
+        EquipPrimaryWeapon(EnemyEquipment.GetRandomPrimaryWeapon());
     }
 
     public void SetState(AIState newState)
@@ -35,30 +37,17 @@ public partial class Enemy : Unit
 
     protected override void InitializeStats()
     {
-        Stats = CreateStatsForEnemyType(EnemyType);
+        Stats = CreateStatsForEnemyType(this.EnemyType);
         GD.Print("Player stats initialized");
-    }
-
-    private UnitStats CreateStatsForEnemyType(EnemyType type)
-    {
-        return type switch
-        {
-            EnemyType.Telepath => new TelepathStats(),
-            EnemyType.Creeper => new CreeperStats(),
-            EnemyType.Seperatist => new MedicStats(),
-            EnemyType.Ranger => new RangerStats(),
-            EnemyType.Rebel => new RebelStats(),
-            EnemyType.Boss => new BossStats(),
-            _ => new UnitStats() // Default case
-        };
     }
 
     public void EquipPrimaryWeapon(PrimaryWeapon weapon)
     {
-        if (PrimaryWeapon != null)
-            PrimaryWeapon.RemoveEffects(Stats);
-        
-        PrimaryWeapon = weapon;
-        PrimaryWeapon.ApplyEffects(Stats);
+        EnemyEquipment.SetPrimaryWeapon(weapon);
+    }
+
+    public override bool CanAttack(Unit target)
+    {
+        return base.CanAttack(target, EnemyEquipment.CurrentWeapon);
     }
 }

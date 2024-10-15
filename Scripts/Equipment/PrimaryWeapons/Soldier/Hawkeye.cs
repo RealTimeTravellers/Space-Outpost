@@ -9,6 +9,7 @@ public partial class Hawkeye : PrimaryWeapon
         Accuracy = 15;
         MinDamage = 4;
         MaxDamage = 6;
+        Range = 20;
         Impact = 5;
         CritChance = 15;
     }

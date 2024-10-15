@@ -9,6 +9,7 @@ public partial class Devastator : PrimaryWeapon
         AmmoClip = 2;
         Accuracy = 15;
         MinDamage = 4;
+        Range = 25;
         MaxDamage = 8;
         Impact = 7;
         CritChance = 20;

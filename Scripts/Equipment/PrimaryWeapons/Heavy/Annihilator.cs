@@ -8,6 +8,7 @@ public partial class Annihilator : PrimaryWeapon
         AmmoClip = 2;
         Accuracy = 3;
         MinDamage = 3;
+        Range = 15;
         MaxDamage = 8;
         Impact = 5;
         CritChance = 7;

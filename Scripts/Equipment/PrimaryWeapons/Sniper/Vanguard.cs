@@ -8,6 +8,7 @@ public partial class Vanguard : PrimaryWeapon
         AmmoClip = 4;
         Accuracy = 10;
         MinDamage = 3;
+        Range = 25;
         MaxDamage = 6;
         Impact = 5;
         CritChance = 15;

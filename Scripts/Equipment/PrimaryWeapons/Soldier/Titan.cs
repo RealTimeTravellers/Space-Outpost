@@ -11,5 +11,6 @@ public partial class TitanAssaultRifle : PrimaryWeapon
         MaxDamage = 7;
         Impact = 7;
         CritChance = 12;
+        Range = 20;
     }
 }

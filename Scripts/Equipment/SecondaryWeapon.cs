@@ -4,6 +4,7 @@ public partial class SecondaryWeapon : Equipment
 {
     [Export] public int AmmoClip { get; set; }
     [Export] public int Accuracy { get; set; }
+    [Export] public int Range { get; set; }
     [Export] public int MinDamage { get; set; }
     [Export] public int MaxDamage { get; set; }
     [Export] public int Impact { get; set; }
@@ -34,5 +35,10 @@ public partial class SecondaryWeapon : Equipment
     public int DealImpact()
     {
         return Impact;
+    }
+
+    public bool IsInRange(int distance)
+    {
+        return distance <= Range;
     }
 }

@@ -7,6 +7,7 @@ public partial class Hercules : PrimaryWeapon
         PlayerType = PlayerType.Heavy;
         AmmoClip = 2;
         Accuracy = 4;
+        Range = 15;
         MinDamage = 4;
         MaxDamage = 8;
         Impact = 7;

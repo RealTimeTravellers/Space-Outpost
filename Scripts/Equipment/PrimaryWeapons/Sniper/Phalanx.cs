@@ -11,6 +11,7 @@ public partial class Phalanx : PrimaryWeapon
         Accuracy = 15;
         MinDamage = 4;
         MaxDamage = 6;
+        Range = 30;
         Impact = 6;
         CritChance = 25;
     }

@@ -7,6 +7,7 @@ public partial class GuardianLight : PrimaryWeapon
         PlayerType = PlayerType.Medic;
         AmmoClip = 3;
         Accuracy = 12;
+        Range = 12;
         MinDamage = 3;
         MaxDamage = 5;
         Impact = 4;

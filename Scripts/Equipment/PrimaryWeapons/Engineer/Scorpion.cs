@@ -7,6 +7,7 @@ public partial class Scorpion : PrimaryWeapon
         PlayerType = PlayerType.Engineer;
         AmmoClip = 4;
         Accuracy = 5;
+        Range = 12;
         MinDamage = 3;
         MaxDamage = 6;
         Impact = 5;

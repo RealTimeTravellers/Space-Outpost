@@ -7,6 +7,7 @@ public partial class Thumper : PrimaryWeapon
         PlayerType = PlayerType.Engineer;
         AmmoClip = 3;
         Accuracy = 4;
+        Range = 9;
         MinDamage = 3;
         MaxDamage = 7;
         Impact = 6;

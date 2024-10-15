@@ -35,4 +35,9 @@ public partial class Player : Unit
     {
         PlayerEquipment.SwitchWeapon();
     }
+
+    public bool CanAttack(Unit target)
+    {
+        return CanInteract(target, PlayerEquipment.CurrentWeapon);
+    }
 }

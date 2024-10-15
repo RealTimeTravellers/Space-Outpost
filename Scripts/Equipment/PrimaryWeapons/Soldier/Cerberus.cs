@@ -7,6 +7,7 @@ public partial class Cerebus : PrimaryWeapon
         PlayerType = PlayerType.Soldier;
         AmmoClip = 4;
         Accuracy = 13;
+        Range = 15;
         MinDamage = 3;
         MaxDamage = 7;
         Impact = 6;

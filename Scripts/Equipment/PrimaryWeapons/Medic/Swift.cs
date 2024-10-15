@@ -7,6 +7,7 @@ public partial class Swift : PrimaryWeapon
         PlayerType = PlayerType.Medic;
         AmmoClip = 2;
         Accuracy = 13;
+        Range = 12;
         MinDamage = 4;
         MaxDamage = 6;
         Impact = 4;

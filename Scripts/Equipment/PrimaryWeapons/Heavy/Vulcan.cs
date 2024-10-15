@@ -9,6 +9,7 @@ public partial class Vulcan : PrimaryWeapon
         Accuracy = 2;
         MinDamage = 2;
         MaxDamage = 6;
+        Range = 20;
         Impact = 7;
         CritChance = 3;
     }
