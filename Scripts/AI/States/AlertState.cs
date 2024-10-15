@@ -7,9 +7,10 @@ public class AlertState : BaseState
         GD.Print("Entering Alert State");
     }
 
-    public override void Process(Enemy aiController, double delta)
+    public override AIState Process(Enemy enemy)
     {
         GD.Print("Alert! Searching for player...");
+        return AIState.Alert;
     }
 
     public override void Exit(Enemy aiController)

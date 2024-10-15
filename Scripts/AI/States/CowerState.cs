@@ -7,9 +7,10 @@ public class CowerState : BaseState
         GD.Print("Entering Cower State");
     }
 
-    public override void Process(Enemy aiController, double delta)
+    public override AIState Process(Enemy enemy)
     {
-        GD.Print("Hiding and taking cover!");
+        GD.Print("In Fear!");
+        return AIState.Cower;
     }
 
     public override void Exit(Enemy aiController)

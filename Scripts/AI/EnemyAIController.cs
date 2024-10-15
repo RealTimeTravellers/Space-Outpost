@@ -8,6 +8,7 @@ public class EnemyAIController
     {
         // State geçişlerini yönetmek için state machine oluşturuyoruz
         _stateMachine = new EnemyAIStateMachine();
+        _stateMachine.OnStateChanged += OnStateChanged;
     }
 
     public void SetState(AIState newState, Enemy aiCharacter)
@@ -16,9 +17,18 @@ public class EnemyAIController
         _stateMachine.ChangeState(newState, aiCharacter);
     }
 
-    public void UpdateAI(Enemy aiCharacter, double delta)
+    public void UpdateAI(Enemy aiCharacter)
     {
-        // Mevcut state'in process metodunu çağır
-        _stateMachine.UpdateCurrentState(aiCharacter, delta);
+        AIState currentState = _stateMachine.CurrentState;
+        AIState nextState = _stateMachine.UpdateCurrentState(aiCharacter);
+        if (nextState != currentState)
+        {
+            SetState(nextState, aiCharacter);
+        }
+    }
+
+    private void OnStateChanged(AIState oldState, AIState newState)
+    {
+        GD.Print($"State changed from {oldState} to {newState}");
     }
 }

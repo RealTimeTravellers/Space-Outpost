@@ -7,9 +7,10 @@ public class AggressionState : BaseState
         GD.Print("Entering Aggression State");
     }
 
-    public override void Process(Enemy aiController, double delta)
+    public override AIState Process(Enemy enemy)
     {
-        GD.Print("Attacking the player!");
+        GD.Print("Finding the player!");
+        return AIState.Aggression;
     }
 
     public override void Exit(Enemy aiController)

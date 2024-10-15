@@ -7,9 +7,10 @@ public class FleeState : BaseState
         GD.Print("Entering Flee State");
     }
 
-    public override void Process(Enemy aiController, double delta)
+    public override AIState Process(Enemy enemy)
     {
-        GD.Print("Running away from danger!");
+        GD.Print("Fleeing!");
+        return AIState.Flee;
     }
 
     public override void Exit(Enemy aiController)

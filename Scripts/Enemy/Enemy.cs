@@ -9,13 +9,13 @@ public partial class Enemy : Node3D
         _aiController = new EnemyAIController();
     }
 
-    public override void _Process(double delta)
-    {
-        _aiController.UpdateAI(this, (float)delta);
-    }
-
     public void SetState(AIState newState)
     {
         _aiController.SetState(newState, this);
+    }
+
+    public void TakeTurn()
+    {
+        _aiController.UpdateAI(this);
     }
 }

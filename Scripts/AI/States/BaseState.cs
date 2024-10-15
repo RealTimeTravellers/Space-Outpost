@@ -5,9 +5,9 @@ public abstract class BaseState : IBaseState
         
     }
 
-    public virtual void Process(Enemy aiController, double delta)
+    public virtual AIState Process(Enemy enemy)
     {
-        
+        return AIState.Patrol; 
     }
 
     public virtual void Exit(Enemy aiController)

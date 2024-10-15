@@ -7,11 +7,11 @@ public class TacticalState : BaseState
         GD.Print("Entering Tactical State");
     }
 
-    public override void Process(Enemy aiController, double delta)
+    public override AIState Process(Enemy enemy)
     {
-        GD.Print("Taking strategic positions!");
+        GD.Print("Tactical Positioning!");
+        return AIState.Tactical;
     }
-
     public override void Exit(Enemy aiController)
     {
         GD.Print("Exiting Tactical State");

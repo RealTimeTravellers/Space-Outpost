@@ -1,18 +1,19 @@
 using Godot;
 
-public class PatrolState : IBaseState
+public class PatrolState : BaseState
 {
-    public void Enter(Enemy enemy)
+    public override void Enter(Enemy enemy)
     {
         GD.Print("Entering Patrol State");
     }
 
-    public void Process(Enemy enemy, double delta)
+    public override AIState Process(Enemy enemy)
     {
-        GD.Print("Patrolling...");
+        GD.Print("Patrolling!");
+        return AIState.Patrol;
     }
 
-    public void Exit(Enemy enemy)
+    public override void Exit(Enemy enemy)
     {
         GD.Print("Exiting Patrol State");
     }

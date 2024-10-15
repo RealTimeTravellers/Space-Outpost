@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Godot;
 
 public enum AIState
 {
@@ -13,7 +15,8 @@ public enum AIState
 public class EnemyAIStateMachine
 {
     private Dictionary<AIState, IBaseState> _states;
-    private IBaseState _currentState;
+    public event Action<AIState, AIState> OnStateChanged;
+    public AIState CurrentState { get; private set; }
 
     public EnemyAIStateMachine()
     {
@@ -27,20 +30,28 @@ public class EnemyAIStateMachine
             { AIState.Tactical, new TacticalState() }
         };
 
-        _currentState = _states[AIState.Patrol]; 
+        CurrentState = AIState.Patrol;
     }
+
+
 
     public void ChangeState(AIState newState, Enemy aiCharacter)
     {
-        // Mevcut state'den çık ve yeni state'e geçiş yap
-        _currentState.Exit(aiCharacter);
-        _currentState = _states[newState];
-        _currentState.Enter(aiCharacter);
+        AIState oldState = CurrentState;
+        _states[CurrentState].Exit(aiCharacter);
+        CurrentState = newState;
+        _states[CurrentState].Enter(aiCharacter);
+        
+        OnStateChanged?.Invoke(oldState, newState);
     }
 
-    public void UpdateCurrentState(Enemy aiCharacter, double delta)
+    public AIState UpdateCurrentState(Enemy aiCharacter)
     {
-        // Mevcut state'in process metodunu çağır
-        _currentState.Process(aiCharacter, delta);
+        if (!_states.ContainsKey(CurrentState))
+        {
+            GD.PrintErr($"Invalid state: {CurrentState}");
+            return AIState.Patrol; // Varsayılan duruma dön
+        }
+        return _states[CurrentState].Process(aiCharacter);
     }
 }
