@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Godot;
 
 public enum UnitType
@@ -8,10 +7,9 @@ public enum UnitType
 }
 
 
-public class UnitStats
+public partial class UnitStats : Resource
 {
-
-    public UnitType unitType;    
+    [Export] public UnitType UnitType { get; set; } = UnitType.Human;
     public Stat Health { get; private set; }
     public Stat Armor { get; private set; }
     public Stat Accuracy { get; private set; }
@@ -24,7 +22,6 @@ public class UnitStats
 
     public UnitStats()
     {
-        unitType = UnitType.Human;
         Health = new Stat(0, 8);
         Armor = new Stat(0, 6);
         Accuracy = new Stat(30, 100);
@@ -35,7 +32,7 @@ public class UnitStats
         Evasion = new Stat(0, 30);
         CriticalHitChance = new Stat(0, 100);
 
-        // Varsayılan değerleri ayarlayalım
+        // Set default values
         Health.SetDefaultValue(5);
         Armor.SetDefaultValue(3);
         Morale.SetDefaultValue(8);
@@ -47,36 +44,30 @@ public class UnitStats
         return GD.Randf() * 100 <= hitChance;
     }
 
-    // Hareket menzili hesaplama
     public int GetMovementRange()
     {
         return MovementRange.GetValue() * ActionPoints.GetValue();
     }
 
-    // Moral sıfırlandığında olay fırlatma
     public void DecreaseMorale(int amount)
     {
         Morale.DecreaseValue(amount);
         if (Morale.GetValue() == 0)
         {
-            // Moral sıfırlandı, AI devreye girebilir
             GD.Print("Morale is zero, switching to AI control.");
         }
     }
 
-    // Aksiyon puanı kontrolü
     public bool CanPerformAction()
     {
-        return ActionPoints.GetValue() > 0; // Eğer aksiyon puanı varsa aksiyon yapılabilir
+        return ActionPoints.GetValue() > 0;
     }
 
-    // Kritik vuruş şansı hesaplama
     public bool CalculateCriticalHitChance()
     {
-        return GD.Randf() * 100 <= CriticalHitChance.GetValue(); // Kritik vuruş true/false
+        return GD.Randf() * 100 <= CriticalHitChance.GetValue();
     }
 
-    // Hasar almak (Health değerini azaltır)
     public void TakeDamage(int damage)
     {
         Health.DecreaseValue(damage);
@@ -84,5 +75,33 @@ public class UnitStats
         {
             GD.Print("Unit has died.");
         }
+    }
+
+    // Methods to add and remove modifiers
+    public void AddModifier(string statName, int modifier)
+    {
+        GetStatByName(statName)?.AddModifier(modifier);
+    }
+
+    public void RemoveModifier(string statName, int modifier)
+    {
+        GetStatByName(statName)?.RemoveModifier(modifier);
+    }
+
+    private Stat GetStatByName(string statName)
+    {
+        return statName switch
+        {
+            "Health" => Health,
+            "Armor" => Armor,
+            "Accuracy" => Accuracy,
+            "MovementRange" => MovementRange,
+            "Morale" => Morale,
+            "ActionPoints" => ActionPoints,
+            "Perception" => Perception,
+            "Evasion" => Evasion,
+            "CriticalHitChance" => CriticalHitChance,
+            _ => null
+        };
     }
 }
