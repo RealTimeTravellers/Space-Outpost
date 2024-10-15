@@ -17,12 +17,13 @@ public partial class Player : Unit
     public Player()
     {
         InitializeStats();  
-        Equipment = new PlayerEquipment(Stats);
+        PlayerEquipment = new PlayerEquipment(Stats);
     }
 
     protected override void InitializeStats()
     {
-        Stats = PlayerStats.CreateStatsForPlayerType(this.PlayerType);
+        PlayerStats playerStats = new PlayerStats();
+        Stats = playerStats.CreateStatsForPlayerType();
         GD.Print("Player stats initialized");
     }
 

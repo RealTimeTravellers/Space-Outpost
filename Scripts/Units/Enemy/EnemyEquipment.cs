@@ -13,13 +13,12 @@ public class EnemyEquipment
 
     public void SetPrimaryWeapon(PrimaryWeapon weapon)
     {
-        if (PrimaryWeapon != null)
+        if (CurrentWeapon != null)
         {
-            PrimaryWeapon.RemoveEffects(Stats);
+            CurrentWeapon.RemoveEffects(Stats);
         }
-        PrimaryWeapon = weapon;
         CurrentWeapon = weapon;
-        PrimaryWeapon.ApplyEffects(Stats);
+        CurrentWeapon.ApplyEffects(Stats);
     }
 
     public PrimaryWeapon GetRandomPrimaryWeapon()

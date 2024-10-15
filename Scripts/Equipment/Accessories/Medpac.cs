@@ -7,7 +7,7 @@ public partial class Medpac : Accessory
         UsageCount = 1;
         IsPermanent = false;
         IsPassive = false;
-        UsageRange = 1;
+        Range = 1;
         Effect = "4 HP iyileştirir";
     }
 

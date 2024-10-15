@@ -37,7 +37,8 @@ public partial class Enemy : Unit
 
     protected override void InitializeStats()
     {
-        Stats = CreateStatsForEnemyType(this.EnemyType);
+        EnemyStats enemyStats = new EnemyStats();
+        Stats = enemyStats.CreateStatsForEnemyType(this.EnemyType);
         GD.Print("Player stats initialized");
     }
 
@@ -46,8 +47,8 @@ public partial class Enemy : Unit
         EnemyEquipment.SetPrimaryWeapon(weapon);
     }
 
-    public override bool CanAttack(Unit target)
+    public virtual bool CanAttack(Unit target)
     {
-        return base.CanAttack(target, EnemyEquipment.CurrentWeapon);
+        return CanInteract(target, EnemyEquipment.CurrentWeapon);
     }
 }

@@ -1,6 +1,6 @@
-public partial class TitanAssaultRifle : PrimaryWeapon
+public partial class Titan : PrimaryWeapon
 {
-    public TitanAssaultRifle()
+    public Titan()
     {
         Name = "Titan Assault Rifle";
         Description = "Yüksek hasar veren, tek atışta düşmanı etkisiz hale getirebilen bir saldırı tüfeği.";

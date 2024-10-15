@@ -6,7 +6,7 @@ public partial class AdrenalineShot : Accessory
         Description = "Bir birime geçici bir enerji artışı sağlayan enjektör. birimin hızını ve saldırı gücünü artırır.";
         UsageCount = 1;
         IsPassive = false;
-        UsageRange = 1;
+        Range = 1;
         IsPermanent = false;
         Effect = "Morali düşük birimleri toparlar";
     }

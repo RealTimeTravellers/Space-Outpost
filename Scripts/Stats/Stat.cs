@@ -49,6 +49,11 @@ public class Stat
         CheckIfValueZero();
     }
 
+    public void IncreaseValue(int amount)
+    {
+        currentValue = Mathf.Clamp(currentValue + amount, MinValue, MaxValue);
+    }
+
     public void AddModifier(int modifier)
     {
         modifiers.Add(modifier);

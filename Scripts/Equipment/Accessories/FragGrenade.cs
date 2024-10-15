@@ -6,7 +6,7 @@ public partial class FragGrenade : Accessory
         Description = "Alan etkili patlayıcı bir el bombası. Yakındaki düşmanlara hasar verir ve çevresel yıkım yaratır.";
         UsageCount = 1;
         IsPassive = false;
-        UsageRange = 10;
+        Range = 10;
         IsPermanent = false;
         Effect = "Orta-yüksek hasar, küçük bir patlama alanı";
     }

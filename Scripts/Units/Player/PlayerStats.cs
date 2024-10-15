@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class PlayerStats : UnitStats
@@ -18,7 +19,7 @@ public partial class PlayerStats : UnitStats
             PlayerType.Engineer => new EngineerStats(),
             PlayerType.Medic => new MedicStats(),
             PlayerType.Heavy => new HeavyStats(),
-            _ => throw new ArgumentException("Invalid PlayerType", nameof(type))
+            _ => throw new ArgumentException("Invalid PlayerType")
         };
     }
 }

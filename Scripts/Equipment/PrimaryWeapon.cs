@@ -5,7 +5,6 @@ public partial class PrimaryWeapon : Equipment
     [Export] public PlayerType PlayerType { get; set; }
     [Export] public int AmmoClip { get; set; }
     [Export] public int Accuracy { get; set; }
-    [Export] public int Range { get; set; }
     [Export] public int MaxDamage { get; set; }
     [Export] public int MinDamage { get; set; }
     [Export] public int Impact { get; set; }

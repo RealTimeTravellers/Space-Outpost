@@ -7,7 +7,7 @@ public partial class Binoculars : Accessory
         UsageCount = 1;
         IsPassive = false;
         IsPermanent = true;
-        UsageRange = int.MaxValue;
+        Range = int.MaxValue;
         Effect = "Büyük bir alanı 2 tur boyunca görmeyi sağlar";
     }
 

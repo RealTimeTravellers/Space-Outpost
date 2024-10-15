@@ -6,7 +6,7 @@ public partial class Flashbang : Accessory
         Description = "Düşmanları geçici olarak sersemleten ve onların saldırı yeteneklerini sınırlayan bir el bombası.";
         UsageCount = 1;
         IsPassive = false;
-        UsageRange = 10;
+        Range = 10;
         IsPermanent = false;
         Effect = "Düşmanları bir turluğuna stunlar/dazeler";
     }

@@ -5,7 +5,6 @@ public partial class Accessory : Equipment
     [Export] public int UsageCount { get; set; }
     [Export] public bool IsPermanent { get; set; }
     [Export] public string Effect { get; set; }
-    [Export] public int UsageRange { get; set; }
     [Export] public bool IsPassive { get; set; }
 
     public override void ApplyEffects(UnitStats stats)
@@ -42,7 +41,7 @@ public partial class Accessory : Equipment
             return false; // Cannot use if target is not in sight
         }
 
-        if (target != null && user.GetDistanceTo(target) > UsageRange)
+        if (target != null && user.GetDistanceTo(target) > Range)
         {
             return false; // Cannot use if target is out of range
         }
@@ -62,4 +61,6 @@ public partial class Accessory : Equipment
         // This is a placeholder. Implement grid-based line of sight check here.
         return true;
     }
+
+    
 }

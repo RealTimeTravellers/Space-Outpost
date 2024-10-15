@@ -1,3 +1,5 @@
+using Godot;
+
 public partial class DroneShield : Accessory
 {
     public DroneShield()
@@ -6,7 +8,7 @@ public partial class DroneShield : Accessory
         Description = "Geçici olarak bir birimin etrafında koruyucu bir enerji kalkanı oluşturan yüksek teknolojili bir cihaz.";
         UsageCount = 1;
         IsPassive = false;
-        UsageRange = 10;
+        Range = 10;
         IsPermanent = false;
         Effect = "%50 şans ile 2 tur boyunca hasarı %50 azaltır";
     }

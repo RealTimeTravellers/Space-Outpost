@@ -6,7 +6,7 @@ public partial class IncendiaryGrenade : Accessory
         Description = "Düşmanları yakmak için kullanılan bir yangın bombası. Etki alanındaki düşmanlar birkaç tur boyunca hasar alır.";
         UsageCount = 1;
         IsPassive = false;
-        UsageRange = 10;
+        Range = 10;
         IsPermanent = false;
         Effect = "Düşmanlar 2 tur boyunca yanar ve her tur hasar alır";
     }

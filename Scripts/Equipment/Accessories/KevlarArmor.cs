@@ -6,7 +6,7 @@ public partial class KevlarArmor : Accessory
         Description = "Bir birimin savunmasını geçici olarak artıran zırh plakası. Gelen saldırılardan alınan hasarı azaltır.";
         UsageCount = 1;
         IsPassive = true;
-        UsageRange = 10;
+        Range = 10;
         IsPermanent = true;
         Effect = "Armor artırır.";
     }
