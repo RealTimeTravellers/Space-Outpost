@@ -19,6 +19,8 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_vod4s")
 
 [node name="Area3D" type="Area3D" parent="."]
+monitoring = false
+monitorable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("BoxShape3D_trh14")
