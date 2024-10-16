@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cr6l7i74jnq6y"]
+[gd_scene load_steps=6 format=3 uid="uid://cr6l7i74jnq6y"]
 
 [ext_resource type="PackedScene" uid="uid://benuohyq86b2i" path="res://Subscenes/Managers/grid_manager.tscn" id="1_u6u7v"]
 [ext_resource type="PackedScene" uid="uid://dbep6uqerw3hs" path="res://Subscenes/Grid/grid_object.tscn" id="2_aubdv"]
+[ext_resource type="Script" path="res://Scripts/Camera/Raycaster.cs" id="3_3a4yt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w2b0h"]
 albedo_color = Color(0.372549, 0.419608, 0.0666667, 1)
@@ -25,7 +26,8 @@ mesh = SubResource("PlaneMesh_2htpb")
 [node name="Grid Parent" type="Node3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.637908, 0.770113, 0, -0.770113, 0.637908, 8.001, 11.479, 20.641)
+transform = Transform3D(1, 0, 0, 0, 0.567844, 0.823136, 0, -0.823136, 0.567844, 8.001, 42.084, 95.916)
+script = ExtResource("3_3a4yt")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
