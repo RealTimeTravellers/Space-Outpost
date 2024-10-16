@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://dbep6uqerw3hs"]
+
+[ext_resource type="Script" path="res://Scripts/Grid/GridObject.cs" id="1_1vjro"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_um0o2"]
+albedo_color = Color(0, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vod4s"]
+size = Vector3(0.9, 0.9, 0.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trh14"]
+
+[node name="Grid Object" type="Node3D"]
+script = ExtResource("1_1vjro")
+
+[node name="Debug Box" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_um0o2")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_vod4s")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_trh14")

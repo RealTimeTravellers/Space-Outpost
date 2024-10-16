@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cr6l7i74jnq6y"]
+
+[ext_resource type="PackedScene" uid="uid://benuohyq86b2i" path="res://Subscenes/Managers/grid_manager.tscn" id="1_u6u7v"]
+[ext_resource type="PackedScene" uid="uid://dbep6uqerw3hs" path="res://Subscenes/Grid/grid_object.tscn" id="2_aubdv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w2b0h"]
+albedo_color = Color(0.372549, 0.419608, 0.0666667, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2htpb"]
+size = Vector2(100, 100)
+
+[node name="GridDev" type="Node3D"]
+
+[node name="Grid Manager" parent="." node_paths=PackedStringArray("gridParent") instance=ExtResource("1_u6u7v")]
+gridObjectSubscene = ExtResource("2_aubdv")
+gridParent = NodePath("../Grid Parent")
+gridSize = 100
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_w2b0h")
+mesh = SubResource("PlaneMesh_2htpb")
+
+[node name="GridMap" type="GridMap" parent="."]
+
+[node name="Grid Parent" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.637908, 0.770113, 0, -0.770113, 0.637908, 8.001, 11.479, 20.641)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://df7r7we8vod1d"]
 
-[ext_resource type="PackedScene" uid="uid://bixrkeysu0s5c" path="res://Subscenes/Character/TestCharacter.tscn" id="1_fjct1"]
+[ext_resource type="PackedScene" uid="uid://bixrkeysu0s5c" path="res://Subscenes/Character/TestCharacter.tscn" id="1_v4i7u"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ctc21"]
 size = Vector2(30, 30)
@@ -20,4 +20,4 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8, 
 transform = Transform3D(0.812379, 2.54894e-08, -0.58313, 0.58313, -3.55102e-08, 0.812379, 0, -1, -4.37114e-08, 0, 7.16023, 0)
 shadow_enabled = true
 
-[node name="TestCharacter" parent="." instance=ExtResource("1_fjct1")]
+[node name="TestCharacter" parent="." instance=ExtResource("1_v4i7u")]

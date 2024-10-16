@@ -1,16 +1,32 @@
-[gd_scene load_steps=6 format=3 uid="uid://77qkpxdiae0u"]
+[gd_scene load_steps=8 format=3 uid="uid://77qkpxdiae0u"]
 
 [ext_resource type="PackedScene" uid="uid://byqw1oqs82ord" path="res://Subscenes/Managers/game_manager.tscn" id="1_87e0o"]
 [ext_resource type="PackedScene" uid="uid://cbhkfpor6datm" path="res://Subscenes/Configs/settings.tscn" id="2_aa3yh"]
 [ext_resource type="PackedScene" uid="uid://dvv3ipmsmt1rr" path="res://Scenes/Game/TeamSelection.tscn" id="2_acjul"]
-[ext_resource type="PackedScene" uid="uid://df7r7we8vod1d" path="res://Scenes/Game/TestBattle.tscn" id="2_e7q5w"]
 [ext_resource type="PackedScene" uid="uid://db5muqbbxse6b" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
+[ext_resource type="PackedScene" uid="uid://bixrkeysu0s5c" path="res://Subscenes/Character/TestCharacter.tscn" id="4_1ps07"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ctc21"]
+size = Vector2(30, 30)
+
+[sub_resource type="PackedScene" id="PackedScene_0vt33"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("BattleScreen", "Node", "Plane", "MeshInstance3D", "mesh", "CameraPivot", "Node3D", "transform", "Camera3D", "Camera3D", "transform", "DirectionalLight3D", "DirectionalLight3D", "transform", "shadow_enabled", "TestCharacter"),
+"node_count": 6,
+"node_paths": [NodePath("."), NodePath("."), NodePath("./CameraPivot"), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 0, 0, 1073741824, 0, 3, 2, -1, 1, 4, 0, 0, 1073741825, 0, 6, 5, -1, 1, 7, 1, 0, 1073741826, 0, 9, 8, -1, 1, 10, 2, 0, 1073741827, 0, 12, 11, -1, 2, 13, 3, 14, 4, 0, 1073741828, 0, 2147483647, 15, 5, 0, 0),
+"variants": [SubResource("PlaneMesh_ctc21"), Transform3D(1, 0, 0, 0, 0.713324, -0.700835, 0, 0.700835, 0.713324, 0, 1.04405, 0.0697777), Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8, 0), Transform3D(0.812379, 2.54894e-08, -0.58313, 0.58313, -3.55102e-08, 0.812379, 0, -1, -4.37114e-08, 0, 7.16023, 0), true, ExtResource("4_1ps07")],
+"version": 3
+}
 
 [node name="Root" type="Node3D"]
 
 [node name="GameManager" parent="." node_paths=PackedStringArray("settings") instance=ExtResource("1_87e0o")]
 settings = NodePath("../Settings")
 mainMenuSubScene = ExtResource("2_mgtbs")
-gameScenes = Array[PackedScene]([ExtResource("2_acjul"), ExtResource("2_e7q5w")])
+gameScenes = Array[PackedScene]([ExtResource("2_acjul"), SubResource("PackedScene_0vt33")])
 
 [node name="Settings" parent="." instance=ExtResource("2_aa3yh")]
