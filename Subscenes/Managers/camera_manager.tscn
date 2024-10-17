@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://blo2rc7isqhmi"]
+
+[ext_resource type="Script" path="res://Scripts/Managers/CameraManager.cs" id="1_t44t2"]
+
+[node name="Camera Manager" type="Node" node_paths=PackedStringArray("mainCamera")]
+script = ExtResource("1_t44t2")
+mainCamera = NodePath("")

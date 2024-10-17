@@ -14,7 +14,7 @@ public partial class TestCharacter : CharacterBody3D
 
     private void OnInputEvent(Node camera, InputEvent @event, Vector3 eventposition, Vector3 normal, long shapeidx)
     {
-        if (@event.IsActionReleased("select"))
+        if (@event.IsActionReleased("Select"))
         {
             _isSelected = !_isSelected;
             if (_meshMaterial is StandardMaterial3D standardMaterial)
