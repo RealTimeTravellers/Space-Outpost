@@ -9,7 +9,7 @@ public partial class Character : CharacterBody3D // don't really know why is thi
 
     public override void _Process(double delta)
     {
-        if (move)
+        if (move) // test
         {
             move = !move;
             GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition;

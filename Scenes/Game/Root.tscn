@@ -20,4 +20,4 @@ gameScenes = Array[PackedScene]([null, ExtResource("3_dk7iy")])
 mainCamera = NodePath("../Camera")
 
 [node name="Camera" parent="." instance=ExtResource("6_x3h47")]
-transform = Transform3D(1, 0, 0, 0, 0.902307, 0.431094, 0, -0.431094, 0.902307, -0.479554, 2.00458, 4.43174)
+transform = Transform3D(1, 0, 0, 0, 0.763638, 0.645644, 0, -0.645644, 0.763638, -0.479554, 4.48949, 9.39342)
