@@ -24,16 +24,22 @@ public partial class Raycaster : Node3D // random name idk
             if(hit.NonEmpty)
             {
                 // character
-                if (hit.Collider.CollisionLayer == 4)
+                if (hit.Collider.CollisionLayer == PhysicsCasts.GetCollisionMask(4))
                 {
                     Character selected = hit.Collider as Character;
                     GridManager.Instance.selectedGrid = selected.currentGrid;
                     GridManager.Instance.selectedCharacter = selected;
                     GridManager.Instance.previousGrid = null;
+
+                    GD.Print(hit.Collider);
                 }
-                else if (hit.Collider.CollisionLayer == 5) // grid
+                else if (hit.Collider.CollisionLayer == PhysicsCasts.GetCollisionMask(5)) // grid
                 {
                     GridManager.Instance.selectedGrid = hit.Collider.GetParent() as GridObject;
+
+                    GD.Print(hit.Collider.GetParent());
+
+                    if (GridManager.Instance.selectedCharacter == null) return;
 
                     if (GridManager.Instance.previousGrid == null)
                         GridManager.Instance.previousGrid = GridManager.Instance.selectedCharacter.currentGrid;

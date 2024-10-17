@@ -9,6 +9,8 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
 [node name="Character" type="CharacterBody3D"]
+collision_layer = 8
+collision_mask = 8
 script = ExtResource("1_iy22r")
 
 [node name="Model" type="MeshInstance3D" parent="."]
