@@ -12,8 +12,9 @@ public partial class GridManager : Node
 
     [Export] private int gridSize; // temp, will check from data
 
-    public Node3D selectedCharacter; // currently Node3D will change it to Character.cs or smth
-    public Node3D selectedGrid; // currently Node3D will change it to Character.cs or smth
+    public Character selectedCharacter; // currently Node3D will change it to Character.cs or smth
+    public Node3D selectedGrid; // currently Node3D will change it to grid.cs or smth
+    public Node3D previousGrid; // currently Node3D will change it to grid.cs or smth
 
     /// <summary>
     /// Strictly a square
