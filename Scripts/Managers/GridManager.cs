@@ -12,6 +12,9 @@ public partial class GridManager : Node
 
     [Export] private int gridSize; // temp, will check from data
 
+    /// <summary>
+    /// Strictly a square
+    /// </summary>
     [Export] public Godot.Collections.Array<Godot.Collections.Array<Node3D>> grids = new();
 
     private GridManager()
@@ -33,7 +36,7 @@ public partial class GridManager : Node
             for (int j = 0; j < gridSize; j++)
             {
                 var gridObject = gridObjectSubscene.Instantiate<Node3D>();
-                gridObject.Position = new Vector3(i, 0, j);
+                gridObject.Position = new Vector3(i - (gridSize / 2), 0, j - (gridSize / 2));
                 gridParent.AddChild(gridObject);
                 innerArray.Add(gridObject);
             }

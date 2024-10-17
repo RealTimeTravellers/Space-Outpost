@@ -24,6 +24,7 @@ public partial class Raycaster : Camera3D // random name idk
             if(hit.NonEmpty)
             {
                 GD.Print(hit.Collider.GetParent().Name);
+                // select here
             }
             else
                 GD.Print("No Hit");
