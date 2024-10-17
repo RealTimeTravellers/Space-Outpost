@@ -1,21 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://cr6l7i74jnq6y"]
+[gd_scene load_steps=7 format=3 uid="uid://cr6l7i74jnq6y"]
 
 [ext_resource type="PackedScene" uid="uid://benuohyq86b2i" path="res://Subscenes/Managers/grid_manager.tscn" id="1_u6u7v"]
 [ext_resource type="PackedScene" uid="uid://dbep6uqerw3hs" path="res://Subscenes/Grid/grid_object.tscn" id="2_aubdv"]
 [ext_resource type="Script" path="res://Scripts/Camera/Raycaster.cs" id="3_3a4yt"]
-[ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="4_o4afo"]
+[ext_resource type="PackedScene" uid="uid://bbshs62tttw3a" path="res://Subscenes/Character/character.tscn" id="4_dd3d8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w2b0h"]
 albedo_color = Color(0.372549, 0.419608, 0.0666667, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_2htpb"]
 size = Vector2(100, 100)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
-
-[sub_resource type="PrismMesh" id="PrismMesh_co5wa"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
 [node name="GridDev" type="Node3D"]
 
@@ -24,11 +18,11 @@ gridObjectSubscene = ExtResource("2_aubdv")
 gridParent = NodePath("../Grid Parent")
 gridSize = 100
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_w2b0h")
 mesh = SubResource("PlaneMesh_2htpb")
 
-[node name="GridMap" type="GridMap" parent="."]
+[node name="GridMap" type="GridMap" parent="Ground"]
 
 [node name="Grid Parent" type="Node3D" parent="."]
 
@@ -39,17 +33,5 @@ script = ExtResource("3_3a4yt")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
 
-[node name="Character" type="CharacterBody3D" parent="."]
-script = ExtResource("4_o4afo")
-
-[node name="Model" type="MeshInstance3D" parent="Character"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_t5xya")
-
-[node name="face" type="MeshInstance3D" parent="Character/Model"]
-transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 0, -0.486261)
-mesh = SubResource("PrismMesh_co5wa")
-
-[node name="Capsule Collider" type="CollisionShape3D" parent="Character"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_fdfim")
+[node name="Character" parent="." instance=ExtResource("4_dd3d8")]
+disable_mode = 1

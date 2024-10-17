@@ -30,16 +30,16 @@ public partial class Raycaster : Camera3D // random name idk
                 if (hit.Collider.CollisionLayer == 4)
                 {
                     Character selected = hit.Collider.GetParent() as Character;
-                    GridManager.Instance.selectedGrid = selected.currentGrid;
+                    GridManager.Instance.selectedGrid = selected.currentGrid as GridObject;
                     GridManager.Instance.selectedCharacter = selected;
                     GridManager.Instance.previousGrid = null;
                 }
                 else if (hit.Collider.CollisionLayer == 5) // grid
                 {
-                    GridManager.Instance.selectedGrid = (Node3D)hit.Collider.GetParent();
+                    GridManager.Instance.selectedGrid = (Node3D)hit.Collider.GetParent() as GridObject;
 
                     if (GridManager.Instance.previousGrid == null)
-                        GridManager.Instance.previousGrid = GridManager.Instance.selectedCharacter.currentGrid;
+                        GridManager.Instance.previousGrid = GridManager.Instance.selectedCharacter.currentGrid as GridObject;
                 }
             }
             else
