@@ -8,7 +8,6 @@ public partial class Raycaster : Camera3D // random name idk
 
     public override void _Input(InputEvent @event)
     {
-
         SelectViaRaycast();
         base._Input(@event);
     }
@@ -17,11 +16,8 @@ public partial class Raycaster : Camera3D // random name idk
     {
         if (Input.IsActionJustPressed("Select"))
         {
-            //var from = CameraManager.Instance.mainCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
-			//var to = from + CameraManager.Instance.mainCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * RayLength;
-
-            var from = this.ProjectRayOrigin(GetViewport().GetMousePosition());
-            var to = from + ProjectRayNormal(GetViewport().GetMousePosition()) * rayLength;
+            var from =  CameraManager.Instance.mainCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
+            var to = from +  CameraManager.Instance.mainCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * rayLength;
 
             CastHit hit = PhysicsCasts.CastLine(this, from, to, PhysicsCasts.GetCollisionMask(1) ,true);
 

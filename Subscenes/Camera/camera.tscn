@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2eqd4gi0desn"]
+
+[ext_resource type="Script" path="res://Scripts/Camera/Raycaster.cs" id="1_0d72r"]
+
+[node name="Camera" type="Camera3D"]
+
+[node name="Raycaster" type="Node3D" parent="."]
+script = ExtResource("1_0d72r")

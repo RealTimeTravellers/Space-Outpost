@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://77qkpxdiae0u"]
+[gd_scene load_steps=10 format=3 uid="uid://77qkpxdiae0u"]
 
 [ext_resource type="PackedScene" uid="uid://byqw1oqs82ord" path="res://Subscenes/Managers/game_manager.tscn" id="1_87e0o"]
 [ext_resource type="PackedScene" uid="uid://cbhkfpor6datm" path="res://Subscenes/Configs/settings.tscn" id="2_aa3yh"]
 [ext_resource type="PackedScene" uid="uid://dvv3ipmsmt1rr" path="res://Scenes/Game/TeamSelection.tscn" id="2_acjul"]
 [ext_resource type="PackedScene" uid="uid://db5muqbbxse6b" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
 [ext_resource type="PackedScene" uid="uid://bixrkeysu0s5c" path="res://Subscenes/Character/TestCharacter.tscn" id="4_1ps07"]
+[ext_resource type="Script" path="res://Scripts/Managers/CameraManager.cs" id="6_l844a"]
+[ext_resource type="PackedScene" uid="uid://d2eqd4gi0desn" path="res://Subscenes/Camera/camera.tscn" id="6_x3h47"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ctc21"]
 size = Vector2(30, 30)
@@ -30,3 +32,9 @@ mainMenuSubScene = ExtResource("2_mgtbs")
 gameScenes = Array[PackedScene]([ExtResource("2_acjul"), SubResource("PackedScene_0vt33")])
 
 [node name="Settings" parent="." instance=ExtResource("2_aa3yh")]
+
+[node name="Camera Manager" type="Node" parent="." node_paths=PackedStringArray("mainCamera")]
+script = ExtResource("6_l844a")
+mainCamera = NodePath("../Camera")
+
+[node name="Camera" parent="." instance=ExtResource("6_x3h47")]
