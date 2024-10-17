@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://bbshs62tttw3a"]
+
+[ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_iy22r"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_co5wa"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
+
+[node name="Character" type="CharacterBody3D"]
+collision_layer = 8
+collision_mask = 8
+script = ExtResource("1_iy22r")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_t5xya")
+
+[node name="face" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 0, -0.486261)
+mesh = SubResource("PrismMesh_co5wa")
+
+[node name="Capsule Collider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_fdfim")

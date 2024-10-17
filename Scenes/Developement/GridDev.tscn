@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://cr6l7i74jnq6y"]
+
+[ext_resource type="PackedScene" uid="uid://benuohyq86b2i" path="res://Subscenes/Managers/grid_manager.tscn" id="1_u6u7v"]
+[ext_resource type="PackedScene" uid="uid://dbep6uqerw3hs" path="res://Subscenes/Grid/grid_object.tscn" id="2_aubdv"]
+[ext_resource type="PackedScene" uid="uid://bbshs62tttw3a" path="res://Subscenes/Character/character.tscn" id="4_dd3d8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w2b0h"]
+albedo_color = Color(0.372549, 0.419608, 0.0666667, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2htpb"]
+size = Vector2(100, 100)
+
+[node name="GridDev" type="Node3D"]
+
+[node name="Grid Manager" parent="." node_paths=PackedStringArray("gridParent") instance=ExtResource("1_u6u7v")]
+gridObjectSubscene = ExtResource("2_aubdv")
+gridParent = NodePath("../Grid Parent")
+gridSize = 50
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_w2b0h")
+mesh = SubResource("PlaneMesh_2htpb")
+
+[node name="GridMap" type="GridMap" parent="Ground"]
+
+[node name="Grid Parent" type="Node3D" parent="."]
+
+[node name="Character" parent="." instance=ExtResource("4_dd3d8")]
+disable_mode = 1
+collision_mask = 25
