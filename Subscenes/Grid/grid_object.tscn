@@ -1,24 +1,32 @@
-[gd_scene load_steps=5 format=3 uid="uid://dbep6uqerw3hs"]
+[gd_scene load_steps=9 format=3 uid="uid://dbep6uqerw3hs"]
 
 [ext_resource type="Script" path="res://Scripts/Grid/GridObject.cs" id="1_1vjro"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_um0o2"]
-albedo_color = Color(0, 1, 1, 1)
+[ext_resource type="Material" uid="uid://cy08fvm4i285f" path="res://Visual Assets/Materials/Grid/grid_blocked.tres" id="2_efyxx"]
+[ext_resource type="Material" uid="uid://dw1g6mg5vdliu" path="res://Visual Assets/Materials/Grid/grid_default.tres" id="2_oxrnx"]
+[ext_resource type="Material" uid="uid://c3j2aa431t26d" path="res://Visual Assets/Materials/Grid/grid_selected.tres" id="3_2tx4k"]
+[ext_resource type="Material" uid="uid://oacr84reg6dq" path="res://Visual Assets/Materials/Grid/grid_inner.tres" id="4_kx3cm"]
+[ext_resource type="Material" uid="uid://bivirh3scggmh" path="res://Visual Assets/Materials/Grid/grid_outer.tres" id="5_5k85l"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_vod4s"]
 size = Vector3(0.9, 0.9, 0.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_trh14"]
 
-[node name="Grid Object" type="Node3D"]
+[node name="Grid Object" type="Node3D" node_paths=PackedStringArray("meshInstance")]
 script = ExtResource("1_1vjro")
+standardMaterial = ExtResource("2_oxrnx")
+selectedMaterial = ExtResource("3_2tx4k")
+innerMaterial = ExtResource("4_kx3cm")
+outerMaterial = ExtResource("5_5k85l")
+blockedMaterial = ExtResource("2_efyxx")
+meshInstance = NodePath("Debug Box")
 
 [node name="Debug Box" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, -0.000133747, 4.10468e-05, 0.000133747, 1, 7.14206e-05, -4.10468e-05, -7.14206e-05, 1, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_um0o2")
 transparency = 0.75
 cast_shadow = 0
 mesh = SubResource("BoxMesh_vod4s")
+surface_material_override/0 = ExtResource("2_oxrnx")
 
 [node name="Area3D" type="Area3D" parent="."]
 collision_layer = 16

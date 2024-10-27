@@ -30,8 +30,8 @@ public partial class Raycaster : Node3D // random name idk
                     GridManager.Instance.selectedGrid = selected.currentGrid;
                     GridManager.Instance.selectedCharacter = selected;
                     GridManager.Instance.previousGrid = null;
-
-                    GD.Print(hit.Collider);
+                    GridManager.Instance.SelectionChanged.Invoke(GridManager.Instance.selectedGrid);
+                    //GD.Print(hit.Collider);
                 }
                 else if (hit.Collider.CollisionLayer == PhysicsCasts.GetCollisionMask(5)) // grid
                 {
@@ -39,14 +39,17 @@ public partial class Raycaster : Node3D // random name idk
 
                     GD.Print(hit.Collider.GetParent());
 
+                    GridManager.Instance.SelectionChanged.Invoke(GridManager.Instance.selectedGrid);
+
                     if (GridManager.Instance.selectedCharacter == null) return;
 
                     if (GridManager.Instance.previousGrid == null)
                         GridManager.Instance.previousGrid = GridManager.Instance.selectedCharacter.currentGrid;
+
                 }
             }
             else
-                GD.Print("No Hit");
+                GridManager.Instance.SelectionChanged.Invoke(null);
         }
     }
 
