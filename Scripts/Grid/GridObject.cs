@@ -5,4 +5,8 @@ public partial class GridObject : Node3D
 {
     [Export] private CoverType coverType = CoverType.None;
     [Export] public Godot.Collections.Array<bool> coverDirection = new Godot.Collections.Array<bool>{ false, false, false, false };
+    [Export] public Material defaultMaterial;
+    [Export] public Material selectedMaterial;
+    [Export] public Material firstActionMaterial;
+    [Export] public Material secondActionMaterial;
 }
