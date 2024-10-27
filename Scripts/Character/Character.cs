@@ -7,6 +7,9 @@ public partial class Character : CharacterBody3D // don't really know why is thi
 
     [Export] public bool move = false; // temp for test only
 
+    [Export] public int firstRange = 10; // test
+    [Export] public int secondRange = 10; // test
+
     public override void _Process(double delta)
     {
         if (move) // test

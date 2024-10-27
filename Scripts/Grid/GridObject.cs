@@ -31,24 +31,36 @@ public partial class GridObject : Node3D
         GridManager.Instance.SelectionChanged += OnSelectionChanged;
     }
 
+    private void ChangeGridMaterial(Material mat, float transparency)
+    {
+        meshInstance.SetSurfaceOverrideMaterial(0, mat);
+        meshInstance.Transparency = transparency;
+    }
+
     private void OnSelectionChanged(GridObject gridObject)
     {
         // TODO: if selected colour it as selected (Change Material on Geometry3D)
         if (gridObject == null)
         {   
-            meshInstance.SetSurfaceOverrideMaterial(0, standardMaterial);
-            meshInstance.Transparency = standardTransparency;
+            ChangeGridMaterial(standardMaterial, standardTransparency);
             return;
         }
 
         if (gridObject.GetInstanceId() == this.GetInstanceId()) // since I do a null check above, this is a little faster
-        {
-            meshInstance.SetSurfaceOverrideMaterial(0, selectedMaterial);
-            meshInstance.Transparency = selectedTransparency;
-        }
+            ChangeGridMaterial(selectedMaterial, selectedTransparency);
         else
         {
             // TODO: if this is not selected change colour based on range or enemy presence
+            if (GridManager.Instance.selectedCharacter != null)
+            {
+                var character = GridManager.Instance.selectedCharacter;
+                if (this.Position.DistanceTo(character.Position) < character.firstRange)
+                    ChangeGridMaterial(innerMaterial, standardTransparency);
+                else if (this.Position.DistanceTo(character.Position) < character.firstRange + character.secondRange)
+                    ChangeGridMaterial(outerMaterial, standardTransparency);
+                else
+                    ChangeGridMaterial(standardMaterial, 1f);
+            }
         }
     }
 }
