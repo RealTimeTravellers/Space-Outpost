@@ -6,7 +6,8 @@ using System.Runtime.Serialization;
 public partial class GridObject : Node3D
 {
     [Export] private CoverType coverType = CoverType.None;
-    [Export] public Godot.Collections.Array<bool> coverDirection = new Godot.Collections.Array<bool>{ false, false, false, false };
+    [Export] public Godot.Collections.Array<bool> coverDirection = new() { false, false, false, false };
+    
     [Export] public Material standardMaterial;
     [Export] public Material selectedMaterial;
     [Export] public Material innerMaterial;
@@ -42,7 +43,6 @@ public partial class GridObject : Node3D
 
         if (gridObject.GetInstanceId() == this.GetInstanceId()) // since I do a null check above, this is a little faster
         {
-            GD.Print("here");
             meshInstance.SetSurfaceOverrideMaterial(0, selectedMaterial);
             meshInstance.Transparency = selectedTransparency;
         }
