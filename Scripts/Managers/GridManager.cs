@@ -5,6 +5,9 @@ public partial class GridManager : Node
 {
 
     public static GridManager Instance {get; private set;}
+
+    public Action<GridObject> SelectionChanged;
+
     [Export] public Resource gridData; // TODO: change to grid data resources type
 
     [Export] public PackedScene gridObjectSubscene;

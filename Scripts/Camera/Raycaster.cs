@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class Raycaster : Node3D // random name idk
 {
@@ -8,8 +7,15 @@ public partial class Raycaster : Node3D // random name idk
 
     public override void _Input(InputEvent @event)
     {
-        SelectViaRaycast();
+        if (GameManager.Instance.gameState == GameState.Battle)
+            SelectViaRaycast();
         base._Input(@event);
+    }
+
+    private void ChangeGridSelection(GridObject gridObject)
+    {
+            GridManager.Instance.selectedGrid = gridObject;
+            GridManager.Instance.SelectionChanged.Invoke(GridManager.Instance.selectedGrid);
     }
 
     private void SelectViaRaycast()
@@ -27,17 +33,16 @@ public partial class Raycaster : Node3D // random name idk
                 if (hit.Collider.CollisionLayer == PhysicsCasts.GetCollisionMask(4))
                 {
                     Character selected = hit.Collider as Character;
-                    GridManager.Instance.selectedGrid = selected.currentGrid;
                     GridManager.Instance.selectedCharacter = selected;
                     GridManager.Instance.previousGrid = null;
-
-                    GD.Print(hit.Collider);
+                    ChangeGridSelection(selected.currentGrid);
                 }
                 else if (hit.Collider.CollisionLayer == PhysicsCasts.GetCollisionMask(5)) // grid
                 {
-                    GridManager.Instance.selectedGrid = hit.Collider.GetParent() as GridObject;
-
-                    GD.Print(hit.Collider.GetParent());
+                    if((GridObject) hit.Collider.GetParent() == GridManager.Instance.selectedGrid) // deselect
+                        ChangeGridSelection(null);
+                    else // select
+                        ChangeGridSelection(hit.Collider.GetParent() as GridObject);
 
                     if (GridManager.Instance.selectedCharacter == null) return;
 
@@ -46,8 +51,7 @@ public partial class Raycaster : Node3D // random name idk
                 }
             }
             else
-                GD.Print("No Hit");
+                ChangeGridSelection(null);
         }
     }
-
 }
