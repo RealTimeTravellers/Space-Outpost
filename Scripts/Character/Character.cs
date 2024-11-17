@@ -50,7 +50,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         //TODO: get All enemies and check via distance, return the ones in range
 
         // Get all enemies
-        // Check range
+        // Check range (and LOS ==> do we want ambush?, need to not check this if combat has started)
         // if in range add to list
         // after the iteration is over return the list, (these enemies, we can see (from this character))
 
