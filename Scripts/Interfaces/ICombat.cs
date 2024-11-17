@@ -6,6 +6,8 @@ public interface ICombat
     public int Health {get;}
     public int Damage {get;}
 
-    public List<Character>QueryForEnemies();
+    // methods
+    public List<Character> QueryForEnemies(Godot.Collections.Array enemies);
+    public void Attack(ICombat enemy, int chance);
     public void TakeDamage(int damage);
 }

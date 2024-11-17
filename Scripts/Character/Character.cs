@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class Character : CharacterBody3D, ICombat// don't really know why is this character body
 {
@@ -10,6 +11,8 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 
     [Export] public int firstRange = 10; // test
     [Export] public int secondRange = 10; // test
+
+    [Export] public float range = 25; // test
 
     public int Health { get; private set; }
     public int Damage { get ; private set ; }
@@ -36,6 +39,28 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     }
 
     #region ICombat Implementations
+    public List<Character> QueryForEnemies(Godot.Collections.Array enemies)
+    {
+        List<Character> enemiesWithLos = new();
+
+        foreach (Character enemy in enemies.Select(v => (Character)v))
+        {
+            if (enemy.Position.DistanceTo(this.Position) < range) // is in range
+            {
+                CastHit hit = PhysicsCasts.CastLine(this, enemy.Position, this.Position, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
+                
+                if (hit.NonEmpty)
+                    enemiesWithLos.Add(enemy);
+            }
+        }
+        return enemiesWithLos;
+    }
+
+    public void Attack(ICombat enemy, int chance)
+    {
+        throw new NotImplementedException();
+    }
+
     public void TakeDamage(int damage)
     {
         Health -= damage;
@@ -43,18 +68,6 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         if (Health <= 0)
             Die();
 
-    }
-
-    public List<Character> QueryForEnemies()
-    {
-        //TODO: get All enemies and check via distance, return the ones in range
-
-        // Get all enemies
-        // Check range (and LOS ==> do we want ambush?, need to not check this if combat has started)
-        // if in range add to list
-        // after the iteration is over return the list, (these enemies, we can see (from this character))
-
-        throw new NotImplementedException();
     }
     #endregion
 }
