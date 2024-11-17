@@ -43,6 +43,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     }
 
     #region ICombat Implementations
+    // sub this at turn ends or enemy movements
     public List<Character> QueryForEnemies(Godot.Collections.Array enemies)
     {
         List<Character> enemiesWithLos = new();
