@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 public partial class Character : CharacterBody3D, ICombat// don't really know why is this character body
 {
@@ -46,11 +47,13 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     private void SubscribeToEvents()
     {
         TurnManager.Instance.TurnChanged += OnTurnChanged;
+        TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
     }
 
     private void UnsubscribeFromEvents()
     {
         TurnManager.Instance.TurnChanged -= OnTurnChanged;
+        TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
     }
 
     private void Die()
@@ -80,9 +83,14 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         return enemiesWithLos;
     }
 
-    public void Attack(ICombat enemy, int chance)
+    public void Attack(ICombat enemy, float chance)
     {
-        throw new NotImplementedException();
+        // TODO: chance calculations here define if miss or hit
+        // if (hit)
+            enemy.TakeDamage(Damage);
+            // and play animation
+        // else
+            // shoot animation but no hit
     }
 
     public void TakeDamage(int damage)
@@ -99,5 +107,10 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     private void OnTurnChanged(bool playerTurn)
     {
         throw new NotImplementedException();
+    }
+
+    private void OnEnemyMovementChanged(bool started)
+    {
+
     }
 }
