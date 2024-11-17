@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Character : CharacterBody3D, ICombat// don't really know why is this character body
 {
@@ -42,6 +43,18 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         if (Health <= 0)
             Die();
 
+    }
+
+    public List<Character> QueryForEnemies()
+    {
+        //TODO: get All enemies and check via distance, return the ones in range
+
+        // Get all enemies
+        // Check range
+        // if in range add to list
+        // after the iteration is over return the list, (these enemies, we can see (from this character))
+
+        throw new NotImplementedException();
     }
     #endregion
 }
