@@ -51,9 +51,12 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     }
 
     #region ICombat Implementations
-    // sub this at turn ends or enemy movements
     public List<Character> QueryForEnemies(Godot.Collections.Array enemies)
     {
+        // this needs to be actiove in enemy turn
+        // this needs to be actiove during this characters movement
+        // this needs to be active last time once moving is done
+
         List<Character> enemiesWithLos = new();
 
         foreach (Character enemy in enemies.Select(v => (Character)v))
