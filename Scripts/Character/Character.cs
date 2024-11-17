@@ -27,6 +27,14 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         base._Ready();
     }
 
+    private void SubscribeToEvents()
+    {        
+    }
+
+    private void UnsubscribeFromEvents()
+    {        
+    }
+
     public override void _Process(double delta)
     {
         if (move) // test
