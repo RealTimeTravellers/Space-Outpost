@@ -14,12 +14,16 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 
     [Export] public float range = 25; // test
 
+    // More of an idea, make the non identified chracters show up but black
+    // only meaning full if there are civilians in the combat zone
+    [Export] public float visualRange = 35;
+
     public int Health { get; private set; }
     public int Damage { get ; private set ; }
 
     public override void _Ready()
     {
-
+        // read data here?
         base._Ready();
     }
 
@@ -45,7 +49,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 
         foreach (Character enemy in enemies.Select(v => (Character)v))
         {
-            if (enemy.Position.DistanceTo(this.Position) < range) // is in range
+            if (enemy.Position.DistanceTo(this.Position) < range) // is in identification range
             {
                 CastHit hit = PhysicsCasts.CastLine(this, enemy.Position, this.Position, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
                 
