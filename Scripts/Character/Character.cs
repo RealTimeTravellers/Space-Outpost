@@ -28,11 +28,13 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     }
 
     private void SubscribeToEvents()
-    {        
+    {
+        TurnManager.Instance.TurnChanged += OnTurnChanged;
     }
 
     private void UnsubscribeFromEvents()
-    {        
+    {
+        TurnManager.Instance.TurnChanged -= OnTurnChanged;
     }
 
     public override void _Process(double delta)
@@ -86,4 +88,10 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 
     }
     #endregion
+
+    // events
+    private void OnTurnChanged(bool playerTurn)
+    {
+        throw new NotImplementedException();
+    }
 }
