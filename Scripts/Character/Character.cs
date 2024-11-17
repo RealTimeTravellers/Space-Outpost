@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat// don't really know why is this character body
 {
@@ -19,8 +21,14 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     // only meaning full if there are civilians in the combat zone
     [Export] public float visualRange = 35;
 
+    #region ICombat variables
     public int Health { get; private set; }
     public int Damage { get ; private set ; }
+    #endregion
+
+    private Godot.Collections.Array<Character> enemiosInLos = new();
+    [Export] private int queriesPerSecond = 10;
+    [Export] private bool doQuery = false;
 
     public override void _Ready()
     {
@@ -35,6 +43,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
             move = !move;
             GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition;
         }
+
         base._Process(delta);
     }
 
@@ -56,19 +65,35 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
     }
 
+    private async void SearchForEnemies(bool instantSearch = false)
+    {
+        if (instantSearch)
+        {
+            enemiosInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+            doQuery = false;
+            return;
+        }
+
+        while (doQuery)
+        {
+            enemiosInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+            await Task.Delay(Mathf.CeilToInt(1000f / queriesPerSecond));
+        }
+    }
+
     private void Die()
     {
         throw new NotImplementedException();
     }
 
     #region ICombat Implementations
-    public List<Character> QueryForEnemies(Godot.Collections.Array enemies)
+    public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies)
     {
         // this needs to be actiove in enemy turn
         // this needs to be actiove during this characters movement
         // this needs to be active last time once moving is done
 
-        List<Character> enemiesWithLos = new();
+        Godot.Collections.Array<Character> enemiesWithLos = new();
 
         foreach (Character enemy in enemies.Select(v => (Character)v))
         {
@@ -109,8 +134,23 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         throw new NotImplementedException();
     }
 
+    private void OnPlayerMovementChanged(bool started)
+    {
+        if (!started) // ended
+            SearchForEnemies(true); // force a Query once.
+    }
+
     private void OnEnemyMovementChanged(bool started)
     {
-
+        if (started) // enemy started moving
+        {
+            doQuery = true;
+            SearchForEnemies();
+        }
+        else
+        {
+            doQuery = false;
+            SearchForEnemies(true); // force a query once
+        }
     }
 }
