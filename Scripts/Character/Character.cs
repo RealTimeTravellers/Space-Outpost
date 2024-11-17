@@ -57,12 +57,14 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     {
         TurnManager.Instance.TurnChanged += OnTurnChanged;
         TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
+        TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
     }
 
     private void UnsubscribeFromEvents()
     {
         TurnManager.Instance.TurnChanged -= OnTurnChanged;
         TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
+        TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
     }
 
     private async void SearchForEnemies(bool instantSearch = false)
