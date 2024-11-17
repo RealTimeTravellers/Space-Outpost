@@ -27,16 +27,6 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         base._Ready();
     }
 
-    private void SubscribeToEvents()
-    {
-        TurnManager.Instance.TurnChanged += OnTurnChanged;
-    }
-
-    private void UnsubscribeFromEvents()
-    {
-        TurnManager.Instance.TurnChanged -= OnTurnChanged;
-    }
-
     public override void _Process(double delta)
     {
         if (move) // test
@@ -45,6 +35,22 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
             GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition;
         }
         base._Process(delta);
+    }
+
+    public override void _ExitTree()
+    {
+        UnsubscribeFromEvents();
+        base._ExitTree();
+    }
+
+    private void SubscribeToEvents()
+    {
+        TurnManager.Instance.TurnChanged += OnTurnChanged;
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        TurnManager.Instance.TurnChanged -= OnTurnChanged;
     }
 
     private void Die()
