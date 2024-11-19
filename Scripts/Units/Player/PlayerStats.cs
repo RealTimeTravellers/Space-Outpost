@@ -1,6 +1,15 @@
 using System;
 using Godot;
 
+public enum PlayerType
+{
+    Soldier,
+    Sniper,
+    Engineer,
+    Medic,
+    Heavy,
+}
+
 public partial class PlayerStats : UnitStats
 {
     [Export] public PlayerType PlayerType { get; set; } = PlayerType.Soldier;

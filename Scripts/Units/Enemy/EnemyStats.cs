@@ -1,5 +1,15 @@
 using Godot;
 
+public enum EnemyType
+{
+    Telepath,
+    Creeper,
+    Seperatist,
+    Ranger,
+    Rebel,
+    Boss,
+}
+
 public partial class EnemyStats : UnitStats
 {
     [Export] public EnemyType EnemyType { get; set; } = EnemyType.Creeper;

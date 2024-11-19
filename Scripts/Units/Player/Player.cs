@@ -1,44 +1,37 @@
-using Godot;
+// using Godot;
 
-public enum PlayerType
-{
-    Soldier,
-    Sniper,
-    Engineer,
-    Medic,
-    Heavy,
-}
-public partial class Player : Unit
-{
-    [Export]
-    public PlayerType PlayerType { get; set; }
-    public PlayerEquipment PlayerEquipment { get; private set; }
 
-    public Player()
-    {
-        InitializeStats();  
-        PlayerEquipment = new PlayerEquipment(Stats);
-    }
+// public partial class Player : Unit
+// {
+//     [Export]
+//     public PlayerType PlayerType { get; set; }
+//     public PlayerEquipment PlayerEquipment { get; private set; }
 
-    protected override void InitializeStats()
-    {
-        PlayerStats playerStats = new PlayerStats();
-        Stats = playerStats.CreateStatsForPlayerType(this.PlayerType);
-        GD.Print("Player stats initialized");
-    }
+//     public Player()
+//     {
+//         InitializeStats();  
+//         PlayerEquipment = new PlayerEquipment(Stats);
+//     }
 
-    public void SetInitialEquipment(PrimaryWeapon primaryWeapon, SecondaryWeapon secondaryWeapon, Accessory accessory)
-    {
-        PlayerEquipment.SetInitialEquipment(primaryWeapon, secondaryWeapon, accessory);
-    }
+//     protected override void InitializeStats()
+//     {
+//         PlayerStats playerStats = new PlayerStats();
+//         Stats = playerStats.CreateStatsForPlayerType(this.PlayerType);
+//         GD.Print("Player stats initialized");
+//     }
 
-    public void SwitchWeapon()
-    {
-        PlayerEquipment.SwitchWeapon();
-    }
+//     public void SetInitialEquipment(PrimaryWeapon primaryWeapon, SecondaryWeapon secondaryWeapon, Accessory accessory)
+//     {
+//         PlayerEquipment.SetInitialEquipment(primaryWeapon, secondaryWeapon, accessory);
+//     }
 
-    public bool CanAttack(Unit target)
-    {
-        return CanInteract(target, PlayerEquipment.CurrentWeapon);
-    }
-}
+//     public void SwitchWeapon()
+//     {
+//         PlayerEquipment.SwitchWeapon();
+//     }
+
+//     public bool CanAttack(Unit target)
+//     {
+//         return CanInteract(target, PlayerEquipment.CurrentWeapon);
+//     }
+// }

@@ -11,8 +11,8 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     public GridObject currentGrid = null;
 
     [Export] public UnitStats Stats;
-    [Export] public Node Equipment;
-    [Export] public Node stateMachine;
+    [Export] private Node Equipment;
+    [Export] private Node stateMachine;
     [Export] public bool move = false; // temp for test only
     [Export] public int firstRange = 10; // test
     [Export] public int secondRange = 10; // test
