@@ -21,6 +21,8 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     // only meaning full if there are civilians in the combat zone
     [Export] public float visualRange = 35;
 
+    public bool IsMyTurn {get; private set;} = false;
+
     #region ICombat variables
     public int Health { get; private set; }
     public int Damage { get ; private set ; }
@@ -133,6 +135,9 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     // events
     private void OnTurnChanged(bool playerTurn)
     {
+        if (playerTurn)
+            IsMyTurn = false;
+        
         throw new NotImplementedException();
     }
 
