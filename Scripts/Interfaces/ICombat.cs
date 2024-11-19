@@ -3,6 +3,7 @@ using Godot;
 
 public interface ICombat
 {
+    public bool Friendly {get;}
     public int Health {get;}
     public int Damage {get;}
 
