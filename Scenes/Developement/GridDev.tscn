@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://cr6l7i74jnq6y"]
+[gd_scene load_steps=8 format=3 uid="uid://cr6l7i74jnq6y"]
 
 [ext_resource type="PackedScene" uid="uid://benuohyq86b2i" path="res://Subscenes/Managers/grid_manager.tscn" id="1_u6u7v"]
 [ext_resource type="PackedScene" uid="uid://dbep6uqerw3hs" path="res://Subscenes/Grid/grid_object.tscn" id="2_aubdv"]
+[ext_resource type="PackedScene" uid="uid://bttg6yojcnjhf" path="res://Subscenes/Managers/turn_manager.tscn" id="3_4etcd"]
 [ext_resource type="PackedScene" uid="uid://bbshs62tttw3a" path="res://Subscenes/Character/character.tscn" id="4_dd3d8"]
+[ext_resource type="PackedScene" uid="uid://ctbi66ifng67t" path="res://Subscenes/Managers/enemy_manager.tscn" id="4_s1rwu"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w2b0h"]
 albedo_color = Color(0.372549, 0.419608, 0.0666667, 1)
@@ -16,6 +18,10 @@ size = Vector2(100, 100)
 gridObjectSubscene = ExtResource("2_aubdv")
 gridParent = NodePath("../Grid Parent")
 gridSize = 50
+
+[node name="TurnManager" parent="." instance=ExtResource("3_4etcd")]
+
+[node name="EnemyManager" parent="." instance=ExtResource("4_s1rwu")]
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_w2b0h")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctbi66ifng67t"]
+
+[ext_resource type="Script" path="res://Scripts/Managers/EnemyManager.cs" id="1_qruu8"]
+
+[node name="EnemyManager" type="Node" node_paths=PackedStringArray("allEnemies", "spottedEnemies")]
+script = ExtResource("1_qruu8")
+allEnemies = []
+spottedEnemies = []
