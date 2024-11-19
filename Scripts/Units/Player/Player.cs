@@ -23,7 +23,7 @@ public partial class Player : Unit
     protected override void InitializeStats()
     {
         PlayerStats playerStats = new PlayerStats();
-        Stats = playerStats.CreateStatsForPlayerType();
+        Stats = playerStats.CreateStatsForPlayerType(this.PlayerType);
         GD.Print("Player stats initialized");
     }
 

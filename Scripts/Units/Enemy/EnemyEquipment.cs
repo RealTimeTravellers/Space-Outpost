@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class EnemyEquipment
+public partial class EnemyEquipment: Node
 {
     public Equipment CurrentWeapon { get; private set; }
     private UnitStats Stats { get; set; }

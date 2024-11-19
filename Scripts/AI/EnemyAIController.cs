@@ -1,6 +1,6 @@
 using Godot;
 
-public class EnemyAIController
+public partial class EnemyAIController : Node
 {
     private EnemyAIStateMachine _stateMachine;
 
@@ -11,13 +11,13 @@ public class EnemyAIController
         _stateMachine.OnStateChanged += OnStateChanged;
     }
 
-    public void SetState(AIState newState, Enemy aiCharacter)
+    public void SetState(AIState newState, Character aiCharacter)
     {
         // Yeni state'e geçişi tetikle
         _stateMachine.ChangeState(newState, aiCharacter);
     }
 
-    public void UpdateAI(Enemy aiCharacter)
+    public void UpdateAI(Character aiCharacter)
     {
         AIState currentState = _stateMachine.CurrentState;
         AIState nextState = _stateMachine.UpdateCurrentState(aiCharacter);

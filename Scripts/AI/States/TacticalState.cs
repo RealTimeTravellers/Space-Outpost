@@ -2,22 +2,22 @@ using Godot;
 
 public class TacticalState : BaseState
 {
-    public override void Enter(Enemy aiController)
+    public override void Enter(Character aiController)
     {
         GD.Print("Entering Tactical State");
     }
 
-    public override AIState Process(Enemy enemy)
+    public override AIState Process(Character enemy)
     {
         GD.Print("Tactical Positioning!");
         return CheckState(enemy);
     }
-    public override void Exit(Enemy aiController)
+    public override void Exit(Character aiController)
     {
         GD.Print("Exiting Tactical State");
     }
 
-    public override AIState CheckState(Enemy enemy)
+    public override AIState CheckState(Character enemy)
     {
         if (enemy.Stats.UnitType == UnitType.Human && enemy.Stats.Morale.GetValue() < 20)
         {

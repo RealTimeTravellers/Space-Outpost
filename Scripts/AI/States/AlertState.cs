@@ -2,23 +2,23 @@ using Godot;
 
 public class AlertState : BaseState
 {
-    public override void Enter(Enemy aiController)
+    public override void Enter(Character aiController)
     {
         GD.Print("Entering Alert State");
     }
 
-    public override AIState Process(Enemy enemy)
+    public override AIState Process(Character enemy)
     {
         GD.Print("Alert! Searching for player...");
         return CheckState(enemy);
     }
 
-    public override void Exit(Enemy aiController)
+    public override void Exit(Character aiController)
     {
         GD.Print("Exiting Alert State");
     }
 
-    public override AIState CheckState(Enemy enemy)
+    public override AIState CheckState(Character enemy)
     {
         if (enemy.Stats.UnitType == UnitType.Alien && PlayerInSight(enemy))
         {

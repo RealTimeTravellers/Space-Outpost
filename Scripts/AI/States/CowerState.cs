@@ -2,23 +2,23 @@ using Godot;
 
 public class CowerState : BaseState
 {
-    public override void Enter(Enemy aiController)
+    public override void Enter(Character aiController)
     {
         GD.Print("Entering Cower State");
     }
 
-    public override AIState Process(Enemy enemy)
+    public override AIState Process(Character enemy)
     {
         GD.Print("In Fear!");
         return AIState.Cower;
     }
 
-    public override void Exit(Enemy aiController)
+    public override void Exit(Character aiController)
     {
         GD.Print("Exiting Cower State");
     }
 
-    public override AIState CheckState(Enemy enemy)
+    public override AIState CheckState(Character enemy)
     {
         if (EnemyInSight(enemy))
         {

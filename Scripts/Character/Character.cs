@@ -10,11 +10,12 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 {
     public GridObject currentGrid = null;
 
+    [Export] public UnitStats Stats;
+    [Export] public Node Equipment;
+    [Export] public Node stateMachine;
     [Export] public bool move = false; // temp for test only
-
     [Export] public int firstRange = 10; // test
     [Export] public int secondRange = 10; // test
-
     [Export] public float range = 25; // test
 
     // More of an idea, make the non identified chracters show up but black
@@ -22,6 +23,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     [Export] public float visualRange = 35;
 
     public bool IsMyTurn {get; private set;} = false;
+    public bool isFriendly {get; private set;} = false;
 
     #region ICombat variables
     public bool Friendly { get; private set; } // will be set in ready according to subscene preference.
@@ -37,6 +39,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     {
         // read data here?
         base._Ready();
+        InitializeStats();
     }
 
     public override void _Process(double delta)
@@ -54,6 +57,24 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     {
         UnsubscribeFromEvents();
         base._ExitTree();
+    }
+
+    private void InitializeStats()
+    {
+        Friendly = isFriendly;
+        if (isFriendly)
+        {
+            PlayerStats playerStats = new PlayerStats(); // Initialize stats if player.
+            Stats = playerStats.CreateStatsForPlayerType(playerStats.PlayerType);
+            Equipment = new PlayerEquipment(Stats);
+        }
+        else
+        {
+            EnemyStats enemyStats = new EnemyStats(); // Initialize stats if enemy.
+            Stats = enemyStats.CreateStatsForEnemyType(enemyStats.EnemyType);
+            Equipment = new EnemyEquipment(Stats);
+            stateMachine = new EnemyAIController();
+        }
     }
 
     private void SubscribeToEvents()

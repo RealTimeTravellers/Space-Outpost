@@ -2,23 +2,23 @@ using Godot;
 
 public class PatrolState : BaseState
 {
-    public override void Enter(Enemy enemy)
+    public override void Enter(Character enemy)
     {
         GD.Print("Entering Patrol State");
     }
 
-    public override AIState Process(Enemy enemy)
+    public override AIState Process(Character enemy)
     {
         GD.Print("Patrolling!");
         return CheckState(enemy);
     }
 
-    public override void Exit(Enemy enemy)
+    public override void Exit(Character enemy)
     {
         GD.Print("Exiting Patrol State");
     }
 
-    public override AIState CheckState(Enemy enemy)
+    public override AIState CheckState(Character enemy)
     {
         if (enemy.Stats.UnitType == UnitType.Alien && PlayerInSight(enemy))
         {

@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-public class PlayerEquipment
+public partial class PlayerEquipment: Node
 {
     public PrimaryWeapon PrimaryWeapon { get; private set; }
     public SecondaryWeapon SecondaryWeapon { get; private set; }

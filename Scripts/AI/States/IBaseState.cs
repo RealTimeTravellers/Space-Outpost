@@ -1,6 +1,6 @@
 public interface IBaseState
 {
-    void Enter(Enemy enemy);
-    AIState Process(Enemy enemy);
-    void Exit(Enemy enemy);
+    void Enter(Character enemy);
+    AIState Process(Character enemy);
+    void Exit(Character enemy);
 }

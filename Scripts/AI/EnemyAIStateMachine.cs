@@ -35,7 +35,7 @@ public class EnemyAIStateMachine
 
 
 
-    public void ChangeState(AIState newState, Enemy aiCharacter)
+    public void ChangeState(AIState newState, Character aiCharacter)
     {
         AIState oldState = CurrentState;
         _states[CurrentState].Exit(aiCharacter);
@@ -45,7 +45,7 @@ public class EnemyAIStateMachine
         OnStateChanged?.Invoke(oldState, newState);
     }
 
-    public AIState UpdateCurrentState(Enemy aiCharacter)
+    public AIState UpdateCurrentState(Character aiCharacter)
     {
         if (!_states.ContainsKey(CurrentState))
         {

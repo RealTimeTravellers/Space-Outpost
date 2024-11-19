@@ -9,9 +9,9 @@ public partial class EnemyStats : UnitStats
         UnitType = UnitType.Alien;
     }
 
-    public UnitStats CreateStatsForEnemyType(EnemyType type)
+    public UnitStats CreateStatsForEnemyType(EnemyType enemyType)
     {
-        return type switch
+        return enemyType switch
         {
             EnemyType.Telepath => new TelepathStats(),
             EnemyType.Creeper => new CreeperStats(),

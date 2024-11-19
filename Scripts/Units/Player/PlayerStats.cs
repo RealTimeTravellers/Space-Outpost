@@ -10,9 +10,9 @@ public partial class PlayerStats : UnitStats
         UnitType = UnitType.Human;
     }
 
-    public UnitStats CreateStatsForPlayerType()
+    public UnitStats CreateStatsForPlayerType(PlayerType playerType)
     {
-        return PlayerType switch
+        return playerType switch
         {
             PlayerType.Soldier => new SoldierStats(),
             PlayerType.Sniper => new SniperStats(),
