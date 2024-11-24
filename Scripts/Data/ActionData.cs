@@ -1,3 +1,4 @@
+using System;
 using Godot;
 public partial class ActionData : Resource
 {
@@ -14,4 +15,10 @@ public partial class ActionData : Resource
     /// Meaning if 10, 20 degrees of coverage.
     /// </summary>
     [Export] public float supressiveFireDegree = 10;
+
+    /// <summary>
+    /// Need to have an empty constructor for Godot initialization.
+    /// Does not matter what you do inside needs to have no parameters, for a data resource.
+    /// </summary>
+    public ActionData(){}
 }

@@ -33,6 +33,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     public bool TakingCover { get ; private set ; }
     #endregion
 
+    [Export] private ActionData actionData = null;
     [Export] private int moveCost = 1; // take from a resource data
     [Export] private int firingCost = 2; // take from a resource data
     [Export] private int takeCoverCost = 2; // take from a resource data
