@@ -237,7 +237,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         
         CompletedTurn = false;
         TakingCover = false;
-        
+
         actionPoints = default; // predefined can make
         //throw new NotImplementedException();
     }
@@ -245,7 +245,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     private void OnPlayerMovementChanged(bool started)
     {
         if (!started) // ended
-            SearchForEnemies(true); // force a Query once.
+            SearchForEnemies(true); // force a Query once, to detect enemies
     }
 
     private void OnEnemyMovementChanged(bool started)
@@ -258,7 +258,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         else
         {
             doQuery = false;
-            SearchForEnemies(true); // force a query once
+            SearchForEnemies(true); // to see if this can see enemy
         }
     }
 }
