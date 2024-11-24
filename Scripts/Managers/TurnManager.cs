@@ -27,6 +27,7 @@ public partial class TurnManager : Node
     /// True if completed. false if not completed
     /// </summary>
     [Export] public Godot.Collections.Array<Character> playerCharacters = new();
+    [Export] public Godot.Collections.Array<Character> enemyCharacters = new();
     //[Export] public Godot.Collections.Dictionary<Character, bool> playerCharacterTurns = new();
 
     private TurnManager()
@@ -37,8 +38,16 @@ public partial class TurnManager : Node
     public override void _Ready()
     {
         SetInitialTurn();
-        PlayerMovementChanged += OnPlayerMovementChanged;
+        Instance.PlayerMovementChanged += Instance.OnPlayerMovementChanged;
+        Instance.EnemyMovementChanged += Instance.OnEnemyMovementChanged;
         base._Ready();
+    }
+
+    public override void _ExitTree()
+    {
+        Instance.PlayerMovementChanged -= Instance.OnPlayerMovementChanged;
+        Instance.EnemyMovementChanged -= Instance.OnEnemyMovementChanged;
+        base._ExitTree();
     }
 
     private async void SetInitialTurn()
@@ -81,7 +90,24 @@ public partial class TurnManager : Node
 
             if (allCompletedTurns)
                 TurnChanged.Invoke(false); // start enemy turn
+            
         }
 
+    }
+
+    private void OnEnemyMovementChanged(bool started)
+    {
+        if (started) return;
+
+        if (!started) // enemy turn finished
+        {
+            bool allCompletedTurns = true;
+
+            foreach (Character enemy in enemyCharacters)
+                allCompletedTurns |= enemy.CompletedTurn;
+
+            if (allCompletedTurns)
+                TurnChanged.Invoke(true); // start player turn
+        }
     }
 }

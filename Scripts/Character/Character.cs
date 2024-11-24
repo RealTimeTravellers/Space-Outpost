@@ -88,6 +88,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             stateMachine = new EnemyAIController();
 
             EnemyManager.Instance.allEnemies.Add(this);
+            TurnManager.Instance.enemyCharacters.Add(this);
         }
 
         actionPoints = actionData.defaultActionPoints;
@@ -220,10 +221,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             // do movement
             GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // TEST
             // TODO: make the mesh agent move using characterBody, or tweens if no verticality
+            TurnManager.Instance.StartPlayerMovement();
+            TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
             CompleteAction(actionData.moveCost);
         }
-
-        throw new NotImplementedException();
     }
 
     public void TakeCover()
@@ -252,12 +253,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     private void OnTurnChanged(bool playerTurn)
     {
         if (playerTurn)
+        {
             IsMyTurn = false;
-        
-        CompletedTurn = false;
-        IsTakingCover = false;
-
-        actionPoints = actionData.defaultActionPoints;
+            CompletedTurn = false;
+            IsTakingCover = false;
+            actionPoints = actionData.defaultActionPoints;
+        }
     }
 
     private void OnPlayerMovementChanged(bool started)
