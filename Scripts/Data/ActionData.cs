@@ -17,6 +17,8 @@ public partial class ActionData : Resource
     /// </summary>
     [Export] public float supressiveFireDegree = 10;
 
+    [Export] public float coverChanceMultiplier = 0.75f;
+
     /// <summary>
     /// Need to have an empty constructor for Godot initialization.
     /// Does not matter what you do inside needs to have no parameters, for a data resource.

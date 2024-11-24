@@ -9,6 +9,6 @@ public interface ICombat
 
     // methods
     public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies);
-    public void Attack(ICombat enemy, float chance);
+    public void Attack(Character enemy, float chance);
     public void TakeDamage(int damage);
 }

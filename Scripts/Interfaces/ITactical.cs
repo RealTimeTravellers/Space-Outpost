@@ -1,6 +1,6 @@
 public interface ITactical
 {
-    public bool TakingCover {get;}
+    public bool IsTakingCover {get;}
 
     /// <summary>
     /// Movement, from current grid to target grid

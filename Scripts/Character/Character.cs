@@ -30,7 +30,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     #endregion
 
     #region ITactical Variables
-    public bool TakingCover { get ; private set ; }
+    public bool IsTakingCover { get ; private set ; }
     #endregion
 
     [Export] private ActionData actionData = null;
@@ -41,6 +41,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     private Godot.Collections.Array<Character> enemiosInLos = new();
     [Export] private int queriesPerSecond = 10;
     [Export] private bool doQuery = false;
+
+    private RandomNumberGenerator rng = new();
 
     public override void _Ready()
     {
@@ -170,11 +172,24 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         return enemiesWithLos;
     }
 
-    public void Attack(ICombat enemy, float chance)
+    /// <summary>
+    /// Accuracy is dependent on weapon and range as well as skill
+    /// </summary>
+    /// <param name="enemy"></param>
+    /// <param name="accuracy"></param>
+    public void Attack(Character enemy, float accuracy)
     {
         actionPoints -= actionData.attackCost;
+
         // TODO: chance calculations here define if miss or hit
-        // if (hit)
+        float chance;
+        if (enemy.IsTakingCover)
+             chance = accuracy * actionData.coverChanceMultiplier;
+        else
+            chance = accuracy;
+
+        float hitChance = rng.RandfRange(0f, 1f);
+        if (hitChance <= chance)
             enemy.TakeDamage(Damage);
             // and play animation
         // else
@@ -207,7 +222,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
     public void TakeCover()
     {
-        TakingCover = true;
+        IsTakingCover = true;
         CompleteAction(actionData.takeCoverCost);
     }
 
@@ -234,7 +249,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             IsMyTurn = false;
         
         CompletedTurn = false;
-        TakingCover = false;
+        IsTakingCover = false;
 
         actionPoints = actionData.defaultActionPoints;
         //throw new NotImplementedException();
