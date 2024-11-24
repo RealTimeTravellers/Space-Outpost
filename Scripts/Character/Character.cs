@@ -1,12 +1,9 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
-public partial class Character : CharacterBody3D, ICombat// don't really know why is this character body
+public partial class Character : CharacterBody3D, ICombat, ITactical
 {
     public GridObject currentGrid = null;
 
@@ -164,6 +161,28 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         if (Health <= 0)
             Die();
 
+    }
+    #endregion
+
+    #region ITactical Implementations
+    public void Move(GridObject targetGrid)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void TakeCover()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void StandToEngage()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SupressiveFire()
+    {
+        throw new NotImplementedException();
     }
     #endregion
 
