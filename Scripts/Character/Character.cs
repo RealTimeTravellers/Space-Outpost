@@ -39,7 +39,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     [Export] private int standToEngageCost = 2; // take from a resource data
     [Export] private int supressiveFireCost = 2; // take from a resource data
 
-    private int actionPoints = 2;
+    private int actionPoints = 2; // take form a resource data
     private bool CompletedTurn = false;
 
     private Godot.Collections.Array<Character> enemiosInLos = new();
@@ -199,12 +199,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         if(!CompletedTurn)
         {
             // do movement
-            GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // temp
-            // TODO: make the mesh agent move using characterBody
+            GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // TEST
+            // TODO: make the mesh agent move using characterBody, or tweens if no verticality
             CompleteAction(moveCost);
         }
 
-    
         throw new NotImplementedException();
     }
 
@@ -238,6 +237,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         
         CompletedTurn = false;
         TakingCover = false;
+        
+        actionPoints = default; // predefined can make
         //throw new NotImplementedException();
     }
 
