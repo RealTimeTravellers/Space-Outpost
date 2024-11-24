@@ -178,15 +178,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     /// <summary>
     /// Accuracy is dependent on weapon and range as well as skill
     /// </summary>
-    /// <param name="enemy"></param>
+    /// <param name="target"></param>
     /// <param name="accuracy"></param>
-    public void Attack(Character enemy, float accuracy)
+    public void Attack(Character target, float accuracy)
     {
         actionPoints -= actionData.attackCost;
 
         // TODO: chance calculations here define if miss or hit
         float chance;
-        if (enemy.IsTakingCover)
+        if (target.IsTakingCover)
              chance = accuracy * actionData.coverChanceMultiplier;
         else
             chance = accuracy;
@@ -194,7 +194,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         float hitChance = rng.RandfRange(0f, 1f);
 
         if (hitChance <= chance)
-            enemy.TakeDamage(Damage);
+            target.TakeDamage(Damage);
             // and play animation
         // else
             // shoot animation but no hit
@@ -218,12 +218,24 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     {
         if(!CompletedTurn)
         {
-            // do movement
-            GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // TEST
-            // TODO: make the mesh agent move using characterBody, or tweens if no verticality
-            TurnManager.Instance.StartPlayerMovement();
-            TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
-            CompleteAction(actionData.moveCost);
+            if (IsFriendly)
+            {
+                 // do movement
+                GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // TEST
+                // TODO: make the mesh agent move using characterBody, or tweens if no verticality
+                TurnManager.Instance.StartPlayerMovement();
+                TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
+                CompleteAction(actionData.moveCost);
+            }
+            else
+            {
+                // same thing but moves on its own and enemy event runs
+                TurnManager.Instance.StartPlayerMovement();
+                TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
+                CompleteAction(actionData.moveCost);
+
+                throw new NotImplementedException();
+            }
         }
     }
 
@@ -243,7 +255,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     public void SupressiveFire()
     {
         // TODO: apply supressive fire protocol
-        // TODO: empty guns magazine
+        // TODO: empty guns' magazine
         CompleteAction(actionData.supressiveFireCost);
         throw new NotImplementedException();
     }
@@ -274,7 +286,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             doQuery = true;
             SearchForEnemies();
         }
-        else
+        else // enemy finished moving
         {
             doQuery = false;
             SearchForEnemies(true); // to see if this can see enemy
