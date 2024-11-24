@@ -194,6 +194,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             // and play animation
         // else
             // shoot animation but no hit
+
+        throw new NotImplementedException();
+
     }
 
     public void TakeDamage(int damage)
@@ -209,6 +212,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     #region ITactical Implementations
     public void Move(GridObject targetGrid)
     {
+        throw new NotImplementedException();
         if(!CompletedTurn)
         {
             // do movement
@@ -252,7 +256,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         IsTakingCover = false;
 
         actionPoints = actionData.defaultActionPoints;
-        //throw new NotImplementedException();
     }
 
     private void OnPlayerMovementChanged(bool started)
