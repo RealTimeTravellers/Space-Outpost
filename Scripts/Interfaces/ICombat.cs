@@ -6,7 +6,6 @@ public interface ICombat
     public bool Friendly {get;}
     public int Health {get;}
     public int Damage {get;}
-    public bool TakingCover {get;}
 
     // methods
     public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies);
