@@ -189,6 +189,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             chance = accuracy;
 
         float hitChance = rng.RandfRange(0f, 1f);
+        
         if (hitChance <= chance)
             enemy.TakeDamage(Damage);
             // and play animation
