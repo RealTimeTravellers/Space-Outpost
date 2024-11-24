@@ -38,6 +38,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     public override void _Ready()
     {
         InitializeStats();
+        TurnManager.Instance.playerCharacters.Add(this);
         TurnManager.Instance.playerCharacterTurns.Add(this, false);
         SubscribeToEvents();
         base._Ready(); // this signal signifies its completed, keep it at the bottom.
@@ -49,6 +50,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         {
             move = !move;
             GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition;
+            Move(GridManager.Instance.selectedGrid);
         }
 
         base._Process(delta);
@@ -167,6 +169,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     #region ITactical Implementations
     public void Move(GridObject targetGrid)
     {
+        
         throw new NotImplementedException();
     }
 
