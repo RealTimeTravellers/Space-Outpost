@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
@@ -26,9 +27,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     public bool Friendly { get; private set; } // will be set in ready according to subscene preference.
     public int Health { get; private set; }
     public int Damage { get ; private set ; }
+    public bool TakingCover { get ; private set ; }
     #endregion
 
-    private int movementPoint = 2;
+    [Export] private int moveCost = 1; // take from a resource data
+    [Export] private int firingCost = 2; // take from a resource data
+    [Export] private int takeCoverCost = 2; // take from a resource data
+    [Export] private int standToEngageCost = 2; // take from a resource data
+    [Export] private int supressiveFireCost = 2; // take from a resource data
+
+    private int actionPoints = 2;
     private bool CompletedTurn = false;
 
     private Godot.Collections.Array<Character> enemiosInLos = new();
@@ -49,7 +57,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         if (move) // test
         {
             move = !move;
-            GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition;
             Move(GridManager.Instance.selectedGrid);
         }
 
@@ -110,6 +117,23 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         }
     }
 
+    private void CompleteAction(int cost)
+    {
+        this.actionPoints -= cost;
+        CheckTurnEnd();
+    }
+
+    private bool CheckTurnEnd()
+    {
+        if (actionPoints <= 0)
+        {
+            EndTurn();
+            return true;
+        }
+        else
+            return false;
+    }
+
     private void EndTurn()
     {
         CompletedTurn = true;
@@ -147,7 +171,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
     public void Attack(ICombat enemy, float chance)
     {
-        movementPoint -= 2;
+        actionPoints -= 2;
         // TODO: chance calculations here define if miss or hit
         // if (hit)
             enemy.TakeDamage(Damage);
@@ -169,22 +193,36 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     #region ITactical Implementations
     public void Move(GridObject targetGrid)
     {
-        
+        if(!CompletedTurn)
+        {
+            // do movement
+            GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // temp
+            // TODO: make the mesh agent move using characterBody
+            CompleteAction(moveCost);
+        }
+
+    
         throw new NotImplementedException();
     }
 
     public void TakeCover()
     {
-        throw new NotImplementedException();
+        TakingCover = true;
+        CompleteAction(takeCoverCost);
     }
 
     public void StandToEngage()
     {
+        // TODO: apply query and engage protocol
+        CompleteAction(standToEngageCost);
         throw new NotImplementedException();
     }
 
     public void SupressiveFire()
     {
+        // TODO: apply supressive fire protocol
+        // TODO: empty guns magazine
+        CompleteAction(supressiveFireCost);
         throw new NotImplementedException();
     }
     #endregion
@@ -196,7 +234,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             IsMyTurn = false;
         
         CompletedTurn = false;
-
+        TakingCover = false;
         //throw new NotImplementedException();
     }
 

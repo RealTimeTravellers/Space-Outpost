@@ -16,7 +16,7 @@ public interface ITactical
     public void StandToEngage();
 
     /// <summary>
-    /// Fires at every moving enemy in a limited field of view, every shot uses ammo, if out of ammo this action is ceased.
+    /// Fires at every moving enemy in a limited field of view, empties the magazine.
     /// </summary>
     public void SupressiveFire();
 }
