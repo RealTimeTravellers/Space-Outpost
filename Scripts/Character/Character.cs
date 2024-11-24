@@ -212,7 +212,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     #region ITactical Implementations
     public void Move(GridObject targetGrid)
     {
-        throw new NotImplementedException();
         if(!CompletedTurn)
         {
             // do movement
