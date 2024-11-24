@@ -123,7 +123,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     private void CompleteAction(int cost)
     {
         this.actionPoints -= cost;
-        CheckTurnEnd();
+        CompletedTurn = CheckTurnEnd();
     }
 
     private bool CheckTurnEnd()
