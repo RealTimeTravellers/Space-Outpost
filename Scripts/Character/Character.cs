@@ -34,11 +34,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     #endregion
 
     [Export] private ActionData actionData = null;
-    [Export] private int moveCost = 1; // take from a resource data
-    [Export] private int firingCost = 2; // take from a resource data
-    [Export] private int takeCoverCost = 2; // take from a resource data
-    [Export] private int standToEngageCost = 2; // take from a resource data
-    [Export] private int supressiveFireCost = 2; // take from a resource data
 
     private int actionPoints = 2; // take form a resource data
     private bool CompletedTurn = false;
@@ -89,6 +84,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             Equipment = new EnemyEquipment(Stats);
             stateMachine = new EnemyAIController();
         }
+
+        actionPoints = actionData.defaultActionPoints;
     }
 
     private void SubscribeToEvents()
@@ -175,7 +172,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
     public void Attack(ICombat enemy, float chance)
     {
-        actionPoints -= 2;
+        actionPoints -= actionData.attackCost;
         // TODO: chance calculations here define if miss or hit
         // if (hit)
             enemy.TakeDamage(Damage);
@@ -202,7 +199,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             // do movement
             GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // TEST
             // TODO: make the mesh agent move using characterBody, or tweens if no verticality
-            CompleteAction(moveCost);
+            CompleteAction(actionData.moveCost);
         }
 
         throw new NotImplementedException();
@@ -211,13 +208,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     public void TakeCover()
     {
         TakingCover = true;
-        CompleteAction(takeCoverCost);
+        CompleteAction(actionData.takeCoverCost);
     }
 
     public void StandToEngage()
     {
         // TODO: apply query and engage protocol
-        CompleteAction(standToEngageCost);
+        CompleteAction(actionData.standToEngageCost);
         throw new NotImplementedException();
     }
 
@@ -225,7 +222,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     {
         // TODO: apply supressive fire protocol
         // TODO: empty guns magazine
-        CompleteAction(supressiveFireCost);
+        CompleteAction(actionData.supressiveFireCost);
         throw new NotImplementedException();
     }
     #endregion
@@ -239,7 +236,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         CompletedTurn = false;
         TakingCover = false;
 
-        actionPoints = default; // predefined can make
+        actionPoints = actionData.defaultActionPoints;
         //throw new NotImplementedException();
     }
 
