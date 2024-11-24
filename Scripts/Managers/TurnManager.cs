@@ -1,4 +1,5 @@
 using Godot;
+using Godot.NativeInterop;
 using System;
 using System.Threading;
 
@@ -20,6 +21,11 @@ public partial class TurnManager : Node
     /// if started True, Flase when finished
     /// </summary>
     public event Action<bool> PlayerMovementChanged;
+
+    /// <summary>
+    /// True if completed. false if not completed
+    /// </summary>
+    [Export] public Godot.Collections.Dictionary<Character, bool> playerCharacterTurns = new();
 
     private TurnManager()
     {

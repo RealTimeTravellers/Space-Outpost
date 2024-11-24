@@ -31,15 +31,19 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     public int Damage { get ; private set ; }
     #endregion
 
+    private int movementPoint = 2;
+    private bool CompletedTurn = false;
+
     private Godot.Collections.Array<Character> enemiosInLos = new();
     [Export] private int queriesPerSecond = 10;
     [Export] private bool doQuery = false;
 
     public override void _Ready()
     {
-        // read data here?
-        base._Ready();
         InitializeStats();
+        TurnManager.Instance.playerCharacterTurns.Add(this, false);
+        SubscribeToEvents();
+        base._Ready(); // this signal signifies its completed, keep it at the bottom.
     }
 
     public override void _Process(double delta)
@@ -107,8 +111,16 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         }
     }
 
+    private void EndTurn()
+    {
+        CompletedTurn = true;
+        TurnManager.Instance.playerCharacterTurns[this] = true;
+    }
+
     private void Die()
     {
+        CompletedTurn = true;
+        // play Death animation and sound
         throw new NotImplementedException();
     }
 
@@ -136,6 +148,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 
     public void Attack(ICombat enemy, float chance)
     {
+        movementPoint -= 2;
         // TODO: chance calculations here define if miss or hit
         // if (hit)
             enemy.TakeDamage(Damage);
@@ -160,7 +173,9 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         if (playerTurn)
             IsMyTurn = false;
         
-        throw new NotImplementedException();
+        CompletedTurn = false;
+
+        //throw new NotImplementedException();
     }
 
     private void OnPlayerMovementChanged(bool started)
