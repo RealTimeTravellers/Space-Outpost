@@ -1,6 +1,7 @@
 using Godot;
 using Godot.NativeInterop;
 using System;
+using System.Linq;
 using System.Threading;
 
 public partial class TurnManager : Node
@@ -26,7 +27,7 @@ public partial class TurnManager : Node
     /// True if completed. false if not completed
     /// </summary>
     [Export] public Godot.Collections.Array<Character> playerCharacters = new();
-    [Export] public Godot.Collections.Dictionary<Character, bool> playerCharacterTurns = new();
+    //[Export] public Godot.Collections.Dictionary<Character, bool> playerCharacterTurns = new();
 
     private TurnManager()
     {
@@ -36,6 +37,7 @@ public partial class TurnManager : Node
     public override void _Ready()
     {
         SetInitialTurn();
+        PlayerMovementChanged += OnPlayerMovementChanged;
         base._Ready();
     }
 
@@ -64,5 +66,22 @@ public partial class TurnManager : Node
     public void EndPlayerMovement()
     {
         PlayerMovementChanged.Invoke(false);
+    }
+
+    private void OnPlayerMovementChanged(bool started)
+    {
+        if(started) return;
+
+        if (!started) // player turn finished
+        {
+            bool allCompletedTurns = true;
+
+            foreach (Character player in playerCharacters)
+                allCompletedTurns |= player.CompletedTurn;
+
+            if (allCompletedTurns)
+                TurnChanged.Invoke(false); // start enemy turn
+        }
+
     }
 }

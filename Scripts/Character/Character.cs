@@ -21,10 +21,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     [Export] public float visualRange = 35;
 
     public bool IsMyTurn {get; private set;} = false;
-    public bool IsFriendly {get; private set;} = false;
+    [Export] public bool friendly; // FOR TEST
 
     #region ICombat Variables
-    public bool Friendly { get; private set; } // will be set in ready according to subscene preference.
+    public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
     public int Health { get; private set; }
     public int Damage { get ; private set ; }
     #endregion
@@ -36,7 +36,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     [Export] private ActionData actionData = null;
 
     private int actionPoints = 2; // take form a resource data
-    private bool CompletedTurn = false;
+    public bool CompletedTurn {get; private set;} = false;
 
     private Godot.Collections.Array<Character> enemiosInLos = new();
     [Export] private int queriesPerSecond = 10;
@@ -47,8 +47,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     public override void _Ready()
     {
         InitializeStats();
-        TurnManager.Instance.playerCharacters.Add(this);
-        TurnManager.Instance.playerCharacterTurns.Add(this, false);
         SubscribeToEvents();
         base._Ready(); // this signal signifies its completed, keep it at the bottom.
     }
@@ -72,12 +70,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
     private void InitializeStats()
     {
-        Friendly = IsFriendly;
+        IsFriendly = friendly; // FOR TEST
         if (IsFriendly)
         {
             PlayerStats playerStats = new PlayerStats(); // Initialize stats if player.
             Stats = playerStats.CreateStatsForPlayerType(playerStats.PlayerType);
             Equipment = new PlayerEquipment(Stats);
+            
+            TurnManager.Instance.playerCharacters.Add(this);
+            //TurnManager.Instance.playerCharacterTurns.Add(this, false);
         }
         else
         {
@@ -85,6 +86,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             Stats = enemyStats.CreateStatsForEnemyType(enemyStats.EnemyType);
             Equipment = new EnemyEquipment(Stats);
             stateMachine = new EnemyAIController();
+
+            EnemyManager.Instance.allEnemies.Add(this);
         }
 
         actionPoints = actionData.defaultActionPoints;
@@ -140,7 +143,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     private void EndTurn()
     {
         CompletedTurn = true;
-        TurnManager.Instance.playerCharacterTurns[this] = true;
+        //TurnManager.Instance.playerCharacterTurns[this] = true;
     }
 
     private void Die()
@@ -153,8 +156,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     #region ICombat Implementations
     public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies)
     {
-        // this needs to be actiove in enemy turn
-        // this needs to be actiove during this characters movement
+        // this needs to be active in enemy turn
         // this needs to be active last time once moving is done
 
         Godot.Collections.Array<Character> enemiesWithLos = new();
@@ -189,7 +191,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             chance = accuracy;
 
         float hitChance = rng.RandfRange(0f, 1f);
-        
+
         if (hitChance <= chance)
             enemy.TakeDamage(Damage);
             // and play animation
