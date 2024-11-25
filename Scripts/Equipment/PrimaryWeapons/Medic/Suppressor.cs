@@ -6,7 +6,8 @@ public partial class Suppressor : PrimaryWeapon
         Description = "Susturucu özelliği sayesinde sessiz saldırılar yapabilir. Düşman hatlarını bozmak için idealdir.";
         PlayerType = PlayerType.Medic;
         WeaponType = PrimaryWeaponType.Suppressor;
-        AmmoClip = 2;
+        MaxAmmoClip = 2;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 6;
         Range = 15;
         MinDamage = 3;

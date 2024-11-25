@@ -4,7 +4,8 @@ public partial class Viper : SecondaryWeapon
     {
         Name = "Viper 9mm";
         Description = "Hafif vuran, ancak hızlı ateş edebilen ve dengeli bir isabet oranına sahip tabanca. Mermi kapasitesi yüksektir.";
-        AmmoClip = 4;
+        MaxAmmoClip = 4;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 10;
         MinDamage = 2;
         MaxDamage = 4;

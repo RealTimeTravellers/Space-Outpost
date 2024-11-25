@@ -7,8 +7,6 @@ public class PlayerShootingState : PlayerState
     public override void Enter(Character character)
     {
         GD.Print("Entering Shooting State");
-        _shootCooldown = character.Equipment.CurrentWeapon.FireRate;
-        
         // Silahı ateşle
         character.Equipment.CurrentWeapon.Fire();
     }
@@ -33,7 +31,6 @@ public class PlayerShootingState : PlayerState
             {
                 // Tekrar ateş et
                 character.Equipment.CurrentWeapon.Fire();
-                _shootCooldown = character.Equipment.CurrentWeapon.FireRate;
                 return PlayerStateType.Shooting;
             }
             

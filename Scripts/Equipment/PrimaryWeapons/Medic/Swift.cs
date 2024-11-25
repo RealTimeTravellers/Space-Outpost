@@ -6,7 +6,8 @@ public partial class Swift : PrimaryWeapon
         Description = "Hızlı ateş hızı ve yüksek etki gücü ile takım arkadaşlarını iyileştirirken düşmanlara karşı da etkili olabilir.";
         PlayerType = PlayerType.Medic;
         WeaponType = PrimaryWeaponType.Swift;
-        AmmoClip = 2;
+        MaxAmmoClip = 2;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 13;
         Range = 12;
         MinDamage = 4;

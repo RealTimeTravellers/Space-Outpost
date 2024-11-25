@@ -6,7 +6,8 @@ public partial class Thumper : PrimaryWeapon
         Description = "Clipte az mermi bulunan (4 mermi), ancak her atışında büyük hasar ve geniş etki alanı sağlayan bir shotgun.";
         PlayerType = PlayerType.Engineer;
         WeaponType = PrimaryWeaponType.Thumper;
-        AmmoClip = 3;
+        MaxAmmoClip = 3;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 4;
         Range = 9;
         MinDamage = 3;

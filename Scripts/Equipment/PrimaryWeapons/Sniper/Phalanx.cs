@@ -8,7 +8,8 @@ public partial class Phalanx : PrimaryWeapon
         Description = "Kurulum gerektiren, menzili çok uzun olan ve steady özelliği ile ek isabet sağlayan bir sniper tüfeği.";
         PlayerType = PlayerType.Sniper;
         WeaponType = PrimaryWeaponType.Phalanx;
-        AmmoClip = 1;
+        MaxAmmoClip = 1;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 15;
         MinDamage = 4;
         MaxDamage = 6;

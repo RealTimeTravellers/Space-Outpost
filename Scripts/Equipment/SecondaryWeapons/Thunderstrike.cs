@@ -4,7 +4,8 @@ public partial class Thunderstrike : SecondaryWeapon
     {
         Name = "Thunderstrike .50";
         Description = "Ağır vuran, sınırlı cephane kapasitesine sahip tabanca. Her atışta yüksek hasar verir ancak az sayıda mermi içerir.";
-        AmmoClip = 2;
+        MaxAmmoClip = 2;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 4;
         MinDamage = 4;
         MaxDamage = 5;

@@ -6,6 +6,7 @@ public partial class EquipmentController : Node
     private PrimaryWeapon _currentPrimaryWeapon;
     private SecondaryWeapon _currentSecondaryWeapon;
     private Accessory _currentAccessory;
+    private Weapon _currentWeapon;
     
     private List<PrimaryWeapon> _primaryWeapons = new();
     private List<SecondaryWeapon> _secondaryWeapons = new();
@@ -14,6 +15,7 @@ public partial class EquipmentController : Node
     public PrimaryWeapon CurrentPrimaryWeapon => _currentPrimaryWeapon;
     public SecondaryWeapon CurrentSecondaryWeapon => _currentSecondaryWeapon;
     public Accessory CurrentAccessory => _currentAccessory;
+    public Weapon CurrentWeapon => _currentWeapon;
 
     private UnitStats _stats;
 
@@ -33,7 +35,12 @@ public partial class EquipmentController : Node
 
         _currentPrimaryWeapon = weapon;
         _primaryWeapons.Add(weapon);
-        weapon.ApplyEffects(_stats);
+        
+        if (_currentWeapon == null)
+        {
+            _currentWeapon = weapon;
+            weapon.ApplyEffects(_stats);
+        }
     }
 
     // Belirli bir player type için tüm silahları yükle
@@ -62,7 +69,12 @@ public partial class EquipmentController : Node
 
         _currentSecondaryWeapon = weapon;
         _secondaryWeapons.Add(weapon);
-        weapon.ApplyEffects(_stats);
+        
+        if (_currentWeapon == null)
+        {
+            _currentWeapon = weapon;
+            weapon.ApplyEffects(_stats);
+        }
     }
 
     public void EquipAccessory(AccessoryType accessoryType)
@@ -79,9 +91,35 @@ public partial class EquipmentController : Node
         accessory.ApplyEffects(_stats);
     }
 
+        public void SwitchWeapon()
+    {
+        if (_currentWeapon == null) return;
+
+        _currentWeapon.RemoveEffects(_stats);
+        
+        if (_currentWeapon == _currentPrimaryWeapon)
+        {
+            _currentWeapon = _currentSecondaryWeapon;
+        }
+        else
+        {
+            _currentWeapon = _currentPrimaryWeapon;
+        }
+        
+        _currentWeapon?.ApplyEffects(_stats);
+    }
+
     public bool NeedsReload()
     {
-        return _currentPrimaryWeapon?.AmmoClip <= 0 || _currentSecondaryWeapon?.AmmoClip <= 0;
+        if (_currentWeapon is PrimaryWeapon primaryWeapon)
+        {
+            return primaryWeapon.AmmoClip <= 0;
+        }
+        if (_currentWeapon is SecondaryWeapon secondaryWeapon)
+        {
+            return secondaryWeapon.AmmoClip <= 0;
+        }
+        return false;
     }
 
     public void Reload()
@@ -89,12 +127,13 @@ public partial class EquipmentController : Node
         // Reload mantığı burada implement edilecek
     }
 
-    public int GetCurrentWeaponDamage(bool isPrimary = true)
+    public int GetCurrentWeaponDamage()
     {
-        if (isPrimary)
-        {
-            return _currentPrimaryWeapon?.DealDamage() ?? 0;
-        }
-        return _currentSecondaryWeapon?.DealDamage() ?? 0;
+        return (_currentWeapon as dynamic)?.DealDamage() ?? 0;
+    }
+    
+    public Equipment GetCurrentWeapon()
+    {
+        return CurrentWeapon;  
     }
 }

@@ -6,7 +6,8 @@ public partial class GuardianLight : PrimaryWeapon
         Description = "Dengeli bir silah olup, sürekli ateşleme kapasitesi sayesinde savunma ve destek görevlerinde etkilidir.";
         PlayerType = PlayerType.Medic;
         WeaponType = PrimaryWeaponType.Guardian;
-        AmmoClip = 3;
+        MaxAmmoClip = 3;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 12;
         Range = 12;
         MinDamage = 3;

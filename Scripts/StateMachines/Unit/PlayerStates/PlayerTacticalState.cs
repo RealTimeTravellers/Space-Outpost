@@ -9,21 +9,20 @@ public class PlayerTacticalState : PlayerState
     public override PlayerStateType Process(Character character)
     {
         // State değişim mantığı
-        if (character.Stats.CurrentHealth <= 0)
+        if (character.Stats.Health.GetValue() <= 0)
             return PlayerStateType.Death;
             
         if (character.Equipment.CurrentWeapon.NeedsReload())
             return PlayerStateType.Reloading;
             
-        if (EnemyInSight(character) && !character.IsInCover())
+        if (EnemyInSight(character) && !character.IsInCover)
             return PlayerStateType.TakingCover;
             
-        return PlayerStateType.Tactical;
+        return PlayerStateType.Idle;
     }
 
     public override void Exit(Character character)
     {
-        // Normal hareket hızına dön
-        character.Stats.MovementSpeed /= 0.7f;
+
     }
 }

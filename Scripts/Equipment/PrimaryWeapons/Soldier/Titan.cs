@@ -6,7 +6,8 @@ public partial class Titan : PrimaryWeapon
         Description = "Yüksek hasar veren, tek atışta düşmanı etkisiz hale getirebilen bir saldırı tüfeği.";
         PlayerType = PlayerType.Soldier;
         WeaponType = PrimaryWeaponType.Titan;
-        AmmoClip = 5;
+        MaxAmmoClip = 5;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 11;
         MinDamage = 3;
         MaxDamage = 7;

@@ -6,7 +6,8 @@ public partial class Hawkeye : PrimaryWeapon
         Description = "Az mermisi olan (3 mermi), tek atışlı ve isabet oranı yüksek tek atışlı saldırı tüfeği.";
         PlayerType = PlayerType.Soldier;
         WeaponType = PrimaryWeaponType.Hawkeye;
-        AmmoClip = 3;
+        MaxAmmoClip = 3;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 15;
         MinDamage = 4;
         MaxDamage = 6;

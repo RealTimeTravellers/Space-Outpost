@@ -6,7 +6,8 @@ public partial class Cerebus : PrimaryWeapon
         Description = "Düşük isabet oranına sahip (4 mermi) ancak her ateşte üçlü burst atış yapan bir saldırı tüfeği.";
         PlayerType = PlayerType.Soldier;
         WeaponType = PrimaryWeaponType.Cerberus;
-        AmmoClip = 4;
+        MaxAmmoClip = 4;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 13;
         Range = 15;
         MinDamage = 3;

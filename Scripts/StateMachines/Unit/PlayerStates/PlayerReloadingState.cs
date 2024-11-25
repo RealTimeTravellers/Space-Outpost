@@ -13,7 +13,6 @@ public class PlayerReloadingState : PlayerState
     public override void Enter(Character character)
     {
         GD.Print("Entering Reloading State");
-        _reloadTimer = character.Equipment.CurrentWeapon.ReloadTime;
         // Reload animasyonunu başlat
     }
 
@@ -29,9 +28,9 @@ public class PlayerReloadingState : PlayerState
         if (_reloadTimer <= 0)
         {
             character.Equipment.CurrentWeapon.Reload();
-            
+
             // Önceki state'e dön
-            if (character.IsInCover())
+            if (character.IsInCover)
                 return PlayerStateType.TakingCover;
                 
             if (Input.IsActionPressed("aim"))
