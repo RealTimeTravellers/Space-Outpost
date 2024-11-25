@@ -1,15 +1,15 @@
-public partial class EngineerStats : UnitStats
+public partial class EngineerStats : StatContainer
 {
     public EngineerStats() : base()
     {
-        Health.SetDefaultValue(6);
-        Armor.SetDefaultValue(4);
-        Accuracy.SetDefaultValue(60);
-        MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(18);
-        ActionPoints.SetDefaultValue(2);
-        Evasion.SetDefaultValue(10);
-        CriticalHitChance.SetDefaultValue(30);
-        Perception.SetDefaultValue(80);
+        Health = 6;
+        Armor = 4;
+        Accuracy = 60;
+        MovementRange = 5;
+        Morale = 18;
+        ActionPoints = 2;
+        Evasion = 10;
+        CriticalHitChance = 30;
+        Perception = 80;
     }
 }

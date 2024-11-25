@@ -10,8 +10,8 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 {
     public GridObject currentGrid = null;
 
-    // Stats and equipment
-    [Export] public UnitStats Stats;
+    // Stats and equipment - EXPORT etme problemi.
+    public UnitStats Stats;
 
     // Equipment controller
     [Export] public EquipmentController Equipment { get; private set; }
@@ -82,6 +82,8 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
             Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
             Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
             Equipment.EquipAccessory(AccessoryType.FragGrenade);
+
+            
         }
         else
         {

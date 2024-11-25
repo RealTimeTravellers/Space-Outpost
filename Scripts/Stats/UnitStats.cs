@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public enum UnitType
@@ -7,8 +8,9 @@ public enum UnitType
 }
 
 
-public partial class UnitStats : Resource
+public partial class UnitStats 
 {
+    [Export] public StatContainer StatContainer { get; private set; }
     [Export] public UnitType UnitType { get; set; } = UnitType.Human;
     public Stat Health { get; private set; }
     public Stat Armor { get; private set; }
@@ -20,22 +22,23 @@ public partial class UnitStats : Resource
     public Stat Evasion { get; private set; }
     public Stat CriticalHitChance { get; private set; }
 
-    public UnitStats()
+    public UnitStats(StatContainer statContainer)
     {
-        Health = new Stat(0, 8);
-        Armor = new Stat(0, 6);
-        Accuracy = new Stat(30, 100);
-        MovementRange = new Stat(0, 10);
-        Morale = new Stat(0, 8);
-        ActionPoints = new Stat(1, 3);
-        Perception = new Stat(0, 100);
-        Evasion = new Stat(0, 30);
-        CriticalHitChance = new Stat(0, 100);
+        if (statContainer == null)
+            throw new ArgumentNullException(nameof(statContainer), "StatContainer cannot be null.");
+        StatContainer = statContainer;
 
+        InitializeStats();
         // Set default values
-        Health.SetDefaultValue(5);
-        Armor.SetDefaultValue(3);
-        Morale.SetDefaultValue(8);
+        Health.SetDefaultValue(StatContainer.Health);
+        Armor.SetDefaultValue(StatContainer.Armor);
+        Accuracy.SetDefaultValue(StatContainer.Accuracy);
+        MovementRange.SetDefaultValue(StatContainer.MovementRange);
+        Morale.SetDefaultValue(StatContainer.Morale);
+        ActionPoints.SetDefaultValue(StatContainer.ActionPoints);
+        Perception.SetDefaultValue(StatContainer.Perception);
+        Evasion.SetDefaultValue(StatContainer.Evasion);
+        CriticalHitChance.SetDefaultValue(StatContainer.CriticalHitChance);
     }
 
     public bool CalculateHitChance()
@@ -113,5 +116,18 @@ public partial class UnitStats : Resource
             "CriticalHitChance" => CriticalHitChance,
             _ => null
         };
+    }
+
+    private void InitializeStats()
+    {
+        Health = new Stat(0, 8);
+        Armor = new Stat(0, 6);
+        Accuracy = new Stat(30, 100);
+        MovementRange = new Stat(0, 10);
+        Morale = new Stat(0, 20);
+        ActionPoints = new Stat(1, 3);
+        Perception = new Stat(0, 100);
+        Evasion = new Stat(0, 30);
+        CriticalHitChance = new Stat(0, 100);
     }
 }
