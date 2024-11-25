@@ -1,21 +1,20 @@
 using Godot;
 
-public class AggressionState : BaseState
+public class TacticalState : EnemyState
 {
     public override void Enter(Character aiController)
     {
-        GD.Print("Entering Aggression State");
+        GD.Print("Entering Tactical State");
     }
 
     public override AIState Process(Character enemy)
     {
-        GD.Print("Finding the player!");
-        return AIState.Aggression;
+        GD.Print("Tactical Positioning!");
+        return CheckState(enemy);
     }
-
     public override void Exit(Character aiController)
     {
-        GD.Print("Exiting Aggression State");
+        GD.Print("Exiting Tactical State");
     }
 
     public override AIState CheckState(Character enemy)
@@ -28,6 +27,6 @@ public class AggressionState : BaseState
         {
             return AIState.Flee;
         }
-        return AIState.Aggression;
+        return AIState.Tactical;
     }
 }

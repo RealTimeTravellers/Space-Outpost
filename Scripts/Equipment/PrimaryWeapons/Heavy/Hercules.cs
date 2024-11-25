@@ -5,6 +5,7 @@ public partial class Hercules : PrimaryWeapon
         Name = "Hercules HMG";
         Description = "Yüksek hasar veren ağır makineli tüfek. Kurşun sayısı fazla.";
         PlayerType = PlayerType.Heavy;
+        WeaponType = PrimaryWeaponType.Hercules;
         AmmoClip = 2;
         Accuracy = 4;
         Range = 15;

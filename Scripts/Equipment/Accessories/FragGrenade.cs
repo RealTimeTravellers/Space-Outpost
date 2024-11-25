@@ -2,6 +2,7 @@ public partial class FragGrenade : Accessory
 {
     public FragGrenade()
     {
+        AccessoryType = AccessoryType.FragGrenade;
         Name = "Frag Grenade";
         Description = "Alan etkili patlayıcı bir el bombası. Yakındaki düşmanlara hasar verir ve çevresel yıkım yaratır.";
         UsageCount = 1;

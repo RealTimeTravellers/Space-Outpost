@@ -14,13 +14,13 @@ public enum AIState
 
 public class EnemyAIStateMachine
 {
-    private Dictionary<AIState, IBaseState> _states;
+    private Dictionary<AIState, IBaseState<AIState>> _states;
     public event Action<AIState, AIState> OnStateChanged;
     public AIState CurrentState { get; private set; }
 
     public EnemyAIStateMachine()
     {
-        _states = new Dictionary<AIState, IBaseState>
+        _states = new Dictionary<AIState, IBaseState<AIState>>
         {
             { AIState.Patrol, new PatrolState() },
             { AIState.Alert, new AlertState() },

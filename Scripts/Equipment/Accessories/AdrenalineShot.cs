@@ -2,6 +2,7 @@ public partial class AdrenalineShot : Accessory
 {
     public AdrenalineShot()
     {
+        AccessoryType = AccessoryType.AdrenalineShot;
         Name = "Adrenaline Shot";
         Description = "Bir birime geçici bir enerji artışı sağlayan enjektör. birimin hızını ve saldırı gücünü artırır.";
         UsageCount = 1;

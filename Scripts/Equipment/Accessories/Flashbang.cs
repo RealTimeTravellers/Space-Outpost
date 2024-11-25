@@ -2,6 +2,7 @@ public partial class Flashbang : Accessory
 {
     public Flashbang()
     {
+        AccessoryType = AccessoryType.Flashbang;
         Name = "Flashbang";
         Description = "Düşmanları geçici olarak sersemleten ve onların saldırı yeteneklerini sınırlayan bir el bombası.";
         UsageCount = 1;

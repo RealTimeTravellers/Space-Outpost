@@ -2,6 +2,7 @@ public partial class Medpac : Accessory
 {
     public Medpac()
     {
+        AccessoryType = AccessoryType.Medpac;
         Name = "Medpac";
         Description = "Yaralı takım arkadaşlarını iyileştirmek için kullanılan taşınabilir bir ilk yardım kiti.";
         UsageCount = 1;

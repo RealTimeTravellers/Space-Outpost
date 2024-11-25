@@ -1,21 +1,21 @@
 using Godot;
 
-public class PatrolState : BaseState
+public class AlertState : EnemyState
 {
-    public override void Enter(Character enemy)
+    public override void Enter(Character aiController)
     {
-        GD.Print("Entering Patrol State");
+        GD.Print("Entering Alert State");
     }
 
     public override AIState Process(Character enemy)
     {
-        GD.Print("Patrolling!");
+        GD.Print("Alert! Searching for player...");
         return CheckState(enemy);
     }
 
-    public override void Exit(Character enemy)
+    public override void Exit(Character aiController)
     {
-        GD.Print("Exiting Patrol State");
+        GD.Print("Exiting Alert State");
     }
 
     public override AIState CheckState(Character enemy)
@@ -36,6 +36,6 @@ public class PatrolState : BaseState
         {
             return AIState.Flee;
         }
-        return AIState.Patrol;
+        return AIState.Alert;
     }
 }

@@ -5,6 +5,7 @@ public partial class Suppressor : PrimaryWeapon
         Name = "Medic Suppressor MG";
         Description = "Susturucu özelliği sayesinde sessiz saldırılar yapabilir. Düşman hatlarını bozmak için idealdir.";
         PlayerType = PlayerType.Medic;
+        WeaponType = PrimaryWeaponType.Suppressor;
         AmmoClip = 2;
         Accuracy = 6;
         Range = 15;

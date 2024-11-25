@@ -10,9 +10,17 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 {
     public GridObject currentGrid = null;
 
+    // Stats and equipment
     [Export] public UnitStats Stats;
-    [Export] private Node Equipment;
+
+    // Equipment controller
+    [Export] public EquipmentController Equipment { get; private set; }
+
+    // AI stuff.
     [Export] private Node stateMachine;
+    [Export] private NodePath aiControllerPath;
+    private EnemyAIController aiController;
+
     [Export] public bool move = false; // temp for test only
     [Export] public int firstRange = 10; // test
     [Export] public int secondRange = 10; // test
@@ -64,17 +72,39 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         Friendly = isFriendly;
         if (isFriendly)
         {
+            // Player Stats
             PlayerStats playerStats = new PlayerStats(); // Initialize stats if player.
             Stats = playerStats.CreateStatsForPlayerType(playerStats.PlayerType);
-            Equipment = new PlayerEquipment(Stats);
+
+            // Player Equipment
+            Equipment = new EquipmentController(Stats);
+            Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
+            Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
+            Equipment.EquipAccessory(AccessoryType.FragGrenade);
         }
         else
         {
+            // Enemy Stats
             EnemyStats enemyStats = new EnemyStats(); // Initialize stats if enemy.
             Stats = enemyStats.CreateStatsForEnemyType(enemyStats.EnemyType);
-            Equipment = new EnemyEquipment(Stats);
+
+            // Enemy Equipment
+            Equipment = new EquipmentController(Stats);
+            Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
+            Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
+            Equipment.EquipAccessory(AccessoryType.FragGrenade);
+
+            // Enemy AI Controller
             stateMachine = new EnemyAIController();
+            aiController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
+            if (aiController == null)
+            {
+                aiController = new EnemyAIController();
+                AddChild(aiController);
+            }
         }
+
+        SubscribeToEvents();
     }
 
     private void SubscribeToEvents()
@@ -137,8 +167,10 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     public void Attack(ICombat enemy, float chance)
     {
         // TODO: chance calculations here define if miss or hit
+        
         // if (hit)
-            enemy.TakeDamage(Damage);
+            int damage = Equipment.GetCurrentWeaponDamage();
+            enemy.TakeDamage(damage);
             // and play animation
         // else
             // shoot animation but no hit
