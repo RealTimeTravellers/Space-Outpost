@@ -1,9 +1,6 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat// don't really know why is this character body
@@ -28,13 +25,13 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     [Export] private EnemyAIController enemyController;
 
     [Export] public bool move = false; // temp for test only
-    [Export] public int firstRange = 10; // test
-    [Export] public int secondRange = 10; // test
+    public int FirstMovementRange => Stats.MovementRange.GetValue();
+    public int SecondMovementRange => Stats.MovementRange.GetValue();
     [Export] public float range = 25; // test
 
     // More of an idea, make the non identified chracters show up but black
     // only meaning full if there are civilians in the combat zone
-    [Export] public float visualRange = 35;
+    [Export] public float visualRange { get; private set; } = 35; 
 
     public bool IsMyTurn {get; private set;} = false;
     public bool isFriendly {get; private set;} = false;
@@ -43,7 +40,7 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     #region ICombat variables
     public bool Friendly { get; private set; } // will be set in ready according to subscene preference.
     public int Health { get; private set; }
-    public int Damage { get ; private set ; }
+    public int Damage { get; private set; }
     #endregion
 
     private Godot.Collections.Array<Character> enemiosInLos = new();
@@ -77,11 +74,14 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
     private void InitializeStats()
     {
         Friendly = isFriendly;
+
         if (isFriendly)
         {
             // Player Stats
             StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
             Stats = new PlayerStats(PlayerType, StatContainer);
+            Health = Stats.Health.GetValue();
+            Damage = Equipment.GetCurrentWeaponDamage();
 
             // Player Equipment
             Equipment = new EquipmentController(Stats);
@@ -101,6 +101,8 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
             // Enemy Stats
             StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
             Stats = new EnemyStats(EnemyType, StatContainer);
+            Health = Stats.Health.GetValue();
+            Damage = Equipment.GetCurrentWeaponDamage();
 
             // Enemy Equipment
             Equipment = new EquipmentController(Stats);
@@ -179,14 +181,21 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 
     public void Attack(ICombat enemy, float chance)
     {
-        // TODO: chance calculations here define if miss or hit
+        // TODO: chance calculations here define if miss or hit - done
+        // Calculate hit chance based on attacker's accuracy
+        float hitChance = Stats.Accuracy.GetValue() / 100f;
+        bool hit = GD.Randf() <= hitChance;
         
-        // if (hit)
+        if (hit)
+        {
             int damage = Equipment.GetCurrentWeaponDamage();
             enemy.TakeDamage(damage);
             // and play animation
-        // else
+        }
+        else
+        {
             // shoot animation but no hit
+        }
     }
 
     public void TakeDamage(int damage)
