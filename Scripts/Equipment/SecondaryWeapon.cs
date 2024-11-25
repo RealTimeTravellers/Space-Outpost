@@ -1,13 +1,8 @@
 using Godot;
 
-public partial class SecondaryWeapon : Equipment
+public partial class SecondaryWeapon : Weapon
 {
     [Export] public int AmmoClip { get; set; }
-    [Export] public int Accuracy { get; set; }
-    [Export] public int MinDamage { get; set; }
-    [Export] public int MaxDamage { get; set; }
-    [Export] public int Impact { get; set; }
-    [Export] public int CritChance { get; set; }
 
     public override void ApplyEffects(UnitStats stats)
     {
@@ -19,16 +14,6 @@ public partial class SecondaryWeapon : Equipment
     {
         stats.RemoveModifier("Accuracy", Accuracy);
         stats.RemoveModifier("CriticalHitChance", CritChance);
-    }
-
-    public int DealDamage(bool isCritical = false)
-    {
-        int damageDealt = GD.RandRange(MinDamage, MaxDamage);
-        if (isCritical)
-        {
-            damageDealt *= 2; 
-        }
-        return damageDealt;
     }
 
     public int DealImpact()

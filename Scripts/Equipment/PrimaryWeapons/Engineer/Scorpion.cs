@@ -5,7 +5,9 @@ public partial class Scorpion : PrimaryWeapon
         Name = "Scorpion-12 Shotgun";
         Description = "Clipte 6 mermi taşıyan ve hızla ateş edebilen, orta hasar ve geniş menzile sahip bir shotgun.";
         PlayerType = PlayerType.Engineer;
-        AmmoClip = 4;
+        WeaponType = PrimaryWeaponType.Scorpion;
+        MaxAmmoClip = 4;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 5;
         Range = 12;
         MinDamage = 3;

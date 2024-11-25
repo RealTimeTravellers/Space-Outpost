@@ -5,7 +5,9 @@ public partial class Vanguard : PrimaryWeapon
         Name = "Vanguard SR-30";
         Description = "Çok sayıda mermi taşıyabilen (4 mermi), ancak isabet oranı daha düşük olan bir sniper tüfeği.";
         PlayerType = PlayerType.Sniper;
-        AmmoClip = 4;
+        WeaponType = PrimaryWeaponType.Vanguard;
+        MaxAmmoClip = 4;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 10;
         MinDamage = 3;
         Range = 25;

@@ -1,6 +1,6 @@
 using Godot;
 
-public class CowerState : BaseState
+public class CowerState : EnemyState
 {
     public override void Enter(Character aiController)
     {

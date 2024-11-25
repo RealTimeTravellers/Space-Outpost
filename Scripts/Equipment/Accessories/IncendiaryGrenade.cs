@@ -2,6 +2,7 @@ public partial class IncendiaryGrenade : Accessory
 {
     public IncendiaryGrenade()
     {
+        AccessoryType = AccessoryType.IncendiaryGrenade;
         Name = "Incendiary Grenade";
         Description = "Düşmanları yakmak için kullanılan bir yangın bombası. Etki alanındaki düşmanlar birkaç tur boyunca hasar alır.";
         UsageCount = 1;

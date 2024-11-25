@@ -5,7 +5,9 @@ public partial class Annihilator : PrimaryWeapon
         Name = "Annihilator HMG";
         Description = "Daha küçük cephane kapasitesine sahip ancak her atışta büyük bir etki yaratan bir makineli tüfek.";
         PlayerType = PlayerType.Heavy;
-        AmmoClip = 2;
+        WeaponType = PrimaryWeaponType.Annihilator;
+        MaxAmmoClip = 2;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 3;
         MinDamage = 3;
         Range = 15;

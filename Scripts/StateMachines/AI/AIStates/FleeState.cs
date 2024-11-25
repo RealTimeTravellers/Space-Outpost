@@ -1,6 +1,6 @@
 using Godot;
 
-public class FleeState : BaseState
+public class FleeState : EnemyState
 {
     public override void Enter(Character aiController)
     {

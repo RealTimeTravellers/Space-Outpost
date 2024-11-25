@@ -8,25 +8,40 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 {
     public GridObject currentGrid = null;
 
-    [Export] public UnitStats Stats;
-    [Export] private Node Equipment;
-    [Export] private Node stateMachine;
+    // Stats and equipment - EXPORT etme problemi
+    [Export] public PlayerType PlayerType { get; private set; } = PlayerType.Soldier;
+    [Export] public EnemyType EnemyType { get; private set; } = EnemyType.Creeper;
+    public UnitStats Stats;
+    public StatContainer StatContainer;
+
+    // Equipment controller
+    [Export] public EquipmentController Equipment { get; private set; }
+
+    // Player stuff.
+    [Export] private NodePath playerControllerPath;
+    [Export] private PlayerAIController playerController;
+
+    // AI stuff.
+    [Export] private NodePath aiControllerPath;
+    [Export] private EnemyAIController enemyController;
+
     [Export] public bool move = false; // temp for test only
-    [Export] public int firstRange = 10; // test
-    [Export] public int secondRange = 10; // test
+    public int FirstMovementRange => Stats.MovementRange.GetValue();
+    public int SecondMovementRange => Stats.MovementRange.GetValue();
     [Export] public float range = 25; // test
 
     // More of an idea, make the non identified chracters show up but black
     // only meaning full if there are civilians in the combat zone
-    [Export] public float visualRange = 35;
+    [Export] public float visualRange { get; private set; } = 35; 
 
     public bool IsMyTurn {get; private set;} = false;
-    [Export] public bool friendly; // FOR TEST
+    public bool isFriendly {get; private set;} = false;
+    public bool IsInCover { get; private set; } = false;
 
     #region ICombat Variables
     public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
     public int Health { get; private set; }
-    public int Damage { get ; private set ; }
+    public int Damage { get; private set; }
     #endregion
 
     #region ITactical Variables
@@ -70,27 +85,55 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
     private void InitializeStats()
     {
-        IsFriendly = friendly; // FOR TEST
-        if (IsFriendly)
+        Friendly = isFriendly;
+
+        if (isFriendly)
         {
-            PlayerStats playerStats = new PlayerStats(); // Initialize stats if player.
-            Stats = playerStats.CreateStatsForPlayerType(playerStats.PlayerType);
-            Equipment = new PlayerEquipment(Stats);
-            
-            TurnManager.Instance.playerCharacters.Add(this);
-            //TurnManager.Instance.playerCharacterTurns.Add(this, false);
+            // Player Stats
+            StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
+            Stats = new PlayerStats(PlayerType, StatContainer);
+            Health = Stats.Health.GetValue();
+            Damage = Equipment.GetCurrentWeaponDamage();
+
+            // Player Equipment
+            Equipment = new EquipmentController(Stats);
+            Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
+            Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
+            Equipment.EquipAccessory(AccessoryType.FragGrenade);
+
+            playerController = GetNodeOrNull<PlayerAIController>(playerControllerPath);
+            if (playerController == null)
+            {
+                playerController = new PlayerAIController();
+                AddChild(playerController);
+            }
         }
         else
         {
-            EnemyStats enemyStats = new EnemyStats(); // Initialize stats if enemy.
-            Stats = enemyStats.CreateStatsForEnemyType(enemyStats.EnemyType);
-            Equipment = new EnemyEquipment(Stats);
-            stateMachine = new EnemyAIController();
+            // Enemy Stats
+            StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
+            Stats = new EnemyStats(EnemyType, StatContainer);
+            Health = Stats.Health.GetValue();
+            Damage = Equipment.GetCurrentWeaponDamage();
 
-            EnemyManager.Instance.allEnemies.Add(this);
-            TurnManager.Instance.enemyCharacters.Add(this);
+            // Enemy Equipment
+            Equipment = new EquipmentController(Stats);
+            Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
+            Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
+            Equipment.EquipAccessory(AccessoryType.FragGrenade);
+
+            // Enemy AI Controller
+            enemyController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
+            if (enemyController == null)
+            {
+                enemyController = new EnemyAIController();
+                AddChild(enemyController);
+            }
         }
 
+        SubscribeToEvents();
+        EnemyManager.Instance.allEnemies.Add(this);
+        TurnManager.Instance.enemyCharacters.Add(this);
         actionPoints = actionData.defaultActionPoints;
     }
 
@@ -182,21 +225,19 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
     /// <param name="accuracy"></param>
     public void Attack(Character target, float accuracy)
     {
-        actionPoints -= actionData.attackCost;
-
-        // TODO: chance calculations here define if miss or hit
-        float chance;
-        if (target.IsTakingCover)
-             chance = accuracy * actionData.coverChanceMultiplier;
-        else
-            chance = accuracy;
-
-        float hitChance = rng.RandfRange(0f, 1f);
-
-        if (hitChance <= chance)
-            target.TakeDamage(Damage);
+        // TODO: chance calculations here define if miss or hit - done
+        // Calculate hit chance based on attacker's accuracy
+        float hitChance = Stats.Accuracy.GetValue() / 100f;
+        bool hit = GD.Randf() <= hitChance;
+        
+        if (hit)
+        {
+            int damage = Equipment.GetCurrentWeaponDamage();
+            enemy.TakeDamage(damage);
             // and play animation
-        // else
+        }
+        else
+        {
             // shoot animation but no hit
 
         throw new NotImplementedException();

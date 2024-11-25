@@ -1,15 +1,20 @@
-public partial class EngineerStats : UnitStats
+using Godot;
+
+[Tool]
+public partial class EngineerStats : StatContainer
 {
+    [Export] public PlayerType PlayerType { get; set; } = PlayerType.Engineer;
+
     public EngineerStats() : base()
     {
-        Health.SetDefaultValue(6);
-        Armor.SetDefaultValue(4);
-        Accuracy.SetDefaultValue(60);
-        MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(18);
-        ActionPoints.SetDefaultValue(2);
-        Evasion.SetDefaultValue(10);
-        CriticalHitChance.SetDefaultValue(30);
-        Perception.SetDefaultValue(80);
+        Health = 6;
+        Armor = 3;
+        Accuracy = 65;
+        MovementRange = 6;
+        Morale = 18;
+        ActionPoints = 2;
+        Evasion = 10;
+        CriticalHitChance = 30;
+        Perception = 75;
     }
 }

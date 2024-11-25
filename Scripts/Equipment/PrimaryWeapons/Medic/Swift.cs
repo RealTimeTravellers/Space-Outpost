@@ -5,7 +5,9 @@ public partial class Swift : PrimaryWeapon
         Name = "Swift Healer's Burst Rifle";
         Description = "Hızlı ateş hızı ve yüksek etki gücü ile takım arkadaşlarını iyileştirirken düşmanlara karşı da etkili olabilir.";
         PlayerType = PlayerType.Medic;
-        AmmoClip = 2;
+        WeaponType = PrimaryWeaponType.Swift;
+        MaxAmmoClip = 2;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 13;
         Range = 12;
         MinDamage = 4;

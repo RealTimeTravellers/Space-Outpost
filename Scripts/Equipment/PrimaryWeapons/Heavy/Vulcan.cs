@@ -5,7 +5,9 @@ public partial class Vulcan : PrimaryWeapon
         Name = "Vulcan Rocket Launcher";
         Description = "Çok geniş bir alanda büyük hasar veren, mermi başına yüksek etki gücüne sahip bir roketatar.";
         PlayerType = PlayerType.Heavy;
-        AmmoClip = 1;
+        WeaponType = PrimaryWeaponType.Vulcan;
+        MaxAmmoClip = 1;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 2;
         MinDamage = 2;
         MaxDamage = 6;

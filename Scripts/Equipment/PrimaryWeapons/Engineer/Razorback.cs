@@ -5,7 +5,9 @@ public partial class Razorback : PrimaryWeapon
         Name = "Razorback Dual Barrel Shotgun";
         Description = "Yüksek etki gücüne sahip çift namlulu bir shotgun. Yakın mesafede büyük hasar verir.";
         PlayerType = PlayerType.Engineer;
-        AmmoClip = 2;
+        WeaponType = PrimaryWeaponType.Razorback;
+        MaxAmmoClip = 2;
+        CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 6;
         Range = 10;
         MinDamage = 2;
