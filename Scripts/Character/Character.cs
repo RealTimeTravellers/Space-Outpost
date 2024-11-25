@@ -85,7 +85,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
     private void InitializeStats()
     {
-        Friendly = isFriendly;
+        IsFriendly = isFriendly;
 
         if (isFriendly)
         {
@@ -233,16 +233,55 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         if (hit)
         {
             int damage = Equipment.GetCurrentWeaponDamage();
-            enemy.TakeDamage(damage);
+            target.TakeDamage(damage);
             // and play animation
         }
         else
         {
             // shoot animation but no hit
-
+        }
         throw new NotImplementedException();
 
     }
+
+    #endregion
+
+    #region ITactical Implementations
+
+    #endregion
+
+    // events
+    private void OnTurnChanged(bool playerTurn)
+    {
+        if (playerTurn)
+        {
+            IsMyTurn = false;
+            CompletedTurn = false;
+            IsTakingCover = false;
+            actionPoints = actionData.defaultActionPoints;
+        }
+    }
+
+    private void OnPlayerMovementChanged(bool started)
+    {
+        if (!started) // ended
+            SearchForEnemies(true); // force a Query once, to detect enemies
+    }
+
+    private void OnEnemyMovementChanged(bool started)
+    {
+        if (started) // enemy started moving
+        {
+            doQuery = true;
+            SearchForEnemies();
+        }
+        else // enemy finished moving
+        {
+            doQuery = false;
+            SearchForEnemies(true); // to see if this can see enemy
+        }
+    }
+
 
     public void TakeDamage(int damage)
     {
@@ -250,11 +289,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
         if (Health <= 0)
             Die();
-
     }
-    #endregion
 
-    #region ITactical Implementations
     public void Move(GridObject targetGrid)
     {
         if(!CompletedTurn)
@@ -300,37 +336,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
         CompleteAction(actionData.supressiveFireCost);
         throw new NotImplementedException();
     }
-    #endregion
 
-    // events
-    private void OnTurnChanged(bool playerTurn)
-    {
-        if (playerTurn)
-        {
-            IsMyTurn = false;
-            CompletedTurn = false;
-            IsTakingCover = false;
-            actionPoints = actionData.defaultActionPoints;
-        }
-    }
-
-    private void OnPlayerMovementChanged(bool started)
-    {
-        if (!started) // ended
-            SearchForEnemies(true); // force a Query once, to detect enemies
-    }
-
-    private void OnEnemyMovementChanged(bool started)
-    {
-        if (started) // enemy started moving
-        {
-            doQuery = true;
-            SearchForEnemies();
-        }
-        else // enemy finished moving
-        {
-            doQuery = false;
-            SearchForEnemies(true); // to see if this can see enemy
-        }
-    }
 }
+
