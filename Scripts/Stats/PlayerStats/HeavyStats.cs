@@ -1,15 +1,19 @@
+using Godot;
+
 public partial class HeavyStats : StatContainer
 {
-    // public HeavyStats() : base()
-    // {
-    //     Health.SetDefaultValue(8);
-    //     Armor.SetDefaultValue(5);
-    //     Accuracy.SetDefaultValue(60);
-    //     MovementRange.SetDefaultValue(4);
-    //     Morale.SetDefaultValue(20);
-    //     ActionPoints.SetDefaultValue(2);
-    //     Evasion.SetDefaultValue(8);
-    //     CriticalHitChance.SetDefaultValue(35);
-    //     Perception.SetDefaultValue(50);
-    // }
+    [Export] public PlayerType PlayerType { get; set; } = PlayerType.Heavy;
+
+    public HeavyStats() : base()
+    {
+        Health = 8;
+        Armor = 5;
+        Accuracy = 60;
+        MovementRange = 4;
+        Morale = 20;
+        ActionPoints = 2;
+        Evasion = 8;
+        CriticalHitChance = 35;
+        Perception = 50;
+    }
 }

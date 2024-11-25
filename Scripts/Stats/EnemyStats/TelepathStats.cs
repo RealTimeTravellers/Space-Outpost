@@ -1,17 +1,19 @@
-public partial class TelepathStats : EnemyStats
+using Godot;
+
+public partial class TelepathStats : StatContainer
 {
+    [Export] public EnemyType EnemyType { get; set; } = EnemyType.Telepath;
+
     public TelepathStats() : base()
     {
-        UnitType = UnitType.Human;
-        EnemyType = EnemyType.Telepath;
-        Health.SetDefaultValue(6);
-        Armor.SetDefaultValue(2);
-        Accuracy.SetDefaultValue(75);
-        MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(40);
-        ActionPoints.SetDefaultValue(2);
-        Evasion.SetDefaultValue(20);
-        CriticalHitChance.SetDefaultValue(30);
-        Perception.SetDefaultValue(85);
+        Health = 6;
+        Armor = 2;
+        Accuracy = 75;
+        MovementRange = 5;
+        Morale = 40;
+        ActionPoints = 2;
+        Evasion = 20;
+        CriticalHitChance = 30;
+        Perception = 85;
     }
 }

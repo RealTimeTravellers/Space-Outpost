@@ -1,15 +1,19 @@
+using Godot;
+
 public partial class SniperStats : StatContainer
 {
-    // public SniperStats() : base()
-    // {
-    //     Health.SetDefaultValue(5);
-    //     Armor.SetDefaultValue(2);
-    //     Accuracy.SetDefaultValue(85);
-    //     MovementRange.SetDefaultValue(6);
-    //     Morale.SetDefaultValue(16);
-    //     ActionPoints.SetDefaultValue(2);
-    //     Evasion.SetDefaultValue(15);
-    //     CriticalHitChance.SetDefaultValue(50);
-    //     Perception.SetDefaultValue(90);
-    // }
+    [Export] public PlayerType PlayerType { get; set; } = PlayerType.Sniper;
+
+    public SniperStats() : base()
+    {
+        Health = 5;
+        Armor = 2;
+        Accuracy = 85;
+        MovementRange = 6;
+        Morale = 16;
+        ActionPoints = 2;
+        Evasion = 15;
+        CriticalHitChance = 50;
+        Perception = 90;
+    }
 }

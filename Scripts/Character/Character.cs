@@ -10,16 +10,22 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
 {
     public GridObject currentGrid = null;
 
-    // Stats and equipment - EXPORT etme problemi.
+    // Stats and equipment - EXPORT etme problemi
+    [Export] public PlayerType PlayerType { get; private set; } = PlayerType.Soldier;
+    [Export] public EnemyType EnemyType { get; private set; } = EnemyType.Creeper;
     public UnitStats Stats;
+    public StatContainer StatContainer;
 
     // Equipment controller
     [Export] public EquipmentController Equipment { get; private set; }
 
+    // Player stuff.
+    [Export] private NodePath playerControllerPath;
+    [Export] private PlayerAIController playerController;
+
     // AI stuff.
-    [Export] private Node stateMachine;
     [Export] private NodePath aiControllerPath;
-    private EnemyAIController aiController;
+    [Export] private EnemyAIController enemyController;
 
     [Export] public bool move = false; // temp for test only
     [Export] public int firstRange = 10; // test
@@ -74,8 +80,8 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
         if (isFriendly)
         {
             // Player Stats
-            PlayerStats playerStats = new PlayerStats(); // Initialize stats if player.
-            Stats = playerStats.CreateStatsForPlayerType(playerStats.PlayerType);
+            StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
+            Stats = new PlayerStats(PlayerType, StatContainer);
 
             // Player Equipment
             Equipment = new EquipmentController(Stats);
@@ -83,13 +89,18 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
             Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
             Equipment.EquipAccessory(AccessoryType.FragGrenade);
 
-            
+            playerController = GetNodeOrNull<PlayerAIController>(playerControllerPath);
+            if (playerController == null)
+            {
+                playerController = new PlayerAIController();
+                AddChild(playerController);
+            }
         }
         else
         {
             // Enemy Stats
-            EnemyStats enemyStats = new EnemyStats(); // Initialize stats if enemy.
-            Stats = enemyStats.CreateStatsForEnemyType(enemyStats.EnemyType);
+            StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
+            Stats = new EnemyStats(EnemyType, StatContainer);
 
             // Enemy Equipment
             Equipment = new EquipmentController(Stats);
@@ -98,12 +109,11 @@ public partial class Character : CharacterBody3D, ICombat// don't really know wh
             Equipment.EquipAccessory(AccessoryType.FragGrenade);
 
             // Enemy AI Controller
-            stateMachine = new EnemyAIController();
-            aiController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
-            if (aiController == null)
+            enemyController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
+            if (enemyController == null)
             {
-                aiController = new EnemyAIController();
-                AddChild(aiController);
+                enemyController = new EnemyAIController();
+                AddChild(enemyController);
             }
         }
 
