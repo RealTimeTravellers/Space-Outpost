@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bkescmc5gkgap"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/EnemyStats/RangerStats.cs" id="1_chl1b"]
+
+[resource]
+script = ExtResource("1_chl1b")
+UnitType = 1
+EnemyType = 3
+Health = 5
+Armor = 2
+Accuracy = 80
+MovementRange = 8
+Morale = 22
+ActionPoints = 2
+Perception = 90
+Evasion = 15
+CriticalHitChance = 30

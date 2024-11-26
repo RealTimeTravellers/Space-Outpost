@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dkem877sv2pag"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/EnemyStats/CreeperStats.cs" id="1_niuss"]
+
+[resource]
+script = ExtResource("1_niuss")
+UnitType = 0
+EnemyType = 1
+Health = 8
+Armor = 4
+Accuracy = 65
+MovementRange = 6
+Morale = 40
+ActionPoints = 2
+Perception = 70
+Evasion = 10
+CriticalHitChance = 1

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://coqkkxmo78opm"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/PlayerStats/SoldierStats.cs" id="1_ngk65"]
+
+[resource]
+script = ExtResource("1_ngk65")
+PlayerType = 0
+Health = 7
+Armor = 3
+Accuracy = 70
+MovementRange = 9
+Morale = 20
+ActionPoints = 2
+Perception = 60
+Evasion = 12
+CriticalHitChance = 30

@@ -2,6 +2,7 @@ using Godot;
 
 public partial class CreeperStats : StatContainer
 {
+    [Export] public UnitType UnitType { get; set; } = UnitType.Alien;
     [Export] public EnemyType EnemyType { get; set; } = EnemyType.Creeper;
 
     public CreeperStats() : base()

@@ -2,6 +2,7 @@ using Godot;
 
 public partial class RangerStats : StatContainer
 {
+    [Export] public UnitType UnitType { get; set; } = UnitType.Human;
     [Export] public EnemyType EnemyType { get; set; } = EnemyType.Ranger;
 
     public RangerStats() : base()

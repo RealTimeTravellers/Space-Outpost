@@ -38,7 +38,7 @@ public partial class EnemyAIController : Node
 
     private void OnTurnChanged(bool isPlayerTurn)
     {
-        if (!isPlayerTurn && _character != null && !_character.Friendly)
+        if (!isPlayerTurn && _character != null && !_character.IsFriendly)
         {
             _isActive = true;
             // AI turuna başla
@@ -52,7 +52,7 @@ public partial class EnemyAIController : Node
 
     private void OnEnemyMovementChanged(bool started)
     {
-        _isActive = started && !_character.Friendly;
+        _isActive = started && !_character.IsFriendly;
     }
 
     private void SetState(AIState newState, Character aiCharacter)

@@ -37,7 +37,7 @@ public partial class PlayerAIController : Node
 
     private void OnTurnChanged(bool isPlayerTurn)
     {
-        if (isPlayerTurn && _character != null && _character.Friendly)
+        if (isPlayerTurn && _character != null && _character.IsFriendly)
         {
             _isActive = true;
             ProcessPlayerState();
@@ -50,7 +50,7 @@ public partial class PlayerAIController : Node
 
     private void OnPlayerMovementChanged(bool started)
     {
-        _isActive = started && _character.Friendly;
+        _isActive = started && _character.IsFriendly;
     }
 
     public void SetState(PlayerStateType newState, Character playerCharacter)

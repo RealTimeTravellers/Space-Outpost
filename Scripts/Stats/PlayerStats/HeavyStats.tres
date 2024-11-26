@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://d0s6ep6kbg6i6"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/PlayerStats/HeavyStats.cs" id="1_aouww"]
+
+[resource]
+script = ExtResource("1_aouww")
+PlayerType = 4
+Health = 8
+Armor = 5
+Accuracy = 60
+MovementRange = 8
+Morale = 20
+ActionPoints = 2
+Perception = 50
+Evasion = 8
+CriticalHitChance = 15

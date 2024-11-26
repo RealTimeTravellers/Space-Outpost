@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dq16mkjndq0o1"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/PlayerStats/EngineerStats.cs" id="1_08j78"]
+
+[resource]
+script = ExtResource("1_08j78")
+PlayerType = 2
+Health = 6
+Armor = 3
+Accuracy = 65
+MovementRange = 6
+Morale = 18
+ActionPoints = 2
+Perception = 75
+Evasion = 10
+CriticalHitChance = 30

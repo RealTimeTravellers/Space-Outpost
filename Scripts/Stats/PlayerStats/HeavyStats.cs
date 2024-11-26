@@ -2,10 +2,12 @@ using Godot;
 
 public partial class HeavyStats : StatContainer
 {
+    [Export] public UnitType UnitType { get; set; } = UnitType.Human;
     [Export] public PlayerType PlayerType { get; set; } = PlayerType.Heavy;
 
     public HeavyStats() : base()
     {
+        /*
         Health = 8;
         Armor = 5;
         Accuracy = 60;
@@ -15,5 +17,6 @@ public partial class HeavyStats : StatContainer
         Evasion = 8;
         CriticalHitChance = 35;
         Perception = 50;
+        */
     }
 }
