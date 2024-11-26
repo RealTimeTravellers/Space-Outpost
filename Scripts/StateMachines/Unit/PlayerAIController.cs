@@ -2,7 +2,7 @@ using Godot;
 
 public partial class PlayerAIController : Node
 {
-    private PlayerStateMachine _stateMachine;
+    public PlayerStateMachine _stateMachine {get; private set;}
     private Character _character;
     private bool _isActive = false;
 

@@ -2,7 +2,7 @@ using Godot;
 
 public partial class EnemyAIController : Node
 {
-    private EnemyAIStateMachine _stateMachine;
+    public EnemyAIStateMachine _stateMachine {get; private set;}
     private Character _character;
     private bool _isActive = false;
 

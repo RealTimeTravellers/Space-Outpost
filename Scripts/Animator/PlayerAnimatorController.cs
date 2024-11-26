@@ -19,9 +19,9 @@ public partial class PlayerAnimatorController : Node
 
     public override void _Ready()
     {
-        _character = GetParent<Character>();
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-        _stateMachine = GetNode<PlayerStateMachine>("PlayerStateMachine");
+        _character = GetParent<Character>();
+        _stateMachine = GetParent<PlayerAIController>()._stateMachine;
         
         if (_stateMachine != null)
         {
