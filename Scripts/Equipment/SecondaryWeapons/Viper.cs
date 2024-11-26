@@ -1,15 +1,11 @@
+using Godot;
+
 public partial class Viper : SecondaryWeapon
 {
     public Viper()
     {
-        Name = "Viper 9mm";
-        Description = "Hafif vuran, ancak hızlı ateş edebilen ve dengeli bir isabet oranına sahip tabanca. Mermi kapasitesi yüksektir.";
-        MaxAmmoClip = 4;
-        CurrentAmmoClip = MaxAmmoClip;
-        Accuracy = 10;
-        MinDamage = 2;
-        MaxDamage = 4;
-        Impact = 3;
-        CritChance = 8;
+		var stats = ResourceLoader.Load<WeaponStatsContainer>("res://Scripts/Equipment/SecondaryWeapons/ViperStats.tres");
+        Initialize(stats);
+        SecondaryWeaponType = SecondaryWeaponType.Viper;
     }
 }

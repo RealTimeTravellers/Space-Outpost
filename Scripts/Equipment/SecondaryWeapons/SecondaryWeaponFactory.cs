@@ -7,7 +7,7 @@ public enum SecondaryWeaponType
     Thunderstrike,
     Viper,
     Falcon,
-    NovaPlasma
+    Nova
 }
 
 public static class SecondaryWeaponFactory
@@ -20,7 +20,7 @@ public static class SecondaryWeaponFactory
             SecondaryWeaponType.Thunderstrike => new Thunderstrike(),
             SecondaryWeaponType.Viper => new Viper(),
             SecondaryWeaponType.Falcon => new Falcon(),
-            SecondaryWeaponType.NovaPlasma => new NovaPlasma(),
+            SecondaryWeaponType.Nova => new Nova(),
             _ => throw new ArgumentException($"Unknown weapon type: {type}")
         };
     }
@@ -33,7 +33,7 @@ public static class SecondaryWeaponFactory
             CreateWeapon(SecondaryWeaponType.Thunderstrike),
             CreateWeapon(SecondaryWeaponType.Viper),
             CreateWeapon(SecondaryWeaponType.Falcon),
-            CreateWeapon(SecondaryWeaponType.NovaPlasma)
+            CreateWeapon(SecondaryWeaponType.Nova)
         };
     }
 }

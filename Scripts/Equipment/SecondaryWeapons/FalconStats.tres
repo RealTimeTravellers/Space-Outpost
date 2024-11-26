@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bopko0lpw3brc"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/SecondaryWeapons/Falcon.cs" id="1_4yqkt"]
+
+[resource]
+script = ExtResource("1_4yqkt")
+MaxAmmoClip = 3
+CurrentAmmoClip = 3
+Accuracy = 8
+MaxDamage = 6
+MinDamage = 3
+Impact = 5
+CritChance = 10
+Name = "Falcon Compact"
+Description = "Dengeli bir tabanca, orta menzil ve hasar sunar. Hem cephane kapasitesi hem de isabet oranı dengelidir."
+Range = 12

@@ -2,7 +2,7 @@ using Godot;
 
 public partial class SecondaryWeapon : Weapon
 {
-    [Export] public int AmmoClip { get; set; }
+    public SecondaryWeaponType SecondaryWeaponType { get; set; }
 
     public override void ApplyEffects(UnitStats stats)
     {

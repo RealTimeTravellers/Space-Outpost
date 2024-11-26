@@ -117,7 +117,7 @@ public partial class EquipmentController : Node
 		}
 		if (_currentWeapon is SecondaryWeapon secondaryWeapon)
 		{
-			return secondaryWeapon.AmmoClip <= 0;
+			return secondaryWeapon.CurrentAmmoClip <= 0;
 		}
 		return false;
 	}

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b711rgh28phgn"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/SecondaryWeapons/Viper.cs" id="1_424wg"]
+
+[resource]
+script = ExtResource("1_424wg")
+MaxAmmoClip = 4
+CurrentAmmoClip = 4
+Accuracy = 10
+MaxDamage = 4
+MinDamage = 2
+Impact = 3
+CritChance = 8
+Name = "Viper 9mm"
+Description = "Hafif vuran, ancak hızlı ateş edebilen ve dengeli bir isabet oranına sahip tabanca. Mermi kapasitesi yüksektir."
+Range = 12
