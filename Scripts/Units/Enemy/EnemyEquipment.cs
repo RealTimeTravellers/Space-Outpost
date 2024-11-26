@@ -70,10 +70,10 @@ public partial class EnemyEquipment: Node
 
         return weaponChoice switch
         {
-            0 => new GuardianLight(),
+            0 => new Guardian(),
             1 => new Swift(),
             2 => new Suppressor(),
-            _ => new GuardianLight()
+            _ => new Guardian()
         };
     }
 }

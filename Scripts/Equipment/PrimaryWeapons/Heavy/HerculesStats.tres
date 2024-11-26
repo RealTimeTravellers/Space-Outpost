@@ -1,3 +1,18 @@
-[gd_resource type="Resource" format=3 uid="uid://bqb6yb5qswd5u"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bqb6yb5qswd5u"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Heavy/Vulcan.cs" id="1_cig7x"]
 
 [resource]
+script = ExtResource("1_cig7x")
+PlayerType = 0
+PrimaryWeaponType = 0
+MaxAmmoClip = 0
+CurrentAmmoClip = 0
+Accuracy = 0
+MaxDamage = 0
+MinDamage = 0
+Impact = 0
+CritChance = 0
+Name = ""
+Description = ""
+Range = 0

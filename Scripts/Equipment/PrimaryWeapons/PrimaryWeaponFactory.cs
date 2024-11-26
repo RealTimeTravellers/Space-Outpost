@@ -57,7 +57,7 @@ public static class PrimaryWeaponFactory
 			
 			// Medic Weapons
 			PrimaryWeaponType.Swift => new Swift(),
-			PrimaryWeaponType.Guardian => new GuardianLight(),
+			PrimaryWeaponType.Guardian => new Guardian(),
 			PrimaryWeaponType.Suppressor => new Suppressor(),
 			
 			_ => throw new ArgumentException($"Unknown weapon type: {type}")
