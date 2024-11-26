@@ -44,7 +44,7 @@ public partial class EnemyEquipment: Node
         {
             0 => new Hawkeye(),
             1 => new Titan(),
-            2 => new Cerebus(),
+            2 => new Cerberus(),
             _ => new Hawkeye()
         };
     }

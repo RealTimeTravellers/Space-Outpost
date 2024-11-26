@@ -1,18 +1,12 @@
-public partial class Cerebus : PrimaryWeapon
+using Godot;
+
+public partial class Cerberus : PrimaryWeapon
 {
-    public Cerebus()
+    public Cerberus()
     {
-        Name = "Cerebus Burst Rifle";
-        Description = "Düşük isabet oranına sahip (4 mermi) ancak her ateşte üçlü burst atış yapan bir saldırı tüfeği.";
+		var stats = ResourceLoader.Load<WeaponStatsContainer>("res://Scripts/Equipment/PrimaryWeapons/Soldier/CerberusStats.tres");
+        Initialize(stats);
         PlayerType = PlayerType.Soldier;
         PrimaryWeaponType = PrimaryWeaponType.Cerberus;
-        MaxAmmoClip = 4;
-        CurrentAmmoClip = MaxAmmoClip;
-        Accuracy = 13;
-        Range = 15;
-        MinDamage = 3;
-        MaxDamage = 7;
-        Impact = 6;
-        CritChance = 10;
     }
 }

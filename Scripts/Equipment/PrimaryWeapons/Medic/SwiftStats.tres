@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://q12ry3m5714q"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Medic/Swift.cs" id="1_f7ye1"]
+
+[resource]
+script = ExtResource("1_f7ye1")
+PlayerType = 3
+PrimaryWeaponType = 12
+MaxAmmoClip = 2
+CurrentAmmoClip = 2
+Accuracy = 13
+MaxDamage = 6
+MinDamage = 4
+Impact = 4
+CritChance = 12
+Name = "Swift Healer's Burst Rifle"
+Description = "Hızlı ateş hızı ve yüksek etki gücü ile takım arkadaşlarını iyileştirirken düşmanlara karşı da etkili olabilir."
+Range = 15

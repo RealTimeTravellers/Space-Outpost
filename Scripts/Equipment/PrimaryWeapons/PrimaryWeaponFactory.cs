@@ -38,7 +38,7 @@ public static class PrimaryWeaponFactory
 			// Soldier Weapons
 			PrimaryWeaponType.Titan => new Titan(),
 			PrimaryWeaponType.Hawkeye => new Hawkeye(),
-			PrimaryWeaponType.Cerberus => new Cerebus(),
+			PrimaryWeaponType.Cerberus => new Cerberus(),
 			
 			// Sniper Weapons
 			PrimaryWeaponType.Devastator => new Devastator(),

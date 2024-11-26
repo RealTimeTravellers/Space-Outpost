@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://d01bpxx415tvh"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Sniper/Phalanx.cs" id="1_8j1pn"]
+
+[resource]
+script = ExtResource("1_8j1pn")
+PlayerType = 1
+PrimaryWeaponType = 5
+MaxAmmoClip = 1
+CurrentAmmoClip = 1
+Accuracy = 15
+MaxDamage = 6
+MinDamage = 4
+Impact = 6
+CritChance = 25
+Name = "Phalanx MK-IV"
+Description = "Kurulum gerektiren, menzili çok uzun olan ve steady özelliği ile ek isabet sağlayan bir sniper tüfeği."
+Range = 30

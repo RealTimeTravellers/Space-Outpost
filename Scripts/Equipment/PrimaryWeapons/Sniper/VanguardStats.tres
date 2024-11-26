@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cfqkxc6atc4e2"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Sniper/Vanguard.cs" id="1_bcju8"]
+
+[resource]
+script = ExtResource("1_bcju8")
+PlayerType = 1
+PrimaryWeaponType = 4
+MaxAmmoClip = 4
+CurrentAmmoClip = 4
+Accuracy = 10
+MaxDamage = 6
+MinDamage = 3
+Impact = 5
+CritChance = 15
+Name = "Vanguard SR-30"
+Description = "Çok sayıda mermi taşıyabilen (4 mermi), ancak isabet oranı daha düşük olan bir sniper tüfeği."
+Range = 25

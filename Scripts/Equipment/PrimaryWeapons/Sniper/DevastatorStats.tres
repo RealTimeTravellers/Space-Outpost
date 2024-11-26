@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dy6vokcw8k420"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Sniper/Devastator.cs" id="1_sat74"]
+
+[resource]
+script = ExtResource("1_sat74")
+PlayerType = 1
+PrimaryWeaponType = 3
+MaxAmmoClip = 2
+CurrentAmmoClip = 2
+Accuracy = 15
+MaxDamage = 8
+MinDamage = 4
+Impact = 7
+CritChance = 20
+Name = "Devastator .50"
+Description = "Clipte çok az mermi (2 mermi) olan, ancak her vuruşunda inanılmaz yüksek hasar veren bir sniper tüfeği."
+Range = 25

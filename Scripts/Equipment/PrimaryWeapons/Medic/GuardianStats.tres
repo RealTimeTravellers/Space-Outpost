@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cfk2n3sat36nf"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Medic/Guardian.cs" id="1_vcqk7"]
+
+[resource]
+script = ExtResource("1_vcqk7")
+PlayerType = 3
+PrimaryWeaponType = 13
+MaxAmmoClip = 3
+CurrentAmmoClip = 3
+Accuracy = 12
+MaxDamage = 5
+MinDamage = 3
+Impact = 4
+CritChance = 10
+Name = "Guardian Light Machine Gun"
+Description = "Dengeli bir silah olup, sürekli ateşleme kapasitesi sayesinde savunma ve destek görevlerinde etkilidir."
+Range = 15

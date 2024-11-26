@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cnfvt08ugy61y"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Soldier/Cerberus.cs" id="1_qp46c"]
+
+[resource]
+script = ExtResource("1_qp46c")
+PlayerType = 0
+PrimaryWeaponType = 2
+MaxAmmoClip = 4
+CurrentAmmoClip = 4
+Accuracy = 13
+MaxDamage = 7
+MinDamage = 3
+Impact = 6
+CritChance = 10
+Name = "Cerebus Burst Rifle"
+Description = "Düşük isabet oranına sahip (4 mermi) ancak her ateşte üçlü burst atış yapan bir saldırı tüfeği."
+Range = 15
