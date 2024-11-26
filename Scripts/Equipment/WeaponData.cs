@@ -12,6 +12,5 @@ public partial class WeaponData : Resource
     [Export] public int Impact { get; set; } = 0;
     [Export] public int CritChance { get; set; } = 0;
     [Export] public PlayerType PlayerType { get; set; }
-    [Export] public PrimaryWeaponType WeaponType { get; set; }
     [Export] public Texture2D Icon { get; set; }
 }

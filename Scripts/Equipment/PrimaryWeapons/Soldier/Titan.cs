@@ -5,7 +5,7 @@ public partial class Titan : PrimaryWeapon
         Name = "Titan Assault Rifle";
         Description = "Yüksek hasar veren, tek atışta düşmanı etkisiz hale getirebilen bir saldırı tüfeği.";
         PlayerType = PlayerType.Soldier;
-        WeaponType = PrimaryWeaponType.Titan;
+        PrimaryWeaponType = PrimaryWeaponType.Titan;
         MaxAmmoClip = 5;
         CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 11;

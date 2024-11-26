@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bjlkqnf4uqcts"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Heavy/Annihilator.cs" id="1_bfj1i"]
+
+[resource]
+script = ExtResource("1_bfj1i")
+PlayerType = 4
+PrimaryWeaponType = 8
+MaxAmmoClip = 0
+CurrentAmmoClip = 0
+Accuracy = 0
+MaxDamage = 0
+MinDamage = 0
+Impact = 0
+CritChance = 0
+Name = ""
+Description = ""
+Range = 0

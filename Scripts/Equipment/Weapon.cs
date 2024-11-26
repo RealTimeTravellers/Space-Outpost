@@ -10,6 +10,20 @@ public abstract partial class Weapon : Equipment
     [Export] public int Impact { get; protected set; }
     [Export] public int CritChance { get; protected set; }
 
+    protected void Initialize(WeaponStatsContainer stats)
+    {
+        Name = stats.Name;
+        Description = stats.Description;
+        MaxAmmoClip = stats.MaxAmmoClip;
+        CurrentAmmoClip = stats.CurrentAmmoClip;
+        Accuracy = stats.Accuracy;
+        Range = stats.Range;
+        MinDamage = stats.MinDamage;
+        MaxDamage = stats.MaxDamage;
+        Impact = stats.Impact;
+        CritChance = stats.CritChance;
+        Icon = stats.Icon;
+    }
     public virtual void Reload()
     {
         CurrentAmmoClip = MaxAmmoClip;

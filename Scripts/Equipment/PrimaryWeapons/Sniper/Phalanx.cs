@@ -7,7 +7,7 @@ public partial class Phalanx : PrimaryWeapon
         Name = "Phalanx MK-IV";
         Description = "Kurulum gerektiren, menzili çok uzun olan ve steady özelliği ile ek isabet sağlayan bir sniper tüfeği.";
         PlayerType = PlayerType.Sniper;
-        WeaponType = PrimaryWeaponType.Phalanx;
+        PrimaryWeaponType = PrimaryWeaponType.Phalanx;
         MaxAmmoClip = 1;
         CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 15;

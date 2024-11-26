@@ -6,7 +6,7 @@ public partial class Devastator : PrimaryWeapon
         Name = "Devastator .50";
         Description = "Clipte çok az mermi (2 mermi) olan, ancak her vuruşunda inanılmaz yüksek hasar veren bir sniper tüfeği.";
         PlayerType = PlayerType.Sniper;
-        WeaponType = PrimaryWeaponType.Devastator;
+        PrimaryWeaponType = PrimaryWeaponType.Devastator;
         MaxAmmoClip = 2;
         CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 15;

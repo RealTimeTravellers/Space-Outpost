@@ -7,7 +7,7 @@ public partial class MedicStats : StatContainer
 
 	public MedicStats() : base()
 	{
-        /*
+		/*
 		Health = 5;
 		Armor = 3;
 		Accuracy = 50;
@@ -17,6 +17,6 @@ public partial class MedicStats : StatContainer
 		Evasion = 10;
 		CriticalHitChance = 20;
 		Perception = 70;
-        */
+		*/
 	}
 }

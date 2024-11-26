@@ -5,7 +5,7 @@ public partial class Hawkeye : PrimaryWeapon
         Name = "Hawkeye Marksman Rifle";
         Description = "Az mermisi olan (3 mermi), tek atışlı ve isabet oranı yüksek tek atışlı saldırı tüfeği.";
         PlayerType = PlayerType.Soldier;
-        WeaponType = PrimaryWeaponType.Hawkeye;
+        PrimaryWeaponType = PrimaryWeaponType.Hawkeye;
         MaxAmmoClip = 3;
         CurrentAmmoClip = MaxAmmoClip;
         Accuracy = 15;

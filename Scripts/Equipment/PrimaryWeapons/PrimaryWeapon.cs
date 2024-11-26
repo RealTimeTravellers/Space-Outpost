@@ -3,8 +3,7 @@ using Godot;
 public partial class PrimaryWeapon : Weapon
 {
     [Export] public PlayerType PlayerType { get; set; }
-    [Export] public PrimaryWeaponType WeaponType { get; set; }
-    [Export] public int AmmoClip { get; set; }
+    [Export] public PrimaryWeaponType PrimaryWeaponType { get; set; }
 
     public override void ApplyEffects(UnitStats stats)
     {
