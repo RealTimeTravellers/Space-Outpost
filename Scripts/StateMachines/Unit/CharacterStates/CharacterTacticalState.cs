@@ -1,4 +1,4 @@
-public class PlayerTacticalState : PlayerState
+public class CharacterTacticalState : CharacterState
 {
     public override void Enter(Character character)
     {
@@ -6,19 +6,19 @@ public class PlayerTacticalState : PlayerState
         // character.GetNode<AnimatorComponent>("AnimatorComponent")?.PlayAnimation("tactical_stance");
     }
 
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
         // State değişim mantığı
         if (character.Stats.Health.GetValue() <= 0)
-            return PlayerStateType.Death;
+            return CharacterStateType.Death;
             
         if (character.Equipment.CurrentWeapon.NeedsReload())
-            return PlayerStateType.Reloading;
+            return CharacterStateType.Reloading;
             
         if (EnemyInSight(character) && !character.IsInCover)
-            return PlayerStateType.TakingCover;
+            return CharacterStateType.TakingCover;
             
-        return PlayerStateType.Idle;
+        return CharacterStateType.Idle;
     }
 
     public override void Exit(Character character)

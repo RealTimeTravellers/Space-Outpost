@@ -5,30 +5,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 
-public class PlayerAimingState : PlayerState
+public class CharacterAimingState : CharacterState
 {
     public override void Enter(Character character)
     {
         GD.Print("Entering Aiming State");
     }
 
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
         return CheckState(character);
     }
 
-    public override PlayerStateType CheckState(Character character)
+    public override CharacterStateType CheckState(Character character)
     {
         if (Input.IsActionPressed("shoot"))
-            return PlayerStateType.Shooting;
+            return CharacterStateType.Shooting;
             
         if (!Input.IsActionPressed("aim"))
-            return PlayerStateType.Idle;
+            return CharacterStateType.Idle;
             
         if (Input.IsActionPressed("reload"))
-            return PlayerStateType.Reloading;
+            return CharacterStateType.Reloading;
             
-        return PlayerStateType.Aiming;
+        return CharacterStateType.Aiming;
     }
 
     public override void Exit(Character character)

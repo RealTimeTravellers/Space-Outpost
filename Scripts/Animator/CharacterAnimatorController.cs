@@ -1,10 +1,10 @@
 using Godot;
 
-public partial class PlayerAnimatorController : Node
+public partial class CharacterAnimatorController : Node
 {
     private AnimationPlayer _animationPlayer;
     private Character _character;
-    private PlayerStateMachine _stateMachine;
+    private CharacterStateMachine _stateMachine;
     
     // Animation names - can be configured in the editor
     [Export] public string IdleAnimation { get; set; } = "idle";
@@ -21,53 +21,52 @@ public partial class PlayerAnimatorController : Node
     {
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         _character = GetParent<Character>();
-        _stateMachine = GetParent<PlayerAIController>()._stateMachine;
+        _stateMachine = _character.GetNode<CharacterController>("CharacterController")._stateMachine;
         
-        if (_stateMachine != null)
+        if (_character != null)
         {
-            _stateMachine.OnStateChanged += HandleStateChanged;
+            if (_stateMachine != null)
+            {
+                _stateMachine.OnStateChanged += HandleStateChanged;
+            }
         }
     }
 
-    private void HandleStateChanged(PlayerStateType oldState, PlayerStateType newState)
+    private void HandleStateChanged(CharacterStateType oldState, CharacterStateType newState)
     {
         switch (newState)
         {
-            case PlayerStateType.Idle:
+            case CharacterStateType.Idle:
                 PlayAnimation(IdleAnimation);
                 break;
-                
-            case PlayerStateType.Shooting:
+            case CharacterStateType.Shooting:
                 PlayAnimation(ShootingAnimation);
                 break;
-                
-            case PlayerStateType.Reloading:
+            case CharacterStateType.Reloading:
                 PlayAnimation(ReloadingAnimation);
                 break;
-                
-            case PlayerStateType.Moving:
+            case CharacterStateType.Moving:
                 PlayAnimation(MovingAnimation);
                 break;
-                
-            case PlayerStateType.TakingCover:
+            case CharacterStateType.TakingCover:
                 PlayAnimation(TakingCoverAnimation);
                 break;
-                
-            case PlayerStateType.LeavingCover:
+            case CharacterStateType.LeavingCover:
                 PlayAnimation(LeavingCoverAnimation);
                 break;
-                
-            case PlayerStateType.Aiming:
+            case CharacterStateType.Aiming:
                 PlayAnimation(AimingAnimation);
                 break;
-                
-            case PlayerStateType.Death:
+            case CharacterStateType.Death:
                 PlayAnimation(DeathAnimation);
+                break;
+            case CharacterStateType.Tactical:
+                PlayAnimation(TacticalStanceAnimation);
                 break;
         }
     }
 
-    private void PlayAnimation(string animationName)
+    protected void PlayAnimation(string animationName)
     {
         if (_animationPlayer != null && _animationPlayer.HasAnimation(animationName))
         {

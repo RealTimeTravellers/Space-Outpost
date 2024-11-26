@@ -1,29 +1,29 @@
 using Godot;
 
-public class PlayerIdleState : PlayerState
+public class CharacterIdleState : CharacterState
 {
     public override void Enter(Character character)
     {
         GD.Print("Entering Idle State");
     }
 
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
         return CheckState(character);
     }
 
-    public override PlayerStateType CheckState(Character character)
+    public override CharacterStateType CheckState(Character character)
     {
         if (Input.IsActionPressed("move"))
-            return PlayerStateType.Moving;
+            return CharacterStateType.Moving;
             
         if (Input.IsActionPressed("aim"))
-            return PlayerStateType.Aiming;
+            return CharacterStateType.Aiming;
             
         if (Input.IsActionPressed("take_cover"))
-            return PlayerStateType.TakingCover;
+            return CharacterStateType.TakingCover;
             
-        return PlayerStateType.Idle;
+        return CharacterStateType.Idle;
     }
 
     public override void Exit(Character character)

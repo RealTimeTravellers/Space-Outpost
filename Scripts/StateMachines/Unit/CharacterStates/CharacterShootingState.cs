@@ -1,6 +1,6 @@
 using Godot;
 
-public class PlayerShootingState : PlayerState
+public class CharacterShootingState : CharacterState
 {
     private float _shootCooldown = 0f;
 
@@ -11,17 +11,17 @@ public class PlayerShootingState : PlayerState
         character.Equipment.CurrentWeapon.Fire();
     }
 
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
         _shootCooldown -= (float)character.GetProcessDeltaTime();
         return CheckState(character);
     }
 
-    public override PlayerStateType CheckState(Character character)
+    public override CharacterStateType CheckState(Character character)
     {
         // Mermi bitti mi?
         if (character.Equipment.CurrentWeapon.NeedsReload())
-            return PlayerStateType.Reloading;
+            return CharacterStateType.Reloading;
 
         // Ateş etme cooldown'ı bitti mi?
         if (_shootCooldown <= 0)
@@ -31,18 +31,18 @@ public class PlayerShootingState : PlayerState
             {
                 // Tekrar ateş et
                 character.Equipment.CurrentWeapon.Fire();
-                return PlayerStateType.Shooting;
+                return CharacterStateType.Shooting;
             }
             
             // Ateş tuşu bırakıldı
             if (Input.IsActionPressed("aim"))
-                return PlayerStateType.Aiming;
+                return CharacterStateType.Aiming;
                 
-            return PlayerStateType.Idle;
+            return CharacterStateType.Idle;
         }
 
         // Ateş etme cooldown'ı devam ediyor
-        return PlayerStateType.Shooting;
+        return CharacterStateType.Shooting;
     }
 
     public override void Exit(Character character)

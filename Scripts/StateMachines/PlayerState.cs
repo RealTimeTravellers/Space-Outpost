@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-public class PlayerState : BaseState<PlayerStateType>
+public class CharacterState : BaseState<CharacterStateType>
 {
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
-        return PlayerStateType.Idle;
+        return CharacterStateType.Idle;
     }
 }

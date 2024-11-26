@@ -5,30 +5,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 
-public class PlayerTakingCoverState : PlayerState
+public class CharacterTakingCoverState : CharacterState
 {
     public override void Enter(Character character)
     {
         GD.Print("Entering Taking Cover State");
     }
 
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
         return CheckState(character);
     }
 
-    public override PlayerStateType CheckState(Character character)
+    public override CharacterStateType CheckState(Character character)
     {
         if (Input.IsActionPressed("leave_cover"))
-            return PlayerStateType.LeavingCover;
+            return CharacterStateType.LeavingCover;
             
         if (Input.IsActionPressed("aim"))
-            return PlayerStateType.Aiming;
+            return CharacterStateType.Aiming;
             
         if (Input.IsActionPressed("reload"))
-            return PlayerStateType.Reloading;
+            return CharacterStateType.Reloading;
             
-        return PlayerStateType.TakingCover;
+        return CharacterStateType.TakingCover;
     }
 
     public override void Exit(Character character)

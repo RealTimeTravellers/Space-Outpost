@@ -1,6 +1,6 @@
 using Godot;
 
-public class PlayerDeathState : PlayerState
+public class CharacterDeathState : CharacterState
 {
     public override void Enter(Character character)
     {
@@ -10,15 +10,15 @@ public class PlayerDeathState : PlayerState
         // Gerekli event'leri tetikle
     }
 
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
         return CheckState(character);
     }
 
-    public override PlayerStateType CheckState(Character character)
+    public override CharacterStateType CheckState(Character character)
     {
         // Ölüm state'inden başka bir state'e geçiş yok
-        return PlayerStateType.Death;
+        return CharacterStateType.Death;
     }
 
     public override void Exit(Character character)

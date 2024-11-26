@@ -1,15 +1,15 @@
 using Godot;
 
-public partial class PlayerAIController : Node
+public partial class CharacterController : Node
 {
-    public PlayerStateMachine _stateMachine {get; private set;}
+    public CharacterStateMachine _stateMachine {get; private set;}
     private Character _character;
     private bool _isActive = false;
 
     public override void _Ready()
     {
         _character = GetParent<Character>();
-        _stateMachine = new PlayerStateMachine();
+        _stateMachine = new CharacterStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
         
         TurnManager.Instance.TurnChanged += OnTurnChanged;
@@ -26,7 +26,7 @@ public partial class PlayerAIController : Node
 
     private void ProcessPlayerState()
     {
-        PlayerStateType currentState = _stateMachine.CurrentStateType;
+        CharacterStateType currentState = _stateMachine.CurrentStateType;
         _stateMachine.UpdateState(_character);
         
         if (_stateMachine.CurrentStateType != currentState)
@@ -53,12 +53,12 @@ public partial class PlayerAIController : Node
         _isActive = started && _character.IsFriendly;
     }
 
-    public void SetState(PlayerStateType newState, Character playerCharacter)
+    public void SetState(CharacterStateType newState, Character playerCharacter)
     {
         _stateMachine.ChangeState(newState, playerCharacter);
     }
 
-    private void OnStateChanged(PlayerStateType oldState, PlayerStateType newState)
+    private void OnStateChanged(CharacterStateType oldState, CharacterStateType newState)
     {
         GD.Print($"Player state changed from {oldState} to {newState} for {_character.Name}");
     }

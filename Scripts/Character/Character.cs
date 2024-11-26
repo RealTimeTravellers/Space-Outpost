@@ -17,9 +17,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// Equipment controller
 	[Export] public EquipmentController Equipment { get; private set; }
 
-	// Player stuff.
+    // Animator controller
+    [Export] public CharacterAnimatorController AnimatorController { get; private set; }
+
+	// Character stuff.
 	[Export] private NodePath playerControllerPath;
-	[Export] private PlayerAIController playerController;
+	[Export] private CharacterController characterController;
 
 	// AI stuff.
 	[Export] private NodePath aiControllerPath;
@@ -86,7 +89,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	private void InitializeStats()
 	{
 		IsFriendly = isFriendly;
-
+        
+        characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
+        if (characterController == null)
+        {
+            characterController = new CharacterController();
+            AddChild(characterController);
+        }
+        
 		if (isFriendly)
 		{
 			// Player Stats
@@ -100,13 +110,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
 			Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
 			Equipment.EquipAccessory(AccessoryType.FragGrenade);
-
-			playerController = GetNodeOrNull<PlayerAIController>(playerControllerPath);
-			if (playerController == null)
-			{
-				playerController = new PlayerAIController();
-				AddChild(playerController);
-			}
 		}
 		else
 		{

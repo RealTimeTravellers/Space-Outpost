@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Godot;
 
-public class PlayerReloadingState : PlayerState
+public class CharacterReloadingState : CharacterState
 {
     private float _reloadTimer = 0f;
 
@@ -16,13 +16,13 @@ public class PlayerReloadingState : PlayerState
         // Reload animasyonunu başlat
     }
 
-    public override PlayerStateType Process(Character character)
+    public override CharacterStateType Process(Character character)
     {
         _reloadTimer -= (float)character.GetProcessDeltaTime();
         return CheckState(character);
     }
 
-    public override PlayerStateType CheckState(Character character)
+    public override CharacterStateType CheckState(Character character)
     {
         // Reload işlemi bitti mi?
         if (_reloadTimer <= 0)
@@ -31,16 +31,16 @@ public class PlayerReloadingState : PlayerState
 
             // Önceki state'e dön
             if (character.IsInCover)
-                return PlayerStateType.TakingCover;
+                return CharacterStateType.TakingCover;
                 
             if (Input.IsActionPressed("aim"))
-                return PlayerStateType.Aiming;
+                return CharacterStateType.Aiming;
                 
-            return PlayerStateType.Idle;
+            return CharacterStateType.Idle;
         }
 
         // Reload işlemi devam ediyor
-        return PlayerStateType.Reloading;
+        return CharacterStateType.Reloading;
     }
 
     public override void Exit(Character character)
