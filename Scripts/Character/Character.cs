@@ -38,11 +38,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public float visualRange { get; private set; } = 35; 
 
 	public bool IsMyTurn {get; private set;} = false;
-	public bool isFriendly {get; private set;} = false;
 	public bool IsInCover { get; private set; } = false;
 
 	#region ICombat Variables
-	public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
+	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
 	public int Health { get; private set; }
 	public int Damage { get; private set; }
 	#endregion
@@ -88,8 +87,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void InitializeStats()
 	{
-		IsFriendly = isFriendly;
-        
         characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
         if (characterController == null)
         {
@@ -97,7 +94,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             AddChild(characterController);
         }
         
-		if (isFriendly)
+		if (IsFriendly)
 		{
 			// Player Stats
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
