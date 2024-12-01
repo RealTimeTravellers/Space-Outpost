@@ -3,6 +3,12 @@ using System;
 
 public partial class BattleHUD : Control
 {
+
+    private Character ChangeSelectedCharacter(bool toLeft)
+    {
+        return null;
+    }
+
     private static void OnMovePressed()
     {
         GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
@@ -23,12 +29,22 @@ public partial class BattleHUD : Control
 
     private static void OnLeftArrowPressed()
     {
-        GridManager.Instance.selectedCharacter.ChangeTarget(true);
+        if (CameraManager.Instance.AimingMode)
+            GridManager.Instance.selectedCharacter.ChangeTarget(true);
+        else
+        {
+            // TODO: add character swithing
+        }
     }
 
     private static void OnRigtArrowPressed()
     {
-        GridManager.Instance.selectedCharacter.ChangeTarget();
+        if (CameraManager.Instance.AimingMode)
+            GridManager.Instance.selectedCharacter.ChangeTarget(false);
+        else
+        {
+            // TODO: add character swithing
+        }
     }
 
     private void OnMouseEnteredUI()

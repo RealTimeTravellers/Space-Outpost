@@ -237,7 +237,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
-	public void ChangeTarget(bool toLeft = false)
+	public void ChangeTarget(bool toLeft)
 	{
 		if (toLeft)
 		{
