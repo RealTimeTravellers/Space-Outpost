@@ -37,12 +37,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float visualRange { get; private set; } = 35; 
 
-	public bool IsMyTurn {get; private set;} = false;
-	public bool isFriendly {get; private set;} = false;
+	[Export] public bool IsMyTurn {get; private set;} = false; // For DEBUG USE
 	public bool IsInCover { get; private set; } = false;
 
 	#region ICombat Variables
-	public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
+	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
 	public int Health { get; private set; }
 	public int Damage { get; private set; }
 	#endregion
@@ -54,7 +53,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private ActionData actionData = null;
 
 	private int actionPoints = 2; // take form a resource data
-	public bool CompletedTurn {get; private set;} = false;
+	[Export] public bool CompletedTurn {get; private set;} = false;
 
 	private Godot.Collections.Array<Character> enemiosInLos = new();
 	[Export] private int queriesPerSecond = 10;
@@ -88,8 +87,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void InitializeStats()
 	{
-		IsFriendly = isFriendly;
-        
         characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
         if (characterController == null)
         {
@@ -97,7 +94,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
             AddChild(characterController);
         }
         
-		if (isFriendly)
+		if (IsFriendly)
 		{
 			// Player Stats
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
@@ -135,8 +132,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		SubscribeToEvents();
-		EnemyManager.Instance.allEnemies.Add(this);
-		TurnManager.Instance.enemyCharacters.Add(this);
+		if (IsFriendly)
+		{
+			TurnManager.Instance.playerCharacters.Add(this);
+		}
+		else
+		{
+			EnemyManager.Instance.allEnemies.Add(this);
+			TurnManager.Instance.enemyCharacters.Add(this);
+		}
 		actionPoints = actionData.defaultActionPoints;
 	}
 
@@ -172,6 +176,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void CompleteAction(int cost)
 	{
+		GD.Print(this.Name + " Action Done: " + cost);
 		this.actionPoints -= cost;
 		CompletedTurn = CheckTurnEnd();
 	}
@@ -189,6 +194,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void EndTurn()
 	{
+		GD.Print(this.Name + " Completed Turn!");
 		CompletedTurn = true;
 		//TurnManager.Instance.playerCharacterTurns[this] = true;
 	}
@@ -260,17 +266,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // TEST
 				// TODO: make the mesh agent move using characterBody, or tweens if no verticality
 				TurnManager.Instance.StartPlayerMovement();
-				TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
 				CompleteAction(actionData.moveCost);
+				TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
 			}
 			else
 			{
 				// same thing but moves on its own and enemy event runs
-				TurnManager.Instance.StartPlayerMovement();
-				TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
+				TurnManager.Instance.StartEnemyMovement();
 				CompleteAction(actionData.moveCost);
-
-				throw new NotImplementedException();
+				TurnManager.Instance.EndEnemyMovement(); // here for test as this moves instantly currently
 			}
 		}
 	}
@@ -300,9 +304,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// events
 	private void OnTurnChanged(bool playerTurn)
 	{
-		if (playerTurn)
+		if (IsFriendly && playerTurn)
 		{
 			IsMyTurn = false;
+			CompletedTurn = false;
+			IsTakingCover = false;
+			actionPoints = actionData.defaultActionPoints;
+		}
+		else if(!IsFriendly && !playerTurn)
+		{
+			IsMyTurn = true;
 			CompletedTurn = false;
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
