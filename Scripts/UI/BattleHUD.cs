@@ -8,11 +8,17 @@ public partial class BattleHUD : Control
         GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
     }
 
+    private static void OnFirePressed()
+    {
+        Character character = GridManager.Instance.selectedCharacter;
+        if (character.InAttackMode)
+            character.Attack(character.Target);
+    }
+
     private static void OnAttackModePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        CameraManager.MoveToShoulder(character);
-        character.AttackMode();
+        character.ToggleAttackMode();
     }
 
     private static void OnLeftArrowPressed()

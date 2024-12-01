@@ -22,7 +22,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	// Character stuff.
 	[Export] private NodePath playerControllerPath;
-	[Export] private CharacterController characterController;
+	//[Export] private CharacterController characterController;
 
 	// AI stuff.
 	[Export] private NodePath aiControllerPath;
@@ -58,7 +58,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
-	[Export] private Character target = null;
+	[Export] public Character Target { get; private set; } = null;
+	[Export] public bool InAttackMode { get; private set; } = false;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
@@ -79,12 +80,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void InitializeStats()
 	{
-        characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
+        /* characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
         if (characterController == null)
         {
             characterController = new CharacterController();
             AddChild(characterController);
-        }
+        } */
         
 		if (IsFriendly)
 		{
@@ -92,13 +93,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
 			Stats = new PlayerStats(PlayerType, StatContainer);
 			Health = Stats.Health.GetValue();
-			Damage = Equipment.GetCurrentWeaponDamage();
+			/* Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
 			Equipment = new EquipmentController(Stats);
 			Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
 			Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
-			Equipment.EquipAccessory(AccessoryType.FragGrenade);
+			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
 		}
 		else
 		{
@@ -106,13 +107,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
 			Stats = new EnemyStats(EnemyType, StatContainer);
 			Health = Stats.Health.GetValue();
-			Damage = Equipment.GetCurrentWeaponDamage();
+			/* Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Enemy Equipment
 			Equipment = new EquipmentController(Stats);
 			Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
 			Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
-			Equipment.EquipAccessory(AccessoryType.FragGrenade);
+			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
 
 			// Enemy AI Controller
 			enemyController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
@@ -191,13 +192,25 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		//TurnManager.Instance.playerCharacterTurns[this] = true;
 	}
 
-	public void AttackMode()
+	public void ToggleAttackMode()
 	{
 		// TODO: Add tweening to these
-		target = enemiesInLos[targetIndex];
-		this.LookAt(target.Position);
-		CameraManager.Instance.mainCamera.LookAt(target.Position);
-		CameraManager.MoveToShoulder(this);
+
+		if (InAttackMode)
+		{
+			InAttackMode = false;
+			CameraManager.ReturnCameraToTactical();
+			// return the camera
+		}
+		else
+		{
+			InAttackMode = true;
+			Target = enemiesInLos[targetIndex];
+			LookAt(Target.Position);
+			CameraManager.Instance.mainCamera.LookAt(Target.Position);
+			CameraManager.MoveToShoulder(this);
+		}
+		
 	}
 
 	public void ChangeTarget(bool toLeft = false)
@@ -206,7 +219,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			targetIndex--;
 			if (targetIndex <= 0)
-				targetIndex = enemiesInLos.Count-1;
+				targetIndex = enemiesInLos.Count - 1;
 		}
 		else
 		{
@@ -215,8 +228,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				targetIndex = 0;
 		}
 
-		target = enemiesInLos[targetIndex];
-		CameraManager.Instance.mainCamera.LookAt(target.Position);
+		Target = enemiesInLos[targetIndex];
+		LookAt(Target.Position);
+		CameraManager.MoveToShoulder(this);
+		CameraManager.Instance.mainCamera.LookAt(Target.Position);
 	}
 
 	private void Die()
@@ -254,7 +269,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// </summary>
 	/// <param name="target"></param>
 	/// <param name="accuracy"></param>
-	public void Attack(Character target, float accuracy)
+	public void Attack(Character target)
 	{
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
