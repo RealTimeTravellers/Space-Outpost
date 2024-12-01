@@ -4,18 +4,18 @@ public class PatrolState : EnemyState
 {
     public override void Enter(Character enemy)
     {
-        GD.Print("Entering Patrol State");
+        //GD.Print("Entering Patrol State");
     }
 
     public override AIState Process(Character enemy)
     {
-        GD.Print("Patrolling!");
+        //GD.Print("Patrolling!");
         return CheckState(enemy);
     }
 
     public override void Exit(Character enemy)
     {
-        GD.Print("Exiting Patrol State");
+        //GD.Print("Exiting Patrol State");
     }
 
     public override AIState CheckState(Character enemy)

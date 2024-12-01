@@ -1,0 +1,69 @@
+[gd_scene load_steps=4 format=3 uid="uid://drnju42qvcxpj"]
+
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
+[ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
+[ext_resource type="Texture2D" uid="uid://cqr8pq4ihev71" path="res://Visual Assets/Sprites/UI/Right Triangle.png" id="2_50qdf"]
+
+[node name="Battle HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hljih")
+
+[node name="Action Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -55.0
+offset_top = -71.0
+offset_right = 61.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Action Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -59.5
+offset_top = -67.0
+offset_right = 53.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Action HBox" type="HBoxContainer" parent="Action Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Attack Mode Button" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+layout_mode = 2
+text = "Attack"
+
+[node name="Move" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+layout_mode = 2
+text = "Move"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Action Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Left" type="Button" parent="Action Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("1_l26u0")
+
+[node name="Right" type="Button" parent="Action Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("2_50qdf")
+
+[connection signal="mouse_entered" from="." to="." method="OnMouseEnteredUI"]
+[connection signal="mouse_exited" from="." to="." method="OnMouseExitedUI"]
+[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
+[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Move" to="." method="OnMovePressed"]
+[connection signal="pressed" from="Action Panel/VBoxContainer/HBoxContainer/Left" to="." method="OnLeftArrowPressed"]
+[connection signal="pressed" from="Action Panel/VBoxContainer/HBoxContainer/Right" to="." method="OnRigtArrowPressed"]

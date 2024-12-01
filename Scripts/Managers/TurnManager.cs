@@ -88,11 +88,8 @@ public partial class TurnManager : Node
             foreach (Character player in playerCharacters)
                 allCompletedTurns &= player.CompletedTurn;
             
-
             if (allCompletedTurns)
                 TurnChanged.Invoke(false); // start enemy turn
-            
-            
         }
 
     }
