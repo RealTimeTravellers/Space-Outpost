@@ -3,11 +3,13 @@ using Godot;
 public partial class Raycaster : Node3D // random name idk
 {
 
+    public static bool MouseOverUI = false;
+
     [Export] private float rayLength = 300;
 
     public override void _Input(InputEvent @event)
     {
-        if (GameManager.Instance.gameState == GameState.Battle)
+        if (MouseOverUI && GameManager.Instance.gameState == GameState.Battle)
             SelectViaRaycast();
         base._Input(@event);
     }

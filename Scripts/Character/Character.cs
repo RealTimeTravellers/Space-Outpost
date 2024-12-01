@@ -55,9 +55,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	private int actionPoints = 2; // take form a resource data
 	[Export] public bool CompletedTurn {get; private set;} = false;
 
-	private Godot.Collections.Array<Character> enemiosInLos = new();
+	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
+	[Export] private Character target = null;
+	[Export] private int targetIndex = 0;
+	[Export] public Node3D ShoulderCamera {get; private set;}
 
 	private RandomNumberGenerator rng = new();
 
@@ -66,17 +69,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		InitializeStats();
 		SubscribeToEvents();
 		base._Ready(); // this signal signifies its completed, keep it at the bottom.
-	}
-
-	public override void _Process(double delta)
-	{
-		if (move) // test
-		{
-			move = !move;
-			Move(GridManager.Instance.selectedGrid);
-		}
-
-		base._Process(delta);
 	}
 
 	public override void _ExitTree()
@@ -162,14 +154,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (instantSearch)
 		{
-			enemiosInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+			enemiesInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
 			doQuery = false;
 			return;
 		}
 
 		while (doQuery)
 		{
-			enemiosInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+			enemiesInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
 			await Task.Delay(Mathf.CeilToInt(1000f / queriesPerSecond));
 		}
 	}
@@ -199,6 +191,34 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		//TurnManager.Instance.playerCharacterTurns[this] = true;
 	}
 
+	public void AttackMode()
+	{
+		// TODO: Add tweening to these
+		target = enemiesInLos[targetIndex];
+		this.LookAt(target.Position);
+		CameraManager.Instance.mainCamera.LookAt(target.Position);
+		CameraManager.MoveToShoulder(this);
+	}
+
+	public void ChangeTarget(bool toLeft = false)
+	{
+		if (toLeft)
+		{
+			targetIndex--;
+			if (targetIndex <= 0)
+				targetIndex = enemiesInLos.Count-1;
+		}
+		else
+		{
+			targetIndex++;
+			if (targetIndex >= enemiesInLos.Count)
+				targetIndex = 0;
+		}
+
+		target = enemiesInLos[targetIndex];
+		CameraManager.Instance.mainCamera.LookAt(target.Position);
+	}
+
 	private void Die()
 	{
 		CompletedTurn = true;
@@ -218,7 +238,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			if (enemy.Position.DistanceTo(this.Position) < range) // is in identification range
 			{
-				CastHit hit = PhysicsCasts.CastLine(this, enemy.Position, this.Position, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
+				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
+				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
+				CastHit hit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
 				
 				if (hit.NonEmpty)
 					enemiesWithLos.Add(enemy);

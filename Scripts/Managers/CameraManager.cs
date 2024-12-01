@@ -10,4 +10,9 @@ public partial class CameraManager : Node
     {
         Instance = this;
     }
+
+    public static void MoveToShoulder(Character character)
+    {
+        Instance.mainCamera.Transform = character.ShoulderCamera.GlobalTransform;
+    }
 }
