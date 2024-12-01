@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
@@ -285,7 +286,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	}
 
 	#region ICombat Implementations
-	public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies)
+	public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies, bool limitedFov = false)
 	{
 		// this needs to be active in enemy turn
 		// this needs to be active last time once moving is done
@@ -302,6 +303,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				
 				if (hit.NonEmpty)
 					enemiesWithLos.Add(enemy);
+
+				if (limitedFov)
+				{
+					// TODO: do vector math to determine if where character looking direction is within a radian of x degrees
+					// TODO; if they are not take them out of enemiesWithLos list
+				}
 			}
 		}
 		return enemiesWithLos;

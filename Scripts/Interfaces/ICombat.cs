@@ -8,7 +8,7 @@ public interface ICombat
     public int Damage {get;}
 
     // methods
-    public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies);
+    public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies, bool limitedFov = false);
     public void Attack(Character enemy);
     public void TakeDamage(int damage);
 }
