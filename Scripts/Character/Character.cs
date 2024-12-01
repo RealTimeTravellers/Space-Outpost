@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
@@ -22,7 +21,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	// Character stuff.
 	[Export] private NodePath playerControllerPath;
-	[Export] private CharacterController characterController;
+	//[Export] private CharacterController characterController;
 
 	// AI stuff.
 	[Export] private NodePath aiControllerPath;
@@ -52,15 +51,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	[Export] private ActionData actionData = null;
 
-	private int actionPoints = 2; // take form a resource data
+	[Export] private int actionPoints = 2; // take form a resource data
 	[Export] public bool CompletedTurn {get; private set;} = false;
 
 	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
-	[Export] private Character target = null;
+	[Export] public Character Target { get; private set; } = null;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
+	[Export] private Label3D HealthLabel;
 
 	private RandomNumberGenerator rng = new();
 
@@ -79,12 +79,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void InitializeStats()
 	{
-        characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
+        /* characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
         if (characterController == null)
         {
             characterController = new CharacterController();
             AddChild(characterController);
-        }
+        } */
         
 		if (IsFriendly)
 		{
@@ -92,13 +92,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
 			Stats = new PlayerStats(PlayerType, StatContainer);
 			Health = Stats.Health.GetValue();
-			Damage = Equipment.GetCurrentWeaponDamage();
+			/* Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
 			Equipment = new EquipmentController(Stats);
 			Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
 			Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
-			Equipment.EquipAccessory(AccessoryType.FragGrenade);
+			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
 		}
 		else
 		{
@@ -106,13 +106,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
 			Stats = new EnemyStats(EnemyType, StatContainer);
 			Health = Stats.Health.GetValue();
-			Damage = Equipment.GetCurrentWeaponDamage();
+			/* Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Enemy Equipment
 			Equipment = new EquipmentController(Stats);
 			Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
 			Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
-			Equipment.EquipAccessory(AccessoryType.FragGrenade);
+			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
 
 			// Enemy AI Controller
 			enemyController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
@@ -127,12 +127,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (IsFriendly)
 		{
 			TurnManager.Instance.playerCharacters.Add(this);
+			HealthLabel.Modulate = new Color(0,0,1,1);
 		}
 		else
 		{
 			EnemyManager.Instance.allEnemies.Add(this);
 			TurnManager.Instance.enemyCharacters.Add(this);
+			HealthLabel.Modulate = new Color(1,0,0,1);
 		}
+
+		UpdateHealthText();
 		actionPoints = actionData.defaultActionPoints;
 	}
 
@@ -141,6 +145,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		TurnManager.Instance.TurnChanged += OnTurnChanged;
 		TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
 		TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
+		TurnManager.Instance.CharacterDied += OnCharacterDied;
 	}
 
 	private void UnsubscribeFromEvents()
@@ -148,6 +153,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		TurnManager.Instance.TurnChanged -= OnTurnChanged;
 		TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
 		TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
+		TurnManager.Instance.CharacterDied -= OnCharacterDied;
 	}
 
 	private async void SearchForEnemies(bool instantSearch = false)
@@ -171,6 +177,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		GD.Print(this.Name + " Action Done: " + cost);
 		this.actionPoints -= cost;
 		CompletedTurn = CheckTurnEnd();
+
+		if (CompletedTurn && CameraManager.Instance.AimingMode)
+			CameraManager.ReturnCameraToTactical();
 	}
 
 	private bool CheckTurnEnd()
@@ -191,13 +200,23 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		//TurnManager.Instance.playerCharacterTurns[this] = true;
 	}
 
-	public void AttackMode()
+	public void ToggleAim()
 	{
 		// TODO: Add tweening to these
-		target = enemiesInLos[targetIndex];
-		this.LookAt(target.Position);
-		CameraManager.Instance.mainCamera.LookAt(target.Position);
-		CameraManager.MoveToShoulder(this);
+
+		if (CameraManager.Instance.AimingMode)
+			CameraManager.ReturnCameraToTactical();
+		else
+		{
+			if (actionPoints > 0)
+			{
+				Target = enemiesInLos[targetIndex];
+				LookAt(Target.Position);
+				CameraManager.Instance.mainCamera.LookAt(Target.Position);
+				CameraManager.MoveToShoulder(this);
+			}
+		}
+		
 	}
 
 	public void ChangeTarget(bool toLeft = false)
@@ -206,7 +225,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			targetIndex--;
 			if (targetIndex <= 0)
-				targetIndex = enemiesInLos.Count-1;
+				targetIndex = enemiesInLos.Count - 1;
 		}
 		else
 		{
@@ -215,15 +234,36 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				targetIndex = 0;
 		}
 
-		target = enemiesInLos[targetIndex];
-		CameraManager.Instance.mainCamera.LookAt(target.Position);
+		Target = enemiesInLos[targetIndex];
+		LookAt(Target.Position);
+		CameraManager.MoveToShoulder(this);
+		CameraManager.Instance.mainCamera.LookAt(Target.Position);
 	}
 
 	private void Die()
 	{
 		CompletedTurn = true;
-		// play Death animation and sound
-		throw new NotImplementedException();
+		// TODO: play Death animation and sound
+		
+		// Test
+		if (IsFriendly)
+			TurnManager.Instance.playerCharacters.Remove(this);
+		else
+		{
+			enemiesInLos.Remove(this);
+			EnemyManager.Instance.allEnemies.Remove(this);
+			TurnManager.Instance.enemyCharacters.Remove(this);
+			// need to do a global query check
+
+		}
+
+		TurnManager.Instance.CharacterDied.Invoke(this);
+		QueueFree();
+	}
+
+	private void UpdateHealthText()
+	{
+		HealthLabel.Text = Health +"/"+ Stats.Health.GetValue();
 	}
 
 	#region ICombat Implementations
@@ -254,16 +294,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// </summary>
 	/// <param name="target"></param>
 	/// <param name="accuracy"></param>
-	public void Attack(Character target, float accuracy)
+	public void Attack(Character target)
 	{
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
 		float hitChance = Stats.Accuracy.GetValue() / 100f;
 		bool hit = GD.Randf() <= hitChance;
 		
-		if (hit)
+		if (hit) // || true for test purposes
 		{
-			int damage = Equipment.GetCurrentWeaponDamage();
+			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
 			// and play animation
 		}
@@ -271,8 +311,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			// shoot animation but no hit
 		}
-		throw new NotImplementedException();
 
+		CompleteAction(actionData.attackCost);
+	}
+
+	public void TakeDamage(int damage)
+	{
+		Health -= damage;
+
+		if (Health <= 0)
+			Die();
+		else
+			UpdateHealthText();
 	}
 
 	#endregion
@@ -282,6 +332,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if(!CompletedTurn)
 		{
+			if(GridManager.Instance.selectedGrid == null) return;
+
 			if (IsFriendly)
 			{
 				 // do movement
@@ -362,15 +414,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
-
-	public void TakeDamage(int damage)
+	private void OnCharacterDied(Character diedCharacter)
 	{
-		Health -= damage;
-
-		if (Health <= 0)
-			Die();
+		SearchForEnemies(true);
 	}
-
-
-
 }

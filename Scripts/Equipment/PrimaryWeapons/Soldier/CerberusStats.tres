@@ -7,7 +7,6 @@ script = ExtResource("1_qp46c")
 PlayerType = 0
 PrimaryWeaponType = 2
 MaxAmmoClip = 4
-CurrentAmmoClip = 4
 Accuracy = 13
 MaxDamage = 7
 MinDamage = 3

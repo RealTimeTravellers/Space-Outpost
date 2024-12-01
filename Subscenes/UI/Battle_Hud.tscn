@@ -21,7 +21,7 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -55.0
-offset_top = -71.0
+offset_top = -102.0
 offset_right = 61.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -39,12 +39,17 @@ offset_right = 53.5
 grow_horizontal = 2
 grow_vertical = 0
 
+[node name="Fire Button" type="Button" parent="Action Panel/VBoxContainer"]
+layout_mode = 2
+text = "Fire"
+
 [node name="Action HBox" type="HBoxContainer" parent="Action Panel/VBoxContainer"]
 layout_mode = 2
 
 [node name="Attack Mode Button" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
 layout_mode = 2
-text = "Attack"
+text = "Aim
+"
 
 [node name="Move" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
 layout_mode = 2
@@ -63,6 +68,7 @@ icon = ExtResource("2_50qdf")
 
 [connection signal="mouse_entered" from="." to="." method="OnMouseEnteredUI"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExitedUI"]
+[connection signal="pressed" from="Action Panel/VBoxContainer/Fire Button" to="." method="OnFirePressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Move" to="." method="OnMovePressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/HBoxContainer/Left" to="." method="OnLeftArrowPressed"]

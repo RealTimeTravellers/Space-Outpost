@@ -4,3 +4,11 @@
 
 [resource]
 script = ExtResource("1_dsmgg")
+defaultActionPoints = 2
+moveCost = 1
+attackCost = 2
+takeCoverCost = 2
+standToEngageCost = 2
+supressiveFireCost = 2
+supressiveFireDegree = 10.0
+coverChanceMultiplier = 0.75

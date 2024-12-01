@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" path="res://Scripts/Managers/CameraManager.cs" id="1_t44t2"]
 
-[node name="Camera Manager" type="Node" node_paths=PackedStringArray("mainCamera")]
+[node name="Camera Manager" type="Node" node_paths=PackedStringArray("TacticalCameraPostion")]
 script = ExtResource("1_t44t2")
-mainCamera = NodePath("")
+TacticalCameraPostion = NodePath("Camera Position")
+
+[node name="Camera Position" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 10, 15)
