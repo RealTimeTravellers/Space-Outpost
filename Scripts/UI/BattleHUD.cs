@@ -3,28 +3,19 @@ using System;
 
 public partial class BattleHUD : Control
 {
-
     private Character ChangeSelectedCharacter(bool toLeft)
     {
         return null;
     }
 
-    private static void OnMovePressed()
+    private void OnMouseEnteredUI()
     {
-        GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
+        Raycaster.MouseOverUI = true;
     }
 
-    private static void OnFirePressed()
+    private void OnMouseExitedUI()
     {
-        Character character = GridManager.Instance.selectedCharacter;
-        if (CameraManager.Instance.AimingMode)
-            character.Attack(character.Target);
-    }
-
-    private static void OnAttackModePressed()
-    {
-        Character character = GridManager.Instance.selectedCharacter;
-        character.ToggleAim();
+        Raycaster.MouseOverUI = false;
     }
 
     private static void OnLeftArrowPressed()
@@ -47,14 +38,32 @@ public partial class BattleHUD : Control
         }
     }
 
-    private void OnMouseEnteredUI()
+    private static void OnFirePressed()
     {
-        Raycaster.MouseOverUI = true;
+        Character character = GridManager.Instance.selectedCharacter;
+        if (CameraManager.Instance.AimingMode)
+            character.Attack(character.Target);
     }
 
-    private void OnMouseExitedUI()
+    private static void OnMovePressed()
     {
-        Raycaster.MouseOverUI = false;
+        GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
     }
-    
+
+    private static void OnStandToEngagePressed()
+    {
+        GridManager.Instance.selectedCharacter.StandToEngage();
+    }
+
+    private static void OnSupressiveFirePressed()
+    {
+        CameraManager.AreaSelectionMode();
+        GridManager.Instance.selectedCharacter.SupressiveFire();
+    }
+
+    private static void OnAttackModePressed()
+    {
+        Character character = GridManager.Instance.selectedCharacter;
+        character.ToggleAim();
+    }
 }
