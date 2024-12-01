@@ -1,17 +1,20 @@
-public partial class RebelStats : EnemyStats
+using Godot;
+
+public partial class RebelStats : StatContainer
 {
+    [Export] public UnitType UnitType { get; set; } = UnitType.Human;
+    [Export] public EnemyType EnemyType { get; set; } = EnemyType.Rebel;
+
     public RebelStats() : base()
     {
-        UnitType = UnitType.Human;
-        EnemyType = EnemyType.Rebel;
-        Health.SetDefaultValue(6);
-        Armor.SetDefaultValue(3);
-        Accuracy.SetDefaultValue(70);
-        MovementRange.SetDefaultValue(6);
-        Morale.SetDefaultValue(12);
-        ActionPoints.SetDefaultValue(2);
-        Evasion.SetDefaultValue(20);
-        CriticalHitChance.SetDefaultValue(30);
-        Perception.SetDefaultValue(80);
+        Health = 6;
+        Armor = 3;
+        Accuracy = 70;
+        MovementRange = 6;
+        Morale = 12;
+        ActionPoints = 2;
+        Evasion = 20;
+        CriticalHitChance = 30;
+        Perception = 80;
     }
 }

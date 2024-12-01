@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://pfh307bxk1mp"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Soldier/Titan.cs" id="1_op1iy"]
+
+[resource]
+script = ExtResource("1_op1iy")
+PlayerType = 0
+PrimaryWeaponType = 0
+MaxAmmoClip = 5
+CurrentAmmoClip = 5
+Accuracy = 11
+MaxDamage = 7
+MinDamage = 3
+Impact = 7
+CritChance = 12
+Name = "Titan Assault Rifle"
+Description = "Yüksek hasar veren, tek atışta düşmanı etkisiz hale getirebilen bir saldırı tüfeği."
+Range = 20

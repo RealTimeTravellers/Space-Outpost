@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bw4tsr1fcw1q0"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/EnemyStats/TelepathStats.cs" id="1_2vitv"]
+
+[resource]
+script = ExtResource("1_2vitv")
+UnitType = 0
+EnemyType = 0
+Health = 6
+Armor = 2
+Accuracy = 75
+MovementRange = 6
+Morale = 40
+ActionPoints = 2
+Perception = 85
+Evasion = 20
+CriticalHitChance = 30

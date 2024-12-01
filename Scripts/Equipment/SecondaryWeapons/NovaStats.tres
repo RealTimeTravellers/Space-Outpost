@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://t2i7exxow8no"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/SecondaryWeapons/Nova.cs" id="1_w68qj"]
+
+[resource]
+script = ExtResource("1_w68qj")
+MaxAmmoClip = 2
+CurrentAmmoClip = 2
+Accuracy = 4
+MaxDamage = 8
+MinDamage = 5
+Impact = 7
+CritChance = 12
+Name = "Nova Plasma Pistol"
+Description = "Geleceğin silahı, yüksek enerji atışları yapan bir plazma tabancası. Yüksek hasar verir ancak isabet oranı düşüktür."
+Range = 12

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cnslsferfltpi"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Engineer/Razorback.cs" id="1_0ggeh"]
+
+[resource]
+script = ExtResource("1_0ggeh")
+PlayerType = 2
+PrimaryWeaponType = 10
+MaxAmmoClip = 2
+CurrentAmmoClip = 2
+Accuracy = 6
+MaxDamage = 7
+MinDamage = 2
+Impact = 7
+CritChance = 10
+Name = "Razorback Dual Barrel Shotgun"
+Description = "Yüksek etki gücüne sahip çift namlulu bir shotgun. Yakın mesafede büyük hasar verir."
+Range = 15

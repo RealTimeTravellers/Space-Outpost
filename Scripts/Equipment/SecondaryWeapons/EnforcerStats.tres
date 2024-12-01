@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cv4gxcy0eneg5"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/SecondaryWeapons/Enforcer.cs" id="1_1yrng"]
+
+[resource]
+script = ExtResource("1_1yrng")
+AmmoClip = 0
+MaxAmmoClip = 3
+CurrentAmmoClip = 3
+Accuracy = 8
+MaxDamage = 5
+MinDamage = 3
+Impact = 4
+CritChance = 10
+Name = "Enforcer 1911"
+Description = "Klasik bir tabanca, isabet oranı yüksek ve orta seviyede hasar veren bir silah."
+Range = 12

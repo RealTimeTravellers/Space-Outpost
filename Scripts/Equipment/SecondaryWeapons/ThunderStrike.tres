@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://c57ib78eipd1e"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/SecondaryWeapons/Thunderstrike.cs" id="1_gjgbk"]
+
+[resource]
+script = ExtResource("1_gjgbk")
+MaxAmmoClip = 2
+CurrentAmmoClip = 2
+Accuracy = 4
+MaxDamage = 8
+MinDamage = 4
+Impact = 8
+CritChance = 15
+Name = "Thunderstrike .50"
+Description = "Ağır vuran, sınırlı cephane kapasitesine sahip tabanca. Her atışta yüksek hasar verir ancak az sayıda mermi içerir."
+Range = 12

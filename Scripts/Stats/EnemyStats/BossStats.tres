@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://g6wiupurxe1o"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/EnemyStats/BossStats.cs" id="1_wjvuv"]
+
+[resource]
+script = ExtResource("1_wjvuv")
+UnitType = 0
+EnemyType = 5
+Health = 10
+Armor = 5
+Accuracy = 85
+MovementRange = 5
+Morale = 40
+ActionPoints = 2
+Perception = 95
+Evasion = 30
+CriticalHitChance = 30

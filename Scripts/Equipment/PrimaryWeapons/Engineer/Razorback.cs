@@ -1,16 +1,12 @@
+using Godot;
+
 public partial class Razorback : PrimaryWeapon
 {
-    public Razorback()
-    {
-        Name = "Razorback Dual Barrel Shotgun";
-        Description = "Yüksek etki gücüne sahip çift namlulu bir shotgun. Yakın mesafede büyük hasar verir.";
+	public Razorback()
+	{
+		var stats = ResourceLoader.Load<WeaponStatsContainer>("res://Scripts/Equipment/PrimaryWeapons/Engineer/RazorbackStats.tres");
+        Initialize(stats);
         PlayerType = PlayerType.Engineer;
-        AmmoClip = 2;
-        Accuracy = 6;
-        Range = 10;
-        MinDamage = 2;
-        MaxDamage = 7;
-        Impact = 7;
-        CritChance = 10;
-    }
+        PrimaryWeaponType = PrimaryWeaponType.Razorback;
+	}
 }

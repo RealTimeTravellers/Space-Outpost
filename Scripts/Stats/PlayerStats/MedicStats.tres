@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://7lo6b8fyrmq"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/PlayerStats/MedicStats.cs" id="1_qxedp"]
+
+[resource]
+script = ExtResource("1_qxedp")
+PlayerType = 3
+Health = 5
+Armor = 3
+Accuracy = 50
+MovementRange = 6
+Morale = 18
+ActionPoints = 2
+Perception = 70
+Evasion = 10
+CriticalHitChance = 20

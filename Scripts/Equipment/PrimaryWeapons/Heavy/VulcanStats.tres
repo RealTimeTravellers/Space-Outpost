@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dq7o4a2xnp7cv"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Heavy/Vulcan.cs" id="1_7t2fw"]
+
+[resource]
+script = ExtResource("1_7t2fw")
+PlayerType = 4
+PrimaryWeaponType = 6
+MaxAmmoClip = 1
+CurrentAmmoClip = 1
+Accuracy = 2
+MaxDamage = 6
+MinDamage = 2
+Impact = 7
+CritChance = 3
+Name = "Vulcan RPG"
+Description = "Rocket launcher with high impact AOE damage."
+Range = 20

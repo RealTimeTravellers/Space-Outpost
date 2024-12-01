@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://qetb7colxdvd"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Medic/Suppressor.cs" id="1_h1rba"]
+
+[resource]
+script = ExtResource("1_h1rba")
+PlayerType = 3
+PrimaryWeaponType = 14
+MaxAmmoClip = 2
+CurrentAmmoClip = 2
+Accuracy = 6
+MaxDamage = 4
+MinDamage = 3
+Impact = 7
+CritChance = 6
+Name = "Medic Suppressor MG"
+Description = "Susturucu özelliği sayesinde sessiz saldırılar yapabilir. Düşman hatlarını bozmak için idealdir."
+Range = 15

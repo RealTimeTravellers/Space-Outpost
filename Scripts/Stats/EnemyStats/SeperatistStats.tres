@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://di7gvcialyrmg"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/EnemyStats/SeperatistStats.cs" id="1_vyw10"]
+
+[resource]
+script = ExtResource("1_vyw10")
+UnitType = 1
+EnemyType = 2
+Health = 5
+Armor = 2
+Accuracy = 80
+MovementRange = 7
+Morale = 22
+ActionPoints = 2
+Perception = 90
+Evasion = 25
+CriticalHitChance = 20

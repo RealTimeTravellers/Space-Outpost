@@ -1,15 +1,22 @@
-public partial class SoldierStats : UnitStats
+using Godot;
+
+public partial class SoldierStats : StatContainer
 {
+    [Export] public UnitType UnitType { get; set; } = UnitType.Human;
+    [Export] public PlayerType PlayerType { get; set; } = PlayerType.Soldier;
+
     public SoldierStats() : base()
     {
-        Health.SetDefaultValue(7);
-        Armor.SetDefaultValue(3);
-        Accuracy.SetDefaultValue(70);
-        MovementRange.SetDefaultValue(7);
-        Morale.SetDefaultValue(22);
-        ActionPoints.SetDefaultValue(2);
-        Evasion.SetDefaultValue(12);
-        CriticalHitChance.SetDefaultValue(40);
-        Perception.SetDefaultValue(60);
+        /*
+        Health = 7;
+        Armor = 3;
+        Accuracy = 70;
+        MovementRange = 9;
+        Morale = 22;
+        ActionPoints = 2;
+        Evasion = 12;
+        CriticalHitChance = 40;
+        Perception = 60;
+        */
     }
 }

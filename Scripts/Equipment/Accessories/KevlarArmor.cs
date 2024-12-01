@@ -2,6 +2,7 @@ public partial class KevlarArmor : Accessory
 {
     public KevlarArmor()
     {
+        AccessoryType = AccessoryType.KevlarArmor;
         Name = "Kevlar Armor";
         Description = "Bir birimin savunmasını geçici olarak artıran zırh plakası. Gelen saldırılardan alınan hasarı azaltır.";
         UsageCount = 1;

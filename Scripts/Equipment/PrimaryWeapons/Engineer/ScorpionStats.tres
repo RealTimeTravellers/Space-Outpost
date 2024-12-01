@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b3wjxyxemofy4"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Engineer/Scorpion.cs" id="1_igiif"]
+
+[resource]
+script = ExtResource("1_igiif")
+PlayerType = 2
+PrimaryWeaponType = 9
+MaxAmmoClip = 4
+CurrentAmmoClip = 4
+Accuracy = 5
+MaxDamage = 6
+MinDamage = 3
+Impact = 5
+CritChance = 5
+Name = "Scorpion-12 Shotgun"
+Description = "Clipte 4 mermi taşıyan ve hızla ateş edebilen, orta hasar ve geniş menzile sahip bir shotgun."
+Range = 12

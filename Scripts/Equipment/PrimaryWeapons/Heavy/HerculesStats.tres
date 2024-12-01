@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://8eu2u8nnje5f"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Heavy/Vulcan.cs" id="1_cig7x"]
+
+[resource]
+script = ExtResource("1_cig7x")
+PlayerType = 4
+PrimaryWeaponType = 7
+MaxAmmoClip = 2
+CurrentAmmoClip = 2
+Accuracy = 4
+MaxDamage = 8
+MinDamage = 4
+Impact = 7
+CritChance = 5
+Name = "Hercules MG"
+Description = "Suppressive fire machine gun with high impact and damage."
+Range = 15

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://x7n233gpnhk0"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/PlayerStats/SniperStats.cs" id="1_ene0x"]
+
+[resource]
+script = ExtResource("1_ene0x")
+PlayerType = 1
+Health = 2
+Armor = 5
+Accuracy = 86
+MovementRange = 8
+Morale = 16
+ActionPoints = 2
+Perception = 20
+Evasion = 10
+CriticalHitChance = 20

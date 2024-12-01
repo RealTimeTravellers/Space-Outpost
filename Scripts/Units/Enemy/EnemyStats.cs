@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Godot;
 
 public enum EnemyType
@@ -12,24 +14,11 @@ public enum EnemyType
 
 public partial class EnemyStats : UnitStats
 {
-    [Export] public EnemyType EnemyType { get; set; } = EnemyType.Creeper;
+    [Export] public EnemyType EnemyType { get; private set; }
 
-    public EnemyStats() : base()
+    public EnemyStats(EnemyType enemyType, StatContainer statContainer) : base(statContainer)
     {
+        EnemyType = enemyType;
         UnitType = UnitType.Alien;
-    }
-
-    public UnitStats CreateStatsForEnemyType(EnemyType enemyType)
-    {
-        return enemyType switch
-        {
-            EnemyType.Telepath => new TelepathStats(),
-            EnemyType.Creeper => new CreeperStats(),
-            EnemyType.Seperatist => new MedicStats(),
-            EnemyType.Ranger => new RangerStats(),
-            EnemyType.Rebel => new RebelStats(),
-            EnemyType.Boss => new BossStats(),
-            _ => new UnitStats() // Default case
-        };
     }
 }

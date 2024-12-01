@@ -1,15 +1,22 @@
-public partial class MedicStats : UnitStats
+using Godot;
+
+public partial class MedicStats : StatContainer
 {
-    public MedicStats() : base()
-    {
-        Health.SetDefaultValue(5);
-        Armor.SetDefaultValue(3);
-        Accuracy.SetDefaultValue(50);
-        MovementRange.SetDefaultValue(6);
-        Morale.SetDefaultValue(18);
-        ActionPoints.SetDefaultValue(2);
-        Evasion.SetDefaultValue(10);
-        CriticalHitChance.SetDefaultValue(20);
-        Perception.SetDefaultValue(70);
-    }
+	[Export] public UnitType UnitType { get; set; } = UnitType.Human;
+	[Export] public PlayerType PlayerType { get; set; } = PlayerType.Medic;
+
+	public MedicStats() : base()
+	{
+		/*
+		Health = 5;
+		Armor = 3;
+		Accuracy = 50;
+		MovementRange = 6;
+		Morale = 18;
+		ActionPoints = 2;
+		Evasion = 10;
+		CriticalHitChance = 20;
+		Perception = 70;
+		*/
+	}
 }

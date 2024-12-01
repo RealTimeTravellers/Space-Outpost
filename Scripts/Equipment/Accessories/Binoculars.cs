@@ -2,6 +2,7 @@ public partial class Binoculars : Accessory
 {
     public Binoculars()
     {
+        AccessoryType = AccessoryType.Binoculars;
         Name = "Binoculars";
         Description = "Uzaktaki düşmanları ve stratejik noktaları tespit etmek için kullanılan bir dürbün.";
         UsageCount = 1;

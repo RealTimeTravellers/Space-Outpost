@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bhquljbdffbp2"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/EnemyStats/RebelStats.cs" id="1_b13ov"]
+
+[resource]
+script = ExtResource("1_b13ov")
+UnitType = 1
+EnemyType = 4
+Health = 6
+Armor = 3
+Accuracy = 70
+MovementRange = 6
+Morale = 12
+ActionPoints = 2
+Perception = 80
+Evasion = 20
+CriticalHitChance = 30

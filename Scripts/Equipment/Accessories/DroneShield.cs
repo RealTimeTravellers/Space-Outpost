@@ -4,6 +4,7 @@ public partial class DroneShield : Accessory
 {
     public DroneShield()
     {
+        AccessoryType = AccessoryType.DroneShield;
         Name = "Drone Shield";
         Description = "Geçici olarak bir birimin etrafında koruyucu bir enerji kalkanı oluşturan yüksek teknolojili bir cihaz.";
         UsageCount = 1;

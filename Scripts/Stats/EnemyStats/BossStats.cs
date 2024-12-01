@@ -1,16 +1,21 @@
-public partial class BossStats : EnemyStats
+using Godot;
+
+public partial class BossStats : StatContainer
 {
-    public BossStats() : base()
-    {
-        EnemyType = EnemyType.Boss;
-        Health.SetDefaultValue(10);
-        Armor.SetDefaultValue(5);
-        Accuracy.SetDefaultValue(85);
-        MovementRange.SetDefaultValue(5);
-        Morale.SetDefaultValue(40);
-        ActionPoints.SetDefaultValue(3);
-        Evasion.SetDefaultValue(30);
-        CriticalHitChance.SetDefaultValue(50);
-        Perception.SetDefaultValue(95);
-    }
+	[Export] public UnitType UnitType { get; set; } = UnitType.Alien;
+	[Export] public EnemyType EnemyType { get; set; } = EnemyType.Boss;
+
+
+	public BossStats() : base()
+	{
+		Health = 10;
+		Armor = 5;
+		Accuracy = 85;
+		MovementRange = 5;
+		Morale = 40;
+		ActionPoints = 3;
+		Evasion = 30;
+		CriticalHitChance = 50;
+		Perception = 95;
+	}
 }

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://o5bhgome6itp"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Engineer/Thumper.cs" id="1_fqv4j"]
+
+[resource]
+script = ExtResource("1_fqv4j")
+PlayerType = 0
+PrimaryWeaponType = 0
+MaxAmmoClip = 3
+CurrentAmmoClip = 3
+Accuracy = 4
+MaxDamage = 7
+MinDamage = 3
+Impact = 6
+CritChance = 8
+Name = "Thumper High Impact Shotgun"
+Description = "Clipte az mermi bulunan (4 mermi), ancak her atışında büyük hasar ve geniş etki alanı sağlayan bir shotgun."
+Range = 9

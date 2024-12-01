@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cd1c4ip6xofoh"]
+
+[ext_resource type="Script" path="res://Scripts/Equipment/PrimaryWeapons/Soldier/Hawkeye.cs" id="1_dlr4y"]
+
+[resource]
+script = ExtResource("1_dlr4y")
+PlayerType = 0
+PrimaryWeaponType = 1
+MaxAmmoClip = 3
+CurrentAmmoClip = 3
+Accuracy = 15
+MaxDamage = 6
+MinDamage = 4
+Impact = 5
+CritChance = 15
+Name = "Hawkeye Marksman Rifle"
+Description = "Az mermisi olan (3 mermi), tek atışlı ve isabet oranı yüksek tek atışlı saldırı tüfeği."
+Range = 20

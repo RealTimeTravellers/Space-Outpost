@@ -2,6 +2,7 @@ using Godot;
 
 public partial class Accessory : Equipment
 {
+    [Export] public AccessoryType AccessoryType { get; set; }
     [Export] public int UsageCount { get; set; }
     [Export] public bool IsPermanent { get; set; }
     [Export] public string Effect { get; set; }

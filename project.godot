@@ -13,7 +13,11 @@ config_version=5
 config/name="Space Outpost"
 run/main_scene="res://Scenes/Game/Root.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(1.05286e-07, 0.0790674, 0.120389, 1)
+boot_splash/image="res://Visual Assets/Sprites/Logo/SpaceOutpost_Logo.png"
+config/icon="res://Visual Assets/Sprites/Logo/SpaceOutpost_Logo.png"
+config/macos_native_icon="res://Visual Assets/Sprites/Logo/SpaceOutpost_Logo.icns"
+config/windows_native_icon="res://Visual Assets/Sprites/Logo/SpaceOutpost_Logo.ico"
 
 [dotnet]
 

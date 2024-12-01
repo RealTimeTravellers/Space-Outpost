@@ -1,16 +1,12 @@
+using Godot;
+
 public partial class Swift : PrimaryWeapon
 {
     public Swift()
     {
-        Name = "Swift Healer's Burst Rifle";
-        Description = "Hızlı ateş hızı ve yüksek etki gücü ile takım arkadaşlarını iyileştirirken düşmanlara karşı da etkili olabilir.";
+		var stats = ResourceLoader.Load<WeaponStatsContainer>("res://Scripts/Equipment/PrimaryWeapons/Medic/SwiftStats.tres");
+        Initialize(stats);
         PlayerType = PlayerType.Medic;
-        AmmoClip = 2;
-        Accuracy = 13;
-        Range = 12;
-        MinDamage = 4;
-        MaxDamage = 6;
-        Impact = 4;
-        CritChance = 12;
+        PrimaryWeaponType = PrimaryWeaponType.Swift;
     }
 }

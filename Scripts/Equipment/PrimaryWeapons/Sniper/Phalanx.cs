@@ -1,19 +1,15 @@
+using Godot;
+
 public partial class Phalanx : PrimaryWeapon
 {
     public bool IsSteady { get; set; }
 
     public Phalanx()
     {
-        Name = "Phalanx MK-IV";
-        Description = "Kurulum gerektiren, menzili çok uzun olan ve steady özelliği ile ek isabet sağlayan bir sniper tüfeği.";
+		var stats = ResourceLoader.Load<WeaponStatsContainer>("res://Scripts/Equipment/PrimaryWeapons/Sniper/PhalanxStats.tres");
+        Initialize(stats);
         PlayerType = PlayerType.Sniper;
-        AmmoClip = 1;
-        Accuracy = 15;
-        MinDamage = 4;
-        MaxDamage = 6;
-        Range = 30;
-        Impact = 6;
-        CritChance = 25;
+        PrimaryWeaponType = PrimaryWeaponType.Phalanx;
     }
 
     public override void ApplyEffects(UnitStats stats)
