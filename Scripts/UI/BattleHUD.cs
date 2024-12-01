@@ -11,7 +11,7 @@ public partial class BattleHUD : Control
     private static void OnFirePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        if (character.AimingMode)
+        if (CameraManager.Instance.AimingMode)
             character.Attack(character.Target);
     }
 

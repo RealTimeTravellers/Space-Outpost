@@ -58,7 +58,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
 	[Export] public Character Target { get; private set; } = null;
-	[Export] public bool AimingMode { get; private set; } = false;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 	[Export] private Label3D HealthLabel;
@@ -146,6 +145,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		TurnManager.Instance.TurnChanged += OnTurnChanged;
 		TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
 		TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
+		TurnManager.Instance.CharacterDied += OnCharacterDied;
 	}
 
 	private void UnsubscribeFromEvents()
@@ -153,6 +153,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		TurnManager.Instance.TurnChanged -= OnTurnChanged;
 		TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
 		TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
+		TurnManager.Instance.CharacterDied -= OnCharacterDied;
 	}
 
 	private async void SearchForEnemies(bool instantSearch = false)
@@ -177,11 +178,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		this.actionPoints -= cost;
 		CompletedTurn = CheckTurnEnd();
 
-		if (CompletedTurn && AimingMode)
-		{
-				CameraManager.ReturnCameraToTactical();
-				AimingMode = false;
-		}
+		if (CompletedTurn && CameraManager.Instance.AimingMode)
+			CameraManager.ReturnCameraToTactical();
 	}
 
 	private bool CheckTurnEnd()
@@ -206,18 +204,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		// TODO: Add tweening to these
 
-		if (AimingMode)
-		{
-			AimingMode = false;
+		if (CameraManager.Instance.AimingMode)
 			CameraManager.ReturnCameraToTactical();
-		}
 		else
 		{
-			AimingMode = true;
-			Target = enemiesInLos[targetIndex];
-			LookAt(Target.Position);
-			CameraManager.Instance.mainCamera.LookAt(Target.Position);
-			CameraManager.MoveToShoulder(this);
+			if (actionPoints > 0)
+			{
+				Target = enemiesInLos[targetIndex];
+				LookAt(Target.Position);
+				CameraManager.Instance.mainCamera.LookAt(Target.Position);
+				CameraManager.MoveToShoulder(this);
+			}
 		}
 		
 	}
@@ -256,8 +253,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			enemiesInLos.Remove(this);
 			EnemyManager.Instance.allEnemies.Remove(this);
 			TurnManager.Instance.enemyCharacters.Remove(this);
+			// need to do a global query check
+
 		}
 
+		TurnManager.Instance.CharacterDied.Invoke();
 		QueueFree();
 	}
 
@@ -301,7 +301,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		float hitChance = Stats.Accuracy.GetValue() / 100f;
 		bool hit = GD.Randf() <= hitChance;
 		
-		if (hit)
+		if (hit) // || true for test purposes
 		{
 			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
@@ -332,6 +332,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if(!CompletedTurn)
 		{
+			if(GridManager.Instance.selectedGrid == null) return;
+
 			if (IsFriendly)
 			{
 				 // do movement
@@ -410,5 +412,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			doQuery = false;
 			SearchForEnemies(true); // to see if this can see enemy
 		}
+	}
+
+	private void OnCharacterDied()
+	{
+		SearchForEnemies(true);
 	}
 }

@@ -26,9 +26,13 @@ public partial class TurnManager : Node
     /// <summary>
     /// True if completed. false if not completed
     /// </summary>
+    
+    public Action CharacterDied;
+
     [Export] public Godot.Collections.Array<Character> playerCharacters = new();
     [Export] public Godot.Collections.Array<Character> enemyCharacters = new();
-    //[Export] public Godot.Collections.Dictionary<Character, bool> playerCharacterTurns = new();
+
+    
 
     private TurnManager()
     {
