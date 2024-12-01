@@ -9,12 +9,13 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
-[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera")]
+[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera", "HealthLabel")]
 collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_iy22r")
 actionData = ExtResource("2_wfint")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
+HealthLabel = NodePath("Health Text")
 
 [node name="Model" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -30,3 +31,10 @@ shape = SubResource("CapsuleShape3D_fdfim")
 
 [node name="Shoulder Camera Pos" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 1.5)
+
+[node name="Health Text" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.30701, 0)
+pixel_size = 0.025
+modulate = Color(0, 0, 1, 1)
+outline_modulate = Color(0.41598, 0.41598, 0.41598, 1)
+text = "XXX/XXX"

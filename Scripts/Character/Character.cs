@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
@@ -52,16 +51,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	[Export] private ActionData actionData = null;
 
-	private int actionPoints = 2; // take form a resource data
+	[Export] private int actionPoints = 2; // take form a resource data
 	[Export] public bool CompletedTurn {get; private set;} = false;
 
 	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
 	[Export] public Character Target { get; private set; } = null;
-	[Export] public bool InAttackMode { get; private set; } = false;
+	[Export] public bool AimingMode { get; private set; } = false;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
+	[Export] private Label3D HealthLabel;
 
 	private RandomNumberGenerator rng = new();
 
@@ -128,12 +128,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (IsFriendly)
 		{
 			TurnManager.Instance.playerCharacters.Add(this);
+			HealthLabel.Modulate = new Color(0,0,1,1);
 		}
 		else
 		{
 			EnemyManager.Instance.allEnemies.Add(this);
 			TurnManager.Instance.enemyCharacters.Add(this);
+			HealthLabel.Modulate = new Color(1,0,0,1);
 		}
+
+		UpdateHealthText();
 		actionPoints = actionData.defaultActionPoints;
 	}
 
@@ -172,6 +176,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		GD.Print(this.Name + " Action Done: " + cost);
 		this.actionPoints -= cost;
 		CompletedTurn = CheckTurnEnd();
+
+		if (CompletedTurn && AimingMode)
+		{
+				CameraManager.ReturnCameraToTactical();
+				AimingMode = false;
+		}
 	}
 
 	private bool CheckTurnEnd()
@@ -192,19 +202,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		//TurnManager.Instance.playerCharacterTurns[this] = true;
 	}
 
-	public void ToggleAttackMode()
+	public void ToggleAim()
 	{
 		// TODO: Add tweening to these
 
-		if (InAttackMode)
+		if (AimingMode)
 		{
-			InAttackMode = false;
+			AimingMode = false;
 			CameraManager.ReturnCameraToTactical();
-			// return the camera
 		}
 		else
 		{
-			InAttackMode = true;
+			AimingMode = true;
 			Target = enemiesInLos[targetIndex];
 			LookAt(Target.Position);
 			CameraManager.Instance.mainCamera.LookAt(Target.Position);
@@ -237,8 +246,24 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	private void Die()
 	{
 		CompletedTurn = true;
-		// play Death animation and sound
-		throw new NotImplementedException();
+		// TODO: play Death animation and sound
+		
+		// Test
+		if (IsFriendly)
+			TurnManager.Instance.playerCharacters.Remove(this);
+		else
+		{
+			enemiesInLos.Remove(this);
+			EnemyManager.Instance.allEnemies.Remove(this);
+			TurnManager.Instance.enemyCharacters.Remove(this);
+		}
+
+		QueueFree();
+	}
+
+	private void UpdateHealthText()
+	{
+		HealthLabel.Text = Health +"/"+ Stats.Health.GetValue();
 	}
 
 	#region ICombat Implementations
@@ -278,7 +303,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		
 		if (hit)
 		{
-			int damage = Equipment.GetCurrentWeaponDamage();
+			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
 			// and play animation
 		}
@@ -286,8 +311,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			// shoot animation but no hit
 		}
-		throw new NotImplementedException();
 
+		CompleteAction(actionData.attackCost);
+	}
+
+	public void TakeDamage(int damage)
+	{
+		Health -= damage;
+
+		if (Health <= 0)
+			Die();
+		else
+			UpdateHealthText();
 	}
 
 	#endregion
@@ -376,16 +411,4 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			SearchForEnemies(true); // to see if this can see enemy
 		}
 	}
-
-
-	public void TakeDamage(int damage)
-	{
-		Health -= damage;
-
-		if (Health <= 0)
-			Die();
-	}
-
-
-
 }

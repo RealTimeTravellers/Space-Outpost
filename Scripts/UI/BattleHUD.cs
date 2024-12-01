@@ -11,14 +11,14 @@ public partial class BattleHUD : Control
     private static void OnFirePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        if (character.InAttackMode)
+        if (character.AimingMode)
             character.Attack(character.Target);
     }
 
     private static void OnAttackModePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        character.ToggleAttackMode();
+        character.ToggleAim();
     }
 
     private static void OnLeftArrowPressed()
