@@ -86,10 +86,12 @@ public partial class TurnManager : Node
             bool allCompletedTurns = true;
 
             foreach (Character player in playerCharacters)
-                allCompletedTurns |= player.CompletedTurn;
+                allCompletedTurns &= player.CompletedTurn;
+            
 
             if (allCompletedTurns)
                 TurnChanged.Invoke(false); // start enemy turn
+            
             
         }
 
@@ -104,7 +106,7 @@ public partial class TurnManager : Node
             bool allCompletedTurns = true;
 
             foreach (Character enemy in enemyCharacters)
-                allCompletedTurns |= enemy.CompletedTurn;
+                allCompletedTurns &= enemy.CompletedTurn;
 
             if (allCompletedTurns)
                 TurnChanged.Invoke(true); // start player turn
