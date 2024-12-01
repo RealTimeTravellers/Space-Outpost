@@ -257,7 +257,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		}
 
-		TurnManager.Instance.CharacterDied.Invoke();
+		TurnManager.Instance.CharacterDied.Invoke(this);
 		QueueFree();
 	}
 
@@ -414,7 +414,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
-	private void OnCharacterDied()
+	private void OnCharacterDied(Character diedCharacter)
 	{
 		SearchForEnemies(true);
 	}
