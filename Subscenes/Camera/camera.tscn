@@ -1,10 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2eqd4gi0desn"]
+[gd_scene load_steps=3 format=3 uid="uid://d2eqd4gi0desn"]
 
 [ext_resource type="Script" path="res://Scripts/Camera/Raycaster.cs" id="1_0d72r"]
+[ext_resource type="Script" path="res://Scripts/Camera/CameraController.cs" id="1_28aoo"]
 
-[node name="Camera" type="Camera3D"]
+[node name="CameraSet" type="Node3D" node_paths=PackedStringArray("raycaster", "Camera")]
+script = ExtResource("1_28aoo")
+raycaster = NodePath("Camera3D/Raycaster")
+Camera = NodePath("Camera3D")
 
-[node name="Raycaster" type="Node3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="."]
+
+[node name="Raycaster" type="Node3D" parent="Camera3D"]
 script = ExtResource("1_0d72r")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

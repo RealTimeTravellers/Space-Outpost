@@ -232,7 +232,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				Target = enemiesInLos[targetIndex];
 				LookAt(Target.Position);
-				CameraManager.Instance.mainCamera.LookAt(Target.Position);
+				CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
 				CameraManager.MoveToShoulder(this);
 			}
 		}
@@ -256,7 +256,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		Target = enemiesInLos[targetIndex];
 		LookAt(Target.Position);
 		CameraManager.MoveToShoulder(this);
-		CameraManager.Instance.mainCamera.LookAt(Target.Position);
+		CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
 	}
 
 	private void Die()

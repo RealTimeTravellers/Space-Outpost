@@ -4,7 +4,8 @@ using System;
 public partial class CameraManager : Node
 {
     public static CameraManager Instance {get; private set;}
-    [Export] public Camera3D mainCamera;
+    [Export] public CameraController MainCameraSet { get; private set; }
+    public Camera3D MainCamera { get; private set; }
     [Export] public Node3D TacticalCameraPostion;
 	[Export] public bool AimingMode { get; private set; } = false;
 	[Export] public bool AreaSelection { get; private set; } = false;
@@ -15,15 +16,27 @@ public partial class CameraManager : Node
         Instance = this;
     }
 
+    public override void _Ready()
+    {
+        SetMainCamera();
+        base._Ready();
+    }
+
+    private async void SetMainCamera()
+    {
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        MainCamera = MainCameraSet.Camera;
+    }
+
     public static void ReturnCameraToTactical()
     {
-        Instance.mainCamera.Transform = Instance.TacticalCameraPostion.GlobalTransform;
+        Instance.MainCameraSet.Transform = Instance.TacticalCameraPostion.GlobalTransform;
         Instance.AimingMode = false;
     }
 
     public static void MoveToShoulder(Character character)
     {
-        Instance.mainCamera.Transform = character.ShoulderCamera.GlobalTransform;
+        Instance.MainCameraSet.Transform = character.ShoulderCamera.GlobalTransform;
         Instance.AimingMode = true;
     }
 
