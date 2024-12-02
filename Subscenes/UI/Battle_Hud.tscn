@@ -78,4 +78,6 @@ icon = ExtResource("2_50qdf")
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Left" to="." method="OnLeftArrowPressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Move" to="." method="OnMovePressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
+[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Stand To Engage Button" to="." method="OnStandToEngagePressed"]
+[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Supressive Fire Button" to="." method="OnSupressiveFirePressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Right" to="." method="OnRigtArrowPressed"]
