@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
@@ -35,8 +36,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float visualRange { get; private set; } = 35; 
-
-	[Export] public bool IsMyTurn {get; private set;} = false; // For DEBUG USE
 	public bool IsInCover { get; private set; } = false;
 
 	#region ICombat Variables
@@ -57,6 +56,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
+	[Export] private EndTurnState endTurnState = EndTurnState.None;
 	[Export] public Character Target { get; private set; } = null;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
@@ -168,6 +168,26 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		while (doQuery)
 		{
 			enemiesInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+
+			if (endTurnState == EndTurnState.StandToEngage)
+			{
+				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
+				{
+					Attack(TurnManager.CurrentlyMovingCharacter);
+					endTurnState = EndTurnState.None;
+					doQuery = false;
+				}
+			}
+			else if (endTurnState == EndTurnState.SupressiveFire)
+			{
+				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
+				{
+					Attack(TurnManager.CurrentlyMovingCharacter);
+					endTurnState = EndTurnState.None;
+					doQuery = false;
+				}
+			}
+
 			await Task.Delay(Mathf.CeilToInt(1000f / queriesPerSecond));
 		}
 	}
@@ -216,10 +236,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				CameraManager.MoveToShoulder(this);
 			}
 		}
-		
 	}
 
-	public void ChangeTarget(bool toLeft = false)
+	public void ChangeTarget(bool toLeft)
 	{
 		if (toLeft)
 		{
@@ -267,7 +286,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	}
 
 	#region ICombat Implementations
-	public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies)
+	public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies, bool limitedFov = false)
 	{
 		// this needs to be active in enemy turn
 		// this needs to be active last time once moving is done
@@ -284,6 +303,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				
 				if (hit.NonEmpty)
 					enemiesWithLos.Add(enemy);
+
+				if (limitedFov)
+				{
+					// TODO: do vector math to determine if where character looking direction is within a radian of x degrees
+					// TODO; if they are not take them out of enemiesWithLos list
+				}
 			}
 		}
 		return enemiesWithLos;
@@ -355,15 +380,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void TakeCover()
 	{
-		IsTakingCover = true;
 		CompleteAction(actionData.takeCoverCost);
+		IsTakingCover = true;
+		endTurnState = EndTurnState.TakingCover;
 	}
 
 	public void StandToEngage()
 	{
 		// TODO: apply query and engage protocol
 		CompleteAction(actionData.standToEngageCost);
-		throw new NotImplementedException();
+		endTurnState = EndTurnState.StandToEngage;
 	}
 
 	public void SupressiveFire()
@@ -371,7 +397,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// TODO: apply supressive fire protocol
 		// TODO: empty guns' magazine
 		CompleteAction(actionData.supressiveFireCost);
-		throw new NotImplementedException();
+		endTurnState = EndTurnState.SupressiveFire;
 	}
 	#endregion
 
@@ -380,17 +406,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (IsFriendly && playerTurn)
 		{
-			IsMyTurn = false;
 			CompletedTurn = false;
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
+			endTurnState = EndTurnState.None;
 		}
 		else if(!IsFriendly && !playerTurn)
 		{
-			IsMyTurn = true;
 			CompletedTurn = false;
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
+			endTurnState = EndTurnState.None;
 		}
 	}
 

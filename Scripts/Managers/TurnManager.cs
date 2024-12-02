@@ -27,6 +27,8 @@ public partial class TurnManager : Node
     /// True if completed. false if not completed
     /// </summary>
     
+    public static Character CurrentlyMovingCharacter { get; private set; } = null;
+
     public Action<Character> CharacterDied;
     [Export] public Godot.Collections.Array<Character> playerCharacters = new();
     [Export] public Godot.Collections.Array<Character> enemyCharacters = new();

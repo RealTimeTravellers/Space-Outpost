@@ -7,6 +7,7 @@ public partial class CameraManager : Node
     [Export] public Camera3D mainCamera;
     [Export] public Node3D TacticalCameraPostion;
 	[Export] public bool AimingMode { get; private set; } = false;
+	[Export] public bool AreaSelection { get; private set; } = false;
     
 
     private CameraManager()
@@ -25,4 +26,16 @@ public partial class CameraManager : Node
         Instance.mainCamera.Transform = character.ShoulderCamera.GlobalTransform;
         Instance.AimingMode = true;
     }
+
+    public static void AreaSelectionMode()
+    {
+        ReturnCameraToTactical();
+        Instance.AreaSelection = true;
+    }
+
+    public void OnAreaSelected()
+    {
+        // If i manage to do it through raycaster this may be needed.
+    }
+
 }
