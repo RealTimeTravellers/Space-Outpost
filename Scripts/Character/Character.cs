@@ -429,19 +429,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (IsFriendly)
 		{
-			if (gridObject == null)
-				GD.Print(this.Name + " gridObject Null");
-			if (currentGrid == null)
-				GD.Print(this.Name+ " currentGrid Null");
+			if (gridObject == null) return;
+
 			if (currentGrid.GetInstanceId() == gridObject.GetInstanceId()) // this character is selected
-			{
 				SelectionSprite.Visible = true;
-				GD.Print(this.Name);
-			}
 			else // another chracter is selected
-			{
 				SelectionSprite.Visible = false;
-			}
 		}
 	}
 
