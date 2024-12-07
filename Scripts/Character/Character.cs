@@ -431,10 +431,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			if (gridObject == null) return;
 
-			if (currentGrid.GetInstanceId() == gridObject.GetInstanceId()) // this character is selected
+			if (this.GetInstanceId() == GridManager.Instance.selectedCharacter.GetInstanceId())
 				SelectionSprite.Visible = true;
-			else // another chracter is selected
+			else
 				SelectionSprite.Visible = false;
+
+			//if (currentGrid.GetInstanceId() == gridObject.GetInstanceId())
+			//	SelectionSprite.Visible = true;
+			//else
+			//	SelectionSprite.Visible = false;
 		}
 	}
 

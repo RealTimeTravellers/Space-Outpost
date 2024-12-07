@@ -45,6 +45,8 @@ text = "XXX/XXX"
 [node name="Selection Sprite" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.15, 0)
 visible = false
+transparency = 0.75
+cast_shadow = 0
 modulate = Color(0, 1, 1, 1)
 pixel_size = 0.005
 texture = ExtResource("3_c2hrg")
