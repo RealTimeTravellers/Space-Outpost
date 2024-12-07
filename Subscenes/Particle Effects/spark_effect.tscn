@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://bixjkk68kcd8r"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q8htt"]
+emission_shape_scale = Vector3(0, 1, 0)
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 2.0
+initial_velocity_max = 4.0
+collision_mode = 2
+
+[sub_resource type="Curve" id="Curve_j5lkm"]
+bake_resolution = 10
+_data = [Vector2(0, 0.485294), 0.0, 8.09492, 0, 0, Vector2(0.138728, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.0588236), -2.10166, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t5oi4"]
+transparency = 1
+albedo_color = Color(0.805879, 0.581812, 7.70092e-07, 0.501961)
+emission_enabled = true
+emission = Color(0.849708, 0.167612, 0, 1)
+rim_enabled = true
+rim_tint = 1.0
+use_particle_trails = true
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_bt32m"]
+material = SubResource("StandardMaterial3D_t5oi4")
+size = 0.1
+section_segments = 1
+curve = SubResource("Curve_j5lkm")
+
+[node name="Spark Effect" type="GPUParticles3D"]
+emitting = false
+amount = 100
+lifetime = 0.4
+interp_to_end = 1.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-0.5, -0.5, -0.5, 1, 1, 1)
+trail_enabled = true
+trail_lifetime = 0.25
+process_material = SubResource("ParticleProcessMaterial_q8htt")
+draw_pass_1 = SubResource("RibbonTrailMesh_bt32m")
