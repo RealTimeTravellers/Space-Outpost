@@ -435,11 +435,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				SelectionSprite.Visible = true;
 			else
 				SelectionSprite.Visible = false;
-
-			//if (currentGrid.GetInstanceId() == gridObject.GetInstanceId())
-			//	SelectionSprite.Visible = true;
-			//else
-			//	SelectionSprite.Visible = false;
 		}
 	}
 
