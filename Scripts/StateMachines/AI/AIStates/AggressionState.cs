@@ -9,25 +9,23 @@ public class AggressionState : EnemyState
 
     public override AIState Process(Character enemy)
     {
-        GD.Print("Finding the player!");
+        var nextState = base.CheckState(enemy);
+        if (nextState != AIState.Aggression)
+            return nextState;
+
+        if (enemy.Target != null)
+        {
+            if (enemy.Equipment.CurrentWeapon.NeedsReload())
+                enemy.Equipment.CurrentWeapon.Reload();
+            else
+                enemy.Attack(enemy.Target);
+        }
+        
         return AIState.Aggression;
     }
 
     public override void Exit(Character aiController)
     {
         GD.Print("Exiting Aggression State");
-    }
-
-    public override AIState CheckState(Character enemy)
-    {
-        if (enemy.Stats.UnitType == UnitType.Human && enemy.Stats.Morale.GetValue() < 20)
-        {
-            return AIState.Cower;
-        }
-        else if (enemy.Stats.UnitType == UnitType.Human && enemy.Stats.Health.GetValue() <= 2)
-        {
-            return AIState.Flee;
-        }
-        return AIState.Aggression;
     }
 }

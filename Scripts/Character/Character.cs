@@ -37,6 +37,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float VisualRange { get; private set; } = 35; 
 	public bool IsInCover { get; private set; } = false;
+	public event Action<int> ActionCompleted;
 
 	#region ICombat Variables
 	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
@@ -50,7 +51,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	[Export] private ActionData actionData = null;
 
-	[Export] private int actionPoints = 2; // take form a resource data
+	[Export] private int actionPoints; // take form a resource data
 	[Export] public bool CompletedTurn {get; private set;} = false;
 
 	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
@@ -62,6 +63,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public Node3D ShoulderCamera {get; private set;}
 	[Export] private Label3D HealthLabel;
 	[Export] private Sprite3D SelectionSprite;
+	
 
 	private RandomNumberGenerator rng = new();
 
@@ -138,7 +140,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		UpdateHealthText();
-		actionPoints = actionData.defaultActionPoints;
+		actionPoints = Stats.ActionPoints.GetValue();
 	}
 
 	private void SubscribeToEvents()
@@ -198,6 +200,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	private void CompleteAction(int cost)
 	{
 		GD.Print(this.Name + " Action Done: " + cost);
+		ActionCompleted?.Invoke(this.actionPoints);
 		this.actionPoints -= cost;
 		CompletedTurn = CheckTurnEnd();
 
@@ -231,8 +234,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CameraManager.ReturnCameraToTactical();
 		else
 		{
-			if (actionPoints > 0)
+			if (actionPoints > 0 && enemiesInLos.Count > 0)  // Array boş değilse devam et
 			{
+				targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);  // Index'i sınırla
 				Target = enemiesInLos[targetIndex];
 				LookAt(Target.Position);
 				CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
@@ -243,6 +247,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void ChangeTarget(bool toLeft)
 	{
+		if (enemiesInLos.Count == 0) return; 
+		
 		if (toLeft)
 		{
 			targetIndex--;
@@ -427,7 +433,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void OnSelectionChanged(GridObject gridObject)
 	{
-		if (IsFriendly)
+		if (IsFriendly && SelectionSprite != null) 
 		{
 			if (gridObject == null) return;
 

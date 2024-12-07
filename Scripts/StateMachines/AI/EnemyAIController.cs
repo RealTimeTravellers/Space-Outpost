@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 public partial class EnemyAIController : Node
 {
@@ -8,7 +9,9 @@ public partial class EnemyAIController : Node
 
     public override void _Ready()
     {
+        base._Ready();
         _character = GetParent<Character>();
+        _character.ActionCompleted += OnActionCompleted;
         _stateMachine = new EnemyAIStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
         
@@ -27,12 +30,22 @@ public partial class EnemyAIController : Node
 
     private void ProcessAI()
     {
-        AIState currentState = _stateMachine.CurrentState;
-        AIState nextState = _stateMachine.UpdateCurrentState(_character);
-        
-        if (nextState != currentState)
+        if (!_isActive || _character == null) return;
+
+        // Her action sonrası state'i tekrar kontrol et
+        while (!_character.CompletedTurn)
         {
-            SetState(nextState, _character);
+            AIState currentState = _stateMachine.CurrentState;
+            AIState nextState = _stateMachine.UpdateCurrentState(_character);
+            
+            if (nextState != currentState)
+            {
+                SetState(nextState, _character);
+            }
+            
+            // Action point kalmadıysa döngüden çık
+            if (_character.Stats.ActionPoints.GetValue() <= 0)
+                break;
         }
     }
 
@@ -76,6 +89,14 @@ public partial class EnemyAIController : Node
         {
             TurnManager.Instance.TurnChanged -= OnTurnChanged;
             TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
+        }
+    }
+
+    private void OnActionCompleted(int remainingActionPoints)
+    {
+        if (!_character.CompletedTurn)
+        {
+            ProcessAI(); // Her action sonrası state'i tekrar değerlendir
         }
     }
 }

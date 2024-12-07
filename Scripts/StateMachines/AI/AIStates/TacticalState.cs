@@ -9,24 +9,32 @@ public class TacticalState : EnemyState
 
     public override AIState Process(Character enemy)
     {
-        GD.Print("Tactical Positioning!");
-        return CheckState(enemy);
+        var nextState = base.CheckState(enemy);
+        if (nextState != AIState.Tactical)
+            return nextState;
+
+        // Taktiksel davranış
+        if (!enemy.IsInCover)
+        {
+            enemy.TakeCover();
+            return AIState.Tactical;
+        }
+
+        if (enemy.Equipment.CurrentWeapon.NeedsReload())
+        {
+            enemy.Equipment.CurrentWeapon.Reload();
+            return AIState.Tactical;
+        }
+
+        if (enemy.Target != null && enemy.Stats.ActionPoints.GetValue() >= 2)
+        {
+            enemy.Attack(enemy.Target);
+        }
+        
+        return AIState.Tactical;
     }
     public override void Exit(Character aiController)
     {
         GD.Print("Exiting Tactical State");
-    }
-
-    public override AIState CheckState(Character enemy)
-    {
-        if (enemy.Stats.UnitType == UnitType.Human && enemy.Stats.Morale.GetValue() < 20)
-        {
-            return AIState.Cower;
-        }
-        else if (enemy.Stats.UnitType == UnitType.Human && enemy.Stats.Health.GetValue() <= 2)
-        {
-            return AIState.Flee;
-        }
-        return AIState.Tactical;
     }
 }
