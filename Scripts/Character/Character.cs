@@ -58,9 +58,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
 	[Export] private EndTurnState endTurnState = EndTurnState.None;
+
 	[Export] public Character Target { get; private set; } = null;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
+
+	[Export] private GpuParticles3D shootEffect;
+	[Export] private Node3D MuzzlePosition; // play muzzle flash and shoot pos
+
 	[Export] private Label3D HealthLabel;
 	[Export] private Sprite3D SelectionSprite;
 	
@@ -361,12 +366,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		
 		if (hit) // || true for test purposes
 		{
+			shootEffect.ProcessMaterial.Set("spread", 2);
+			shootEffect.Restart();
+
 			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
 			// and play animation
 		}
 		else
 		{
+			shootEffect.ProcessMaterial.Set("spread", 10);
+			shootEffect.Restart();
+
 			// shoot animation but no hit
 		}
 

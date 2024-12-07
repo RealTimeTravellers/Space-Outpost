@@ -72,4 +72,6 @@ Select={
 
 [layer_names]
 
+3d_render/layer_1="Draw All"
+3d_physics/layer_1="Static Object"
 3d_physics/layer_10="Enemy"
