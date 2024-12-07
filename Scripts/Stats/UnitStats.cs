@@ -71,9 +71,14 @@ public partial class UnitStats
         ActionPoints.DecreaseValue(amount);
     }
 
-    public void DepleteActionPoints(int amount = 1)
+    public void DepleteActionPoints()
     {
         ActionPoints.SetCurrentValue(0);
+    }
+
+    public void ResetActionPoints()
+    {
+        ActionPoints.Reset();
     }
 
     public bool CalculateCriticalHitChance()

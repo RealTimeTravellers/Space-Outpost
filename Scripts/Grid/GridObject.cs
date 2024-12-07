@@ -6,6 +6,9 @@ using System.Runtime.Serialization;
 
 public partial class GridObject : Node3D
 {
+	private bool _isOccupied = false;
+    private bool _isBlocked = false;
+    private Character _occupyingCharacter;
 	[Export] private CoverType coverType = CoverType.None;
 	[Export] public Godot.Collections.Array<bool> coverDirection = new() { false, false, false, false };
 	
@@ -32,6 +35,27 @@ public partial class GridObject : Node3D
 	[Export] public Color innerColour;
 	[Export] public Color outerColour;
 	[Export] public Color blockedColour;
+
+    public bool IsOccupied 
+    { 
+        get => _isOccupied; 
+        set => _isOccupied = value; 
+    }
+
+    public bool IsBlocked 
+    { 
+        get => _isBlocked; 
+        set => _isBlocked = value; 
+    }
+	public Character OccupyingCharacter
+    {
+        get => _occupyingCharacter;
+        set
+        {
+            _occupyingCharacter = value;
+            _isOccupied = value != null;
+        }
+    }
 	#endregion
 	public override void _Ready()
 	{
@@ -87,4 +111,14 @@ public partial class GridObject : Node3D
 			}
 		}
 	}
+
+	public void SetOccupied(Character character)
+    {
+        OccupyingCharacter = character;
+    }
+
+    public void ClearOccupied()
+    {
+        OccupyingCharacter = null;
+    }
 }
