@@ -431,7 +431,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			if (gridObject == null) return;
 
-			if (this.GetInstanceId() == GridManager.Instance.selectedCharacter.GetInstanceId())
+			if (this == GridManager.Instance.selectedCharacter)
 				SelectionSprite.Visible = true;
 			else
 				SelectionSprite.Visible = false;
