@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4lgi2il10fpr"]
+
+[ext_resource type="PackedScene" uid="uid://b25odi15vtkcq" path="res://Visual Assets/Models/Obstacles/Nucleer Case/Nukleer_Case.fbx" id="1_a6vav"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5usmt"]
+size = Vector3(1, 1.30658, 3.40945)
+
+[node name="Nucleer Case" type="StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.596588, 0.0580902)
+shape = SubResource("BoxShape3D_5usmt")
+
+[node name="Nukleer_Case" parent="." instance=ExtResource("1_a6vav")]
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 0, 0.6, 0)
