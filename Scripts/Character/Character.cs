@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
 {
-	public GridObject currentGrid = null;
+	[Export] public GridObject currentGrid = null;
 
 	// Stats and equipment - EXPORT etme problemi
 	[Export] public PlayerType PlayerType { get; private set; } = PlayerType.Soldier;
@@ -35,7 +35,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
-	[Export] public float visualRange { get; private set; } = 35; 
+	[Export] public float VisualRange { get; private set; } = 35; 
 	public bool IsInCover { get; private set; } = false;
 
 	#region ICombat Variables
@@ -61,6 +61,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 	[Export] private Label3D HealthLabel;
+	[Export] private Sprite3D SelectionSprite;
 
 	private RandomNumberGenerator rng = new();
 
@@ -146,6 +147,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
 		TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
 		TurnManager.Instance.CharacterDied += OnCharacterDied;
+		GridManager.Instance.SelectionChanged += OnSelectionChanged;
 	}
 
 	private void UnsubscribeFromEvents()
@@ -154,6 +156,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
 		TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
 		TurnManager.Instance.CharacterDied -= OnCharacterDied;
+		GridManager.Instance.SelectionChanged -= OnSelectionChanged;
 	}
 
 	private async void SearchForEnemies(bool instantSearch = false)
@@ -367,6 +370,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				TurnManager.Instance.StartPlayerMovement();
 				CompleteAction(actionData.moveCost);
 				TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
+				currentGrid = GridManager.Instance.selectedGrid;
 			}
 			else
 			{
@@ -374,6 +378,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				TurnManager.Instance.StartEnemyMovement();
 				CompleteAction(actionData.moveCost);
 				TurnManager.Instance.EndEnemyMovement(); // here for test as this moves instantly currently
+				//currentGrid = where it decided to move;
 			}
 		}
 	}
@@ -401,7 +406,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	}
 	#endregion
 
-	// events
+	#region Event Handles
 	private void OnTurnChanged(bool playerTurn)
 	{
 		if (IsFriendly && playerTurn)
@@ -417,6 +422,19 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
 			endTurnState = EndTurnState.None;
+		}
+	}
+
+	private void OnSelectionChanged(GridObject gridObject)
+	{
+		if (IsFriendly)
+		{
+			if (gridObject == null) return;
+
+			if (this == GridManager.Instance.selectedCharacter)
+				SelectionSprite.Visible = true;
+			else
+				SelectionSprite.Visible = false;
 		}
 	}
 
@@ -444,4 +462,5 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		SearchForEnemies(true);
 	}
+	#endregion
 }

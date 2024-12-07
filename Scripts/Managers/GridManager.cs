@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public partial class GridManager : Node
 {
@@ -12,6 +14,7 @@ public partial class GridManager : Node
 
     [Export] public PackedScene gridObjectSubscene;
     [Export] public Node3D gridParent;
+    [Export] public Godot.Collections.Array<GridObject> gridList = new(); // not in particular order
 
     [Export] private int gridSize; // temp, will check from data
 
@@ -33,6 +36,22 @@ public partial class GridManager : Node
     {
         CreateGrid();
         base._Ready();
+    }
+
+    private async void CreateOrAssignGrid()
+    {
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+
+        if (gridParent.GetChildCount() > 0) // if true grid is done by hand
+            AssignGrid();
+        else
+            CreateGrid();
+    }
+
+    private void AssignGrid()
+    {
+        foreach (GridObject gridObject in gridParent.GetChildren().Cast<GridObject>())
+            gridList.Add(gridObject);
     }
 
     private void CreateGrid()

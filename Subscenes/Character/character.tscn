@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bbshs62tttw3a"]
+[gd_scene load_steps=7 format=3 uid="uid://bbshs62tttw3a"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_iy22r"]
 [ext_resource type="Resource" uid="uid://dha83qrhkaned" path="res://Data/Chracter Action Data/PlayerCharacterActionData.tres" id="2_wfint"]
+[ext_resource type="Texture2D" uid="uid://sk4gltyhmbp4" path="res://Visual Assets/Sprites/circle-512.png" id="3_c2hrg"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
 
@@ -9,13 +10,15 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
-[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera", "HealthLabel")]
+[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera", "HealthLabel", "SelectionSprite")]
 collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_iy22r")
+IsFriendly = true
 actionData = ExtResource("2_wfint")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
 HealthLabel = NodePath("Health Text")
+SelectionSprite = NodePath("Selection Sprite")
 
 [node name="Model" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -38,3 +41,12 @@ pixel_size = 0.025
 modulate = Color(0, 0, 1, 1)
 outline_modulate = Color(0.41598, 0.41598, 0.41598, 1)
 text = "XXX/XXX"
+
+[node name="Selection Sprite" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.15, 0)
+visible = false
+transparency = 0.75
+cast_shadow = 0
+modulate = Color(0, 1, 1, 1)
+pixel_size = 0.005
+texture = ExtResource("3_c2hrg")
