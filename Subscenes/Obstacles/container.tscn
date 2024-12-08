@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://da5utjbqs7o4k"]
+
+[ext_resource type="PackedScene" uid="uid://cny6ucys64qk3" path="res://Visual Assets/Models/Obstacles/Big Container/Container_Big.FBX" id="1_ov8es"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6mqpa"]
+size = Vector3(5.15294, 2.20929, 2.25769)
+
+[node name="Container" type="StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00704193, 1.07465, -0.0210571)
+shape = SubResource("BoxShape3D_6mqpa")
+
+[node name="Container_Big" parent="." instance=ExtResource("1_ov8es")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
