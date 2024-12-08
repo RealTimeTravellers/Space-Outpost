@@ -22,27 +22,35 @@ public partial class EnemyAIController : Node
 
     public override void _Process(double delta)
     {
-        // Eğer aktif değilse veya karakter turu tamamlamışsa işlem yapma
         if (!_isActive || _character == null || _character.CompletedTurn)
         {
             _isActive = false;
             return;
         }
 
+        if (_character.Stats.ActionPoints.GetValue() <= 0)
+        {
+            _character.CompletedTurn = true;
+            _isActive = false;
+            TurnManager.Instance.EndEnemyMovement();
+            return;
+        }
+
         ProcessAI();
     }
-
     private void ProcessAI()
     {
-        if (_character == null || _character.CompletedTurn)
+        if (_character == null || _character.CompletedTurn || _character.Stats.ActionPoints.GetValue() <= 0)
+        {
+            _isActive = false;
             return;
+        }
 
         var nextState = _stateMachine.UpdateCurrentState(_character);
         if (nextState != _stateMachine.CurrentState)
         {
             SetState(nextState, _character);
         }
-        GD.Print($"[AI] { _character.Name } updated to state: { _stateMachine.CurrentState }");
     }
 
     private void OnTurnChanged(bool isPlayerTurn)
@@ -66,17 +74,9 @@ public partial class EnemyAIController : Node
     {
         if (_character == null || _character.IsFriendly)
             return;
-
-        GD.Print($"[AI] Enemy movement changed - started: {started}, Character: {_character.Name}");
-        
         if (started && !_character.CompletedTurn)
         {
             _isActive = true;
-            SetState(AIState.Patrol, _character);
-        }
-        else
-        {
-            _isActive = false;
         }
     }
 

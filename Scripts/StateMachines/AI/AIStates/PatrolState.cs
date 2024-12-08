@@ -13,8 +13,6 @@ public class PatrolState : EnemyState
     private void ChooseNewDirection(Character enemy)
     {
         var currentAP = enemy.Stats.ActionPoints.GetValue();
-        GD.Print($"[AI] {enemy.Name} choosing direction with AP: {currentAP}");
-
         if (currentAP <= 0)
         {
             enemy.CompletedTurn = true;
@@ -36,8 +34,6 @@ public class PatrolState : EnemyState
         {
             // Sadece 1-2 adım ilerle
             int steps = random.RandiRange(1, 2);
-            GD.Print($"[AI] {enemy.Name} trying direction {dir}, steps: {steps}");
-
             Vector3 startPos = enemy.GlobalPosition;
             Vector3 targetPos = startPos + dir * steps;
 
@@ -57,7 +53,6 @@ public class PatrolState : EnemyState
             {
                 _patrolTarget = targetPos;
                 foundValidTarget = true;
-                GD.Print($"[AI] {enemy.Name} found valid target at: {_patrolTarget}");
                 break;
             }
         }
@@ -65,7 +60,6 @@ public class PatrolState : EnemyState
         if (!foundValidTarget)
         {
             GD.Print($"[AI] {enemy.Name} no valid direction found, ending turn");
-            enemy.Stats.DepleteActionPoints();
             enemy.CompletedTurn = true;
             TurnManager.Instance.EndEnemyMovement();
         }
@@ -74,33 +68,19 @@ public class PatrolState : EnemyState
 
     public override AIState Process(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Patrol)
-            return nextState;
-
-        var currentAP = enemy.Stats.ActionPoints.GetValue();
-        GD.Print($"[AI] {enemy.Name} Processing with AP: {currentAP}");
-        
-        if (currentAP <= 0)
-        {
-            GD.Print($"[AI] {enemy.Name} has no AP left, completing turn");
-            enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement();
-            return AIState.Patrol;
-        }
-
         // Hedef grid'e hareket et
-        if (_patrolTarget != Vector3.Zero)
+        if (_patrolTarget != Vector3.Zero && !enemy.CompletedTurn)
         {
+            GD.Print($"[AI] {enemy.Name} has patrol target: {_patrolTarget}");
             var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(_patrolTarget);
-            if (targetGrid != null)
+            if (targetGrid != null) 
             {
+                GD.Print($"[AI] {enemy.Name} moving to target grid");
                 enemy.Move(targetGrid);
+                _patrolTarget = Vector3.Zero;
+                enemy.CompletedTurn = true;
+                TurnManager.Instance.EndEnemyMovement();
             }
-        }
-        else
-        {
-            ChooseNewDirection(enemy);
         }
 
         return AIState.Patrol;
@@ -108,6 +88,6 @@ public class PatrolState : EnemyState
 
     public override void Exit(Character enemy)
     {
-        //GD.Print("Exiting Patrol State");
+        GD.Print($"[AI] {enemy.Name} Exiting Patrol State");
     }
 }

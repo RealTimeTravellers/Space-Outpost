@@ -78,7 +78,7 @@ public partial class UnitStats
 
     public void ResetActionPoints()
     {
-        ActionPoints.Reset();
+        ActionPoints.SetCurrentValue(2);
     }
 
     public bool CalculateCriticalHitChance()

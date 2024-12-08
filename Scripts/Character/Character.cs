@@ -399,29 +399,29 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public void Move(GridObject targetGrid)
 	{
-		if(!CompletedTurn && targetGrid != null)
-		{
-			// Eski grid'i temizle
-			if(currentGrid != null)
-				currentGrid.ClearOccupied();
-				
-			// Yeni grid'e taşın
-			GlobalPosition = targetGrid.GlobalPosition;
-			currentGrid = targetGrid;
-			currentGrid.SetOccupied(this);
+		if(CompletedTurn || targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
+			return;
+
+		// Eski grid'i temizle
+		if(currentGrid != null)
+			currentGrid.ClearOccupied();
 			
-			if (IsFriendly)
-			{
-				TurnManager.Instance.StartPlayerMovement();
-				CompleteAction(actionData.moveCost);
-				TurnManager.Instance.EndPlayerMovement();
-			}
-			else
-			{
-				TurnManager.Instance.StartEnemyMovement();
-				CompleteAction(actionData.moveCost);
-				TurnManager.Instance.EndEnemyMovement();
-			}
+		// Yeni grid'e taşın
+		GlobalPosition = targetGrid.GlobalPosition;
+		currentGrid = targetGrid;
+		currentGrid.SetOccupied(this);
+		
+		if (IsFriendly)
+		{
+			TurnManager.Instance.StartPlayerMovement();
+			CompleteAction(actionData.moveCost);
+			TurnManager.Instance.EndPlayerMovement();
+		}
+		else
+		{
+			TurnManager.Instance.StartEnemyMovement();
+			CompleteAction(actionData.moveCost);
+			TurnManager.Instance.EndEnemyMovement();
 		}
 	}
 

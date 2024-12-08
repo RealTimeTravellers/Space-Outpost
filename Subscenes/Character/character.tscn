@@ -1,11 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://bbshs62tttw3a"]
-[gd_scene load_steps=8 format=3 uid="uid://bbshs62tttw3a"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_iy22r"]
 [ext_resource type="Resource" uid="uid://dha83qrhkaned" path="res://Data/Chracter Action Data/PlayerCharacterActionData.tres" id="2_wfint"]
 [ext_resource type="Texture2D" uid="uid://sk4gltyhmbp4" path="res://Visual Assets/Sprites/circle-512.png" id="3_c2hrg"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/AI/EnemyAIController.cs" id="4_2xx1t"]
-[ext_resource type="PackedScene" uid="uid://bskr6j2q3f2nt" path="res://Subscenes/Particle Effects/shoot_effect.tscn" id="4_0ko4j"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
 
@@ -14,7 +12,6 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
 [node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera", "HealthLabel")]
-[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera", "shootEffect", "MuzzlePosition", "HealthLabel", "SelectionSprite")]
 collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_iy22r")
@@ -22,8 +19,6 @@ aiControllerPath = NodePath("AIController")
 IsFriendly = true
 actionData = ExtResource("2_wfint")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
-shootEffect = NodePath("Muzzle Position/Shoot Effect")
-MuzzlePosition = NodePath("Muzzle Position")
 HealthLabel = NodePath("Health Text")
 
 [node name="Model" type="MeshInstance3D" parent="."]
@@ -56,12 +51,6 @@ cast_shadow = 0
 modulate = Color(0, 1, 1, 1)
 pixel_size = 0.005
 texture = ExtResource("3_c2hrg")
-
-[node name="Muzzle Position" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.534832, 1.43855, -1.28001)
-
-[node name="Shoot Effect" parent="Muzzle Position" instance=ExtResource("4_0ko4j")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="AIController" type="Node3D" parent="."]
 script = ExtResource("4_2xx1t")

@@ -78,18 +78,12 @@ public partial class TurnManager : Node
     public void StartPlayerMovement()
     {
         GD.Print("[TurnManager] Starting player movement");
-        foreach (Character player in playerCharacters)
-            player.Stats.ResetActionPoints();
-        
         PlayerMovementChanged?.Invoke(true);
     }
 
     public void EndPlayerMovement()
     {
-        GD.Print("[TurnManager] Ending player movement");
-        foreach (Character enemy in enemyCharacters)
-            enemy.Stats.ResetActionPoints();
-        
+        GD.Print("[TurnManager] Ending player movement");       
         PlayerMovementChanged?.Invoke(false);
     }
 
@@ -125,19 +119,7 @@ public partial class TurnManager : Node
             GD.Print("[TurnManager] All players completed, switching to enemy turn");
             _isProcessingTurn = false;
             TurnChanged?.Invoke(false);
-            
-            // Düşman turu başlarken oyuncuların durumunu sıfırla
-            foreach (Character player in playerCharacters)
-            {
-                player.CompletedTurn = false;
-            }
-            
-            foreach (Character enemy in enemyCharacters)
-            {
-                enemy.CompletedTurn = false;
-                enemy.Stats.ResetActionPoints();
-            }
-            
+            EndPlayerTurn();
             StartEnemyMovement();
         }
     }
@@ -148,7 +130,6 @@ public partial class TurnManager : Node
         
         if (started) return;
 
-        // Tüm düşmanların durumunu kontrol et
         bool allEnemiesCompleted = true;
         bool foundNextEnemy = false;
         
@@ -157,7 +138,7 @@ public partial class TurnManager : Node
             if (enemy == null) continue;
             
             GD.Print($"[TurnManager] - {enemy.Name}: {enemy.CompletedTurn}");
-            allEnemiesCompleted &= enemy.CompletedTurn;
+            allEnemiesCompleted = allEnemiesCompleted && enemy.CompletedTurn;
             
             // Henüz tamamlanmamış düşman bul
             if (!enemy.CompletedTurn && !foundNextEnemy)
@@ -168,29 +149,64 @@ public partial class TurnManager : Node
                     aiController._isActive = true;
                     foundNextEnemy = true;
                     GD.Print($"[TurnManager] Activating next enemy: {enemy.Name}");
-                    // StartEnemyMovement(); // Bu satırı kaldırıyoruz
                     break;
                 }
             }
         }
         
         // Tüm düşmanlar tamamlandıysa oyuncu turuna geç
-        if (allEnemiesCompleted && !foundNextEnemy)
+        if (allEnemiesCompleted)
         {
             GD.Print("[TurnManager] All enemies completed, switching to player turn");
             _isProcessingTurn = false;
             TurnChanged?.Invoke(true);
-            
-            foreach (Character player in playerCharacters)
+            EndEnemyTurn();
+            StartPlayerMovement();
+        }
+    }
+
+    private void EndPlayerTurn()
+    {
+        foreach (Character player in playerCharacters)
+        {
+            player.CompletedTurn = true;
+            player.Stats.DepleteActionPoints();
+        }
+        
+        foreach (Character enemy in enemyCharacters)
+        {
+            enemy.CompletedTurn = false;
+            enemy.Stats.ResetActionPoints();
+            var aiController = enemy.GetNode<EnemyAIController>("AIController");
+            if (aiController != null)
             {
-                if (player != null)
+                aiController._isActive = true;
+            }
+        }
+    }
+
+    private void EndEnemyTurn()
+    {
+        foreach (Character enemy in enemyCharacters)
+        {
+            if (enemy != null)
+            {
+                enemy.CompletedTurn = true;
+                enemy.Stats.DepleteActionPoints();
+                var aiController = enemy.GetNode<EnemyAIController>("AIController");
+                if (aiController != null)
                 {
-                    player.CompletedTurn = false;
-                    player.Stats.ResetActionPoints();
+                    aiController._isActive = false;
                 }
             }
-            
-            StartPlayerMovement();
+        }
+
+        foreach (Character player in playerCharacters)
+        {
+            GD.Print($"[TurnManager] {player.Name} AP before reset: {player.Stats.ActionPoints.GetValue()}");
+            player.CompletedTurn = false;
+            player.Stats.ResetActionPoints();
+            GD.Print($"[TurnManager] {player.Name} AP after reset: {player.Stats.ActionPoints.GetValue()}");
         }
     }
 }
