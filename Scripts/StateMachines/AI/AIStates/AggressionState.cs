@@ -39,6 +39,12 @@ public class AggressionState : EnemyState
         }
         else
         {
+            if (enemy.Equipment?.CurrentWeapon == null)
+            {
+                enemy.CompletedTurn = true;
+                TurnManager.Instance.EndEnemyMovement();
+                return AIState.Patrol;
+            }
             // Menzilde ise saldır
             if (enemy.Equipment.CurrentWeapon.NeedsReload())
             {

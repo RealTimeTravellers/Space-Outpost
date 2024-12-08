@@ -13,4 +13,5 @@ public partial class StatContainer : Resource
     [Export] public int Perception { get; set; } = 20;
     [Export] public int Evasion { get; set; } = 15;
     [Export] public int CriticalHitChance { get; set; } = 10;
+    [Export] public int Cover { get; set; } = 0;
 }
