@@ -26,7 +26,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	// AI stuff.
 	[Export] private NodePath aiControllerPath;
-	[Export] private EnemyAIController enemyController;
+	[Export] public EnemyAIController enemyController { get; private set; }
 
 	[Export] public bool move = false; // temp for test only
 	public int FirstMovementRange => Stats.MovementRange.GetValue();

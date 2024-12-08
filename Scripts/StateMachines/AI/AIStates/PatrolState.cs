@@ -68,6 +68,12 @@ public class PatrolState : EnemyState
 
     public override AIState Process(Character enemy)
     {
+        var nextState = base.CheckState(enemy);
+        if (nextState != AIState.Patrol)
+        {
+            GD.Print($"[AI] {enemy.Name} changing state from Patrol to {nextState}");
+            return nextState;
+        }
         // Hedef grid'e hareket et
         if (_patrolTarget != Vector3.Zero && !enemy.CompletedTurn)
         {

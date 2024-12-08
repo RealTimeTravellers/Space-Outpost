@@ -19,6 +19,5 @@ public partial class EnemyStats : UnitStats
     public EnemyStats(EnemyType enemyType, StatContainer statContainer) : base(statContainer)
     {
         EnemyType = enemyType;
-        UnitType = UnitType.Alien;
     }
 }

@@ -4,7 +4,7 @@ public class FleeState : EnemyState
 {
     public override void Enter(Character aiController)
     {
-        GD.Print("Entering Flee State");
+        GD.Print($"[AI] {aiController.Name} Entering Flee State");
     }
 
     public override AIState Process(Character enemy)
@@ -27,6 +27,6 @@ public class FleeState : EnemyState
 
     public override void Exit(Character aiController)
     {
-        GD.Print("Exiting Flee State");
+        GD.Print($"[AI] {aiController.Name} Exiting Flee State");
     }
 }

@@ -21,25 +21,24 @@ public class EnemyState : BaseState<AIState>
 
     public override AIState CheckState(Character character)
     {
-        if (character.Stats.UnitType == UnitType.Human)
+        // Önce Alien kontrolü yap
+        if (character.Stats.UnitType == UnitType.Alien)
         {
-            // Emergency conditions first
-            if (character.Stats.Health.GetValue() <= 2)
-                return AIState.Flee;
-                
-            if (character.Stats.Morale.GetValue() < 20)
-                return AIState.Cower;
-
-            // Combat decisions
             if (PlayerInSight(character))
-                return AIState.Tactical;
-        }
-        else if (character.Stats.UnitType == UnitType.Alien && PlayerInSight(character))
-        {
-            return AIState.Aggression;
+                return AIState.Aggression;
+            return AIState.Patrol;  // Varsayılan duruma dön
         }
 
-        // Stay in current state if no condition is met
-        return AIState.Patrol;
+        // Human için kontroller
+        if (character.Stats.Health.GetValue() <= 2)
+            return AIState.Flee;
+                
+        if (character.Stats.Morale.GetValue() < 5)
+            return AIState.Cower;
+
+        if (PlayerInSight(character))
+            return AIState.Tactical;
+
+        return AIState.Patrol;  // Varsayılan duruma dön
     }
 }

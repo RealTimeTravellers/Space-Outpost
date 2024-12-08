@@ -12,6 +12,6 @@ Accuracy = 70
 MovementRange = 6
 Morale = 12
 ActionPoints = 2
-Perception = 80
+Perception = 10
 Evasion = 20
 CriticalHitChance = 30

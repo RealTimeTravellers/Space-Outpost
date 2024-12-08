@@ -4,7 +4,7 @@ public class CowerState : EnemyState
 {
     public override void Enter(Character aiController)
     {
-        GD.Print("Entering Cower State");
+        GD.Print($"[AI] {aiController.Name} Entering Cower State");
     }
 
     public override AIState Process(Character enemy)
@@ -28,6 +28,6 @@ public class CowerState : EnemyState
 
     public override void Exit(Character aiController)
     {
-        GD.Print("Exiting Cower State");
+        GD.Print($"[AI] {aiController.Name} Exiting Cower State");
     }
 }

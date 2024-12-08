@@ -27,6 +27,7 @@ public partial class UnitStats
         if (statContainer == null)
             throw new ArgumentNullException(nameof(statContainer), "StatContainer cannot be null.");
         StatContainer = statContainer;
+        UnitType = statContainer.UnitType;
 
         InitializeStats();
         // Set default values
@@ -37,6 +38,7 @@ public partial class UnitStats
         Morale.SetDefaultValue(StatContainer.Morale);
         ActionPoints.SetDefaultValue(StatContainer.ActionPoints);
         Perception.SetDefaultValue(StatContainer.Perception);
+        GD.Print($"[UnitStats] Initialized {UnitType} with Perception: {Perception.GetValue()}, Default from container: {StatContainer.Perception}");
         Evasion.SetDefaultValue(StatContainer.Evasion);
         CriticalHitChance.SetDefaultValue(StatContainer.CriticalHitChance);
     }
@@ -131,7 +133,7 @@ public partial class UnitStats
         MovementRange = new Stat(0, 10);
         Morale = new Stat(0, 20);
         ActionPoints = new Stat(1, 3);
-        Perception = new Stat(0, 100);
+        Perception = new Stat(10, 100);
         Evasion = new Stat(0, 30);
         CriticalHitChance = new Stat(0, 100);
     }

@@ -3,6 +3,7 @@ using Godot;
 [Tool]
 public partial class StatContainer : Resource
 {
+    [Export] public UnitType UnitType { get; set; } = UnitType.Human;
     [Export] public int Health { get; set; } = 10;
     [Export] public int Armor { get; set; } = 10;
     [Export] public int Accuracy { get; set; } = 70;

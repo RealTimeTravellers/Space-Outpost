@@ -90,7 +90,7 @@ public partial class TurnManager : Node
     private void OnPlayerMovementChanged(bool started)
     {
         GD.Print($"[TurnManager] Player Movement Changed: {started}");
-        
+        CheckEnemyState();
         if (started)
         {
             if (!_isProcessingTurn)
@@ -126,6 +126,7 @@ public partial class TurnManager : Node
 
     private void OnEnemyMovementChanged(bool started)
     {
+        CheckEnemyState();
         GD.Print($"[TurnManager] Enemy Movement Changed: {started}");
         
         if (started) return;
@@ -203,10 +204,28 @@ public partial class TurnManager : Node
 
         foreach (Character player in playerCharacters)
         {
-            GD.Print($"[TurnManager] {player.Name} AP before reset: {player.Stats.ActionPoints.GetValue()}");
             player.CompletedTurn = false;
             player.Stats.ResetActionPoints();
-            GD.Print($"[TurnManager] {player.Name} AP after reset: {player.Stats.ActionPoints.GetValue()}");
+        }
+    }
+
+    private void CheckEnemyState()
+    {
+        foreach (Character enemy in enemyCharacters)
+        {
+            if (enemy == null || enemy.CompletedTurn) continue;
+            
+            var aiController = enemy.GetNode<EnemyAIController>("AIController");
+            if (aiController != null)
+            {
+                var currentState = aiController._stateMachine._states[aiController._stateMachine.CurrentState];
+                var nextState = currentState.CheckState(enemy);
+                
+                if (nextState != aiController._stateMachine.CurrentState)
+                {
+                    aiController.SetState(nextState, enemy);
+                }
+            }
         }
     }
 }

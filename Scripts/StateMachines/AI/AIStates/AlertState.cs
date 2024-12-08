@@ -4,7 +4,7 @@ public class AlertState : EnemyState
 {
     public override void Enter(Character aiController)
     {
-        GD.Print("Entering Alert State");
+        GD.Print($"[AI] {aiController.Name} Entering Alert State");
     }
 
     public override AIState Process(Character enemy)
@@ -26,6 +26,6 @@ public class AlertState : EnemyState
 
     public override void Exit(Character aiController)
     {
-        GD.Print("Exiting Alert State");
+        GD.Print($"[AI] {aiController.Name} Exiting Alert State");
     }
 }

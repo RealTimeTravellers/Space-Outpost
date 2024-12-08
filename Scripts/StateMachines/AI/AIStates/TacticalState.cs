@@ -4,7 +4,7 @@ public class TacticalState : EnemyState
 {
     public override void Enter(Character aiController)
     {
-        GD.Print("Entering Tactical State");
+        GD.Print($"[AI] {aiController.Name} Entering Tactical State");
     }
 
     public override AIState Process(Character enemy)
@@ -35,6 +35,6 @@ public class TacticalState : EnemyState
     }
     public override void Exit(Character aiController)
     {
-        GD.Print("Exiting Tactical State");
+        GD.Print($"[AI] {aiController.Name} Exiting Tactical State");
     }
 }

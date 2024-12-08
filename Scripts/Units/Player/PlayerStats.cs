@@ -18,6 +18,5 @@ public partial class PlayerStats : UnitStats
     public PlayerStats(PlayerType playerType, StatContainer statContainer) : base(statContainer)
     {
         PlayerType = playerType;
-        UnitType = UnitType.Human;
     }
 }

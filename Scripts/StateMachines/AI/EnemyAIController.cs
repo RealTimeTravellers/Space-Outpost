@@ -46,7 +46,9 @@ public partial class EnemyAIController : Node
             return;
         }
 
-        var nextState = _stateMachine.UpdateCurrentState(_character);
+        var currentState = _stateMachine._states[_stateMachine.CurrentState];
+        var nextState = currentState.Process(_character);
+        
         if (nextState != _stateMachine.CurrentState)
         {
             SetState(nextState, _character);
@@ -82,6 +84,11 @@ public partial class EnemyAIController : Node
 
     public void SetState(AIState newState, Character aiCharacter)
     {
+        if (aiCharacter != null)
+        {
+            var characterName = aiCharacter.Name ?? aiCharacter.GetParent()?.Name;
+            GD.Print($"[AI Controller] Setting state to {newState} for {characterName}");
+        }
         _stateMachine.ChangeState(newState, aiCharacter);
     }
 

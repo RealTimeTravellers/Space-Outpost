@@ -4,7 +4,7 @@ public class AggressionState : EnemyState
 {
     public override void Enter(Character aiController)
     {
-        GD.Print("Entering Aggression State");
+        GD.Print($"[AI] {aiController.Name} Entering Aggression State");
     }
 
     public override AIState Process(Character enemy)
@@ -26,6 +26,6 @@ public class AggressionState : EnemyState
 
     public override void Exit(Character aiController)
     {
-        GD.Print("Exiting Aggression State");
+        GD.Print($"[AI] {aiController.Name} Exiting Aggression State");
     }
 }
