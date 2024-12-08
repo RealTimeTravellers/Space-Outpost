@@ -9,7 +9,7 @@ public partial class GridObject : Node3D
 	private bool _isOccupied = false;
     private bool _isBlocked = false;
     private Character _occupyingCharacter;
-	[Export] private CoverType coverType = CoverType.None;
+	[Export] public CoverType coverType = CoverType.None;
 	public bool HasCover { get; private set; }
 	public Vector3 CoverNormal { get; private set; }
 	[Export] public Godot.Collections.Array<bool> coverDirection = new() { false, false, false, false };
@@ -148,13 +148,11 @@ public partial class GridObject : Node3D
 
 	public void SetOccupied(Character character)
     {
-		IsOccupied = true;
         OccupyingCharacter = character;
     }
 
     public void ClearOccupied()
     {
-		IsOccupied = false;
         OccupyingCharacter = null;
     }
 }
