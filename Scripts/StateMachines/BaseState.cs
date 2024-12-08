@@ -32,7 +32,6 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
             if (player == null || player == enemy) continue;  // Skip self-check
 
             float distance = enemy.GlobalPosition.DistanceTo(player.GlobalPosition);
-            GD.Print($"[AI] {enemy.Name} checking distance to {player.Name}: {distance}, Perception range: {enemy.Stats.Perception.GetValue()}");
             
             if (distance <= enemy.Stats.Perception.GetValue())
             {
@@ -83,5 +82,64 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
         }
         
         return false;
+    }
+
+    protected void FindClosestTarget(Character enemy)
+    {
+        float closestDistance = float.MaxValue;
+        Character closestTarget = null;
+
+        foreach (Character player in TurnManager.Instance.playerCharacters)
+        {
+            if (player == null || player.Stats.Health.GetValue() <= 0) continue;
+
+            float distance = enemy.GlobalPosition.DistanceTo(player.GlobalPosition);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestTarget = player;
+            }
+        }
+
+        enemy.Target = closestTarget;
+        GD.Print($"[AI] {enemy.Name} found target: {closestTarget?.Name}");
+    }
+
+    protected GridObject FindNearestCover(Character character, Character target)
+    {
+        float maxDistance = character.Stats.Perception.GetValue();
+        float bestScore = float.MinValue;
+        GridObject bestCover = null;
+
+        // Karakterin etrafındaki grid'leri kontrol et
+        for (int x = -3; x <= 3; x++)
+        {
+            for (int z = -3; z <= 3; z++)
+            {
+                Vector3 checkPos = character.GlobalPosition + new Vector3(x * 2, 0, z * 2);
+                var grid = GridManager.Instance.GetGridObjectFromWorldPosition(checkPos);
+                
+                if (grid == null || grid.IsOccupied || grid.IsBlocked || !grid.HasCover) continue;
+
+                float distanceToGrid = character.GlobalPosition.DistanceTo(checkPos);
+                if (distanceToGrid > maxDistance) continue;
+
+                // Cover'ın hedefle olan açısını kontrol et
+                Vector3 coverToTarget = (target.GlobalPosition - checkPos).Normalized();
+                Vector3 coverNormal = grid.CoverNormal;
+                float coverAngle = Mathf.Abs(coverToTarget.Dot(coverNormal));
+
+                // Puanlama: Cover açısı ve mesafeye göre
+                float score = coverAngle - (distanceToGrid / maxDistance);
+                
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestCover = grid;
+                }
+            }
+        }
+
+        return bestCover;
     }
 }

@@ -41,4 +41,6 @@ public class EnemyState : BaseState<AIState>
 
         return AIState.Patrol;  // Varsayılan duruma dön
     }
+
+    
 }

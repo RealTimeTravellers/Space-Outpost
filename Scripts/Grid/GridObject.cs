@@ -10,6 +10,8 @@ public partial class GridObject : Node3D
     private bool _isBlocked = false;
     private Character _occupyingCharacter;
 	[Export] private CoverType coverType = CoverType.None;
+	public bool HasCover { get; private set; }
+	public Vector3 CoverNormal { get; private set; }
 	[Export] public Godot.Collections.Array<bool> coverDirection = new() { false, false, false, false };
 	
 	[Export] private bool isSpriteOnly = true;
@@ -112,13 +114,47 @@ public partial class GridObject : Node3D
 		}
 	}
 
+	private void CheckCoverStatus()
+    {
+        // Raycast ile etrafı kontrol et
+        var space = GetWorld3D().DirectSpaceState;
+        
+        // 4 yönü kontrol et (sağ, sol, ön, arka)
+        Vector3[] directions = {
+            Vector3.Right,
+            Vector3.Left,
+            Vector3.Forward,
+            Vector3.Back
+        };
+
+        foreach (var dir in directions)
+        {
+            var query = PhysicsRayQueryParameters3D.Create(
+                GlobalPosition + Vector3.Up,
+                GlobalPosition + Vector3.Up + dir * 2
+            );
+            query.CollisionMask = 1 << 1; // Layer 1 (walls)
+            var result = space.IntersectRay(query);
+
+            if (result.Count > 0)
+            {
+                HasCover = true;
+                CoverNormal = -dir; // Cover'ın normal'i duvarın tersi yönünde
+                coverType = CoverType.Full;
+                break;
+            }
+        }
+    }
+
 	public void SetOccupied(Character character)
     {
+		IsOccupied = true;
         OccupyingCharacter = character;
     }
 
     public void ClearOccupied()
     {
+		IsOccupied = false;
         OccupyingCharacter = null;
     }
 }

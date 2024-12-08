@@ -59,7 +59,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private bool doQuery = false;
 	[Export] private EndTurnState endTurnState = EndTurnState.None;
 
-	[Export] public Character Target { get; private set; } = null;
+	[Export] public Character Target { get; set; } = null;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
