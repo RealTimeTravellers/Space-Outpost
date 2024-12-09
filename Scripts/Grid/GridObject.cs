@@ -71,14 +71,20 @@ public partial class GridObject : Node3D
 	private void SubscribeToEvents()
 	{
 		GridManager.Instance.SelectionChanged += OnSelectionChanged;
+		TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
 	}
 
 	private void ChangeGridMaterial(Material mat, float transparency, Color colour, bool spriteOnly)
 	{
 		if (spriteOnly)
 		{
+			if(transparency == 1)
+				gridSprite.Visible = false;
+			else
+				gridSprite.Visible = true;
+
 			gridSprite.Modulate = colour;
-			gridSprite.Transparency = transparency;
+			//gridSprite.Transparency = transparency;
 		}
 		else
 		{
@@ -87,7 +93,7 @@ public partial class GridObject : Node3D
 		}
 	}
 
-	private void OnSelectionChanged(GridObject gridObject)
+	private void UpdateColour(GridObject gridObject)
 	{
 		// TODO: if selected colour it as selected (Change Material on Geometry3D)
 		if (gridObject == null)
@@ -112,6 +118,17 @@ public partial class GridObject : Node3D
 					ChangeGridMaterial(standardMaterial, 1f, standardColour, isSpriteOnly);
 			}
 		}
+	}
+
+	private void OnPlayerMovementChanged(bool started)
+	{
+		if(!started)
+			UpdateColour(TurnManager.CurrentlyMovingCharacter.currentGrid);
+	}
+
+	private void OnSelectionChanged(GridObject gridObject)
+	{
+		UpdateColour(gridObject);
 	}
 
 	private void CheckCoverStatus()

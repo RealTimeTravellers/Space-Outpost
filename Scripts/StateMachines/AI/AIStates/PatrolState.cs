@@ -16,7 +16,7 @@ public class PatrolState : EnemyState
         if (currentAP <= 0)
         {
             enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement();
+            TurnManager.Instance.EndEnemyMovement(enemy);
             return;
         }
 
@@ -61,7 +61,7 @@ public class PatrolState : EnemyState
         {
             GD.Print($"[AI] {enemy.Name} no valid direction found, ending turn");
             enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement();
+            TurnManager.Instance.EndEnemyMovement(enemy);
         }
     }
 
@@ -85,7 +85,7 @@ public class PatrolState : EnemyState
                 enemy.Move(targetGrid);
                 _patrolTarget = Vector3.Zero;
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
         }
 

@@ -63,27 +63,31 @@ public partial class TurnManager : Node
         TurnChanged.Invoke(true);
     }
 
-    public void StartEnemyMovement()
+    public void StartEnemyMovement(Character character)
     {
         GD.Print("[TurnManager] Starting enemy movement");
+        CurrentlyMovingCharacter = character;
         EnemyMovementChanged?.Invoke(true);
     }
 
-    public void EndEnemyMovement()
+    public void EndEnemyMovement(Character character)
     {
         GD.Print("[TurnManager] Ending enemy movement");
+        CurrentlyMovingCharacter = character;
         EnemyMovementChanged?.Invoke(false);
     }
 
-    public void StartPlayerMovement()
+    public void StartPlayerMovement(Character character)
     {
         GD.Print("[TurnManager] Starting player movement");
+        CurrentlyMovingCharacter = character;
         PlayerMovementChanged?.Invoke(true);
     }
 
-    public void EndPlayerMovement()
+    public void EndPlayerMovement(Character character)
     {
-        GD.Print("[TurnManager] Ending player movement");       
+        GD.Print("[TurnManager] Ending player movement");
+        CurrentlyMovingCharacter = character;
         PlayerMovementChanged?.Invoke(false);
     }
 
@@ -120,7 +124,7 @@ public partial class TurnManager : Node
             _isProcessingTurn = false;
             TurnChanged?.Invoke(false);
             EndPlayerTurn();
-            StartEnemyMovement();
+            //StartEnemyMovement();
         }
     }
 
@@ -162,7 +166,7 @@ public partial class TurnManager : Node
             _isProcessingTurn = false;
             TurnChanged?.Invoke(true);
             EndEnemyTurn();
-            StartPlayerMovement();
+            //StartPlayerMovement();
         }
     }
 

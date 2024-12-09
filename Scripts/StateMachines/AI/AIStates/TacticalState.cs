@@ -34,7 +34,7 @@ public class TacticalState : EnemyState
             enemy.Move(_targetCover);
             enemy.TakeCover();
             enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement();
+            TurnManager.Instance.EndEnemyMovement(enemy);
         }
         else if (enemy.IsInCover)
         {
@@ -42,18 +42,18 @@ public class TacticalState : EnemyState
             {
                 enemy.Equipment.CurrentWeapon.Reload();
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
             else if (enemy.Stats.ActionPoints.GetValue() >= 2)
             {
                 enemy.Attack(enemy.Target);
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
             else
             {
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
         }
         

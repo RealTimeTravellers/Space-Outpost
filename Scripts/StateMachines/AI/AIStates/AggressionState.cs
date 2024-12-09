@@ -34,7 +34,7 @@ public class AggressionState : EnemyState
             {
                 enemy.Move(targetGrid);
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
         }
         else
@@ -42,7 +42,7 @@ public class AggressionState : EnemyState
             if (enemy.Equipment?.CurrentWeapon == null)
             {
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
                 return AIState.Patrol;
             }
             // Menzilde ise saldır
@@ -50,18 +50,18 @@ public class AggressionState : EnemyState
             {
                 enemy.Equipment.CurrentWeapon.Reload();
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
             else if (enemy.Stats.ActionPoints.GetValue() >= 2)
             {
                 enemy.Attack(enemy.Target);
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
             else
             {
                 enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement();
+                TurnManager.Instance.EndEnemyMovement(enemy);
             }
         }
         

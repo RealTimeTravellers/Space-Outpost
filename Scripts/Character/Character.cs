@@ -195,6 +195,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
 					Attack(TurnManager.CurrentlyMovingCharacter);
+					Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -244,14 +245,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		CompletedTurn = true;
 
 		if (IsFriendly)
-		{
+		{	
 			GD.Print($"[Character] {this.Name} ending player movement");
-			TurnManager.Instance.EndPlayerMovement();
+			TurnManager.Instance.EndPlayerMovement(this);
 		}
 		else
 		{
 			GD.Print($"[Character] {this.Name} ending enemy movement");
-			TurnManager.Instance.EndEnemyMovement();
+			TurnManager.Instance.EndEnemyMovement(this);
 		}
 	}
 
@@ -413,15 +414,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		
 		if (IsFriendly)
 		{
-			TurnManager.Instance.StartPlayerMovement();
+			TurnManager.Instance.StartPlayerMovement(this);
 			CompleteAction(actionData.moveCost);
-			TurnManager.Instance.EndPlayerMovement();
+			TurnManager.Instance.EndPlayerMovement(this);
 		}
 		else
 		{
-			TurnManager.Instance.StartEnemyMovement();
+			TurnManager.Instance.StartEnemyMovement(this);
 			CompleteAction(actionData.moveCost);
-			TurnManager.Instance.EndEnemyMovement();
+			TurnManager.Instance.EndEnemyMovement(this);
 		}
 	}
 

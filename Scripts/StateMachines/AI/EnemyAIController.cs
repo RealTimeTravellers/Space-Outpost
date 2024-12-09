@@ -32,7 +32,7 @@ public partial class EnemyAIController : Node
         {
             _character.CompletedTurn = true;
             _isActive = false;
-            TurnManager.Instance.EndEnemyMovement();
+            TurnManager.Instance.EndEnemyMovement(_character);
             return;
         }
 
