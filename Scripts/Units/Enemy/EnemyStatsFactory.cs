@@ -1,32 +1,44 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 
 public static class EnemyStatsFactory
 {
+    private static readonly Dictionary<EnemyType, string> ResourcePaths = new()
+    {
+        { EnemyType.Telepath, "res://Scripts/Stats/EnemyStats/TelepathStats.tres" },
+        { EnemyType.Creeper, "res://Scripts/Stats/EnemyStats/CreeperStats.tres" },
+        { EnemyType.Seperatist, "res://Scripts/Stats/EnemyStats/SeperatistStats.tres" },
+        { EnemyType.Ranger, "res://Scripts/Stats/EnemyStats/RangerStats.tres" },
+        { EnemyType.Rebel, "res://Scripts/Stats/EnemyStats/RebelStats.tres" },
+        { EnemyType.Boss, "res://Scripts/Stats/EnemyStats/BossStats.tres" }
+    };
+
     public static StatContainer CreateStatsForEnemyType(EnemyType enemyType)
     {
-        return enemyType switch
+        var resourcePath = ResourcePaths[enemyType];
+        var resource = GD.Load<Resource>(resourcePath);
+        
+        if (resource == null)
         {
-            EnemyType.Telepath => new TelepathStats(),
-            EnemyType.Creeper => new CreeperStats(),
-            EnemyType.Seperatist => new SeperatistStats(),
-            EnemyType.Ranger => new RangerStats(),
-            EnemyType.Rebel => new RebelStats(),
-            EnemyType.Boss => new BossStats(),
-            _ => throw new ArgumentException($"Unknown enemy type: {enemyType}")
-        };
+            GD.PrintErr($"Could not load enemy stats resource: {resourcePath}");
+            return null;
+        }
+        
+        return resource as StatContainer;
     }
 
     public static List<StatContainer> GetAllEnemyStats()
     {
-        return new List<StatContainer>
+        var stats = new List<StatContainer>();
+        foreach (var enemyType in ResourcePaths.Keys)
         {
-            CreateStatsForEnemyType(EnemyType.Telepath),
-            CreateStatsForEnemyType(EnemyType.Creeper),
-            CreateStatsForEnemyType(EnemyType.Seperatist),
-            CreateStatsForEnemyType(EnemyType.Ranger),
-            CreateStatsForEnemyType(EnemyType.Rebel),
-            CreateStatsForEnemyType(EnemyType.Boss)
-        };
+            var stat = CreateStatsForEnemyType(enemyType);
+            if (stat != null)
+            {
+                stats.Add(stat);
+            }
+        }
+        return stats;
     }
 }

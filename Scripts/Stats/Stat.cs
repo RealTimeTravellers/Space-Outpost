@@ -49,6 +49,11 @@ public partial class Stat
         CheckIfValueZero();
     }
 
+    public void DepleteValue()
+    {
+        currentValue = MinValue;
+    }
+
     public void IncreaseValue(int amount)
     {
         currentValue = Mathf.Clamp(currentValue + amount, MinValue, MaxValue);
@@ -71,5 +76,10 @@ public partial class Stat
         {
             OnValueZero?.Invoke(); // Event'i tetikle
         }
+    }
+
+    public void Reset()
+    {
+        currentValue = baseValue;
     }
 }

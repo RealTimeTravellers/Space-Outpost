@@ -2,7 +2,6 @@ using Godot;
 
 public partial class SniperStats : StatContainer
 {
-    [Export] public UnitType UnitType { get; set; } = UnitType.Human;
     [Export] public PlayerType PlayerType { get; set; } = PlayerType.Sniper;
 
     public SniperStats() : base()

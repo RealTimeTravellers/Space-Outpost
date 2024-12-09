@@ -26,7 +26,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	// AI stuff.
 	[Export] private NodePath aiControllerPath;
-	[Export] private EnemyAIController enemyController;
+	[Export] public EnemyAIController enemyController { get; private set; }
 
 	[Export] public bool move = false; // temp for test only
 	public int FirstMovementRange => Stats.MovementRange.GetValue();
@@ -37,6 +37,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float VisualRange { get; private set; } = 35; 
 	public bool IsInCover { get; private set; } = false;
+	public event Action<int> ActionCompleted;
 
 	#region ICombat Variables
 	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
@@ -50,15 +51,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	[Export] private ActionData actionData = null;
 
-	[Export] private int actionPoints = 2; // take form a resource data
-	[Export] public bool CompletedTurn {get; private set;} = false;
+	[Export] private int actionPoints; // take form a resource data
+	[Export] public bool CompletedTurn {get; set;} = false;
 
 	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
 	[Export] private EndTurnState endTurnState = EndTurnState.None;
 
-	[Export] public Character Target { get; private set; } = null;
+	[Export] public Character Target { get; set; } = null;
 	[Export] private int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
@@ -67,6 +68,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	[Export] private Label3D HealthLabel;
 	[Export] private Sprite3D SelectionSprite;
+	
 
 	private RandomNumberGenerator rng = new();
 
@@ -125,7 +127,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			if (enemyController == null)
 			{
 				enemyController = new EnemyAIController();
+				enemyController.Name = "AIController";
 				AddChild(enemyController);
+				enemyController.SetState(AIState.Patrol, this);
 			}
 		}
 
@@ -143,7 +147,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		UpdateHealthText();
-		actionPoints = actionData.defaultActionPoints;
+		actionPoints = Stats.ActionPoints.GetValue();
 	}
 
 	private void SubscribeToEvents()
@@ -191,6 +195,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
 					Attack(TurnManager.CurrentlyMovingCharacter);
+					Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -202,9 +207,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void CompleteAction(int cost)
 	{
-		GD.Print(this.Name + " Action Done: " + cost);
+		GD.Print($"[Character] {this.Name} Action Done: {cost}");
 		this.actionPoints -= cost;
-		CompletedTurn = CheckTurnEnd();
+		ActionCompleted?.Invoke(this.actionPoints);
+		
+		if (this.actionPoints <= 0 && !CompletedTurn)
+		{
+			GD.Print($"[Character] {this.Name} out of action points");
+			EndTurn();
+		}
 
 		if (CompletedTurn && CameraManager.Instance.AimingMode)
 			CameraManager.ReturnCameraToTactical();
@@ -212,8 +223,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private bool CheckTurnEnd()
 	{
-		if (actionPoints <= 0)
+		if (this.actionPoints <= 0 && !CompletedTurn)
 		{
+			GD.Print($"[Character] {this.Name} out of action points");
 			EndTurn();
 			return true;
 		}
@@ -221,11 +233,27 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			return false;
 	}
 
-	private void EndTurn()
+	public void EndTurn()
 	{
-		GD.Print(this.Name + " Completed Turn!");
+		if (CompletedTurn || actionPoints > 0)
+		{
+			GD.Print($"[Character] {this.Name} cannot end turn yet - CompletedTurn:{CompletedTurn}, AP:{actionPoints}");
+			return;
+		}
+		
+		GD.Print($"[Character] {this.Name} Ending Turn");
 		CompletedTurn = true;
-		//TurnManager.Instance.playerCharacterTurns[this] = true;
+
+		if (IsFriendly)
+		{	
+			GD.Print($"[Character] {this.Name} ending player movement");
+			TurnManager.Instance.EndPlayerMovement(this);
+		}
+		else
+		{
+			GD.Print($"[Character] {this.Name} ending enemy movement");
+			TurnManager.Instance.EndEnemyMovement(this);
+		}
 	}
 
 	public void ToggleAim()
@@ -236,8 +264,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CameraManager.ReturnCameraToTactical();
 		else
 		{
-			if (actionPoints > 0)
+			if (actionPoints > 0 && enemiesInLos.Count > 0)  // Array boş değilse devam et
 			{
+				targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);  // Index'i sınırla
 				Target = enemiesInLos[targetIndex];
 				LookAt(Target.Position);
 				CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
@@ -248,6 +277,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void ChangeTarget(bool toLeft)
 	{
+		if (enemiesInLos.Count == 0) return; 
+		
 		if (toLeft)
 		{
 			targetIndex--;
@@ -369,28 +400,29 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public void Move(GridObject targetGrid)
 	{
-		if(!CompletedTurn)
-		{
-			if(GridManager.Instance.selectedGrid == null) return;
+		if(CompletedTurn || targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
+			return;
 
-			if (IsFriendly)
-			{
-				 // do movement
-				GlobalPosition = GridManager.Instance.selectedGrid.GlobalPosition; // TEST
-				// TODO: make the mesh agent move using characterBody, or tweens if no verticality
-				TurnManager.Instance.StartPlayerMovement();
-				CompleteAction(actionData.moveCost);
-				TurnManager.Instance.EndPlayerMovement(); // here for test as this moves instantly currently
-				currentGrid = GridManager.Instance.selectedGrid;
-			}
-			else
-			{
-				// same thing but moves on its own and enemy event runs
-				TurnManager.Instance.StartEnemyMovement();
-				CompleteAction(actionData.moveCost);
-				TurnManager.Instance.EndEnemyMovement(); // here for test as this moves instantly currently
-				//currentGrid = where it decided to move;
-			}
+		// Eski grid'i temizle
+		if(currentGrid != null)
+			currentGrid.ClearOccupied();
+			
+		// Yeni grid'e taşın
+		GlobalPosition = targetGrid.GlobalPosition;
+		currentGrid = targetGrid;
+		currentGrid.SetOccupied(this);
+		
+		if (IsFriendly)
+		{
+			TurnManager.Instance.StartPlayerMovement(this);
+			CompleteAction(actionData.moveCost);
+			TurnManager.Instance.EndPlayerMovement(this);
+		}
+		else
+		{
+			TurnManager.Instance.StartEnemyMovement(this);
+			CompleteAction(actionData.moveCost);
+			TurnManager.Instance.EndEnemyMovement(this);
 		}
 	}
 
@@ -438,7 +470,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void OnSelectionChanged(GridObject gridObject)
 	{
-		if (IsFriendly)
+		if (IsFriendly && SelectionSprite != null) 
 		{
 			if (gridObject == null) return;
 

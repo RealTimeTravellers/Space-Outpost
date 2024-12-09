@@ -6,12 +6,13 @@
 script = ExtResource("1_niuss")
 UnitType = 0
 EnemyType = 1
+UnitType = 0
 Health = 8
 Armor = 4
 Accuracy = 65
 MovementRange = 6
 Morale = 40
 ActionPoints = 2
-Perception = 70
+Perception = 10
 Evasion = 10
 CriticalHitChance = 1

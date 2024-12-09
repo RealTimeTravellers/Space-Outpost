@@ -2,32 +2,75 @@ using Godot;
 
 public class AggressionState : EnemyState
 {
-    public override void Enter(Character aiController)
+    public override void Enter(Character enemy)
     {
-        GD.Print("Entering Aggression State");
+        GD.Print($"[AI] {enemy.Name} Entering Aggression State");
+        FindClosestTarget(enemy);
     }
 
     public override AIState Process(Character enemy)
     {
-        GD.Print("Finding the player!");
+        var nextState = base.CheckState(enemy);
+        if (nextState != AIState.Aggression)
+            return nextState;
+
+        if (enemy.Target == null || enemy.Target.Stats.Health.GetValue() <= 0)
+        {
+            FindClosestTarget(enemy);
+            if (enemy.Target == null)
+                return AIState.Patrol;
+        }
+
+        // Hedef menzilde mi?
+        float distanceToTarget = enemy.GlobalPosition.DistanceTo(enemy.Target.GlobalPosition);
+        if (distanceToTarget > enemy.Stats.Perception.GetValue())
+        {
+            // Hedefe doğru hareket et
+            var direction = (enemy.Target.GlobalPosition - enemy.GlobalPosition).Normalized();
+            var targetPos = enemy.GlobalPosition + direction * 2; // 2 birim ileri
+            var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPos);
+            
+            if (targetGrid != null && !targetGrid.IsOccupied && !targetGrid.IsBlocked)
+            {
+                enemy.Move(targetGrid);
+                enemy.CompletedTurn = true;
+                TurnManager.Instance.EndEnemyMovement(enemy);
+            }
+        }
+        else
+        {
+            if (enemy.Equipment?.CurrentWeapon == null)
+            {
+                enemy.CompletedTurn = true;
+                TurnManager.Instance.EndEnemyMovement(enemy);
+                return AIState.Patrol;
+            }
+            // Menzilde ise saldır
+            if (enemy.Equipment.CurrentWeapon.NeedsReload())
+            {
+                enemy.Equipment.CurrentWeapon.Reload();
+                enemy.CompletedTurn = true;
+                TurnManager.Instance.EndEnemyMovement(enemy);
+            }
+            else if (enemy.Stats.ActionPoints.GetValue() >= 2)
+            {
+                enemy.Attack(enemy.Target);
+                enemy.CompletedTurn = true;
+                TurnManager.Instance.EndEnemyMovement(enemy);
+            }
+            else
+            {
+                enemy.CompletedTurn = true;
+                TurnManager.Instance.EndEnemyMovement(enemy);
+            }
+        }
+        
         return AIState.Aggression;
     }
 
-    public override void Exit(Character aiController)
+    public override void Exit(Character enemy)
     {
-        GD.Print("Exiting Aggression State");
-    }
-
-    public override AIState CheckState(Character enemy)
-    {
-        if (enemy.Stats.UnitType == UnitType.Human && enemy.Stats.Morale.GetValue() < 20)
-        {
-            return AIState.Cower;
-        }
-        else if (enemy.Stats.UnitType == UnitType.Human && enemy.Stats.Health.GetValue() <= 2)
-        {
-            return AIState.Flee;
-        }
-        return AIState.Aggression;
+        GD.Print($"[AI] {enemy.Name} Exiting Aggression State");
+        enemy.Target = null;
     }
 }

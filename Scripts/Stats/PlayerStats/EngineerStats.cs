@@ -3,7 +3,6 @@ using Godot;
 [Tool]
 public partial class EngineerStats : StatContainer
 {
-	[Export] public UnitType UnitType { get; set; } = UnitType.Human;
 	[Export] public PlayerType PlayerType { get; set; } = PlayerType.Engineer;
 
 	public EngineerStats() : base()

@@ -5,12 +5,13 @@
 [resource]
 script = ExtResource("1_08j78")
 PlayerType = 2
+UnitType = 1
 Health = 6
 Armor = 3
 Accuracy = 65
 MovementRange = 6
 Morale = 18
 ActionPoints = 2
-Perception = 75
+Perception = 10
 Evasion = 10
 CriticalHitChance = 30

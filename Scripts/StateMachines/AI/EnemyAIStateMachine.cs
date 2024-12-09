@@ -14,7 +14,7 @@ public enum AIState
 
 public class EnemyAIStateMachine
 {
-    private Dictionary<AIState, IBaseState<AIState>> _states;
+    public Dictionary<AIState, IBaseState<AIState>> _states;
     public event Action<AIState, AIState> OnStateChanged;
     public AIState CurrentState { get; private set; }
 
@@ -38,6 +38,9 @@ public class EnemyAIStateMachine
     public void ChangeState(AIState newState, Character aiCharacter)
     {
         AIState oldState = CurrentState;
+        var characterName = aiCharacter.Name ?? aiCharacter.GetParent()?.Name;
+        GD.Print($"[AI StateMachine] {characterName} changing state from {oldState} to {newState}");
+        
         _states[CurrentState].Exit(aiCharacter);
         CurrentState = newState;
         _states[CurrentState].Enter(aiCharacter);

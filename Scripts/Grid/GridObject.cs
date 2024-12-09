@@ -6,7 +6,12 @@ using System.Runtime.Serialization;
 
 public partial class GridObject : Node3D
 {
-	[Export] private CoverType coverType = CoverType.None;
+	private bool _isOccupied = false;
+    private bool _isBlocked = false;
+    private Character _occupyingCharacter;
+	[Export] public CoverType coverType = CoverType.None;
+	public bool HasCover { get; private set; }
+	public Vector3 CoverNormal { get; private set; }
 	[Export] public Godot.Collections.Array<bool> coverDirection = new() { false, false, false, false };
 	
 	[Export] private bool isSpriteOnly = true;
@@ -32,6 +37,27 @@ public partial class GridObject : Node3D
 	[Export] public Color innerColour;
 	[Export] public Color outerColour;
 	[Export] public Color blockedColour;
+
+    public bool IsOccupied 
+    { 
+        get => _isOccupied; 
+        set => _isOccupied = value; 
+    }
+
+    public bool IsBlocked 
+    { 
+        get => _isBlocked; 
+        set => _isBlocked = value; 
+    }
+	public Character OccupyingCharacter
+    {
+        get => _occupyingCharacter;
+        set
+        {
+            _occupyingCharacter = value;
+            _isOccupied = value != null;
+        }
+    }
 	#endregion
 	public override void _Ready()
 	{
@@ -45,14 +71,20 @@ public partial class GridObject : Node3D
 	private void SubscribeToEvents()
 	{
 		GridManager.Instance.SelectionChanged += OnSelectionChanged;
+		TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
 	}
 
 	private void ChangeGridMaterial(Material mat, float transparency, Color colour, bool spriteOnly)
 	{
 		if (spriteOnly)
 		{
+			if(transparency == 1)
+				gridSprite.Visible = false;
+			else
+				gridSprite.Visible = true;
+
 			gridSprite.Modulate = colour;
-			gridSprite.Transparency = transparency;
+			//gridSprite.Transparency = transparency;
 		}
 		else
 		{
@@ -61,7 +93,7 @@ public partial class GridObject : Node3D
 		}
 	}
 
-	private void OnSelectionChanged(GridObject gridObject)
+	private void UpdateColour(GridObject gridObject)
 	{
 		// TODO: if selected colour it as selected (Change Material on Geometry3D)
 		if (gridObject == null)
@@ -87,4 +119,57 @@ public partial class GridObject : Node3D
 			}
 		}
 	}
+
+	private void OnPlayerMovementChanged(bool started)
+	{
+		if(!started)
+			UpdateColour(TurnManager.CurrentlyMovingCharacter.currentGrid);
+	}
+
+	private void OnSelectionChanged(GridObject gridObject)
+	{
+		UpdateColour(gridObject);
+	}
+
+	private void CheckCoverStatus()
+    {
+        // Raycast ile etrafı kontrol et
+        var space = GetWorld3D().DirectSpaceState;
+        
+        // 4 yönü kontrol et (sağ, sol, ön, arka)
+        Vector3[] directions = {
+            Vector3.Right,
+            Vector3.Left,
+            Vector3.Forward,
+            Vector3.Back
+        };
+
+        foreach (var dir in directions)
+        {
+            var query = PhysicsRayQueryParameters3D.Create(
+                GlobalPosition + Vector3.Up,
+                GlobalPosition + Vector3.Up + dir * 2
+            );
+            query.CollisionMask = 1 << 1; // Layer 1 (walls)
+            var result = space.IntersectRay(query);
+
+            if (result.Count > 0)
+            {
+                HasCover = true;
+                CoverNormal = -dir; // Cover'ın normal'i duvarın tersi yönünde
+                coverType = CoverType.Full;
+                break;
+            }
+        }
+    }
+
+	public void SetOccupied(Character character)
+    {
+        OccupyingCharacter = character;
+    }
+
+    public void ClearOccupied()
+    {
+        OccupyingCharacter = null;
+    }
 }
