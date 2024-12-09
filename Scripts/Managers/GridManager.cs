@@ -16,7 +16,7 @@ public partial class GridManager : Node
     [Export] public Node3D gridParent;
     [Export] public Godot.Collections.Array<GridObject> gridList = new(); // not in particular order
 
-    [Export] private int gridSize = 40; // temp, will check from data
+    [Export] private int gridSize = 0; // temp, will check from data
 
     [Export] public Character selectedCharacter;
     [Export] public GridObject selectedGrid;
@@ -34,7 +34,7 @@ public partial class GridManager : Node
 
     public override void _Ready()
     {
-        CreateGrid();
+        CreateOrAssignGrid();
         base._Ready();
     }
 
@@ -86,17 +86,13 @@ public partial class GridManager : Node
         float tolerance = 0.8f;
 
         // Her bir satırı dön
-        foreach (var row in grids)
+        foreach (var grid in gridList)
         {
-            // Satır içindeki her bir GridObject'i dön
-            foreach (var grid in row)
+            if (Mathf.Abs(grid.GlobalPosition.X - snappedPosition.X) < tolerance &&
+                Mathf.Abs(grid.GlobalPosition.Z - snappedPosition.Z) < tolerance)
             {
-                if (Mathf.Abs(grid.GlobalPosition.X - snappedPosition.X) < tolerance &&
-                    Mathf.Abs(grid.GlobalPosition.Z - snappedPosition.Z) < tolerance)
-                {
-                    return grid;
-                }
-            }
+                return grid;
+            }            
         }
 
         return null;
