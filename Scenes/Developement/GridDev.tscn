@@ -1,12 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://cr6l7i74jnq6y"]
+[gd_scene load_steps=11 format=3 uid="uid://cr6l7i74jnq6y"]
 
 [ext_resource type="PackedScene" uid="uid://benuohyq86b2i" path="res://Subscenes/Managers/grid_manager.tscn" id="1_u6u7v"]
 [ext_resource type="PackedScene" uid="uid://dbep6uqerw3hs" path="res://Subscenes/Grid/grid_object.tscn" id="2_aubdv"]
 [ext_resource type="PackedScene" uid="uid://bttg6yojcnjhf" path="res://Subscenes/Managers/turn_manager.tscn" id="3_4etcd"]
 [ext_resource type="PackedScene" uid="uid://bbshs62tttw3a" path="res://Subscenes/Character/character.tscn" id="4_dd3d8"]
 [ext_resource type="PackedScene" uid="uid://ctbi66ifng67t" path="res://Subscenes/Managers/enemy_manager.tscn" id="4_s1rwu"]
-[ext_resource type="PackedScene" uid="uid://drnju42qvcxpj" path="res://Subscenes/UI/Battle_Hud.tscn" id="5_fwme8"]
-[ext_resource type="PackedScene" uid="uid://c801hdwwm0f1p" path="res://Subscenes/Character/Enemy.tscn" id="7_582or"]
+[ext_resource type="PackedScene" path="res://Subscenes/UI/Battle_Hud.tscn" id="5_fwme8"]
+[ext_resource type="PackedScene" path="res://Subscenes/Character/Enemy.tscn" id="7_582or"]
+[ext_resource type="Script" path="res://Scripts/StateMachines/AI/EnemyAIController.cs" id="8_0p0wo"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w2b0h"]
 albedo_color = Color(0.372549, 0.419608, 0.0666667, 1)
@@ -21,7 +22,9 @@ gridObjectSubscene = ExtResource("2_aubdv")
 gridParent = NodePath("../Grid Parent")
 gridSize = 50
 
-[node name="TurnManager" parent="." instance=ExtResource("3_4etcd")]
+[node name="TurnManager" parent="." node_paths=PackedStringArray("playerCharacters", "enemyCharacters") instance=ExtResource("3_4etcd")]
+playerCharacters = [NodePath("../Character"), NodePath("../Character2"), NodePath("../Character3")]
+enemyCharacters = [NodePath("../Enemy_Character"), NodePath("../Enemy_Character2")]
 
 [node name="EnemyManager" parent="." instance=ExtResource("4_s1rwu")]
 
@@ -51,6 +54,14 @@ collision_mask = 25
 
 [node name="Enemy_Character" parent="." instance=ExtResource("7_582or")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 2, 0, -5)
+aiControllerPath = NodePath("AIController")
+
+[node name="AIController" type="Node3D" parent="Enemy_Character"]
+script = ExtResource("8_0p0wo")
 
 [node name="Enemy_Character2" parent="." instance=ExtResource("7_582or")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -5, 0, -5)
+aiControllerPath = NodePath("AIController")
+
+[node name="AIController" type="Node3D" parent="Enemy_Character2"]
+script = ExtResource("8_0p0wo")

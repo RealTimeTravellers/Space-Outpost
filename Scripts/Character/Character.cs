@@ -334,14 +334,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		foreach (Character enemy in enemies.Select(v => (Character)v))
 		{
-			if (enemy.Position.DistanceTo(this.Position) < range) // is in identification range
+			float distance = enemy.Position.DistanceTo(this.Position);
+
+			if (distance < Stats.Perception.GetValue()) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
 				CastHit hit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
 				
-				if (hit.NonEmpty)
+				if (!hit.NonEmpty)
 					enemiesWithLos.Add(enemy);
+					// GD.Print("vURULDU.");
 
 				if (limitedFov)
 				{
