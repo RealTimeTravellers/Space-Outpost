@@ -27,27 +27,8 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
     {
         if (TurnManager.Instance == null) return false;
 
-        foreach (Character player in TurnManager.Instance.playerCharacters)
-        {
-            if (player == null || player == enemy) continue;  // Skip self-check
-
-            float distance = enemy.GlobalPosition.DistanceTo(player.GlobalPosition);
-            
-            if (distance <= enemy.Stats.Perception.GetValue())
-            {
-                var space = enemy.GetWorld3D().DirectSpaceState;
-                var query = PhysicsRayQueryParameters3D.Create(
-                    enemy.GlobalPosition + Vector3.Up, 
-                    player.GlobalPosition + Vector3.Up
-                );
-                query.CollisionMask = 1 << 1;
-                var result = space.IntersectRay(query);
-
-                if (result.Count == 0)
-                    return true;
-            }
-        }
-        return false;
+        var enemiesInSight = enemy.QueryForEnemies(TurnManager.Instance.playerCharacters);
+        return enemiesInSight.Count > 0;
     }
 
     protected bool EnemyInSight(Character character)
@@ -58,51 +39,18 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
             TurnManager.Instance.enemyCharacters : 
             TurnManager.Instance.playerCharacters;
 
-        foreach (Character potentialTarget in enemies)
-        {
-            if (potentialTarget == null || potentialTarget.Stats.Health.GetValue() <= 0)
-                continue;
-
-            // First check distance
-            float distance = character.GlobalPosition.DistanceTo(potentialTarget.GlobalPosition);
-            if (distance <= character.Stats.Perception.GetValue())
-            {
-                // Then do line of sight check
-                var space = character.GetWorld3D().DirectSpaceState;
-                var query = PhysicsRayQueryParameters3D.Create(
-                    character.GlobalPosition + Vector3.Up, 
-                    potentialTarget.GlobalPosition + Vector3.Up
-                );
-                query.CollisionMask = 1 << 1; // Layer 1 (walls)
-                var result = space.IntersectRay(query);
-
-                if (result.Count == 0) // No wall in between
-                    return true;
-            }
-        }
-        
-        return false;
+        var enemiesInSight = character.QueryForEnemies(enemies);
+        return enemiesInSight.Count > 0;
     }
 
     protected void FindClosestTarget(Character enemy)
     {
-        float closestDistance = float.MaxValue;
-        Character closestTarget = null;
-
-        foreach (Character player in TurnManager.Instance.playerCharacters)
+        var enemiesInSight = enemy.QueryForEnemies(TurnManager.Instance.playerCharacters);
+        if (enemiesInSight.Count > 0)
         {
-            if (player == null || player.Stats.Health.GetValue() <= 0) continue;
-
-            float distance = enemy.GlobalPosition.DistanceTo(player.GlobalPosition);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closestTarget = player;
-            }
+            enemy.Target = enemiesInSight[0]; // İlk düşmanı hedef al
+            GD.Print($"[AI] {enemy.Name} found target: {enemy.Target?.Name}");
         }
-
-        enemy.Target = closestTarget;
-        GD.Print($"[AI] {enemy.Name} found target: {closestTarget?.Name}");
     }
 
     protected GridObject FindNearestCover(Character enemy, Character target)
