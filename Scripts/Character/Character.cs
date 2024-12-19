@@ -15,10 +15,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	public StatContainer StatContainer;
 
 	// Equipment controller
-	[Export] public EquipmentController Equipment { get; private set; }
+    [Export]
+    public PrimaryWeaponType WeaponType { get; private set; }
+ 	public EquipmentController Equipment { get; private set; }
+
 
     // Animator controller
     [Export] public CharacterAnimatorController AnimatorController { get; private set; }
+	[Export] public CharacterController CharacterController { get; private set; }
+	public NavigationAgent3D _navAgent {get; private set;}
 
 	// Character stuff.
 	[Export] private NodePath playerControllerPath;
@@ -87,12 +92,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void InitializeStats()
 	{
-        /* characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
-        if (characterController == null)
+        CharacterController = GetNodeOrNull<CharacterController>(playerControllerPath);
+        if (CharacterController == null)
         {
-            characterController = new CharacterController();
-            AddChild(characterController);
-        } */
+            CharacterController = new CharacterController();
+            AddChild(CharacterController);
+        } 
+
+		if (_navAgent == null)
+			_navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
         
 		if (IsFriendly)
 		{
@@ -100,13 +108,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
 			Stats = new PlayerStats(PlayerType, StatContainer);
 			Health = Stats.Health.GetValue();
-			/* Damage = Equipment.GetCurrentWeaponDamage();
+			Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
-			Equipment = new EquipmentController(Stats);
-			Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
-			Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
-			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
+			// Equipment = new EquipmentController(Stats);
+			// Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
+			// Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
+			// Equipment.EquipAccessory(AccessoryType.FragGrenade);
 		}
 		else
 		{
@@ -370,8 +378,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			shootEffect.ProcessMaterial.Set("spread", 2);
 			shootEffect.Restart();
 
-			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
-			target.TakeDamage(damage);
+			//int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
+			target.TakeDamage(Equipment.GetCurrentWeaponDamage());
 			// and play animation
 		}
 		else
@@ -398,7 +406,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#endregion
 
 	#region ITactical Implementations
-	public void Move(GridObject targetGrid)
+	public async Task Move(GridObject targetGrid)
 	{
 		if(CompletedTurn || targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
 			return;
@@ -408,6 +416,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			currentGrid.ClearOccupied();
 			
 		// Yeni grid'e taşın
+		_navAgent.TargetPosition = targetGrid.GlobalPosition;
+
+		while (!_navAgent.IsNavigationFinished())
+		{
+			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+		}
+
 		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
@@ -421,7 +436,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		else
 		{
 			TurnManager.Instance.StartEnemyMovement(this);
+            // Start animation and navmesh movement
+            // navmes.goto (tagrtgrid.pos)
 			CompleteAction(actionData.moveCost);
+            // is Nvamesh complete (tagrtgrid.pos)
+            // process wait animation and navmesh movement
 			TurnManager.Instance.EndEnemyMovement(this);
 		}
 	}
@@ -491,11 +510,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (started) // enemy started moving
 		{
+            // close ınput
 			doQuery = true;
 			SearchForEnemies();
 		}
 		else // enemy finished moving
 		{
+            // open ınput
 			doQuery = false;
 			SearchForEnemies(true); // to see if this can see enemy
 		}

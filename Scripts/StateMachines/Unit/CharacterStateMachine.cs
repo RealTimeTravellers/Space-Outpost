@@ -8,13 +8,10 @@ public enum CharacterStateType
 {
     Idle,
     Moving,
+    InCover,
     Aiming,
     Shooting,
-    TakingCover,
-    LeavingCover,
-    Reloading,
     Death,
-    Tactical
 }
 
 public class CharacterStateMachine
@@ -24,6 +21,7 @@ public class CharacterStateMachine
     public CharacterStateType CurrentStateType { get; private set; }
     
     public event Action<CharacterStateType, CharacterStateType> OnStateChanged;
+    public event Action<string> OnAnimationRequested; 
 
     public CharacterStateMachine()
     {
@@ -31,13 +29,10 @@ public class CharacterStateMachine
         {
             { CharacterStateType.Idle, new CharacterIdleState() },
             { CharacterStateType.Moving, new CharacterMovingState() },
+            { CharacterStateType.InCover, new CharacterInCoverState() },
             { CharacterStateType.Aiming, new CharacterAimingState() },
             { CharacterStateType.Shooting, new CharacterShootingState() },
-            { CharacterStateType.TakingCover, new CharacterTakingCoverState() },
-            { CharacterStateType.LeavingCover, new CharacterLeavingCoverState() },
-            { CharacterStateType.Reloading, new CharacterReloadingState() },
             { CharacterStateType.Death, new CharacterDeathState() },
-            { CharacterStateType.Tactical, new CharacterTacticalState() }
         };
 
         CurrentStateType = CharacterStateType.Idle;
@@ -64,5 +59,10 @@ public class CharacterStateMachine
         {
             ChangeState(nextState, character);
         }
+    }
+
+    public void RequestAnimation(string animationName)
+    {
+        OnAnimationRequested?.Invoke(animationName);
     }
 }

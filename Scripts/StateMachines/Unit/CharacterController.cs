@@ -11,6 +11,7 @@ public partial class CharacterController : Node
         _character = GetParent<Character>();
         _stateMachine = new CharacterStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
+        _stateMachine.OnAnimationRequested += OnAnimationRequested;
         
         TurnManager.Instance.TurnChanged += OnTurnChanged;
         TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
@@ -32,6 +33,7 @@ public partial class CharacterController : Node
         if (_stateMachine.CurrentStateType != currentState)
         {
             GD.Print($"State changed from {currentState} to {_stateMachine.CurrentStateType}");
+            _stateMachine.RequestAnimation(_stateMachine.CurrentStateType.ToString().ToLower());
         }
     }
 
@@ -63,6 +65,8 @@ public partial class CharacterController : Node
         GD.Print($"Player state changed from {oldState} to {newState} for {_character.Name}");
     }
 
+    public CharacterStateMachine GetStateMachine() => _stateMachine;
+
     public override void _ExitTree()
     {
         if (_stateMachine != null)
@@ -74,6 +78,15 @@ public partial class CharacterController : Node
         {
             TurnManager.Instance.TurnChanged -= OnTurnChanged;
             TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
+
+        }
+    }
+
+    private void OnAnimationRequested(string animationName)
+    {
+        if (_character.AnimatorController != null)
+        {
+            _character.AnimatorController.PlayAnimation(animationName);
         }
     }
 }

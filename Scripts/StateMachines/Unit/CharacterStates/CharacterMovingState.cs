@@ -26,7 +26,7 @@ public class CharacterMovingState : CharacterState
             return CharacterStateType.Aiming;
             
         if (Input.IsActionPressed("take_cover"))
-            return CharacterStateType.TakingCover;
+            return CharacterStateType.InCover;
             
         return CharacterStateType.Moving;
     }

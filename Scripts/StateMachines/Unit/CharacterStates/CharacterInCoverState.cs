@@ -1,6 +1,6 @@
 using Godot;
 
-public class CharacterLeavingCoverState : CharacterState
+public class CharacterInCoverState : CharacterState
 {
     public override void Enter(Character character)
     {
@@ -28,7 +28,7 @@ public class CharacterLeavingCoverState : CharacterState
         }
         
         // Cover'dan çıkma işlemi devam ediyor
-        return CharacterStateType.LeavingCover;
+        return CharacterStateType.InCover;
     }
 
     public override void Exit(Character character)

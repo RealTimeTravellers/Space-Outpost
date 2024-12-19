@@ -19,9 +19,6 @@ public class CharacterShootingState : CharacterState
 
     public override CharacterStateType CheckState(Character character)
     {
-        // Mermi bitti mi?
-        if (character.Equipment.CurrentWeapon.NeedsReload())
-            return CharacterStateType.Reloading;
 
         // Ateş etme cooldown'ı bitti mi?
         if (_shootCooldown <= 0)

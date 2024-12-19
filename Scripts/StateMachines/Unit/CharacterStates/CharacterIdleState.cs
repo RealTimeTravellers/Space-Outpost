@@ -21,7 +21,7 @@ public class CharacterIdleState : CharacterState
             return CharacterStateType.Aiming;
             
         if (Input.IsActionPressed("take_cover"))
-            return CharacterStateType.TakingCover;
+            return CharacterStateType.InCover;
             
         return CharacterStateType.Idle;
     }
