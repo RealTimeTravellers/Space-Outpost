@@ -21,16 +21,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 
     // Animator controller
-    [Export] public CharacterAnimatorController AnimatorController { get; private set; }
+	[Export] public AnimationPlayer Animator { get; private set; }
+	[Export] public CharacterAnimatorController AnimatorController { get; private set; }
 	[Export] public CharacterController CharacterController { get; private set; }
-	public NavigationAgent3D _navAgent {get; private set;}
-
-	// Character stuff.
-	[Export] private NodePath playerControllerPath;
-	//[Export] private CharacterController characterController;
-
-	// AI stuff.
-	[Export] private NodePath aiControllerPath;
+	[Export] public NavigationAgent3D _navAgent {get; private set;}
 	[Export] public EnemyAIController enemyController { get; private set; }
 
 	[Export] public bool move = false; // temp for test only
@@ -92,16 +86,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void InitializeStats()
 	{
-        CharacterController = GetNodeOrNull<CharacterController>(playerControllerPath);
         if (CharacterController == null)
         {
             CharacterController = new CharacterController();
             AddChild(CharacterController);
         } 
-
-		if (_navAgent == null)
-			_navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
-        
+		
 		if (IsFriendly)
 		{
 			// Player Stats
@@ -131,7 +121,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
 
 			// Enemy AI Controller
-			enemyController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
 			if (enemyController == null)
 			{
 				enemyController = new EnemyAIController();

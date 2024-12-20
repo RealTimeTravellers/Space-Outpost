@@ -25,8 +25,7 @@ public class CharacterAimingState : CharacterState
         if (!Input.IsActionPressed("aim"))
             return CharacterStateType.Idle;
             
-        if (Input.IsActionPressed("reload"))
-            return CharacterStateType.Reloading;
+
             
         return CharacterStateType.Aiming;
     }

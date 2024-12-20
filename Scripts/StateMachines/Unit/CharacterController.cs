@@ -4,11 +4,13 @@ public partial class CharacterController : Node
 {
     public CharacterStateMachine _stateMachine {get; private set;}
     private Character _character;
+    private NavigationAgent3D _navAgent;
     private bool _isActive = false;
 
     public override void _Ready()
     {
         _character = GetParent<Character>();
+        _navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
         _stateMachine = new CharacterStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
         _stateMachine.OnAnimationRequested += OnAnimationRequested;

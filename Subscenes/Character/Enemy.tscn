@@ -1,8 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://c801hdwwm0f1p"]
+[gd_scene load_steps=10 format=3 uid="uid://bpnxwfh1wbjam"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_fooxj"]
 [ext_resource type="Resource" uid="uid://b0e0ffdgmwpvx" path="res://Data/Chracter Action Data/EnemyCharacterActionData.tres" id="2_nxhog"]
 [ext_resource type="Material" uid="uid://1r2gc36i3pw2" path="res://Visual Assets/Materials/RED.tres" id="3_b3ioq"]
+[ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterController.cs" id="4_4upge"]
+[ext_resource type="Script" path="res://Scripts/StateMachines/AI/EnemyAIController.cs" id="5_dakxj"]
+[ext_resource type="Script" path="res://Scripts/Animator/CharacterAnimatorController.cs" id="6_4u2sy"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
 
@@ -10,10 +13,15 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
-[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera", "HealthLabel")]
+[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("Animator", "AnimatorController", "CharacterController", "_navAgent", "enemyController", "ShoulderCamera", "HealthLabel")]
 collision_layer = 512
 collision_mask = 512
 script = ExtResource("1_fooxj")
+Animator = NodePath("AnimatorController/AnimationPlayer")
+AnimatorController = NodePath("AnimatorController")
+CharacterController = NodePath("CharacterController")
+_navAgent = NodePath("CharacterController/NavigationAgent3D")
+enemyController = NodePath("EnemyAIController")
 actionData = ExtResource("2_nxhog")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
 HealthLabel = NodePath("Health Text")
@@ -40,3 +48,17 @@ pixel_size = 0.025
 modulate = Color(1, 0, 0, 1)
 outline_modulate = Color(0.41598, 0.41598, 0.41598, 1)
 text = "XXX/XXX"
+
+[node name="CharacterController" type="Node3D" parent="."]
+script = ExtResource("4_4upge")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
+
+[node name="EnemyAIController" type="Node3D" parent="."]
+script = ExtResource("5_dakxj")
+
+[node name="AnimatorController" type="Node3D" parent="."]
+script = ExtResource("6_4u2sy")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatorController"]
+root_node = NodePath("../..")

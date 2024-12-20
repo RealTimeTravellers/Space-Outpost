@@ -20,12 +20,9 @@ public partial class CharacterAnimatorController : Node
         _character = GetParent<Character>();
         _stateMachine = _character.GetNode<CharacterController>("CharacterController")._stateMachine;
         
-        if (_character != null)
+        if (_character != null && _stateMachine != null)
         {
-            if (_stateMachine != null)
-            {
-                _stateMachine.OnStateChanged += HandleStateChanged;
-            }
+            _stateMachine.OnStateChanged += HandleStateChanged;
         }
     }
 
