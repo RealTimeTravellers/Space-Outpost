@@ -6,7 +6,7 @@ public partial class CharacterController : Node
     private Character _character;
     private NavigationAgent3D _navAgent;
     private bool _isActive = false;
-
+    [Export] public float _movementSpeed = 5.0f;
     public override void _Ready()
     {
         _character = GetParent<Character>();
@@ -24,7 +24,31 @@ public partial class CharacterController : Node
         if (_isActive)
         {
             ProcessPlayerState();
+            UpdateNavigation();
         }
+    }
+
+    private void UpdateNavigation()
+    {
+        if (_stateMachine.CurrentStateType != CharacterStateType.Moving)
+            return;
+
+        if (_navAgent.IsNavigationFinished())
+        {
+            _stateMachine.ChangeState(CharacterStateType.Idle, _character);
+            return;
+        }
+
+        var nextPos = _navAgent.GetNextPathPosition();
+        var currentPos = _character.GlobalPosition;
+        var direction = (nextPos - currentPos).Normalized();
+        
+        // Karakteri yönlendir
+        _character.LookAt(new Vector3(nextPos.X, currentPos.Y, nextPos.Z));
+        
+        // Hareketi uygula
+        _character.Velocity = direction * _movementSpeed;
+        _character.MoveAndSlide();
     }
 
     private void ProcessPlayerState()

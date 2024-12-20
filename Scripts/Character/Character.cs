@@ -98,7 +98,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
 			Stats = new PlayerStats(PlayerType, StatContainer);
 			Health = Stats.Health.GetValue();
-			Damage = Equipment.GetCurrentWeaponDamage();
+			// Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
 			// Equipment = new EquipmentController(Stats);
@@ -400,38 +400,43 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if(CompletedTurn || targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
 			return;
 
-		// Eski grid'i temizle
+		// Grid işlemleri
 		if(currentGrid != null)
 			currentGrid.ClearOccupied();
-			
-		// Yeni grid'e taşın
+		
+		// Hedef pozisyonu ayarla
 		_navAgent.TargetPosition = targetGrid.GlobalPosition;
+		
+		// State'i Moving'e geçir
+		if (IsFriendly)
+		{
+			TurnManager.Instance.StartPlayerMovement(this);
+			CharacterController.SetState(CharacterStateType.Moving, this);
+		}
+		else
+		{
+			TurnManager.Instance.StartEnemyMovement(this);
+			CharacterController.SetState(CharacterStateType.Moving, this);
+		}
 
+		// Hareketin bitmesini bekle
 		while (!_navAgent.IsNavigationFinished())
 		{
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
 
+		// Hedef grid'e yerleş
 		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
+		// Hareketi tamamla
+		CompleteAction(actionData.moveCost);
+		
 		if (IsFriendly)
-		{
-			TurnManager.Instance.StartPlayerMovement(this);
-			CompleteAction(actionData.moveCost);
 			TurnManager.Instance.EndPlayerMovement(this);
-		}
 		else
-		{
-			TurnManager.Instance.StartEnemyMovement(this);
-            // Start animation and navmesh movement
-            // navmes.goto (tagrtgrid.pos)
-			CompleteAction(actionData.moveCost);
-            // is Nvamesh complete (tagrtgrid.pos)
-            // process wait animation and navmesh movement
 			TurnManager.Instance.EndEnemyMovement(this);
-		}
 	}
 
 	public void TakeCover()
