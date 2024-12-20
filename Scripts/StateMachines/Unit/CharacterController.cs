@@ -4,7 +4,7 @@ public partial class CharacterController : Node
 {
     public CharacterStateMachine _stateMachine {get; private set;}
     private Character _character;
-    private NavigationAgent3D _navAgent;
+    public NavigationAgent3D _navAgent {get; private set;}
     private bool _isActive = false;
     [Export] public float _movementSpeed = 5.0f;
     public override void _Ready()
@@ -13,7 +13,6 @@ public partial class CharacterController : Node
         _navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
         _stateMachine = new CharacterStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
-        _stateMachine.OnAnimationRequested += OnAnimationRequested;
         
         TurnManager.Instance.TurnChanged += OnTurnChanged;
         TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
@@ -105,14 +104,6 @@ public partial class CharacterController : Node
             TurnManager.Instance.TurnChanged -= OnTurnChanged;
             TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
 
-        }
-    }
-
-    private void OnAnimationRequested(string animationName)
-    {
-        if (_character.AnimatorController != null)
-        {
-            _character.AnimatorController.PlayAnimation(animationName);
         }
     }
 }

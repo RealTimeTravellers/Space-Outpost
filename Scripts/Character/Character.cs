@@ -21,10 +21,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 
     // Animator controller
-	[Export] public AnimationPlayer Animator { get; private set; }
 	[Export] public CharacterAnimatorController AnimatorController { get; private set; }
 	[Export] public CharacterController CharacterController { get; private set; }
-	[Export] public NavigationAgent3D _navAgent {get; private set;}
 	[Export] public EnemyAIController enemyController { get; private set; }
 
 	[Export] public bool move = false; // temp for test only
@@ -405,7 +403,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			currentGrid.ClearOccupied();
 		
 		// Hedef pozisyonu ayarla
-		_navAgent.TargetPosition = targetGrid.GlobalPosition;
+		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
 		
 		// State'i Moving'e geçir
 		if (IsFriendly)
@@ -420,7 +418,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		// Hareketin bitmesini bekle
-		while (!_navAgent.IsNavigationFinished())
+		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}

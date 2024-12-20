@@ -62,3 +62,7 @@ script = ExtResource("6_4u2sy")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatorController"]
 root_node = NodePath("../..")
+
+[node name="AnimationTree" type="AnimationTree" parent="AnimatorController"]
+root_node = NodePath("../..")
+anim_player = NodePath("../AnimationPlayer")
