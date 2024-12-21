@@ -12,10 +12,6 @@ public partial class Gun : Node3D
 	[Export] private GpuParticles3D shootHitEffect;
 	[Export] private GpuParticles3D shootMissEffect;
 
-    [Export] private AudioStream shootSound;
-    [Export] private AudioStream readySound;
-    [Export] private AudioStream reloadSound;
-
     [Export] private AudioStreamPlayer3D audioPlayer;
 
 
@@ -49,12 +45,17 @@ public partial class Gun : Node3D
             case GunActionState.Shoot:
                 if(data.ShootSounds.Count == 0)
                     return;
-                audioPlayer.Stream = data.ShootSounds[GD.RandRange(0, data.readySounds.Count -1)];
+                audioPlayer.Stream = data.ShootSounds[GD.RandRange(0, data.ShootSounds.Count -1)];
+                break;
+            case GunActionState.Empty:
+                if(data.emptySounds.Count == 0)
+                    return;
+                audioPlayer.Stream = data.emptySounds[GD.RandRange(0, data.emptySounds.Count -1)];
                 break;
             case GunActionState.Reload:
-                if(data.readySounds.Count == 0)
+                if(data.reloadSounds.Count == 0)
                     return;
-                audioPlayer.Stream = data.readySounds[GD.RandRange(0, data.readySounds.Count -1)];
+                audioPlayer.Stream = data.reloadSounds[GD.RandRange(0, data.reloadSounds.Count -1)];
                 break;
         }
         audioPlayer.Play();
