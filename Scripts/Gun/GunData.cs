@@ -1,5 +1,5 @@
 using Godot;
-using System;
+using Godot.Collections;
 
 public partial class GunData : Resource
 {
@@ -11,6 +11,11 @@ public partial class GunData : Resource
 	//[Export] public int Range { get; set; } = 0;
 	[Export] public int MinDamage { get; private set; } = 0;
 	[Export] public int MaxDamage { get; private set; } = 0;
+
+    [Export] Array<AudioStream> readySounds;
+    [Export] Array<AudioStream> ShootSounds;
+    [Export] Array<AudioStream> reloadSounds;
+
 	//[Export] public int Impact { get; set; } = 0;
 	//[Export] public int CritChance { get; set; } = 0;
 	[Export] public Texture2D Icon { get; set; }

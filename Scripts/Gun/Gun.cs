@@ -11,6 +11,12 @@ public partial class Gun : Node3D
 	[Export] private GpuParticles3D shootHitEffect;
 	[Export] private GpuParticles3D shootMissEffect;
 
+    [Export] private AudioStream shootSound;
+    [Export] private AudioStream readySound;
+    [Export] private AudioStream reloadSound;
+
+    [Export] private AudioStreamPlayer3D audioPlayer;
+
 
     /// <summary>
     /// For Godot initialization
@@ -36,11 +42,11 @@ public partial class Gun : Node3D
         {
             if (hit)
                 shootHitEffect.Restart();
-            
             else
                 shootMissEffect.Restart();
             
-                //TODO: play sound
+            // has only one stream
+            audioPlayer.Play();
 
             currentAmmo--;
             damage = CalculateDamage();        
