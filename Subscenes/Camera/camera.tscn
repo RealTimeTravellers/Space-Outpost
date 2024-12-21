@@ -15,3 +15,5 @@ script = ExtResource("1_0d72r")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.791554, 0.611099, 0, -0.611099, 0.791554, 0, 0, 0)
+
+[node name="AudioListener3D" type="AudioListener3D" parent="."]
