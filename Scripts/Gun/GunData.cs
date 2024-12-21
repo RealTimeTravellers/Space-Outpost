@@ -12,9 +12,9 @@ public partial class GunData : Resource
 	[Export] public int MinDamage { get; private set; } = 0;
 	[Export] public int MaxDamage { get; private set; } = 0;
 
-    [Export] Array<AudioStream> readySounds;
-    [Export] Array<AudioStream> ShootSounds;
-    [Export] Array<AudioStream> reloadSounds;
+    [Export] public Array<AudioStream> readySounds;
+    [Export] public Array<AudioStream> ShootSounds;
+    [Export] public Array<AudioStream> reloadSounds;
 
 	//[Export] public int Impact { get; set; } = 0;
 	//[Export] public int CritChance { get; set; } = 0;

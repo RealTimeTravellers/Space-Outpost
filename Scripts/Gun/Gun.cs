@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 public partial class Gun : Node3D
@@ -25,8 +26,38 @@ public partial class Gun : Node3D
 
     public override void _Ready()
     {
-        currentAmmo = data.MagazineCapacity;
+        PlaySound(GunActionState.Ready);
         base._Ready();
+    }
+
+    /// <summary>
+    /// Plays based on mode. (should make it enum)
+    /// 0 is ready
+    /// 1 is fire
+    /// 2 is reload
+    /// </summary>
+    /// <param name="mode"></param>
+    private void PlaySound(GunActionState state)
+    {
+        switch (state)
+        {
+            case GunActionState.Ready:
+                if(data.readySounds.Count == 0)
+                    return;
+                audioPlayer.Stream = data.readySounds[GD.RandRange(0, data.readySounds.Count -1)];
+                break;
+            case GunActionState.Shoot:
+                if(data.ShootSounds.Count == 0)
+                    return;
+                audioPlayer.Stream = data.ShootSounds[GD.RandRange(0, data.readySounds.Count -1)];
+                break;
+            case GunActionState.Reload:
+                if(data.readySounds.Count == 0)
+                    return;
+                audioPlayer.Stream = data.readySounds[GD.RandRange(0, data.readySounds.Count -1)];
+                break;
+        }
+        audioPlayer.Play();
     }
 
     private int CalculateDamage()
@@ -45,8 +76,7 @@ public partial class Gun : Node3D
             else
                 shootMissEffect.Restart();
             
-            // has only one stream
-            audioPlayer.Play();
+            PlaySound(GunActionState.Shoot);
 
             currentAmmo--;
             damage = CalculateDamage();        
@@ -59,5 +89,6 @@ public partial class Gun : Node3D
     {
         // guns are unlimited ammo
         currentAmmo = data.MagazineCapacity;
+        PlaySound(GunActionState.Reload);
     }
 }
