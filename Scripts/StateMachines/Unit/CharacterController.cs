@@ -16,6 +16,9 @@ public partial class CharacterController : Node
         
         TurnManager.Instance.TurnChanged += OnTurnChanged;
         TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
+
+        _character.Velocity = Vector3.Zero;
+        SetState(CharacterStateType.Idle, _character);
     }
 
     public override void _Process(double delta)
@@ -43,7 +46,12 @@ public partial class CharacterController : Node
         var direction = (nextPos - currentPos).Normalized();
         
         // Karakteri yönlendir
-        _character.LookAt(new Vector3(nextPos.X, currentPos.Y, nextPos.Z));
+        if (!nextPos.IsEqualApprox(currentPos))
+        {
+            var lookAtPos = new Vector3(nextPos.X, currentPos.Y, nextPos.Z);
+            _character.LookAt(lookAtPos, Vector3.Up);
+            _character.RotateY(Mathf.Pi);
+        }
         
         // Hareketi uygula
         _character.Velocity = direction * _movementSpeed;
@@ -80,9 +88,9 @@ public partial class CharacterController : Node
         _isActive = started && _character.IsFriendly;
     }
 
-    public void SetState(CharacterStateType newState, Character playerCharacter)
+    public void SetState(CharacterStateType newState, Character character)
     {
-        _stateMachine.ChangeState(newState, playerCharacter);
+        _stateMachine.ChangeState(newState, character);
     }
 
     private void OnStateChanged(CharacterStateType oldState, CharacterStateType newState)

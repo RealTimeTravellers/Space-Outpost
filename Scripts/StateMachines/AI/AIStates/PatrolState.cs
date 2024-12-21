@@ -12,14 +12,6 @@ public class PatrolState : EnemyState
 
     private void ChooseNewDirection(Character enemy)
     {
-        var currentAP = enemy.Stats.ActionPoints.GetValue();
-        if (currentAP <= 0)
-        {
-            enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement(enemy);
-            return;
-        }
-
         var random = new RandomNumberGenerator();
         random.Randomize();
         var shuffledDirections = directions.OrderBy(x => random.Randf()).ToArray();
@@ -74,18 +66,24 @@ public class PatrolState : EnemyState
             GD.Print($"[AI] {enemy.Name} changing state from Patrol to {nextState}");
             return nextState;
         }
-        // Hedef grid'e hareket et
+        
+        if (_patrolTarget == Vector3.Zero && !enemy.CompletedTurn)
+        {
+            GD.Print($"[AI] {enemy.Name} choosing new direction");
+            ChooseNewDirection(enemy);
+        }
+        
         if (_patrolTarget != Vector3.Zero && !enemy.CompletedTurn)
         {
-            GD.Print($"[AI] {enemy.Name} has patrol target: {_patrolTarget}");
             var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(_patrolTarget);
             if (targetGrid != null) 
             {
-                GD.Print($"[AI] {enemy.Name} moving to target grid");
-                enemy.Move(targetGrid);
+                GD.Print($"[AI] {enemy.Name} moving to {_patrolTarget}");
+                enemy.CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
+                enemy.CharacterController.SetState(CharacterStateType.Moving, enemy);
+                enemy.enemyController._isMoving = true;
+                TurnManager.Instance.StartEnemyMovement(enemy);
                 _patrolTarget = Vector3.Zero;
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
             }
         }
 

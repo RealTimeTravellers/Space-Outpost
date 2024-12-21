@@ -86,8 +86,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
         if (CharacterController == null)
         {
-            CharacterController = new CharacterController();
+			GD.Print($"[Character] {this.Name} CharacterController is not assigned.");
             AddChild(CharacterController);
+			CharacterController.SetState(CharacterStateType.Idle, this);
         } 
 		
 		if (IsFriendly)
@@ -122,7 +123,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			if (enemyController == null)
 			{
 				enemyController = new EnemyAIController();
-				enemyController.Name = "AIController";
+				enemyController.Name = "EnemyAIController";
 				AddChild(enemyController);
 				enemyController.SetState(AIState.Patrol, this);
 			}
@@ -414,6 +415,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		else
 		{
 			TurnManager.Instance.StartEnemyMovement(this);
+			enemyController._isMoving = true;
 			CharacterController.SetState(CharacterStateType.Moving, this);
 		}
 
@@ -434,7 +436,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (IsFriendly)
 			TurnManager.Instance.EndPlayerMovement(this);
 		else
+		{
+			enemyController._isMoving = false;
 			TurnManager.Instance.EndEnemyMovement(this);
+		}
 	}
 
 	public void TakeCover()

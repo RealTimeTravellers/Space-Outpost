@@ -6,6 +6,7 @@ public partial class EnemyAIController : Node
     public EnemyAIStateMachine _stateMachine {get; private set;}
     private Character _character;
     public bool _isActive = false;
+    public bool _isMoving = false;
 
     public override void _Ready()
     {
@@ -22,35 +23,58 @@ public partial class EnemyAIController : Node
 
     public override void _Process(double delta)
     {
-        if (!_isActive || _character == null || _character.CompletedTurn)
+        if (!_isActive || _character == null)
         {
+            GD.Print($"[AI] Process skipped - Active: {_isActive}, Character: {_character?.Name}");
             _isActive = false;
             return;
         }
 
-        if (_character.Stats.ActionPoints.GetValue() <= 0)
+        // Hareket devam ediyorsa bekle
+        if (_isMoving)
         {
-            _character.CompletedTurn = true;
-            _isActive = false;
-            TurnManager.Instance.EndEnemyMovement(_character);
+            GD.Print($"[AI] {_character.Name} is moving...");
+            if (_character.CharacterController._navAgent.IsNavigationFinished())
+            {
+                GD.Print($"[AI] {_character.Name} finished moving");
+                _isMoving = false;
+                
+                if (_character.Stats.ActionPoints.GetValue() <= 0)
+                {
+                    GD.Print($"[AI] {_character.Name} out of action points");
+                    _character.CompletedTurn = true;
+                    TurnManager.Instance.EndEnemyMovement(_character);
+                }
+                else
+                {
+                    GD.Print($"[AI] {_character.Name} continuing AI processing");
+                    ProcessAI();
+                }
+            }
             return;
         }
 
+        GD.Print($"[AI] {_character.Name} processing AI");
         ProcessAI();
     }
+
     private void ProcessAI()
     {
+        GD.Print($"[AI] {_character.Name} ProcessAI called");
         if (_character == null || _character.CompletedTurn || _character.Stats.ActionPoints.GetValue() <= 0)
         {
+            GD.Print($"[AI] {_character.Name} ProcessAI skipped - Completed: {_character?.CompletedTurn}, AP: {_character?.Stats.ActionPoints.GetValue()}");
             _isActive = false;
             return;
         }
 
         var currentState = _stateMachine._states[_stateMachine.CurrentState];
+        GD.Print($"[AI] {_character.Name} current state: {_stateMachine.CurrentState}");
         var nextState = currentState.Process(_character);
         
         if (nextState != _stateMachine.CurrentState)
         {
+            GD.Print($"[AI] {_character.Name} changing state from {_stateMachine.CurrentState} to {nextState}");
             SetState(nextState, _character);
         }
     }
@@ -63,7 +87,7 @@ public partial class EnemyAIController : Node
         {
             GD.Print($"[AI] Starting turn for {_character.Name}");
             _isActive = true;
-            SetState(AIState.Patrol, _character);
+            //SetState(AIState.Patrol, _character);
         }
         else
         {
@@ -123,4 +147,5 @@ public partial class EnemyAIController : Node
             ProcessAI();
         }
     }
+    
 }

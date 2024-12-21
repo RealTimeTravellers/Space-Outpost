@@ -14,10 +14,12 @@ public class EnemyState : BaseState<AIState>
         new Vector3(0, 0, 1),   // İleri
         new Vector3(0, 0, -1)   // Geri
     };
+
     public override AIState Process(Character character)
     {
         return AIState.Patrol;
     }
+    
 
     public override AIState CheckState(Character character)
     {

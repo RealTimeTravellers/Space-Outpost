@@ -29,6 +29,7 @@ public partial class TurnManager : Node
     
     public static Character CurrentlyMovingCharacter { get; private set; } = null;
     private bool _isProcessingTurn = false;
+    private bool _isEnemyMoving = false;
 
     public Action<Character> CharacterDied;
     [Export] public Godot.Collections.Array<Character> playerCharacters = new();
@@ -67,6 +68,7 @@ public partial class TurnManager : Node
     {
         GD.Print("[TurnManager] Starting enemy movement");
         CurrentlyMovingCharacter = character;
+        _isEnemyMoving = true;
         EnemyMovementChanged?.Invoke(true);
     }
 
@@ -74,6 +76,7 @@ public partial class TurnManager : Node
     {
         GD.Print("[TurnManager] Ending enemy movement");
         CurrentlyMovingCharacter = character;
+        _isEnemyMoving = false;
         EnemyMovementChanged?.Invoke(false);
     }
 
@@ -133,7 +136,7 @@ public partial class TurnManager : Node
         CheckEnemyState();
         GD.Print($"[TurnManager] Enemy Movement Changed: {started}");
         
-        if (started) return;
+        if (started || _isEnemyMoving) return;
 
         bool allEnemiesCompleted = true;
         bool foundNextEnemy = false;
@@ -146,9 +149,9 @@ public partial class TurnManager : Node
             allEnemiesCompleted = allEnemiesCompleted && enemy.CompletedTurn;
             
             // Henüz tamamlanmamış düşman bul
-            if (!enemy.CompletedTurn && !foundNextEnemy)
+            if (!enemy.CompletedTurn && !foundNextEnemy && !_isEnemyMoving)
             {
-                var aiController = enemy.GetNode<EnemyAIController>("AIController");
+                var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
                 if (aiController != null)
                 {
                     aiController._isActive = true;
@@ -182,7 +185,7 @@ public partial class TurnManager : Node
         {
             enemy.CompletedTurn = false;
             enemy.Stats.ResetActionPoints();
-            var aiController = enemy.GetNode<EnemyAIController>("AIController");
+            var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
             if (aiController != null)
             {
                 aiController._isActive = true;
@@ -198,7 +201,7 @@ public partial class TurnManager : Node
             {
                 enemy.CompletedTurn = true;
                 enemy.Stats.DepleteActionPoints();
-                var aiController = enemy.GetNode<EnemyAIController>("AIController");
+                var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
                 if (aiController != null)
                 {
                     aiController._isActive = false;
@@ -219,7 +222,7 @@ public partial class TurnManager : Node
         {
             if (enemy == null || enemy.CompletedTurn) continue;
             
-            var aiController = enemy.GetNode<EnemyAIController>("AIController");
+            var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
             if (aiController != null)
             {
                 var currentState = aiController._stateMachine._states[aiController._stateMachine.CurrentState];
