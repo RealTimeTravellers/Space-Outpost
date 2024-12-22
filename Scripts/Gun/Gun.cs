@@ -61,13 +61,13 @@ public partial class Gun : Node3D
         audioPlayer.Play();
     }
 
-    private int CalculateDamage()
+    private int GetDamage()
     {
         // XXX: calculate damage based on range?
         return GD.RandRange(data.MinDamage, data.MaxDamage);
     }
 
-    public int Fire(bool hit)
+    public int Fire(bool hit, bool critical = false)
     {
         int damage = -1;
         if (currentAmmo > 0)
@@ -80,7 +80,10 @@ public partial class Gun : Node3D
             PlaySound(GunActionState.Shoot);
 
             currentAmmo--;
-            damage = CalculateDamage();        
+            if (critical)
+                damage = data.MaxDamage;
+            else 
+                damage = GetDamage();        
         }
 
         return damage;

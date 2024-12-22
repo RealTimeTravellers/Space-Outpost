@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cwr02fuuyynlc"]
+
+[ext_resource type="Script" path="res://Scripts/Gun/GunData.cs" id="1_w8cdg"]
+
+[resource]
+script = ExtResource("1_w8cdg")
+Name = "Cerebus"
+Description = "Ol' Reliable Assault Rifle"
+MagazineCapacity = 5
+Accuracy = 10
+MinDamage = 2
+MaxDamage = 4
+readySounds = Array[AudioStream]([])
+ShootSounds = Array[AudioStream]([])
+emptySounds = Array[AudioStream]([])
+reloadSounds = Array[AudioStream]([])
