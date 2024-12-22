@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
@@ -318,6 +317,50 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	private void UpdateHealthText()
 	{
 		HealthLabel.Text = Health +"/"+ Stats.Health.GetValue();
+	}
+
+	/// <summary>
+	/// Finds nearest (or not) grid that is unoccupied, if it returns null there is none.
+	/// </summary>
+	/// <param name="nearest"></param>
+	/// <returns></returns>
+	private GridObject QueryForCover(bool nearest = true)
+	{
+		// XXX: check for range as well ? 
+		if (nearest)
+		{
+			Godot.Collections.Array<GridObject> sortedList = new();
+			
+			// find closest grids and sort them
+			foreach (GridObject grid in EnemyManager.Instance.coverGrids)
+			{
+				if (sortedList.Count < 1)
+					sortedList.Add(grid);
+				else
+				{
+					for (int i = 0; i < sortedList.Count; i++)
+					{
+						if (GlobalPosition.DistanceTo(grid.GlobalPosition) < GlobalPosition.DistanceTo(sortedList[i].GlobalPosition))
+						{
+							sortedList.Insert(i, grid);
+							break;
+						}
+					}
+				}
+			}
+
+			foreach (GridObject grid in sortedList)
+			{
+				if (!grid.IsOccupied)
+					return grid;
+			}
+		}
+		else
+		{
+			// something something wont use...
+		}
+
+		return null;
 	}
 
 	#region ICombat Implementations

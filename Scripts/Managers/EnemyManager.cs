@@ -7,6 +7,8 @@ public partial class EnemyManager : Node
 {
     public static EnemyManager Instance {get; private set;}
 
+    [Export] public Godot.Collections.Array<GridObject> coverGrids = new(); // not in particular order
+
     [Export] // Exported for testing
     public Godot.Collections.Array<Character> allEnemies;
     
