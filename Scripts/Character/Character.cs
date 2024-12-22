@@ -181,7 +181,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					Attack(TurnManager.CurrentlyMovingCharacter);
+					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -190,8 +190,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					Attack(TurnManager.CurrentlyMovingCharacter);
-					Attack(TurnManager.CurrentlyMovingCharacter);
+					//Attack(TurnManager.CurrentlyMovingCharacter);
+					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -207,26 +207,19 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		this.actionPoints -= cost;
 		ActionCompleted?.Invoke(this.actionPoints);
 		
-		if (this.actionPoints <= 0 && !CompletedTurn)
-		{
-			GD.Print($"[Character] {this.Name} out of action points");
-			EndTurn();
-		}
+		CheckTurnEnd();
 
 		if (CompletedTurn && CameraManager.Instance.AimingMode)
 			CameraManager.ReturnCameraToTactical();
 	}
 
-	private bool CheckTurnEnd()
+	private void CheckTurnEnd()
 	{
 		if (this.actionPoints <= 0 && !CompletedTurn)
 		{
 			GD.Print($"[Character] {this.Name} out of action points");
 			EndTurn();
-			return true;
 		}
-		else
-			return false;
 	}
 
 	public void EndTurn()
@@ -237,11 +230,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			return;
 		}
 		
+		// Hareket devam ediyorsa bekle
+		if (!CharacterController._navAgent.IsNavigationFinished())
+		{
+			GD.Print($"[Character] {this.Name} still moving, cannot end turn");
+			return;
+		}
+		
 		GD.Print($"[Character] {this.Name} Ending Turn");
 		CompletedTurn = true;
 
 		if (IsFriendly)
-		{	
+		{   
 			GD.Print($"[Character] {this.Name} ending player movement");
 			TurnManager.Instance.EndPlayerMovement(this);
 		}
@@ -415,7 +415,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		else
 		{
 			TurnManager.Instance.StartEnemyMovement(this);
-			enemyController._isMoving = true;
 			CharacterController.SetState(CharacterStateType.Moving, this);
 		}
 
@@ -436,10 +435,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (IsFriendly)
 			TurnManager.Instance.EndPlayerMovement(this);
 		else
-		{
-			enemyController._isMoving = false;
 			TurnManager.Instance.EndEnemyMovement(this);
-		}
 	}
 
 	public void TakeCover()

@@ -1,151 +1,77 @@
 using Godot;
-using System;
 
 public partial class EnemyAIController : Node
 {
     public EnemyAIStateMachine _stateMachine {get; private set;}
     private Character _character;
     public bool _isActive = false;
-    public bool _isMoving = false;
 
     public override void _Ready()
     {
         base._Ready();
         _character = GetParent<Character>();
-        _character.ActionCompleted += OnActionCompleted;
         _stateMachine = new EnemyAIStateMachine();
-        _stateMachine.OnStateChanged += OnStateChanged;
-        
-        // Turn events'e subscribe ol
         TurnManager.Instance.TurnChanged += OnTurnChanged;
-        TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
     }
 
     public override void _Process(double delta)
     {
-        if (!_isActive || _character == null)
+        if (_character == null || _character.CompletedTurn)
         {
-            GD.Print($"[AI] Process skipped - Active: {_isActive}, Character: {_character?.Name}");
-            _isActive = false;
             return;
         }
 
-        // Hareket devam ediyorsa bekle
-        if (_isMoving)
-        {
-            GD.Print($"[AI] {_character.Name} is moving...");
-            if (_character.CharacterController._navAgent.IsNavigationFinished())
-            {
-                GD.Print($"[AI] {_character.Name} finished moving");
-                _isMoving = false;
-                
-                if (_character.Stats.ActionPoints.GetValue() <= 0)
-                {
-                    GD.Print($"[AI] {_character.Name} out of action points");
-                    _character.CompletedTurn = true;
-                    TurnManager.Instance.EndEnemyMovement(_character);
-                }
-                else
-                {
-                    GD.Print($"[AI] {_character.Name} continuing AI processing");
-                    ProcessAI();
-                }
-            }
-            return;
-        }
-
-        GD.Print($"[AI] {_character.Name} processing AI");
         ProcessAI();
-    }
-
-    private void ProcessAI()
-    {
-        GD.Print($"[AI] {_character.Name} ProcessAI called");
-        if (_character == null || _character.CompletedTurn || _character.Stats.ActionPoints.GetValue() <= 0)
-        {
-            GD.Print($"[AI] {_character.Name} ProcessAI skipped - Completed: {_character?.CompletedTurn}, AP: {_character?.Stats.ActionPoints.GetValue()}");
-            _isActive = false;
-            return;
-        }
-
-        var currentState = _stateMachine._states[_stateMachine.CurrentState];
-        GD.Print($"[AI] {_character.Name} current state: {_stateMachine.CurrentState}");
-        var nextState = currentState.Process(_character);
-        
-        if (nextState != _stateMachine.CurrentState)
-        {
-            GD.Print($"[AI] {_character.Name} changing state from {_stateMachine.CurrentState} to {nextState}");
-            SetState(nextState, _character);
-        }
     }
 
     private void OnTurnChanged(bool isPlayerTurn)
     {
-        GD.Print($"[AI] Turn changed - isPlayerTurn: {isPlayerTurn}, Character: {_character?.Name}");
-        
         if (!isPlayerTurn && _character != null && !_character.IsFriendly)
         {
-            GD.Print($"[AI] Starting turn for {_character.Name}");
             _isActive = true;
-            //SetState(AIState.Patrol, _character);
         }
         else
         {
-            GD.Print($"[AI] Ending turn for {_character?.Name}");
             _isActive = false;
         }
     }
 
-    private void OnEnemyMovementChanged(bool started)
+    private void ProcessAI()
     {
-        if (_character == null || _character.IsFriendly)
-            return;
-        if (started && !_character.CompletedTurn)
+        if (!_isActive) return;
+
+        // AI State Machine güncelleme
+        var nextState = _stateMachine.UpdateCurrentState(_character);
+        if (nextState != _stateMachine.CurrentState)
         {
-            _isActive = true;
+            _stateMachine.ChangeState(nextState, _character);
         }
+
+        // Character State Machine'i ProcessPlayerState gibi güncelleyelim
+        if (_character.CharacterController._navAgent.IsNavigationFinished())
+        {
+            CharacterStateType currentState = _character.CharacterController._stateMachine.CurrentStateType;
+            _character.CharacterController._stateMachine.UpdateState(_character);
+            
+            if (_character.CharacterController._stateMachine.CurrentStateType != currentState)
+            {
+                GD.Print($"Enemy state changed from {currentState} to {_character.CharacterController._stateMachine.CurrentStateType}");
+                _character.CharacterController._stateMachine.RequestAnimation(
+                    _character.CharacterController._stateMachine.CurrentStateType.ToString().ToLower());
+            }
+        }
+    }
+
+    public async void MoveToGrid(GridObject targetGrid)
+    {
+        if (targetGrid == null) return;
+        await _character.Move(targetGrid);
     }
 
     public void SetState(AIState newState, Character aiCharacter)
     {
-        if (aiCharacter != null)
-        {
-            var characterName = aiCharacter.Name ?? aiCharacter.GetParent()?.Name;
-            GD.Print($"[AI Controller] Setting state to {newState} for {characterName}");
-        }
         _stateMachine.ChangeState(newState, aiCharacter);
     }
 
-    private void OnStateChanged(AIState oldState, AIState newState)
-    {
-        GD.Print($"AI State changed from {oldState} to {newState} for {_character.Name}");
-    }
 
-    public override void _ExitTree()
-    {
-        if (_stateMachine != null)
-        {
-            _stateMachine.OnStateChanged -= OnStateChanged;
-        }
-        
-        if (TurnManager.Instance != null)
-        {
-            TurnManager.Instance.TurnChanged -= OnTurnChanged;
-            TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
-        }
-    }
-
-    private void OnActionCompleted(int remainingActionPoints)
-    {
-        if (remainingActionPoints <= 0)
-        {
-            _character.EndTurn();
-            _isActive = false;
-        }
-        else if (!_character.CompletedTurn)
-        {
-            ProcessAI();
-        }
-    }
-    
 }

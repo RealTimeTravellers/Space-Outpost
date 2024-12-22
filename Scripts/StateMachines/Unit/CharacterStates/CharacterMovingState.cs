@@ -4,7 +4,7 @@ public class CharacterMovingState : CharacterState
     public override void Enter(Character character)
     {
         base.Enter(character);
-        character.CharacterController.GetStateMachine().RequestAnimation("moving");
+        character.CharacterController._stateMachine.RequestAnimation("moving");
     }
 
     public override CharacterStateType CheckState(Character character)

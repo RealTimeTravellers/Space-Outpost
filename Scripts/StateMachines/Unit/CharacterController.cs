@@ -16,6 +16,7 @@ public partial class CharacterController : Node
         
         TurnManager.Instance.TurnChanged += OnTurnChanged;
         TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
+        TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
 
         _character.Velocity = Vector3.Zero;
         SetState(CharacterStateType.Idle, _character);
@@ -23,23 +24,14 @@ public partial class CharacterController : Node
 
     public override void _Process(double delta)
     {
-        if (_isActive)
-        {
-            ProcessPlayerState();
-            UpdateNavigation();
-        }
+        ProcessPlayerState();
+        UpdateNavigation();
     }
 
     private void UpdateNavigation()
     {
         if (_stateMachine.CurrentStateType != CharacterStateType.Moving)
             return;
-
-        if (_navAgent.IsNavigationFinished())
-        {
-            _stateMachine.ChangeState(CharacterStateType.Idle, _character);
-            return;
-        }
 
         var nextPos = _navAgent.GetNextPathPosition();
         var currentPos = _character.GlobalPosition;
@@ -88,6 +80,11 @@ public partial class CharacterController : Node
         _isActive = started && _character.IsFriendly;
     }
 
+    private void OnEnemyMovementChanged(bool started)
+    {
+        _isActive = started && !_character.IsFriendly;
+    }
+
     public void SetState(CharacterStateType newState, Character character)
     {
         _stateMachine.ChangeState(newState, character);
@@ -97,8 +94,6 @@ public partial class CharacterController : Node
     {
         GD.Print($"Player state changed from {oldState} to {newState} for {_character.Name}");
     }
-
-    public CharacterStateMachine GetStateMachine() => _stateMachine;
 
     public override void _ExitTree()
     {
@@ -111,7 +106,7 @@ public partial class CharacterController : Node
         {
             TurnManager.Instance.TurnChanged -= OnTurnChanged;
             TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
-
+            TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
         }
     }
 }
