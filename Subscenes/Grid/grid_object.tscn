@@ -14,7 +14,7 @@ size = Vector3(0.9, 0.9, 0.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_trh14"]
 
-[node name="Grid Object" type="Node3D" node_paths=PackedStringArray("meshInstance", "gridSprite")]
+[node name="Grid Object" type="Node3D" node_paths=PackedStringArray("meshInstance")]
 script = ExtResource("1_1vjro")
 standardMaterial = ExtResource("2_oxrnx")
 selectedMaterial = ExtResource("3_2tx4k")
@@ -23,12 +23,6 @@ outerMaterial = ExtResource("5_5k85l")
 blockedMaterial = ExtResource("2_efyxx")
 standardTransparency = 0.9
 meshInstance = NodePath("Debug Box")
-gridSprite = NodePath("Sprite3D")
-standardColour = Color(0.141176, 0.584314, 1, 0.501961)
-selectedColour = Color(1, 1, 1, 0.501961)
-innerColour = Color(0, 1, 0, 0.501961)
-outerColour = Color(1, 1, 0, 0.501961)
-blockedColour = Color(1, 0, 0, 0.501961)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 0.2, 0)

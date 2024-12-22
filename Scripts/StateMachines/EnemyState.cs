@@ -23,12 +23,15 @@ public class EnemyState : BaseState<AIState>
 
     public override AIState CheckState(Character character)
     {
+        // Debug için player görüş kontrolü
+        bool canSeePlayer = PlayerInSight(character);
+        
         // Önce Alien kontrolü yap
         if (character.Stats.UnitType == UnitType.Alien)
         {
-            if (PlayerInSight(character))
+            if (canSeePlayer)
                 return AIState.Aggression;
-            return AIState.Patrol;  // Varsayılan duruma dön
+            return AIState.Patrol;
         }
 
         // Human için kontroller
@@ -38,10 +41,10 @@ public class EnemyState : BaseState<AIState>
         if (character.Stats.Morale.GetValue() < 5)
             return AIState.Cower;
 
-        if (PlayerInSight(character))
+        if (canSeePlayer)
             return AIState.Tactical;
 
-        return AIState.Patrol;  // Varsayılan duruma dön
+        return AIState.Patrol;
     }
 
     
