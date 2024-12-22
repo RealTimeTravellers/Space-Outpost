@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://drvh7ppc0c6g0"]
+
+[ext_resource type="PackedScene" uid="uid://bixjkk68kcd8r" path="res://Subscenes/Particle Effects/spark_effect.tscn" id="1_56x7k"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_f1o2g"]
+particle_flag_align_y = true
+direction = Vector3(0, 0, 1)
+spread = 10.0
+initial_velocity_min = 45.0
+initial_velocity_max = 45.0
+gravity = Vector3(0, 0, 0)
+hue_variation_min = 1.0
+hue_variation_max = 1.0
+collision_mode = 2
+sub_emitter_mode = 3
+sub_emitter_amount_at_collision = 20
+
+[sub_resource type="Curve" id="Curve_wcork"]
+_data = [Vector2(0, 0.208791), 0.0, 4.55572, 0, 1, Vector2(0.0606936, 0.485294), 4.1634, 4.1634, 0, 0, Vector2(0.219653, 0.610294), -0.806672, -0.806672, 0, 0, Vector2(0.763006, 0.154412), -0.541301, -0.541301, 0, 0, Vector2(1, 0), -0.651542, 0.0, 1, 0]
+point_count = 5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1atg7"]
+transparency = 1
+albedo_color = Color(1, 0.866667, 0.345098, 0.784314)
+rim_enabled = true
+rim_tint = 1.0
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_7qubj"]
+material = SubResource("StandardMaterial3D_1atg7")
+radius = 0.1
+sections = 12
+curve = SubResource("Curve_wcork")
+
+[node name="Shoot Effect" type="GPUParticles3D"]
+gi_mode = 0
+emitting = false
+amount = 3
+sub_emitter = NodePath("Spark Effect")
+one_shot = true
+collision_base_size = 0.08
+visibility_aabb = AABB(-5, -2, 0, 10, 4, 40)
+process_material = SubResource("ParticleProcessMaterial_f1o2g")
+draw_pass_1 = SubResource("TubeTrailMesh_7qubj")
+
+[node name="Spark Effect" parent="." instance=ExtResource("1_56x7k")]

@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://cqwc45e1nffn5"
+path="res://.godot/imported/Gun_2_1.png-bff9ffb6d4d804755c28263d00fe980f.ctex"
+metadata={
+"vram_texture": false
+}
+generator_parameters={
+"md5": "7b51eab647fa01c47401f3a2e328d945"
+}
+
+[deps]
+
+source_file="res://Visual Assets/Models/Guns/Assault Rifle/Gun_2_1.png"
+dest_files=["res://.godot/imported/Gun_2_1.png-bff9ffb6d4d804755c28263d00fe980f.ctex"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=1
