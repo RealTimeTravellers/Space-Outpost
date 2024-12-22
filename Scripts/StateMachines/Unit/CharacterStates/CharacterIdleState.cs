@@ -4,30 +4,22 @@ public class CharacterIdleState : CharacterState
 {
     public override void Enter(Character character)
     {
-        GD.Print("Entering Idle State");
-    }
-
-    public override CharacterStateType Process(Character character)
-    {
-        return CheckState(character);
+        base.Enter(character);
+        character.CharacterController._stateMachine.RequestAnimation("idle");
     }
 
     public override CharacterStateType CheckState(Character character)
     {
-        if (Input.IsActionPressed("move"))
+        if (character.Velocity.Length() > 0.1f && !character.CharacterController._navAgent.IsNavigationFinished())
             return CharacterStateType.Moving;
-            
-        if (Input.IsActionPressed("aim"))
-            return CharacterStateType.Aiming;
-            
-        if (Input.IsActionPressed("take_cover"))
-            return CharacterStateType.TakingCover;
-            
-        return CharacterStateType.Idle;
-    }
+        
+        if(character.CharacterController._stateMachine.PreviousStateType != CharacterStateType.InCover){
+            var nearestCover = character.QueryForCover();
+            if (nearestCover != null && 
+                character.GlobalPosition.DistanceTo(nearestCover.GlobalPosition) <= 2f)
+                return CharacterStateType.InCover;
+        }
 
-    public override void Exit(Character character)
-    {
-        GD.Print("Exiting Idle State");
+        return CharacterStateType.Idle;
     }
 }

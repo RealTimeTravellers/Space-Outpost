@@ -4,24 +4,50 @@ public partial class CharacterController : Node
 {
     public CharacterStateMachine _stateMachine {get; private set;}
     private Character _character;
+    public NavigationAgent3D _navAgent {get; private set;}
     private bool _isActive = false;
-
+    [Export] public float _movementSpeed = 5.0f;
     public override void _Ready()
     {
         _character = GetParent<Character>();
+        _navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
         _stateMachine = new CharacterStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
         
         TurnManager.Instance.TurnChanged += OnTurnChanged;
         TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
+        TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
+
+        _character.Velocity = Vector3.Zero;
+        SetState(CharacterStateType.Idle, _character);
     }
 
     public override void _Process(double delta)
     {
-        if (_isActive)
+        ProcessPlayerState();
+        UpdateNavigation();
+    }
+
+    private void UpdateNavigation()
+    {
+        if (_stateMachine.CurrentStateType != CharacterStateType.Moving)
+            return;
+
+        var nextPos = _navAgent.GetNextPathPosition();
+        var currentPos = _character.GlobalPosition;
+        var direction = (nextPos - currentPos).Normalized();
+        
+        // Karakteri yönlendir
+        if (!nextPos.IsEqualApprox(currentPos))
         {
-            ProcessPlayerState();
+            var lookAtPos = new Vector3(nextPos.X, currentPos.Y, nextPos.Z);
+            _character.LookAt(lookAtPos, Vector3.Up);
+            _character.RotateY(Mathf.Pi);
         }
+        
+        // Hareketi uygula
+        _character.Velocity = direction * _movementSpeed;
+        _character.MoveAndSlide();
     }
 
     private void ProcessPlayerState()
@@ -32,6 +58,7 @@ public partial class CharacterController : Node
         if (_stateMachine.CurrentStateType != currentState)
         {
             GD.Print($"State changed from {currentState} to {_stateMachine.CurrentStateType}");
+            _stateMachine.RequestAnimation(_stateMachine.CurrentStateType.ToString().ToLower());
         }
     }
 
@@ -53,9 +80,14 @@ public partial class CharacterController : Node
         _isActive = started && _character.IsFriendly;
     }
 
-    public void SetState(CharacterStateType newState, Character playerCharacter)
+    private void OnEnemyMovementChanged(bool started)
     {
-        _stateMachine.ChangeState(newState, playerCharacter);
+        _isActive = started && !_character.IsFriendly;
+    }
+
+    public void SetState(CharacterStateType newState, Character character)
+    {
+        _stateMachine.ChangeState(newState, character);
     }
 
     private void OnStateChanged(CharacterStateType oldState, CharacterStateType newState)
@@ -74,6 +106,7 @@ public partial class CharacterController : Node
         {
             TurnManager.Instance.TurnChanged -= OnTurnChanged;
             TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
+            TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
         }
     }
 }

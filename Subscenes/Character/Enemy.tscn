@@ -1,8 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://c801hdwwm0f1p"]
+[gd_scene load_steps=11 format=3 uid="uid://bpnxwfh1wbjam"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_fooxj"]
 [ext_resource type="Resource" uid="uid://b0e0ffdgmwpvx" path="res://Data/Chracter Action Data/EnemyCharacterActionData.tres" id="2_nxhog"]
 [ext_resource type="Material" uid="uid://1r2gc36i3pw2" path="res://Visual Assets/Materials/RED.tres" id="3_b3ioq"]
+[ext_resource type="PackedScene" uid="uid://chb7julp82npg" path="res://Visual Assets/Models/Units/asker.tscn" id="3_n1nwx"]
+[ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterController.cs" id="4_4upge"]
+[ext_resource type="Script" path="res://Scripts/StateMachines/AI/EnemyAIController.cs" id="5_dakxj"]
+[ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="6_2miie"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
 
@@ -10,16 +14,20 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
-[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("ShoulderCamera", "HealthLabel")]
+[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("AnimatorController", "CharacterController", "enemyController", "ShoulderCamera", "HealthLabel")]
 collision_layer = 512
 collision_mask = 512
 script = ExtResource("1_fooxj")
+AnimatorController = NodePath("AnimatorController")
+CharacterController = NodePath("CharacterController")
+enemyController = NodePath("EnemyAIController")
 actionData = ExtResource("2_nxhog")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
 HealthLabel = NodePath("Health Text")
 
 [node name="Model" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
 material_override = ExtResource("3_b3ioq")
 mesh = SubResource("CapsuleMesh_t5xya")
 
@@ -40,3 +48,16 @@ pixel_size = 0.025
 modulate = Color(1, 0, 0, 1)
 outline_modulate = Color(0.41598, 0.41598, 0.41598, 1)
 text = "XXX/XXX"
+
+[node name="CharacterController" type="Node3D" parent="."]
+script = ExtResource("4_4upge")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
+
+[node name="EnemyAIController" type="Node3D" parent="."]
+script = ExtResource("5_dakxj")
+
+[node name="AnimatorController" type="Node3D" parent="."]
+script = ExtResource("6_2miie")
+
+[node name="Asker" parent="AnimatorController" instance=ExtResource("3_n1nwx")]

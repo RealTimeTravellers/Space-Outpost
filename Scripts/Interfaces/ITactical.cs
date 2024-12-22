@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 public interface ITactical
 {
     public bool IsTakingCover {get;}
@@ -5,7 +7,7 @@ public interface ITactical
     /// <summary>
     /// Movement, from current grid to target grid
     /// </summary>
-    public void Move(GridObject targetGrid);
+    public Task Move(GridObject targetGrid);
 
     /// <summary>
     /// Keeps their head down, reduces change of being hit

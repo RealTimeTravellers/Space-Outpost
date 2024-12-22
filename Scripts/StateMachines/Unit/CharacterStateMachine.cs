@@ -8,13 +8,10 @@ public enum CharacterStateType
 {
     Idle,
     Moving,
+    InCover,
     Aiming,
     Shooting,
-    TakingCover,
-    LeavingCover,
-    Reloading,
     Death,
-    Tactical
 }
 
 public class CharacterStateMachine
@@ -22,8 +19,9 @@ public class CharacterStateMachine
     private Dictionary<CharacterStateType, IBaseState<CharacterStateType>> _states;
     private IBaseState<CharacterStateType> _currentState;
     public CharacterStateType CurrentStateType { get; private set; }
-    
+    public CharacterStateType PreviousStateType { get; private set; }
     public event Action<CharacterStateType, CharacterStateType> OnStateChanged;
+    public event Action<string> OnAnimationRequested; 
 
     public CharacterStateMachine()
     {
@@ -31,13 +29,10 @@ public class CharacterStateMachine
         {
             { CharacterStateType.Idle, new CharacterIdleState() },
             { CharacterStateType.Moving, new CharacterMovingState() },
+            { CharacterStateType.InCover, new CharacterInCoverState() },
             { CharacterStateType.Aiming, new CharacterAimingState() },
             { CharacterStateType.Shooting, new CharacterShootingState() },
-            { CharacterStateType.TakingCover, new CharacterTakingCoverState() },
-            { CharacterStateType.LeavingCover, new CharacterLeavingCoverState() },
-            { CharacterStateType.Reloading, new CharacterReloadingState() },
             { CharacterStateType.Death, new CharacterDeathState() },
-            { CharacterStateType.Tactical, new CharacterTacticalState() }
         };
 
         CurrentStateType = CharacterStateType.Idle;
@@ -48,6 +43,7 @@ public class CharacterStateMachine
     {
         if (!_states.ContainsKey(newState)) return;
 
+        PreviousStateType = CurrentStateType;
         var oldState = CurrentStateType;
         _currentState?.Exit(character);
         CurrentStateType = newState;
@@ -64,5 +60,10 @@ public class CharacterStateMachine
         {
             ChangeState(nextState, character);
         }
+    }
+
+    public void RequestAnimation(string animationName)
+    {
+        OnAnimationRequested?.Invoke(animationName);
     }
 }

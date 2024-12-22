@@ -14,17 +14,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	public StatContainer StatContainer;
 
 	// Equipment controller
-	[Export] public EquipmentController Equipment { get; private set; }
+    [Export]
+    public PrimaryWeaponType WeaponType { get; private set; }
+ 	public EquipmentController Equipment { get; private set; }
+
 
     // Animator controller
-    [Export] public CharacterAnimatorController AnimatorController { get; private set; }
-
-	// Character stuff.
-	[Export] private NodePath playerControllerPath;
-	//[Export] private CharacterController characterController;
-
-	// AI stuff.
-	[Export] private NodePath aiControllerPath;
+	[Export] public CharacterAnimatorController AnimatorController { get; private set; }
+	[Export] public CharacterController CharacterController { get; private set; }
 	[Export] public EnemyAIController enemyController { get; private set; }
 
 	[Export] public bool move = false; // temp for test only
@@ -35,7 +32,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float VisualRange { get; private set; } = 35; 
-	public bool IsInCover { get; private set; } = false;
+	public bool IsInCover { get; set; } = false;
 	public event Action<int> ActionCompleted;
 
 	#region ICombat Variables
@@ -46,6 +43,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	#region ITactical Variables
 	public bool IsTakingCover { get ; private set ; }
+	public bool IsMoving { get; set; }
 	#endregion
 
 	[Export] private ActionData actionData = null;
@@ -53,13 +51,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private int actionPoints; // take form a resource data
 	[Export] public bool CompletedTurn {get; set;} = false;
 
-	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
+	[Export] public Godot.Collections.Array<Character> enemiesInLos {get; set;} = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
 	[Export] private EndTurnState endTurnState = EndTurnState.None;
 
 	[Export] public Character Target { get; set; } = null;
-	[Export] private int targetIndex = 0;
+	[Export] public int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
 	[Export] private GpuParticles3D shootEffect;
@@ -86,26 +84,26 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void InitializeStats()
 	{
-        /* characterController = GetNodeOrNull<CharacterController>(playerControllerPath);
-        if (characterController == null)
+        if (CharacterController == null)
         {
-            characterController = new CharacterController();
-            AddChild(characterController);
-        } */
-        
+			GD.Print($"[Character] {this.Name} CharacterController is not assigned.");
+            AddChild(CharacterController);
+			CharacterController.SetState(CharacterStateType.Idle, this);
+        } 
+		
 		if (IsFriendly)
 		{
 			// Player Stats
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
 			Stats = new PlayerStats(PlayerType, StatContainer);
 			Health = Stats.Health.GetValue();
-			/* Damage = Equipment.GetCurrentWeaponDamage();
+			// Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
-			Equipment = new EquipmentController(Stats);
-			Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
-			Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
-			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
+			// Equipment = new EquipmentController(Stats);
+			// Equipment.EquipPrimaryWeapon(PrimaryWeaponType.Titan);
+			// Equipment.EquipSecondaryWeapon(SecondaryWeaponType.Viper);
+			// Equipment.EquipAccessory(AccessoryType.FragGrenade);
 		}
 		else
 		{
@@ -122,11 +120,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			Equipment.EquipAccessory(AccessoryType.FragGrenade); */
 
 			// Enemy AI Controller
-			enemyController = GetNodeOrNull<EnemyAIController>(aiControllerPath);
 			if (enemyController == null)
 			{
 				enemyController = new EnemyAIController();
-				enemyController.Name = "AIController";
+				enemyController.Name = "EnemyAIController";
 				AddChild(enemyController);
 				enemyController.SetState(AIState.Patrol, this);
 			}
@@ -167,7 +164,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		GridManager.Instance.SelectionChanged -= OnSelectionChanged;
 	}
 
-	private async void SearchForEnemies(bool instantSearch = false)
+	public async void SearchForEnemies(bool instantSearch = false)
 	{
 		if (instantSearch)
 		{
@@ -184,7 +181,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					Attack(TurnManager.CurrentlyMovingCharacter);
+					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -193,8 +190,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					Attack(TurnManager.CurrentlyMovingCharacter);
-					Attack(TurnManager.CurrentlyMovingCharacter);
+					//Attack(TurnManager.CurrentlyMovingCharacter);
+					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -210,26 +207,19 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		this.actionPoints -= cost;
 		ActionCompleted?.Invoke(this.actionPoints);
 		
-		if (this.actionPoints <= 0 && !CompletedTurn)
-		{
-			GD.Print($"[Character] {this.Name} out of action points");
-			EndTurn();
-		}
+		CheckTurnEnd();
 
 		if (CompletedTurn && CameraManager.Instance.AimingMode)
 			CameraManager.ReturnCameraToTactical();
 	}
 
-	private bool CheckTurnEnd()
+	private void CheckTurnEnd()
 	{
 		if (this.actionPoints <= 0 && !CompletedTurn)
 		{
 			GD.Print($"[Character] {this.Name} out of action points");
 			EndTurn();
-			return true;
 		}
-		else
-			return false;
 	}
 
 	public void EndTurn()
@@ -240,11 +230,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			return;
 		}
 		
+		// Hareket devam ediyorsa bekle
+		if (!CharacterController._navAgent.IsNavigationFinished())
+		{
+			GD.Print($"[Character] {this.Name} still moving, cannot end turn");
+			return;
+		}
+		
 		GD.Print($"[Character] {this.Name} Ending Turn");
 		CompletedTurn = true;
 
 		if (IsFriendly)
-		{	
+		{   
 			GD.Print($"[Character] {this.Name} ending player movement");
 			TurnManager.Instance.EndPlayerMovement(this);
 		}
@@ -257,20 +254,27 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void ToggleAim()
 	{
-		// TODO: Add tweening to these
-
 		if (CameraManager.Instance.AimingMode)
-			CameraManager.ReturnCameraToTactical();
-		else
 		{
-			if (actionPoints > 0 && enemiesInLos.Count > 0)  // Array boş değilse devam et
-			{
-				targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);  // Index'i sınırla
-				Target = enemiesInLos[targetIndex];
-				LookAt(Target.Position);
-				CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
-				CameraManager.MoveToShoulder(this);
-			}
+			CameraManager.ReturnCameraToTactical();
+			CharacterController.SetState(CharacterStateType.Idle, this);
+			return;
+		}
+
+		// İlk kez açılıyorsa:
+		if (IsFriendly)
+			enemiesInLos = QueryForEnemies(TurnManager.Instance.enemyCharacters);
+		else
+			enemiesInLos = QueryForEnemies(TurnManager.Instance.playerCharacters);
+
+		if (Stats.ActionPoints.GetValue() > 0 && enemiesInLos.Count > 0)
+		{
+			targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);
+			Target = enemiesInLos[targetIndex];
+			LookAt(Target.Position);
+			CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
+			CameraManager.MoveToShoulder(this);   // AimingMode=true
+			CharacterController.SetState(CharacterStateType.Aiming, this);
 		}
 	}
 
@@ -328,7 +332,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// </summary>
 	/// <param name="nearest"></param>
 	/// <returns></returns>
-	private GridObject QueryForCover(bool nearest = true)
+	public GridObject QueryForCover(bool nearest = true)
 	{
 		// XXX: check for range as well ? 
 		if (nearest)
@@ -378,14 +382,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		foreach (Character enemy in enemies.Select(v => (Character)v))
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
-
 			if (distance < Stats.Perception.GetValue()) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
 				CastHit hit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
 				
-				if (!hit.NonEmpty)
+				if (hit.NonEmpty)
 					enemiesWithLos.Add(enemy);
 					// GD.Print("vURULDU.");
 
@@ -416,8 +419,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			shootEffect.ProcessMaterial.Set("spread", 2);
 			shootEffect.Restart();
 
-			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
-			target.TakeDamage(damage);
+			//int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
+			target.TakeDamage(Equipment.GetCurrentWeaponDamage());
 			// and play animation
 		}
 		else
@@ -444,32 +447,55 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#endregion
 
 	#region ITactical Implementations
-	public void Move(GridObject targetGrid)
+	public async Task Move(GridObject targetGrid)
 	{
 		if(CompletedTurn || targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
 			return;
 
-		// Eski grid'i temizle
+		// Grid işlemleri
 		if(currentGrid != null)
 			currentGrid.ClearOccupied();
-			
-		// Yeni grid'e taşın
-		GlobalPosition = targetGrid.GlobalPosition;
-		currentGrid = targetGrid;
-		currentGrid.SetOccupied(this);
 		
+		if(CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
+		{
+			IsMoving = true;
+			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
+		}
+
+		// Hedef pozisyonu ayarla
+		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
+		
+		// State'i Moving'e geçir
 		if (IsFriendly)
 		{
 			TurnManager.Instance.StartPlayerMovement(this);
-			CompleteAction(actionData.moveCost);
-			TurnManager.Instance.EndPlayerMovement(this);
+			CharacterController.SetState(CharacterStateType.Moving, this);
 		}
 		else
 		{
 			TurnManager.Instance.StartEnemyMovement(this);
-			CompleteAction(actionData.moveCost);
-			TurnManager.Instance.EndEnemyMovement(this);
+			CharacterController.SetState(CharacterStateType.Moving, this);
 		}
+
+		// Hareketin bitmesini bekle
+		while (!CharacterController._navAgent.IsNavigationFinished())
+		{
+			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+		}
+
+		// Hedef grid'e yerleş
+		GlobalPosition = targetGrid.GlobalPosition;
+		currentGrid = targetGrid;
+		currentGrid.SetOccupied(this);
+		
+		// Hareketi tamamla
+		CompleteAction(actionData.moveCost);
+		IsMoving = false;
+		
+		if (IsFriendly)
+			TurnManager.Instance.EndPlayerMovement(this);
+		else
+			TurnManager.Instance.EndEnemyMovement(this);
 	}
 
 	public void TakeCover()
@@ -537,11 +563,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (started) // enemy started moving
 		{
+            // close ınput
 			doQuery = true;
 			SearchForEnemies();
 		}
 		else // enemy finished moving
 		{
+            // open ınput
 			doQuery = false;
 			SearchForEnemies(true); // to see if this can see enemy
 		}

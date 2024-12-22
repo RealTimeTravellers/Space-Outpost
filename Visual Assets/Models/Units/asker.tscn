@@ -1,0 +1,265 @@
+[gd_scene load_steps=55 format=3 uid="uid://chb7julp82npg"]
+
+[ext_resource type="PackedScene" uid="uid://bwf51yhi3akik" path="res://Visual Assets/Models/Units/Core/Asker.FBX" id="1_ftjwh"]
+[ext_resource type="AnimationLibrary" uid="uid://diq8qogds377v" path="res://Visual Assets/Models/Animations/Asker/Defeated.fbx" id="2_3et0n"]
+[ext_resource type="AnimationLibrary" uid="uid://diokyg3tqhw1u" path="res://Visual Assets/Models/Animations/Asker/Breathing Idle (2).fbx" id="2_d70k4"]
+[ext_resource type="AnimationLibrary" uid="uid://dqlqqmcxxhlyo" path="res://Visual Assets/Models/Animations/Asker/Rifle Kneel Hit To Back(1).fbx" id="2_dbiqf"]
+[ext_resource type="AnimationLibrary" uid="uid://b0o43suoxduhi" path="res://Visual Assets/Models/Animations/Asker/Crouch Rapid Fire.fbx" id="3_gbyjo"]
+[ext_resource type="AnimationLibrary" uid="uid://cw7qf1ux63njr" path="res://Visual Assets/Models/Animations/Asker/Idle Crouching.fbx" id="3_mt6a1"]
+[ext_resource type="AnimationLibrary" uid="uid://dkk2uvy6rfmmn" path="res://Visual Assets/Models/Animations/Asker/Crouch Stop Walking.fbx" id="4_aksb0"]
+[ext_resource type="AnimationLibrary" uid="uid://duadamlotr2mr" path="res://Visual Assets/Models/Animations/Asker/Idle Crouching Aiming.fbx" id="4_mgcqv"]
+[ext_resource type="AnimationLibrary" uid="uid://ccm0bnibtf4a4" path="res://Visual Assets/Models/Animations/Asker/Crouch To Standing With Rifle.fbx" id="5_xn8y4"]
+[ext_resource type="AnimationLibrary" uid="uid://bxraggv47gwlb" path="res://Visual Assets/Models/Animations/Asker/Death From Back Headshot.fbx" id="6_x1jop"]
+[ext_resource type="AnimationLibrary" uid="uid://dppua45qg6dyu" path="res://Visual Assets/Models/Animations/Asker/Dying.fbx" id="7_eyohi"]
+[ext_resource type="AnimationLibrary" uid="uid://c8rt3ac5flhax" path="res://Visual Assets/Models/Animations/Asker/Dying (1).fbx" id="8_7utt8"]
+[ext_resource type="AnimationLibrary" uid="uid://brh4x4hylgi2s" path="res://Visual Assets/Models/Animations/Asker/Fire Rifle.fbx" id="9_r688w"]
+[ext_resource type="AnimationLibrary" uid="uid://l3y1oer08lis" path="res://Visual Assets/Models/Animations/Asker/Firing Rifle.fbx" id="10_n78vf"]
+[ext_resource type="AnimationLibrary" uid="uid://dkeco8ts0n5gq" path="res://Visual Assets/Models/Animations/Asker/Firing Rifle (1).fbx" id="11_dm7pm"]
+[ext_resource type="AnimationLibrary" uid="uid://ddrkgf3m0nvsu" path="res://Visual Assets/Models/Animations/Asker/Reloading.fbx" id="12_r5edw"]
+[ext_resource type="AnimationLibrary" uid="uid://csy2c3arqxiu8" path="res://Visual Assets/Models/Animations/Asker/Rifle Crouch Walk To Kneel.fbx" id="13_qjrc3"]
+[ext_resource type="AnimationLibrary" uid="uid://dwa260hglmu8t" path="res://Visual Assets/Models/Animations/Asker/Rifle Idle.fbx" id="14_rsuor"]
+[ext_resource type="AnimationLibrary" uid="uid://b358e0efbi2je" path="res://Visual Assets/Models/Animations/Asker/Rifle Idle (1).fbx" id="15_kjcov"]
+[ext_resource type="AnimationLibrary" uid="uid://bq7htaadjv1vj" path="res://Visual Assets/Models/Animations/Asker/Rifle Run.fbx" id="16_4i474"]
+[ext_resource type="AnimationLibrary" uid="uid://b0jonbswhykfm" path="res://Visual Assets/Models/Animations/Asker/Rifle Run (1).fbx" id="17_krvae"]
+[ext_resource type="AnimationLibrary" uid="uid://djhgy63w57b5o" path="res://Visual Assets/Models/Animations/Asker/Rifle Turn.fbx" id="18_7vu45"]
+[ext_resource type="AnimationLibrary" uid="uid://bn8kdrkn5sap7" path="res://Visual Assets/Models/Animations/Asker/Rifle Walk.fbx" id="19_ikbp1"]
+[ext_resource type="AnimationLibrary" uid="uid://be7gb5xelkapn" path="res://Visual Assets/Models/Animations/Asker/Rifle Walk (1).fbx" id="20_xlsfo"]
+[ext_resource type="AnimationLibrary" uid="uid://blxqxv2pyqmi0" path="res://Visual Assets/Models/Animations/Asker/Rifle Walk To Stop.fbx" id="21_lw6u3"]
+[ext_resource type="AnimationLibrary" uid="uid://bpivv68jv5br2" path="res://Visual Assets/Models/Animations/Asker/Strafing.fbx" id="22_kfy81"]
+[ext_resource type="AnimationLibrary" uid="uid://270o42lhblrv" path="res://Visual Assets/Models/Animations/Asker/Throw Grenade.fbx" id="23_7elcr"]
+[ext_resource type="AnimationLibrary" uid="uid://t2uc4aj4tp76" path="res://Visual Assets/Models/Animations/Asker/Walking.fbx" id="24_8om4c"]
+[ext_resource type="AnimationLibrary" uid="uid://bmenbxj3ekptn" path="res://Visual Assets/Models/Animations/Asker/Walking (1).fbx" id="25_e78uv"]
+[ext_resource type="AnimationLibrary" uid="uid://dyrkt0dps3ywr" path="res://Visual Assets/Models/Animations/Asker/Stand To Crouch.fbx" id="29_8srom"]
+[ext_resource type="AnimationLibrary" uid="uid://e1iiiw8tl3xd" path="res://Visual Assets/Models/Animations/Asker/rifle aiming idle.fbx" id="30_su7wv"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6tp8f"]
+animation = &"rifle aiming idle/mixamo_com"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_or0b0"]
+animation = &"Idle Crouching Aiming/mixamo_com"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2m4nd"]
+animation = &"Rifle Kneel Hit To Back(1)/mixamo_com"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d76yk"]
+animation = &"Soldier_Crouch To Standing With Rifle/mixamo_com"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_j1e4w"]
+animation = &"Soldier_Dying (1)/mixamo_com"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fvie1"]
+animation = &"Idle Crouching/mixamo_com"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_iqwju"]
+animation = &"Stand To Crouch/mixamo_com"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ofp4o"]
+animation = &"Soldier_Rifle Idle (1)/mixamo_com"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_njeid"]
+animation = &"Soldier_Rifle Run (1)/mixamo_com"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ubpiq"]
+switch_mode = 1
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lk3jk"]
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8g7dv"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i7nip"]
+advance_mode = 2
+advance_condition = &"death"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rtqo1"]
+advance_mode = 2
+advance_condition = &"incover"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_01uqm"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_a3pnj"]
+advance_mode = 2
+advance_condition = &"outcover"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dpytv"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5eatd"]
+advance_mode = 2
+advance_condition = &"death"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_a4yxy"]
+switch_mode = 1
+advance_mode = 2
+advance_condition = &"aiming"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c2vw0"]
+switch_mode = 1
+advance_mode = 2
+advance_condition = &"aiming"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8cgt3"]
+switch_mode = 1
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sfp4d"]
+switch_mode = 1
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_gm53w"]
+states/End/position = Vector2(1107, 154)
+states/Soldier_Aim_mixamo_com/node = SubResource("AnimationNodeAnimation_6tp8f")
+states/Soldier_Aim_mixamo_com/position = Vector2(862, 100)
+states/Soldier_CrouchAim_mixamo_com/node = SubResource("AnimationNodeAnimation_or0b0")
+states/Soldier_CrouchAim_mixamo_com/position = Vector2(862, 268)
+states/Soldier_CrouchDeath_mixamo_com/node = SubResource("AnimationNodeAnimation_2m4nd")
+states/Soldier_CrouchDeath_mixamo_com/position = Vector2(718, 386)
+states/Soldier_CrouchToIdle_mixamo_com/node = SubResource("AnimationNodeAnimation_d76yk")
+states/Soldier_CrouchToIdle_mixamo_com/position = Vector2(515, 185)
+states/Soldier_Dying_mixamo_com/node = SubResource("AnimationNodeAnimation_j1e4w")
+states/Soldier_Dying_mixamo_com/position = Vector2(761, -33)
+"states/Soldier_Idle Crouching_mixamo_com/node" = SubResource("AnimationNodeAnimation_fvie1")
+"states/Soldier_Idle Crouching_mixamo_com/position" = Vector2(515, 268)
+states/Soldier_IdleToCrouch_mixamo_com/node = SubResource("AnimationNodeAnimation_iqwju")
+states/Soldier_IdleToCrouch_mixamo_com/position = Vector2(236, 185)
+"states/Soldier_Rifle Idle (1)_mixamo_com/node" = SubResource("AnimationNodeAnimation_ofp4o")
+"states/Soldier_Rifle Idle (1)_mixamo_com/position" = Vector2(515, 100)
+"states/Soldier_Rifle Run (1)_mixamo_com/node" = SubResource("AnimationNodeAnimation_njeid")
+"states/Soldier_Rifle Run (1)_mixamo_com/position" = Vector2(515, -33)
+states/Start/position = Vector2(199, 100)
+transitions = ["Start", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_ubpiq"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Rifle Run (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_lk3jk"), "Soldier_Rifle Run (1)_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_8g7dv"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Dying_mixamo_com", SubResource("AnimationNodeStateMachineTransition_i7nip"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_IdleToCrouch_mixamo_com", SubResource("AnimationNodeStateMachineTransition_rtqo1"), "Soldier_IdleToCrouch_mixamo_com", "Soldier_Idle Crouching_mixamo_com", SubResource("AnimationNodeStateMachineTransition_01uqm"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchToIdle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_a3pnj"), "Soldier_CrouchToIdle_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_dpytv"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchDeath_mixamo_com", SubResource("AnimationNodeStateMachineTransition_5eatd"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Aim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_a4yxy"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchAim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_c2vw0"), "Soldier_Aim_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_8cgt3"), "Soldier_CrouchAim_mixamo_com", "Soldier_Idle Crouching_mixamo_com", SubResource("AnimationNodeStateMachineTransition_sfp4d")]
+graph_offset = Vector2(283, -81)
+
+[node name="Asker" instance=ExtResource("1_ftjwh")]
+
+[node name="Skeleton3D" parent="." index="0"]
+bones/1/position = Vector3(0.0511689, 0.938751, 0.0185977)
+bones/1/rotation = Quaternion(-0.0566257, -0.0552984, 0.0218412, 0.996624)
+bones/2/rotation = Quaternion(-0.0374248, 0.0248918, -0.0190371, 0.998808)
+bones/3/rotation = Quaternion(0.0129503, 0.00746056, -0.00572399, 0.999872)
+bones/4/rotation = Quaternion(0.0129067, 0.0073757, -0.00485031, 0.999878)
+bones/5/rotation = Quaternion(0.0973682, 0.0453302, 0.0196352, 0.994022)
+bones/6/rotation = Quaternion(0.0135229, -0.0833594, 0.0144842, 0.996323)
+bones/8/rotation = Quaternion(-0.695107, -0.279743, 0.578174, -0.32293)
+bones/9/rotation = Quaternion(0.18153, 0.0798887, 0.0670832, 0.977837)
+bones/10/rotation = Quaternion(0.0925278, -0.00177983, 0.587925, 0.803604)
+bones/11/rotation = Quaternion(-0.0265472, -0.83461, -0.076525, 0.544854)
+bones/12/rotation = Quaternion(0.130031, 0.00384594, 0.380984, 0.915384)
+bones/13/rotation = Quaternion(0.0151415, -0.00273534, 0.0816652, 0.996541)
+bones/14/rotation = Quaternion(-0.131109, 0.00656905, 0.0365377, 0.990673)
+bones/16/rotation = Quaternion(0.526525, -0.0309065, 0.0122618, 0.849509)
+bones/17/rotation = Quaternion(0.536225, -0.0001426, -0.0613001, 0.841846)
+bones/18/rotation = Quaternion(0.296178, 1.22362e-05, -0.034566, 0.954507)
+bones/20/rotation = Quaternion(0.617509, 0.00913493, -0.0552637, 0.784567)
+bones/21/rotation = Quaternion(0.417518, 0.00101783, -0.045652, 0.90752)
+bones/22/rotation = Quaternion(0.361458, -0.000465802, -0.0350964, 0.931728)
+bones/24/rotation = Quaternion(0.689877, -0.308445, 0.534541, 0.378413)
+bones/25/rotation = Quaternion(0.210766, -0.186024, -0.0922282, 0.955231)
+bones/26/rotation = Quaternion(0.11087, 0.00177263, -0.741723, 0.661477)
+bones/27/rotation = Quaternion(0.24597, 0.236692, 0.153579, 0.927302)
+bones/28/rotation = Quaternion(0.389388, -0.221793, -0.23114, 0.863574)
+bones/29/rotation = Quaternion(-0.229349, -0.132866, 0.0923468, 0.959801)
+bones/30/rotation = Quaternion(-0.216043, -0.0224319, 0.369396, 0.903531)
+bones/32/rotation = Quaternion(0.0963804, 0.00196391, -0.0578873, 0.993658)
+bones/33/rotation = Quaternion(0.453296, 0.000828854, 0.0253361, 0.891)
+bones/34/rotation = Quaternion(0.572161, 0.000318832, 0.03969, 0.81918)
+bones/36/rotation = Quaternion(0.511915, -0.0333743, 0.0475347, 0.857071)
+bones/37/rotation = Quaternion(0.558163, 0.000306764, 0.033885, 0.829039)
+bones/38/rotation = Quaternion(0.446856, -0.00014907, 0.0281183, 0.894164)
+bones/40/rotation = Quaternion(0.10128, 0.0583499, 0.992769, -0.027331)
+bones/41/rotation = Quaternion(-0.140095, -0.0856641, -0.0219439, 0.986181)
+bones/42/rotation = Quaternion(0.453245, -0.0683111, 0.00847176, 0.888724)
+bones/43/rotation = Quaternion(0.353968, 0.0207637, -0.00812591, 0.934992)
+bones/45/rotation = Quaternion(-0.146813, -0.0659237, 0.981931, 0.0995538)
+bones/46/rotation = Quaternion(-0.134412, 0.072515, -0.00313941, 0.988264)
+bones/47/rotation = Quaternion(0.540568, 0.0940308, 0.0716339, 0.832955)
+bones/48/rotation = Quaternion(0.368941, -0.0199938, 0.00897676, 0.929194)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
+libraries = {
+"Defeated": ExtResource("2_3et0n"),
+"Idle Crouching": ExtResource("3_mt6a1"),
+"Idle Crouching Aiming": ExtResource("4_mgcqv"),
+"Rifle Kneel Hit To Back(1)": ExtResource("2_dbiqf"),
+"Soldier_Breathing Idle (2)": ExtResource("2_d70k4"),
+"Soldier_Crouch Rapid Fire": ExtResource("3_gbyjo"),
+"Soldier_Crouch Stop Walking": ExtResource("4_aksb0"),
+"Soldier_Crouch To Standing With Rifle": ExtResource("5_xn8y4"),
+"Soldier_Death From Back Headshot": ExtResource("6_x1jop"),
+"Soldier_Dying": ExtResource("7_eyohi"),
+"Soldier_Dying (1)": ExtResource("8_7utt8"),
+"Soldier_Fire Rifle": ExtResource("9_r688w"),
+"Soldier_Firing Rifle": ExtResource("10_n78vf"),
+"Soldier_Firing Rifle (1)": ExtResource("11_dm7pm"),
+"Soldier_Reloading": ExtResource("12_r5edw"),
+"Soldier_Rifle Crouch Walk To Kneel": ExtResource("13_qjrc3"),
+"Soldier_Rifle Idle": ExtResource("14_rsuor"),
+"Soldier_Rifle Idle (1)": ExtResource("15_kjcov"),
+"Soldier_Rifle Run": ExtResource("16_4i474"),
+"Soldier_Rifle Run (1)": ExtResource("17_krvae"),
+"Soldier_Rifle Turn": ExtResource("18_7vu45"),
+"Soldier_Rifle Walk": ExtResource("19_ikbp1"),
+"Soldier_Rifle Walk (1)": ExtResource("20_xlsfo"),
+"Soldier_Rifle Walk To Stop": ExtResource("21_lw6u3"),
+"Soldier_Strafing": ExtResource("22_kfy81"),
+"Soldier_Throw Grenade": ExtResource("23_7elcr"),
+"Soldier_Walking": ExtResource("24_8om4c"),
+"Soldier_Walking (1)": ExtResource("25_e78uv"),
+"Stand To Crouch": ExtResource("29_8srom"),
+"rifle aiming idle": ExtResource("30_su7wv")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2"]
+deterministic = false
+tree_root = SubResource("AnimationNodeStateMachine_gm53w")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/aiming = false
+parameters/conditions/death = false
+parameters/conditions/idle = true
+parameters/conditions/incover = false
+parameters/conditions/moving = false
+parameters/conditions/outcover = false
