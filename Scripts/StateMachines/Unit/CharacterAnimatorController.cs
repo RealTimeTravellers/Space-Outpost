@@ -84,7 +84,7 @@ public partial class CharacterAnimatorController : Node
                 _animationTree.Set("parameters/conditions/outcover", true);
                 GD.Print("[Animation] Setting out_cover true");
                 break;
-            case "aim":
+            case "aiming":
                 _animationTree.Set("parameters/conditions/aiming", true);
                 GD.Print("[Animation] Setting aiming true");
                 break;

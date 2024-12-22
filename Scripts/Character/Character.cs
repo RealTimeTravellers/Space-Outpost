@@ -51,13 +51,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] private int actionPoints; // take form a resource data
 	[Export] public bool CompletedTurn {get; set;} = false;
 
-	[Export] private Godot.Collections.Array<Character> enemiesInLos = new();
+	[Export] public Godot.Collections.Array<Character> enemiesInLos {get; set;} = new();
 	[Export] private int queriesPerSecond = 10;
 	[Export] private bool doQuery = false;
 	[Export] private EndTurnState endTurnState = EndTurnState.None;
 
 	[Export] public Character Target { get; set; } = null;
-	[Export] private int targetIndex = 0;
+	[Export] public int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
 	[Export] private GpuParticles3D shootEffect;
@@ -164,7 +164,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		GridManager.Instance.SelectionChanged -= OnSelectionChanged;
 	}
 
-	private async void SearchForEnemies(bool instantSearch = false)
+	public async void SearchForEnemies(bool instantSearch = false)
 	{
 		if (instantSearch)
 		{
@@ -254,20 +254,27 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void ToggleAim()
 	{
-		// TODO: Add tweening to these
-
 		if (CameraManager.Instance.AimingMode)
-			CameraManager.ReturnCameraToTactical();
-		else
 		{
-			if (actionPoints > 0 && enemiesInLos.Count > 0)  // Array boş değilse devam et
-			{
-				targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);  // Index'i sınırla
-				Target = enemiesInLos[targetIndex];
-				LookAt(Target.Position);
-				CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
-				CameraManager.MoveToShoulder(this);
-			}
+			CameraManager.ReturnCameraToTactical();
+			CharacterController.SetState(CharacterStateType.Idle, this);
+			return;
+		}
+
+		// İlk kez açılıyorsa:
+		if (IsFriendly)
+			enemiesInLos = QueryForEnemies(TurnManager.Instance.enemyCharacters);
+		else
+			enemiesInLos = QueryForEnemies(TurnManager.Instance.playerCharacters);
+
+		if (Stats.ActionPoints.GetValue() > 0 && enemiesInLos.Count > 0)
+		{
+			targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);
+			Target = enemiesInLos[targetIndex];
+			LookAt(Target.Position);
+			CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
+			CameraManager.MoveToShoulder(this);   // AimingMode=true
+			CharacterController.SetState(CharacterStateType.Aiming, this);
 		}
 	}
 
@@ -375,14 +382,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		foreach (Character enemy in enemies.Select(v => (Character)v))
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
-
 			if (distance < Stats.Perception.GetValue()) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
 				CastHit hit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
 				
-				if (!hit.NonEmpty)
+				if (hit.NonEmpty)
 					enemiesWithLos.Add(enemy);
 					// GD.Print("vURULDU.");
 

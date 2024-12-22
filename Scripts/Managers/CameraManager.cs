@@ -3,23 +3,21 @@ using System;
 
 public partial class CameraManager : Node
 {
-    public static CameraManager Instance {get; private set;}
+    public static CameraManager Instance { get; set; }
     [Export] public CameraController MainCameraSet { get; private set; }
     public Camera3D MainCamera { get; private set; }
     [Export] public Node3D TacticalCameraPostion;
-	[Export] public bool AimingMode { get; private set; } = false;
-	[Export] public bool AreaSelection { get; private set; } = false;
-    
-
-    private CameraManager()
-    {
-        Instance = this;
-    }
+    [Export] public bool AimingMode { get; set; } = false;
+    [Export] public bool AreaSelection { get; set; } = false;
 
     public override void _Ready()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            QueueFree();
+            
         SetMainCamera();
-        base._Ready();
     }
 
     private async void SetMainCamera()

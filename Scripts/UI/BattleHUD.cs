@@ -64,6 +64,9 @@ public partial class BattleHUD : Control
     private static void OnAttackModePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        character.ToggleAim();
+        if (character != null)
+        {
+            character.ToggleAim();
+        }
     }
 }
