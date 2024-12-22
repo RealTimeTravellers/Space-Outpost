@@ -19,7 +19,7 @@ public class CharacterStateMachine
     private Dictionary<CharacterStateType, IBaseState<CharacterStateType>> _states;
     private IBaseState<CharacterStateType> _currentState;
     public CharacterStateType CurrentStateType { get; private set; }
-    
+    public CharacterStateType PreviousStateType { get; private set; }
     public event Action<CharacterStateType, CharacterStateType> OnStateChanged;
     public event Action<string> OnAnimationRequested; 
 
@@ -43,6 +43,7 @@ public class CharacterStateMachine
     {
         if (!_states.ContainsKey(newState)) return;
 
+        PreviousStateType = CurrentStateType;
         var oldState = CurrentStateType;
         _currentState?.Exit(character);
         CurrentStateType = newState;

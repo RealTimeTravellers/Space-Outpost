@@ -2,37 +2,46 @@ using Godot;
 
 public class CharacterInCoverState : CharacterState
 {
+    private bool coverExiting;
+    private bool outCoverAnimationStarted;
+
     public override void Enter(Character character)
     {
-        GD.Print("Entering Leaving Cover State");
+        base.Enter(character);
+        coverExiting = false;
+        outCoverAnimationStarted = false;
+        character.IsInCover = true;
+        character.Stats.Evasion.AddModifier(15);
+        character.CharacterController._stateMachine.RequestAnimation("incover");
     }
 
     public override CharacterStateType Process(Character character)
     {
-        return CheckState(character);
-    }
-
-    public override CharacterStateType CheckState(Character character)
-    {
-        // Eğer cover'dan çıkma animasyonu bittiyse
-        // karakterin cover'da olup olmadığını kontrol et
-        if (!character.IsInCover)
+        if(character.IsMoving && !outCoverAnimationStarted)
         {
-            if (Input.IsActionPressed("aim"))
-                return CharacterStateType.Aiming;
-                
-            if (Input.IsActionPressed("move"))
-                return CharacterStateType.Moving;
-                
-            return CharacterStateType.Idle;
+            outCoverAnimationStarted = true;
+            coverExiting = true;
+            character.CharacterController._stateMachine.RequestAnimation("outcover");
+            return CharacterStateType.InCover;
         }
-        
-        // Cover'dan çıkma işlemi devam ediyor
+
+        if(coverExiting && outCoverAnimationStarted)
+        {
+            // Animasyon bittiğinde Idle'a geç
+            if(!character.AnimatorController.IsAnimationPlaying("outcover"))
+            {
+                return CharacterStateType.Idle;
+            }
+        }
+
         return CharacterStateType.InCover;
     }
 
     public override void Exit(Character character)
     {
-        GD.Print("Exiting Leaving Cover State");
+        coverExiting = false;
+        outCoverAnimationStarted = false;
+        character.IsInCover = false;
+        character.Stats.Evasion.RemoveModifier(15);
     }
 }

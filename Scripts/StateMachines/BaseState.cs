@@ -3,6 +3,7 @@ using Godot;
 
 public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStateType : Enum
 {
+    protected TStateType PreviousState { get; private set; }
     public virtual void Enter(Character character)
     {
         

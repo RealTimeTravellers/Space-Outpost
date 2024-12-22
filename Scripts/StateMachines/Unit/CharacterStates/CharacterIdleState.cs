@@ -12,7 +12,14 @@ public class CharacterIdleState : CharacterState
     {
         if (character.Velocity.Length() > 0.1f && !character.CharacterController._navAgent.IsNavigationFinished())
             return CharacterStateType.Moving;
-            
+        
+        if(character.CharacterController._stateMachine.PreviousStateType != CharacterStateType.InCover){
+            var nearestCover = character.QueryForCover();
+            if (nearestCover != null && 
+                character.GlobalPosition.DistanceTo(nearestCover.GlobalPosition) <= 2f)
+                return CharacterStateType.InCover;
+        }
+
         return CharacterStateType.Idle;
     }
 }

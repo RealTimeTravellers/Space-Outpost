@@ -15,9 +15,6 @@ public partial class EnemyManager : Node
     [Export] // Exported for testing
     public Godot.Collections.Array<Character> spottedEnemies;
 
-    [Export]
-    public Godot.Collections.Array<GridObject> coverGrids = new();
-
     private EnemyManager()
     {
         Instance = this;

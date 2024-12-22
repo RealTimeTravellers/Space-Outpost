@@ -32,7 +32,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float VisualRange { get; private set; } = 35; 
-	public bool IsInCover { get; private set; } = false;
+	public bool IsInCover { get; set; } = false;
 	public event Action<int> ActionCompleted;
 
 	#region ICombat Variables
@@ -43,6 +43,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	#region ITactical Variables
 	public bool IsTakingCover { get ; private set ; }
+	public bool IsMoving { get; set; }
 	#endregion
 
 	[Export] private ActionData actionData = null;
@@ -324,7 +325,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// </summary>
 	/// <param name="nearest"></param>
 	/// <returns></returns>
-	private GridObject QueryForCover(bool nearest = true)
+	public GridObject QueryForCover(bool nearest = true)
 	{
 		// XXX: check for range as well ? 
 		if (nearest)
@@ -449,6 +450,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if(currentGrid != null)
 			currentGrid.ClearOccupied();
 		
+		if(CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
+		{
+			IsMoving = true;
+			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
+		}
+
 		// Hedef pozisyonu ayarla
 		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
 		
@@ -477,6 +484,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		
 		// Hareketi tamamla
 		CompleteAction(actionData.moveCost);
+		IsMoving = false;
 		
 		if (IsFriendly)
 			TurnManager.Instance.EndPlayerMovement(this);

@@ -40,7 +40,8 @@ public partial class CharacterAnimatorController : Node
         _animationTree.Set("parameters/conditions/idle", false);
         _animationTree.Set("parameters/conditions/moving", false);
         _animationTree.Set("parameters/conditions/shooting", false);
-        _animationTree.Set("parameters/conditions/in_cover", false);
+        _animationTree.Set("parameters/conditions/incover", false);
+        _animationTree.Set("parameters/conditions/outcover", false);
         _animationTree.Set("parameters/conditions/aiming", false);
         _animationTree.Set("parameters/conditions/death", false);
     }
@@ -75,9 +76,13 @@ public partial class CharacterAnimatorController : Node
                 _animationTree.Set("parameters/conditions/shooting", true);
                 GD.Print("[Animation] Setting shooting true");
                 break;
-            case "in_cover":
-                _animationTree.Set("parameters/conditions/in_cover", true);
+            case "incover":
+                _animationTree.Set("parameters/conditions/incover", true);
                 GD.Print("[Animation] Setting in_cover true");
+                break;
+            case "outcover":
+                _animationTree.Set("parameters/conditions/outcover", true);
+                GD.Print("[Animation] Setting out_cover true");
                 break;
             case "aim":
                 _animationTree.Set("parameters/conditions/aiming", true);

@@ -11,7 +11,7 @@ public class CharacterMovingState : CharacterState
     {
         if (character.CharacterController._navAgent.IsNavigationFinished())
             return CharacterStateType.Idle;
-            
+        
         return CharacterStateType.Moving;
     }
 }
