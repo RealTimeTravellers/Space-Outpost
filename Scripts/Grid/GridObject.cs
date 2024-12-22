@@ -1,8 +1,4 @@
 using Godot;
-using Microsoft.VisualBasic;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
 
 public partial class GridObject : Node3D
 {
@@ -12,7 +8,7 @@ public partial class GridObject : Node3D
 	[Export] public CoverType coverType = CoverType.None;
 	public bool HasCover { get; private set; }
 	public Vector3 CoverNormal { get; private set; }
-	[Export] public Godot.Collections.Array<bool> coverDirection = new() { false, false, false, false };
+	[Export] public Godot.Collections.Dictionary<string, CoverType> coverDirection = new() { {"-z" , 0}, {"x" , 0}, {"z" , 0}, {"-x" , 0} };
 	
 	[Export] private bool isSpriteOnly = true;
 
