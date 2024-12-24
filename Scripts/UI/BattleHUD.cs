@@ -41,8 +41,13 @@ public partial class BattleHUD : Control
     private static void OnFirePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        if (CameraManager.Instance.AimingMode)
-            character.Attack(character.Target);
+        if (CameraManager.Instance.AimingMode && 
+            character.Target != null &&
+            character.Stats.ActionPoints.GetValue() > 0 &&
+            character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
+        {
+            character.CharacterController.SetState(CharacterStateType.Shooting, character);
+        }
     }
 
     private static void OnMovePressed()
@@ -64,9 +69,9 @@ public partial class BattleHUD : Control
     private static void OnAttackModePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        if (character != null)
-        {
-            character.ToggleAim();
-        }
+        if (character.Stats.ActionPoints.GetValue() <= 0)
+            return;
+
+        character.ToggleAim();
     }
 }

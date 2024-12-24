@@ -10,6 +10,8 @@ public partial class CameraManager : Node
     [Export] public bool AimingMode { get; set; } = false;
     [Export] public bool AreaSelection { get; set; } = false;
 
+    private Transform3D _tacticalTransform;
+
     public override void _Ready()
     {
         if (Instance == null)
@@ -24,16 +26,21 @@ public partial class CameraManager : Node
     {
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         MainCamera = MainCameraSet.Camera;
+        _tacticalTransform = TacticalCameraPostion.GlobalTransform;
     }
 
     public static void ReturnCameraToTactical()
     {
-        Instance.MainCameraSet.Transform = Instance.TacticalCameraPostion.GlobalTransform;
+        Instance.MainCameraSet.Transform = Instance._tacticalTransform;
         Instance.AimingMode = false;
     }
 
     public static void MoveToShoulder(Character character)
     {
+        var shoulderTransform = character.ShoulderCamera.GlobalTransform;
+        Instance._tacticalTransform.Origin.X = shoulderTransform.Origin.X - Instance._tacticalTransform.Origin.Y * 0.25f;
+        Instance._tacticalTransform.Origin.Z = shoulderTransform.Origin.Z + Instance._tacticalTransform.Origin.Y * 0.5f;
+
         Instance.MainCameraSet.Transform = character.ShoulderCamera.GlobalTransform;
         Instance.AimingMode = true;
     }

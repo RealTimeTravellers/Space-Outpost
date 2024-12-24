@@ -7,6 +7,11 @@ public class CharacterMovingState : CharacterState
         character.CharacterController._stateMachine.RequestAnimation("moving");
     }
 
+    public override CharacterStateType Process(Character character)
+    {
+        return CheckState(character);
+    }
+
     public override CharacterStateType CheckState(Character character)
     {
         if (character.CharacterController._navAgent.IsNavigationFinished())

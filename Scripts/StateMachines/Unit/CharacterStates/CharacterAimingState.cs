@@ -5,31 +5,27 @@ public class CharacterAimingState : CharacterState
     public override void Enter(Character character)
     {
         base.Enter(character);
-        character.CharacterController._stateMachine.RequestAnimation("aiming");
+
         
         // EnemyInSight metodunu kullanarak düşman kontrolü
         if (!EnemyInSight(character))
         {
             GD.Print($"[AimingState] {character.Name} no enemies in sight!");
-            CameraManager.ReturnCameraToTactical();
-            character.CharacterController.SetState(CharacterStateType.Idle, character);
+            character.ToggleAim(); // Aim'i kapat
             return;
         }
 
-        // Düşmanları sorgula
-        var enemies = character.IsFriendly ? 
-            TurnManager.Instance.enemyCharacters : 
-            TurnManager.Instance.playerCharacters;
-            
-        character.enemiesInLos = character.QueryForEnemies(enemies);
-        GD.Print($"[AimingState] {character.Name} found {character.enemiesInLos.Count} enemies in LOS");
+        // Düşmanları sorgula ve hedef seçimi yap
+        character.enemiesInLos = character.QueryForEnemies(
+            character.IsFriendly ? TurnManager.Instance.enemyCharacters : TurnManager.Instance.playerCharacters
+        );
         
-        // Kamera ayarları ve hedef seçimi
         if (character.Stats.ActionPoints.GetValue() > 0 && character.enemiesInLos.Count > 0)
         {
             character.targetIndex = Mathf.Clamp(character.targetIndex, 0, character.enemiesInLos.Count - 1);
             character.Target = character.enemiesInLos[character.targetIndex];
 
+            character.CharacterController._stateMachine.RequestAnimation("aiming");
             character.LookAt(character.Target.Position);
             CameraManager.Instance.MainCameraSet.LookAt(character.Target.Position);
             CameraManager.MoveToShoulder(character);
@@ -37,8 +33,7 @@ public class CharacterAimingState : CharacterState
         }
         else
         {
-            CameraManager.ReturnCameraToTactical();
-            character.CharacterController.SetState(CharacterStateType.Idle, character);
+            CameraManager.Instance.AimingMode = false;
         }
     }
 
@@ -66,5 +61,6 @@ public class CharacterAimingState : CharacterState
     {
         base.Exit(character);
         CameraManager.ReturnCameraToTactical();
+        CameraManager.Instance.AimingMode = false;
     }
 }

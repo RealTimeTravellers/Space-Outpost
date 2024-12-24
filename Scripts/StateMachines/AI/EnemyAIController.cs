@@ -57,7 +57,7 @@ public partial class EnemyAIController : Node
             {
                 GD.Print($"Enemy state changed from {currentState} to {_character.CharacterController._stateMachine.CurrentStateType}");
                 _character.CharacterController._stateMachine.RequestAnimation(
-                    _character.CharacterController._stateMachine.CurrentStateType.ToString().ToLower());
+                    _character.CharacterController._stateMachine.CurrentStateType.ToString().ToLowerInvariant());
             }
         }
     }

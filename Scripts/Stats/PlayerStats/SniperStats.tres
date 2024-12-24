@@ -4,7 +4,6 @@
 
 [resource]
 script = ExtResource("1_ene0x")
-UnitType = 1
 PlayerType = 1
 UnitType = 1
 Health = 2
@@ -13,6 +12,7 @@ Accuracy = 86
 MovementRange = 8
 Morale = 16
 ActionPoints = 2
-Perception = 10
+Perception = 20
 Evasion = 10
 CriticalHitChance = 20
+Cover = 0

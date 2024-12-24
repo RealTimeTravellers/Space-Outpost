@@ -58,7 +58,8 @@ public partial class CharacterController : Node
         if (_stateMachine.CurrentStateType != currentState)
         {
             GD.Print($"State changed from {currentState} to {_stateMachine.CurrentStateType}");
-            _stateMachine.RequestAnimation(_stateMachine.CurrentStateType.ToString().ToLower());
+            string animationName = _stateMachine.CurrentStateType.ToString().ToLowerInvariant();
+            _stateMachine.RequestAnimation(animationName);
         }
     }
 

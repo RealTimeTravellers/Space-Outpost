@@ -2,49 +2,43 @@ using Godot;
 
 public class CharacterShootingState : CharacterState
 {
-    private float _shootCooldown = 0f;
+    private bool _hasShot = false;
 
     public override void Enter(Character character)
     {
         GD.Print("Entering Shooting State");
-        // Silahı ateşle
-        character.Equipment.CurrentWeapon.Fire();
-    }
+        _hasShot = false;  
 
-    public override CharacterStateType Process(Character character)
-    {
-        _shootCooldown -= (float)character.GetProcessDeltaTime();
-        return CheckState(character);
-    }
-
-    public override CharacterStateType CheckState(Character character)
-    {
-
-        // Ateş etme cooldown'ı bitti mi?
-        if (_shootCooldown <= 0)
+        if (character.Stats.ActionPoints.GetValue() <= 0)
         {
-            // Hala ateş tuşuna basılı mı?
-            if (Input.IsActionPressed("shoot") && Input.IsActionPressed("aim"))
-            {
-                // Tekrar ateş et
-                character.Equipment.CurrentWeapon.Fire();
-                return CharacterStateType.Shooting;
-            }
-            
-            // Ateş tuşu bırakıldı
-            if (Input.IsActionPressed("aim"))
-                return CharacterStateType.Aiming;
-                
-            return CharacterStateType.Idle;
+            return;
         }
 
-        // Ateş etme cooldown'ı devam ediyor
+        character.CharacterController._stateMachine.RequestAnimation("shooting");
+       
+       // Hedef varsa ateş et
+       if (character.Target != null)
+       {
+           character.Attack(character.Target);
+           _hasShot = true;
+       }
+   }
+    public override CharacterStateType Process(Character character)
+   {
+       return CheckState(character);
+   }
+    public override CharacterStateType CheckState(Character character)
+   {
+       // Ateş etme animasyonu bittiyse
+       if (_hasShot && !character.AnimatorController.IsAnimationPlaying("shooting"))
+       {
+           return CharacterStateType.Idle;
+       }
         return CharacterStateType.Shooting;
-    }
-
+   }
     public override void Exit(Character character)
-    {
-        GD.Print("Exiting Shooting State");
-        _shootCooldown = 0f;
-    }
+   {
+       GD.Print("Exiting Shooting State");
+       _hasShot = false;
+   }
 }

@@ -72,7 +72,7 @@ public partial class CharacterAnimatorController : Node
                 _animationTree.Set("parameters/conditions/moving", true);
                 GD.Print("[Animation] Setting moving true");
                 break;
-            case "shoot":
+            case "shooting":
                 _animationTree.Set("parameters/conditions/shooting", true);
                 GD.Print("[Animation] Setting shooting true");
                 break;

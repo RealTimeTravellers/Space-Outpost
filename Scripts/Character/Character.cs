@@ -254,26 +254,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void ToggleAim()
 	{
+		GD.Print($"[Character] {Name} ToggleAim - Current AimingMode: {CameraManager.Instance.AimingMode}");
+		
 		if (CameraManager.Instance.AimingMode)
 		{
+			GD.Print($"[Character] {Name} disabling aim mode");
+			CameraManager.Instance.AimingMode = false;
 			CameraManager.ReturnCameraToTactical();
-			CharacterController.SetState(CharacterStateType.Idle, this);
-			return;
 		}
-
-		// İlk kez açılıyorsa:
-		if (IsFriendly)
-			enemiesInLos = QueryForEnemies(TurnManager.Instance.enemyCharacters);
 		else
-			enemiesInLos = QueryForEnemies(TurnManager.Instance.playerCharacters);
-
-		if (Stats.ActionPoints.GetValue() > 0 && enemiesInLos.Count > 0)
 		{
-			targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);
-			Target = enemiesInLos[targetIndex];
-			LookAt(Target.Position);
-			CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
-			CameraManager.MoveToShoulder(this);   // AimingMode=true
+			GD.Print($"[Character] {Name} enabling aim mode");
+			CameraManager.Instance.AimingMode = true;
 			CharacterController.SetState(CharacterStateType.Aiming, this);
 		}
 	}
@@ -411,16 +403,20 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
+
 		float hitChance = Stats.Accuracy.GetValue() / 100f;
 		bool hit = GD.Randf() <= hitChance;
+
+		Vector3 direction = (target.Position - Position).Normalized();
+   		shootEffect.ProcessMaterial.Set("direction", direction);
 		
 		if (hit) // || true for test purposes
 		{
 			shootEffect.ProcessMaterial.Set("spread", 2);
 			shootEffect.Restart();
 
-			//int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
-			target.TakeDamage(Equipment.GetCurrentWeaponDamage());
+			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
+			target.TakeDamage(damage);
 			// and play animation
 		}
 		else
