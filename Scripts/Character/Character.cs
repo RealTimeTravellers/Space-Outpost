@@ -48,7 +48,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	[Export] private ActionData actionData = null;
 
-	[Export] private int actionPoints; // take form a resource data
+	[Export] public int actionPoints;  // take form a resource data
 	[Export] public bool CompletedTurn {get; set;} = false;
 
 	[Export] public Godot.Collections.Array<Character> enemiesInLos {get; set;} = new();
@@ -204,7 +204,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	private void CompleteAction(int cost)
 	{
 		GD.Print($"[Character] {this.Name} Action Done: {cost}");
-		this.actionPoints -= cost;
+		if (this.actionPoints - cost < 0)
+		{
+			actionPoints = 0;
+			Stats.DepleteActionPoints();
+		}
+		else
+		{
+			this.actionPoints -= cost;
+		}
 		ActionCompleted?.Invoke(this.actionPoints);
 		
 		CheckTurnEnd();
@@ -399,7 +407,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// </summary>
 	/// <param name="target"></param>
 	/// <param name="accuracy"></param>
-	public void Attack(Character target)
+	public async void Attack(Character target)
 	{
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
@@ -426,6 +434,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 			// shoot animation but no hit
 		}
+
+		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 
 		CompleteAction(actionData.attackCost);
 	}

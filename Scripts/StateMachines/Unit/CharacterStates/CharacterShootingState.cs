@@ -14,11 +14,10 @@ public class CharacterShootingState : CharacterState
             return;
         }
 
-        character.CharacterController._stateMachine.RequestAnimation("shooting");
-       
        // Hedef varsa ateş et
        if (character.Target != null)
        {
+            character.CharacterController._stateMachine.RequestAnimation("shooting");
            character.Attack(character.Target);
            _hasShot = true;
        }
@@ -29,11 +28,12 @@ public class CharacterShootingState : CharacterState
    }
     public override CharacterStateType CheckState(Character character)
    {
-       // Ateş etme animasyonu bittiyse
-       if (_hasShot && !character.AnimatorController.IsAnimationPlaying("shooting"))
-       {
-           return CharacterStateType.Idle;
-       }
+        // Ateş etme animasyonu bittiyse
+        if (_hasShot)
+        {
+            GD.Print("[ShootingState] Shooting animation completed");
+            return CharacterStateType.Aiming; // Önce aiming'e dön
+        }
         return CharacterStateType.Shooting;
    }
     public override void Exit(Character character)
