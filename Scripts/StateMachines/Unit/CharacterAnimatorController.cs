@@ -97,35 +97,14 @@ public partial class CharacterAnimatorController : Node
                 break;
         }
     }
-
-
-    private void PlayAnimationWithBlend(string animationName, bool shouldLoop = true)
-    {
-        if (_animationPlayer != null)
-        {
-            // Animasyonu durdur
-            _animationPlayer.Stop();
-            
-            // Loop modunu ayarla
-            var animation = _animationPlayer.GetAnimation(animationName);
-            if (animation != null)
-            {
-                animation.LoopMode = shouldLoop ? Animation.LoopModeEnum.Linear : Animation.LoopModeEnum.None;
-            }
-            
-            // Animasyonu başlat
-            _animationPlayer.Play(animationName);
-            GD.Print($"Playing animation: {animationName}, Loop: {shouldLoop}");
-        }
-        else
-        {
-            GD.PrintErr("AnimationPlayer is null!");
-        }
-    }
         
     public bool IsAnimationPlaying(string animationName)
     {
-        return _animationPlayer?.CurrentAnimation == animationName && _animationPlayer.IsPlaying();
+        if (_animationTree == null) return false;
+        
+        // Animasyon ağacından shooting condition'ını kontrol et
+        bool isPlaying = _animationTree.Get($"parameters/conditions/{animationName}").AsBool();
+        return isPlaying;
     }
 
     public override void _ExitTree()

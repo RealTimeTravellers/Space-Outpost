@@ -436,6 +436,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+		CharacterController._stateMachine.RequestAnimation("idle");
 
 		CompleteAction(actionData.attackCost);
 	}
