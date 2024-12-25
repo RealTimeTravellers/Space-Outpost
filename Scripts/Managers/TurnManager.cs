@@ -230,4 +230,15 @@ public partial class TurnManager : Node
         }
     }
 
+    public void RemovePlayerCharacter(Character character)
+    {
+        if (playerCharacters.Contains(character))
+            playerCharacters.Remove(character);
+    }
+
+    public void RemoveEnemyCharacter(Character character)
+    {
+        if (enemyCharacters.Contains(character))
+            enemyCharacters.Remove(character);
+    }
 }

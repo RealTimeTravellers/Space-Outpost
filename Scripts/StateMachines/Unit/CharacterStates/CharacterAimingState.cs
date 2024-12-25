@@ -6,15 +6,12 @@ public class CharacterAimingState : CharacterState
     {
         base.Enter(character);
 
-        // EnemyInSight metodunu kullanarak düşman kontrolü
         if (!EnemyInSight(character))
         {
-            GD.Print($"[AimingState] {character.Name} no enemies in sight!");
-            character.ToggleAim(); // Aim'i kapat
+            character.ToggleAim(); 
             return;
         }
-
-        // Düşmanları sorgula ve hedef seçimi yap
+        
         character.enemiesInLos = character.QueryForEnemies(
             character.IsFriendly ? TurnManager.Instance.enemyCharacters : TurnManager.Instance.playerCharacters
         );

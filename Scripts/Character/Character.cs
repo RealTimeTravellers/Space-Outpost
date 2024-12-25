@@ -44,6 +44,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Variables
 	public bool IsTakingCover { get ; private set ; }
 	public bool IsMoving { get; set; }
+	public bool IsDead { get; private set; } = false;
 	#endregion
 
 	[Export] private ActionData actionData = null;
@@ -203,7 +204,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void CompleteAction(int cost)
 	{
-		GD.Print($"[Character] {this.Name} Action Done: {cost}");
 		if (this.actionPoints - cost < 0)
 		{
 			actionPoints = 0;
@@ -225,7 +225,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (this.actionPoints <= 0 && !CompletedTurn)
 		{
-			GD.Print($"[Character] {this.Name} out of action points");
 			EndTurn();
 		}
 	}
@@ -234,18 +233,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (CompletedTurn || actionPoints > 0)
 		{
-			GD.Print($"[Character] {this.Name} cannot end turn yet - CompletedTurn:{CompletedTurn}, AP:{actionPoints}");
 			return;
 		}
 		
 		// Hareket devam ediyorsa bekle
 		if (!CharacterController._navAgent.IsNavigationFinished())
 		{
-			GD.Print($"[Character] {this.Name} still moving, cannot end turn");
 			return;
 		}
 		
-		GD.Print($"[Character] {this.Name} Ending Turn");
 		CompletedTurn = true;
 
 		if (IsFriendly)
@@ -262,17 +258,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void ToggleAim()
 	{
-		GD.Print($"[Character] {Name} ToggleAim - Current AimingMode: {CameraManager.Instance.AimingMode}");
-		
 		if (CameraManager.Instance.AimingMode)
 		{
-			GD.Print($"[Character] {Name} disabling aim mode");
 			CameraManager.Instance.AimingMode = false;
 			CameraManager.ReturnCameraToTactical();
 		}
 		else
 		{
-			GD.Print($"[Character] {Name} enabling aim mode");
 			CameraManager.Instance.AimingMode = true;
 			CharacterController.SetState(CharacterStateType.Aiming, this);
 		}
@@ -301,12 +293,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
 	}
 
-	private void Die()
+	public void Die()
 	{
 		CompletedTurn = true;
-		// TODO: play Death animation and sound
+		IsDead = true;
 		
-		// Test
 		if (IsFriendly)
 			TurnManager.Instance.playerCharacters.Remove(this);
 		else
@@ -314,12 +305,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			enemiesInLos.Remove(this);
 			EnemyManager.Instance.allEnemies.Remove(this);
 			TurnManager.Instance.enemyCharacters.Remove(this);
-			// need to do a global query check
-
 		}
 
 		TurnManager.Instance.CharacterDied.Invoke(this);
-		QueueFree();
+		
+		// Animasyon bittikten sonra yok et
+		CallDeferred("queue_free");
 	}
 
 	private void UpdateHealthText()
@@ -376,10 +367,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		// this needs to be active in enemy turn
 		// this needs to be active last time once moving is done
+		if (IsDead) return new Godot.Collections.Array<Character>();
 
 		Godot.Collections.Array<Character> enemiesWithLos = new();
 
-		foreach (Character enemy in enemies.Select(v => (Character)v))
+		foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => !e.IsDead))
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
 			if (distance < Stats.Perception.GetValue()) // is in identification range

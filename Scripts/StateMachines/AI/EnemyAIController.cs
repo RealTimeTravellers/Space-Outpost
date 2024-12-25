@@ -16,7 +16,7 @@ public partial class EnemyAIController : Node
 
     public override void _Process(double delta)
     {
-        if (_character == null || _character.CompletedTurn)
+        if (_character == null || _character.CompletedTurn || _character.IsDead)
         {
             return;
         }

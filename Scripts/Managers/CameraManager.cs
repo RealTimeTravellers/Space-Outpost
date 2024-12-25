@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+using System.Threading.Tasks;
 public partial class CameraManager : Node
 {
     public static CameraManager Instance { get; set; }
@@ -14,15 +14,21 @@ public partial class CameraManager : Node
 
     public override void _Ready()
     {
+        InitializeAsync();
+        // TODO: check if camera is ready.
+    }
+
+    private async void InitializeAsync()
+    {
         if (Instance == null)
             Instance = this;
         else
             QueueFree();
-            
-        SetMainCamera();
+
+        await SetMainCamera();
     }
 
-    private async void SetMainCamera()
+    private async Task SetMainCamera()
     {
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         MainCamera = MainCameraSet.Camera;
@@ -31,17 +37,14 @@ public partial class CameraManager : Node
 
     public static void ReturnCameraToTactical()
     {
-        Instance.MainCameraSet.Transform = Instance._tacticalTransform;
+        Instance.MainCameraSet.GlobalTransform = Instance._tacticalTransform;
         Instance.AimingMode = false;
     }
 
     public static void MoveToShoulder(Character character)
     {
-        var shoulderTransform = character.ShoulderCamera.GlobalTransform;
-        Instance._tacticalTransform.Origin.X = shoulderTransform.Origin.X - Instance._tacticalTransform.Origin.Y * 0.25f;
-        Instance._tacticalTransform.Origin.Z = shoulderTransform.Origin.Z + Instance._tacticalTransform.Origin.Y * 0.5f;
-
-        Instance.MainCameraSet.Transform = character.ShoulderCamera.GlobalTransform;
+        Instance._tacticalTransform = Instance.MainCameraSet.GlobalTransform;
+        Instance.MainCameraSet.GlobalTransform = character.ShoulderCamera.GlobalTransform;
         Instance.AimingMode = true;
     }
 
