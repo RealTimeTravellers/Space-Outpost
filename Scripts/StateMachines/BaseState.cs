@@ -26,22 +26,21 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
 
     protected bool PlayerInSight(Character enemy)
     {
-        if (TurnManager.Instance == null) return false;
+        if (TurnManager.Instance == null || enemy.IsDead) return false;
 
-        var enemiesInSight = enemy.QueryForEnemies(TurnManager.Instance.playerCharacters);
-        return enemiesInSight.Count > 0;
+        if(enemy.IsFriendly)
+            return enemy.QueryForEnemies(TurnManager.Instance.playerCharacters).Count > 0;
+        else
+            return enemy.QueryForEnemies(TurnManager.Instance.enemyCharacters).Count > 0;
     }
 
     protected bool EnemyInSight(Character character)
     {
-        if (TurnManager.Instance == null) return false;
-
-        var enemies = character.IsFriendly ? 
-            TurnManager.Instance.enemyCharacters : 
-            TurnManager.Instance.playerCharacters;
-
-        var enemiesInSight = character.QueryForEnemies(enemies);
-        return enemiesInSight.Count > 0;
+        if (TurnManager.Instance == null || character.IsDead) return false;
+        if(character.IsFriendly)
+            return character.QueryForEnemies(TurnManager.Instance.enemyCharacters).Count > 0;
+        else
+            return character.QueryForEnemies(TurnManager.Instance.playerCharacters).Count > 0;
     }
 
     protected void FindClosestTarget(Character enemy)
@@ -49,8 +48,7 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
         var enemiesInSight = enemy.QueryForEnemies(TurnManager.Instance.playerCharacters);
         if (enemiesInSight.Count > 0)
         {
-            enemy.Target = enemiesInSight[0]; // İlk düşmanı hedef al
-            GD.Print($"[AI] {enemy.Name} found target: {enemy.Target?.Name}");
+            enemy.Target = enemiesInSight[0];
         }
     }
 

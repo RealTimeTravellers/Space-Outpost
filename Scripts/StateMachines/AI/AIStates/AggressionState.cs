@@ -1,71 +1,35 @@
+using System.Linq;
 using Godot;
 
 public class AggressionState : EnemyState
 {
+    private const float MAX_MOVE_DISTANCE = 10f;
+
     public override void Enter(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Entering Aggression State");
-        FindClosestTarget(enemy);
+        enemy.Target = enemy.enemiesInLos[0];
+        float distanceToTarget = enemy.GlobalPosition.DistanceTo(enemy.Target.GlobalPosition);
+
+        if (distanceToTarget > enemy.Stats.Perception.GetValue())
+        {
+            var grid = GridManager.Instance.GetGridObjectFromWorldPosition(enemy.Target.GlobalPosition);
+            enemy.CharacterController._stateMachine.ChangeState(CharacterStateType.Moving, enemy);
+            enemy.enemyController.MoveToGrid(grid);
+        }
+        else if (enemy.Stats.ActionPoints.GetValue() >= 2)
+        {
+            enemy.CharacterController._stateMachine.ChangeState(CharacterStateType.Aiming, enemy);
+            enemy.Attack(enemy.Target);
+            enemy.CharacterController._stateMachine.ChangeState(CharacterStateType.Idle, enemy);
+        }
+
+        enemy.CompletedTurn = true;
+        TurnManager.Instance.EndEnemyMovement(enemy);
     }
 
     public override AIState Process(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Aggression)
-            return nextState;
-
-        if (enemy.Target == null || enemy.Target.Stats.Health.GetValue() <= 0)
-        {
-            FindClosestTarget(enemy);
-            if (enemy.Target == null)
-                return AIState.Patrol;
-        }
-
-        // Hedef menzilde mi?
-        float distanceToTarget = enemy.GlobalPosition.DistanceTo(enemy.Target.GlobalPosition);
-        if (distanceToTarget > enemy.Stats.Perception.GetValue())
-        {
-            // Hedefe doğru hareket et
-            var direction = (enemy.Target.GlobalPosition - enemy.GlobalPosition).Normalized();
-            var targetPos = enemy.GlobalPosition + direction * 2; // 2 birim ileri
-            var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPos);
-            
-            if (targetGrid != null && !targetGrid.IsOccupied && !targetGrid.IsBlocked)
-            {
-                enemy.Move(targetGrid);
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-            }
-        }
-        else
-        {
-            if (enemy.Equipment?.CurrentWeapon == null)
-            {
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-                return AIState.Patrol;
-            }
-            // Menzilde ise saldır
-            if (enemy.Equipment.CurrentWeapon.NeedsReload())
-            {
-                enemy.Equipment.CurrentWeapon.Reload();
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-            }
-            else if (enemy.Stats.ActionPoints.GetValue() >= 2)
-            {
-                enemy.Attack(enemy.Target);
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-            }
-            else
-            {
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-            }
-        }
-        
-        return AIState.Aggression;
+        return base.Process(enemy);
     }
 
     public override void Exit(Character enemy)

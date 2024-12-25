@@ -17,19 +17,19 @@ public class EnemyState : BaseState<AIState>
 
     public override AIState Process(Character character)
     {
-        return AIState.Patrol;
+        return CheckState(character);
     }
     
 
     public override AIState CheckState(Character character)
     {
-        // Debug için player görüş kontrolü
-        bool canSeePlayer = PlayerInSight(character);
+        PlayerInSight(character);
+        GD.Print($"[AI Debug] {character.Name} - UnitType: {character.Stats.UnitType}, CanSeePlayer: {character.enemiesInLos.Count > 0}, EnemiesInLos: {character.enemiesInLos.Count}");
         
         // Önce Alien kontrolü yap
         if (character.Stats.UnitType == UnitType.Alien)
         {
-            if (canSeePlayer)
+            if (character.enemiesInLos.Count > 0)
                 return AIState.Aggression;
             return AIState.Patrol;
         }
@@ -41,7 +41,7 @@ public class EnemyState : BaseState<AIState>
         if (character.Stats.Morale.GetValue() < 5)
             return AIState.Cower;
 
-        if (canSeePlayer)
+        if (character.enemiesInLos.Count > 0)
             return AIState.Tactical;
 
         return AIState.Patrol;

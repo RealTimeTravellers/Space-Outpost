@@ -5,6 +5,7 @@ public partial class EnemyAIController : Node
     public EnemyAIStateMachine _stateMachine {get; private set;}
     private Character _character;
     public bool _isActive = false;
+    private bool _isBeingDestroyed = false;
 
     public override void _Ready()
     {
@@ -16,12 +17,12 @@ public partial class EnemyAIController : Node
 
     public override void _Process(double delta)
     {
-        if (_character == null || _character.CompletedTurn || _character.IsDead)
+        if (!_isActive || _character.CompletedTurn || _character.IsDead)
         {
             return;
         }
 
-        ProcessAI();
+        _stateMachine.UpdateCurrentState(_character);
     }
 
     private void OnTurnChanged(bool isPlayerTurn)
@@ -36,32 +37,6 @@ public partial class EnemyAIController : Node
         }
     }
 
-    private void ProcessAI()
-    {
-        if (!_isActive) return;
-
-        // AI State Machine güncelleme
-        var nextState = _stateMachine.UpdateCurrentState(_character);
-        if (nextState != _stateMachine.CurrentState)
-        {
-            _stateMachine.ChangeState(nextState, _character);
-        }
-
-        // Character State Machine'i ProcessPlayerState gibi güncelleyelim
-        if (_character.CharacterController._navAgent.IsNavigationFinished())
-        {
-            CharacterStateType currentState = _character.CharacterController._stateMachine.CurrentStateType;
-            _character.CharacterController._stateMachine.UpdateState(_character);
-            
-            if (_character.CharacterController._stateMachine.CurrentStateType != currentState)
-            {
-                GD.Print($"Enemy state changed from {currentState} to {_character.CharacterController._stateMachine.CurrentStateType}");
-                _character.CharacterController._stateMachine.RequestAnimation(
-                    _character.CharacterController._stateMachine.CurrentStateType.ToString().ToLowerInvariant());
-            }
-        }
-    }
-
     public async void MoveToGrid(GridObject targetGrid)
     {
         if (targetGrid == null) return;
@@ -73,5 +48,10 @@ public partial class EnemyAIController : Node
         _stateMachine.ChangeState(newState, aiCharacter);
     }
 
-
+    public void PrepareForDestruction()
+    {
+        _isBeingDestroyed = true;
+        _isActive = false;
+        SetProcess(false);
+    }
 }

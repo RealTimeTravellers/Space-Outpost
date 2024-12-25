@@ -44,7 +44,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Variables
 	public bool IsTakingCover { get ; private set ; }
 	public bool IsMoving { get; set; }
-	public bool IsDead { get; private set; } = false;
+	public bool IsDead { get; set; } = false;
 	#endregion
 
 	[Export] private ActionData actionData = null;
@@ -295,26 +295,58 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void Die()
 	{
-		CompletedTurn = true;
-		IsDead = true;
+		GD.Print("[Character] Die() method entered");
 		
+		if (IsDead)
+		{
+			GD.Print("[Character] Already dead, returning");
+			return;
+		}
+		
+		// Diğer karakterlerin hedeflerini temizle
 		if (IsFriendly)
+		{
+			GD.Print("[Character] Cleaning up friendly character");
+			foreach (var enemy in TurnManager.Instance.enemyCharacters)
+			{
+				if (enemy.Target == this)
+				{
+					enemy.Target = null;
+					GD.Print("[Character] Cleared enemy target reference");
+				}
+			}
 			TurnManager.Instance.playerCharacters.Remove(this);
+		}
 		else
 		{
+			GD.Print("[Character] Cleaning up enemy character");
+			foreach (var player in TurnManager.Instance.playerCharacters)
+			{
+				if (player.Target == this)
+				{
+					player.Target = null;
+					GD.Print("[Character] Cleared player target reference");
+				}
+			}
 			enemiesInLos.Remove(this);
 			EnemyManager.Instance.allEnemies.Remove(this);
 			TurnManager.Instance.enemyCharacters.Remove(this);
 		}
+		CompletedTurn = true;
+		IsDead = true;
+		GD.Print($"[Character] {Name} marked as dead");
+		
 
+
+		GD.Print("[Character] Invoking CharacterDied event");
 		TurnManager.Instance.CharacterDied.Invoke(this);
 		
-		// Animasyon bittikten sonra yok et
-		CallDeferred("queue_free");
 	}
 
 	private void UpdateHealthText()
 	{
+		if (Health <0) 
+			Health = 0;
 		HealthLabel.Text = Health +"/"+ Stats.Health.GetValue();
 	}
 
@@ -371,18 +403,27 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		Godot.Collections.Array<Character> enemiesWithLos = new();
 
-		foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => !e.IsDead))
+		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => !e.IsDead && e != this)) 
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
 			if (distance < Stats.Perception.GetValue()) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
-				CastHit hit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
-				
-				if (hit.NonEmpty)
-					enemiesWithLos.Add(enemy);
-					// GD.Print("vURULDU.");
+				// wall check(layer 10)
+				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true);
+
+				// character check(layer 4)
+				if (!wallHit.NonEmpty)
+				{
+					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(4), true);
+					if (characterHit.NonEmpty)
+					{
+						GD.Print($"[LOS] {this.Name} can see {enemy.Name} at distance {distance}");
+						enemiesWithLos.Add(enemy);
+					}
+				}
+
 
 				if (limitedFov)
 				{
@@ -401,6 +442,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// <param name="accuracy"></param>
 	public async void Attack(Character target)
 	{
+		if (target == null || target.IsDead) return;
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
 
@@ -415,7 +457,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			shootEffect.ProcessMaterial.Set("spread", 2);
 			shootEffect.Restart();
 
-			int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
+			int damage = 4; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
 			// and play animation
 		}
@@ -438,7 +480,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		Health -= damage;
 
 		if (Health <= 0)
-			Die();
+		{
+			CharacterController._stateMachine.ChangeState(CharacterStateType.Death, this);
+			UpdateHealthText();
+		}
 		else
 			UpdateHealthText();
 	}

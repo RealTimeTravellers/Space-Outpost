@@ -33,10 +33,10 @@ public class EnemyAIStateMachine
         CurrentState = AIState.Patrol;
     }
 
-
-
     public void ChangeState(AIState newState, Character aiCharacter)
     {
+        if (CurrentState == newState) return;
+        
         AIState oldState = CurrentState;
         var characterName = aiCharacter.Name ?? aiCharacter.GetParent()?.Name;
         GD.Print($"[AI StateMachine] {characterName} changing state from {oldState} to {newState}");
@@ -57,4 +57,5 @@ public class EnemyAIStateMachine
         }
         return _states[CurrentState].Process(aiCharacter);
     }
+
 }

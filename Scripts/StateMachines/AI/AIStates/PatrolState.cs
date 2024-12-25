@@ -31,24 +31,14 @@ public class PatrolState : EnemyState
 
     public override AIState Process(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Patrol) 
-            return nextState;
-
-        if (enemy.CompletedTurn)
-            return nextState;
         
         if (_patrolTarget == null)
+        {
             ChooseNewDirection(enemy);
-        
-        // Hareket başlatılmamışsa başlat
-        enemy.enemyController.MoveToGrid(_patrolTarget);
+            enemy.enemyController.MoveToGrid(_patrolTarget);
+        }
 
-        nextState = base.CheckState(enemy);
-        if (nextState != AIState.Patrol) 
-            return nextState;
-
-        return AIState.Patrol;
+        return base.Process(enemy);
     }
 
     public override void Exit(Character enemy)

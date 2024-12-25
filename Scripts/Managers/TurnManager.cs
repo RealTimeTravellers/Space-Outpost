@@ -90,15 +90,12 @@ public partial class TurnManager : Node
 
     public void EndPlayerMovement(Character character)
     {
-        GD.Print("[TurnManager] Ending player movement");
         CurrentlyMovingCharacter = character;
         PlayerMovementChanged?.Invoke(false);
     }
 
     private void OnPlayerMovementChanged(bool started)
     {
-        GD.Print($"[TurnManager] Player Movement Changed: {started}");
-        CheckEnemyState();
         if (started)
         {
             if (!_isProcessingTurn)
@@ -107,18 +104,17 @@ public partial class TurnManager : Node
                 // Oyuncu turu başlarken düşmanların durumunu sıfırla
                 foreach (Character enemy in enemyCharacters)
                 {
+                    if (enemy == null || enemy.IsDead) continue;
                     enemy.CompletedTurn = false;
                 }
-                GD.Print("[TurnManager] Starting player turn processing");
             }
             return;
         }
 
         bool allCompletedTurns = true;
-        GD.Print("[TurnManager] Checking all player turns:");
         foreach (Character player in playerCharacters)
         {
-            GD.Print($"[TurnManager] - {player.Name}: {player.CompletedTurn}");
+            if (player == null || player.IsDead) continue;
             allCompletedTurns &= player.CompletedTurn;
         }
         
@@ -134,8 +130,6 @@ public partial class TurnManager : Node
 
     private async void OnEnemyMovementChanged(bool started)
     {
-        CheckEnemyState();
-        GD.Print($"[TurnManager] Enemy Movement Changed: {started}");
         
         if (started)
         {
@@ -158,7 +152,10 @@ public partial class TurnManager : Node
         // Her 0.2s bir "hepsi bitti mi?" kontrolü
         while (true)
         {
-            bool allEnemiesCompleted = enemyCharacters.All(e => e == null || e.CompletedTurn);
+            bool allEnemiesCompleted = enemyCharacters
+                .Where(e => e != null && !e.IsDead)
+                .All(e => e.CompletedTurn);
+
             if (allEnemiesCompleted)
                 break;
 
@@ -169,20 +166,19 @@ public partial class TurnManager : Node
 
     private void EndPlayerTurn()
     {
-        foreach (Character player in playerCharacters)
+        foreach (Character player in playerCharacters.Where(p => p != null && !p.IsDead))
         {
-            //player.CompletedTurn = true;
             player.Stats.DepleteActionPoints();
         }
         
-        foreach (Character enemy in enemyCharacters)
+        foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
         {
             enemy.CompletedTurn = false;
             enemy.Stats.ResetActionPoints();
             var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
             if (aiController != null)
             {
-                aiController._isActive = true;  // Tüm düşmanları aktif et
+                aiController._isActive = true;
             }
         }
     }
@@ -191,7 +187,7 @@ public partial class TurnManager : Node
     {
         foreach (Character enemy in enemyCharacters)
         {
-            if (enemy != null)
+            if (enemy != null && !enemy.IsDead)
             {
                 enemy.CompletedTurn = true;
                 enemy.Stats.DepleteActionPoints();
@@ -206,27 +202,8 @@ public partial class TurnManager : Node
         foreach (Character player in playerCharacters)
         {
             //player.CompletedTurn = false;
+            if (player == null || player.IsDead) continue;
             player.Stats.ResetActionPoints();
-        }
-    }
-
-    private void CheckEnemyState()
-    {
-        foreach (Character enemy in enemyCharacters)
-        {
-            if (enemy == null || enemy.CompletedTurn) continue;
-            
-            var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
-            if (aiController != null)
-            {
-                var currentState = aiController._stateMachine._states[aiController._stateMachine.CurrentState];
-                var nextState = currentState.CheckState(enemy);
-                
-                if (nextState != aiController._stateMachine.CurrentState)
-                {
-                    aiController.SetState(nextState, enemy);
-                }
-            }
         }
     }
 
