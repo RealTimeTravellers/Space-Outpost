@@ -11,6 +11,7 @@ public partial class CharacterController : Node
     [Export] public float _movementSpeed = 5.0f;
     public override void _Ready()
     {
+        base._Ready();
         _character = GetParent<Character>();
         _navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
         _stateMachine = new CharacterStateMachine();
@@ -26,6 +27,7 @@ public partial class CharacterController : Node
 
     public override void _Process(double delta)
     {
+        base._Process(delta);
         ProcessPlayerState();
         UpdateNavigation();
     }
@@ -48,7 +50,7 @@ public partial class CharacterController : Node
         }
         
         // Hareketi uygula
-        float currentSpeed = IsEnemyAlerted ? _movementSpeed : _alertSpeed;
+        float currentSpeed = IsEnemyAlerted ? _alertSpeed : _movementSpeed;
         _character.Velocity = direction * currentSpeed;
         _character.MoveAndSlide();
     }

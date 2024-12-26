@@ -14,11 +14,13 @@ public partial class EnemyAIController : Node
         _character = GetParent<Character>();
         _stateMachine = new EnemyAIStateMachine();
         TurnManager.Instance.TurnChanged += OnTurnChanged;
+        SetState(AIState.Patrol, _character);
     }
 
     public override void _Process(double delta)
     {
-        if (!_isActive || _character.CompletedTurn || _character.IsDead)
+        base._Process(delta);
+        if (!_isActive || _character.IsDead)
         {
             return;
         }
@@ -31,8 +33,6 @@ public partial class EnemyAIController : Node
         if (!isPlayerTurn && _character != null && !_character.IsDead)
         {
             _isActive = true;
-            _character.CompletedTurn = false;
-            _character.Stats.ResetActionPoints();
         }
         else
         {

@@ -20,10 +20,6 @@ public class FleeState : EnemyState
 
             _isMoving = true;
             await enemy.enemyController.MoveToGrid(escapeGrid, FLEE_DISTANCE);
-            _isMoving = false;
-            
-            enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement(enemy);
         }
     }
 
@@ -34,6 +30,6 @@ public class FleeState : EnemyState
 
     public override void Exit(Character enemy)
     {
-
+        _isMoving = false;
     }
 }

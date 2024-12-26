@@ -126,7 +126,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				enemyController = new EnemyAIController();
 				enemyController.Name = "EnemyAIController";
 				AddChild(enemyController);
-				enemyController.SetState(AIState.Patrol, this);
 			}
 		}
 
@@ -223,6 +222,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		if (CompletedTurn && CameraManager.Instance.AimingMode)
 			CameraManager.ReturnCameraToTactical();
+	}
+
+	public void ResetActionPoints()
+	{
+		Stats.ResetActionPoints();
+		actionPoints = Stats.ActionPoints.GetValue();
+	}
+
+	public void DepleteActionPoints()
+	{
+		Stats.DepleteActionPoints();
+		actionPoints = Stats.ActionPoints.GetValue();
 	}
 
 	private void CheckTurnEnd()
@@ -512,7 +523,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if(CompletedTurn || targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
+		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
 			return;
 
 		// Grid işlemleri
@@ -554,6 +565,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketi tamamla
 		CompleteAction(actionData.moveCost);
 		IsMoving = false;
+		CompletedTurn = true;
 		
 		if (IsFriendly)
 			TurnManager.Instance.EndPlayerMovement(this);
@@ -592,7 +604,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CompletedTurn = false;
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
-			Stats.ResetActionPoints();
+			ResetActionPoints();
 			endTurnState = EndTurnState.None;
 		}
 		else if(!IsFriendly && !playerTurn)
@@ -600,7 +612,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CompletedTurn = false;
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
-			Stats.ResetActionPoints();
+			ResetActionPoints();
 			endTurnState = EndTurnState.None;
 		}
 	}

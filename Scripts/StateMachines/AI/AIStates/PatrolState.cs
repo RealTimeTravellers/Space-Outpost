@@ -13,14 +13,12 @@ public class PatrolState : EnemyState
         if (_patrolTarget == null)
             ChooseNewDirection(enemy);
             
-        if (_patrolTarget != null && !_isMoving)
+        if (_patrolTarget != null)
         {
             _isMoving = true;
             await enemy.enemyController.MoveToGrid(_patrolTarget);
             _isMoving = false;
-            
-            enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement(enemy);
+            _patrolTarget = null;
         }
     }
 
@@ -46,6 +44,11 @@ public class PatrolState : EnemyState
 
     public override AIState Process(Character enemy)
     {
+        if (!_isMoving && _patrolTarget == null)
+        {
+            ChooseNewDirection(enemy);
+        }
+        
         return base.Process(enemy);
     }
 

@@ -56,6 +56,9 @@ public class EnemyAIStateMachine
             return AIState.Patrol;
         }
         
+        // Debug için state process başlangıcını logla
+        GD.Print($"[AI Debug] Processing state {CurrentState} for {aiCharacter.Name}");
+        
         AIState newState = _states[CurrentState].Process(aiCharacter);
         if (newState != CurrentState)
         {
