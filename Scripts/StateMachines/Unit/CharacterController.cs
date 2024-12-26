@@ -2,10 +2,12 @@ using Godot;
 
 public partial class CharacterController : Node
 {
+    public bool IsEnemyAlerted { get; set; } = false;
     public CharacterStateMachine _stateMachine {get; private set;}
     private Character _character;
     public NavigationAgent3D _navAgent {get; private set;}
     private bool _isActive = false;
+    [Export] public float _alertSpeed = 3.0f;
     [Export] public float _movementSpeed = 5.0f;
     public override void _Ready()
     {
@@ -46,7 +48,8 @@ public partial class CharacterController : Node
         }
         
         // Hareketi uygula
-        _character.Velocity = direction * _movementSpeed;
+        float currentSpeed = IsEnemyAlerted ? _alertSpeed : _movementSpeed;
+        _character.Velocity = direction * currentSpeed;
         _character.MoveAndSlide();
     }
 

@@ -4,9 +4,12 @@ public class PatrolState : EnemyState
 {
     private GridObject _patrolTarget;
     private bool _isMoving = false;
-    
+
     public async override void Enter(Character enemy)
     {
+        GD.Print($"[AI] {enemy.Name} Entering Patrol State");
+        enemy.CharacterController.IsEnemyAlerted = true;
+
         if (_patrolTarget == null)
             ChooseNewDirection(enemy);
             
@@ -16,7 +19,6 @@ public class PatrolState : EnemyState
             await enemy.enemyController.MoveToGrid(_patrolTarget);
             _isMoving = false;
             
-            // Hareket tamamlandığında
             enemy.CompletedTurn = true;
             TurnManager.Instance.EndEnemyMovement(enemy);
         }

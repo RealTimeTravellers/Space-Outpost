@@ -15,8 +15,24 @@ public partial class EnemyManager : Node
     [Export] // Exported for testing
     public Godot.Collections.Array<Character> spottedEnemies;
 
+    public bool ShotFired { get; private set; }
+    public GridObject LastShotGrid { get; private set; }
+
     private EnemyManager()
     {
         Instance = this;
+    }
+
+    public void ReportShotFired(GridObject shotLocation)
+    {
+        ShotFired = true;
+        LastShotGrid = shotLocation;
+        GD.Print($"[EnemyManager] Shot reported at {shotLocation.GlobalPosition}");
+    }
+    
+    public void ResetShotStatus()
+    {
+        ShotFired = false;
+        LastShotGrid = null;
     }
 }

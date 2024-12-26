@@ -33,6 +33,8 @@ public class EnemyState : BaseState<AIState>
             return AIState.Patrol;
         }
 
+        if (EnemyManager.Instance.ShotFired && !canSeePlayer)
+            return AIState.Alert;
 
         if (character.Stats.Health.GetValue() <= 2 || character.Health <= 2)
             return AIState.Flee;

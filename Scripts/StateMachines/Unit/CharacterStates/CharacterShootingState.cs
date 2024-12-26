@@ -13,10 +13,17 @@ public class CharacterShootingState : CharacterState
             return;
         }
 
-        // Hedef varsa ateş et
+        // If target is not null, shoot
         if (character.Target != null)
         {
             character.CharacterController._stateMachine.RequestAnimation("shooting");
+            // Shot fired
+            if (character.IsFriendly)
+            {
+                var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(character.Target.GlobalPosition);
+                EnemyManager.Instance.ReportShotFired(targetGrid);
+            }
+
             await character.Attack(character.Target);
             _hasShot = true;
             
@@ -32,7 +39,7 @@ public class CharacterShootingState : CharacterState
    }
     public override CharacterStateType CheckState(Character character)
     {
-        // Ateş etme animasyonu bittiyse
+        // If shooting animation is finished, go to aiming state
         if (_hasShot && !character.AnimatorController.IsAnimationPlaying("shooting"))
         {
             return CharacterStateType.Aiming; 

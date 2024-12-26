@@ -2,30 +2,31 @@ using Godot;
 
 public class AlertState : EnemyState
 {
-    public override void Enter(Character aiController)
+    private bool _isMoving = false;
+    public override async void Enter(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Entering Alert State");
+        GD.Print($"[AI] {enemy.Name} Entering Alert State");
+        enemy.CharacterController.IsEnemyAlerted = true;
+
+        if (EnemyManager.Instance.LastShotGrid != null)
+        {
+            _isMoving = true;
+            await enemy.enemyController.MoveToGrid(EnemyManager.Instance.LastShotGrid);
+            _isMoving = false;
+            
+            // Hareket tamamlandığında
+            enemy.CompletedTurn = true;
+            TurnManager.Instance.EndEnemyMovement(enemy);
+        }
     }
 
     public override AIState Process(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Alert)
-            return nextState;
-            
-        // Alert durumunda çevreyi tara
-        if (!enemy.IsInCover)
-            enemy.TakeCover();
-            
-        // Mühimmat kontrolü
-        if (enemy.Equipment.CurrentWeapon.NeedsReload())
-            enemy.Equipment.CurrentWeapon.Reload();
-            
-        return AIState.Alert;
+        return base.Process(enemy);
     }
 
-    public override void Exit(Character aiController)
+    public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Exiting Alert State");
+
     }
 }

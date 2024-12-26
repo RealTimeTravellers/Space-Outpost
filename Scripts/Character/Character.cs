@@ -430,7 +430,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(4), true);
 					if (characterHit.NonEmpty)
 					{
-						GD.Print($"[LOS] {this.Name} can see {enemy.Name} at distance {distance}");
 						enemiesWithLos.Add(enemy);
 					}
 				}
