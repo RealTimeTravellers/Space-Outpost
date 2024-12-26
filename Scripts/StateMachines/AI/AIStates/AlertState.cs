@@ -14,7 +14,6 @@ public class AlertState : EnemyState
             await enemy.enemyController.MoveToGrid(EnemyManager.Instance.LastShotGrid);
             _isMoving = false;
             
-            // Hareket tamamlandığında
             enemy.CompletedTurn = true;
             TurnManager.Instance.EndEnemyMovement(enemy);
         }

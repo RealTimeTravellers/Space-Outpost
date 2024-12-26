@@ -38,10 +38,47 @@ public partial class EnemyAIController : Node
         }
     }
 
-    public async Task MoveToGrid(GridObject targetGrid)
+    public async Task MoveToGrid(GridObject targetGrid, int maxDistance = 10)
     {
         if (targetGrid == null) return;
-        await _character.Move(targetGrid);
+
+        var agent = _character.CharacterController._navAgent;
+        agent.TargetPosition = targetGrid.GlobalPosition;
+        
+        await ToSignal(GetTree().CreateTimer(.1f), "timeout");
+        
+        // Save start position
+        Vector3 startPos = _character.GlobalPosition;
+        Vector3 currentPos = startPos;
+        float totalDistance = 0;
+        
+        // Move along the path and calculate distance
+        while (totalDistance < maxDistance)
+        {
+            Vector3 nextPos = agent.GetNextPathPosition();
+            float stepDistance = currentPos.DistanceTo(nextPos);
+            
+            if (totalDistance + stepDistance > maxDistance)
+            {
+                // Calculate remaining distance
+                float remaining = maxDistance - totalDistance;
+                Vector3 direction = (nextPos - currentPos).Normalized();
+                Vector3 limitedPoint = currentPos + direction * remaining;
+                
+                var nearestGrid = GridManager.Instance.GetGridObjectFromWorldPosition(limitedPoint);
+                if (nearestGrid != null && !nearestGrid.IsOccupied && nearestGrid != _character.currentGrid)
+                {
+                    await _character.Move(nearestGrid);
+                }
+                break;
+            }
+            
+            currentPos = nextPos;
+            totalDistance += stepDistance;
+            
+            if (agent.IsNavigationFinished())
+                break;
+        }
     }
 
     public async Task HandleAggression()
