@@ -52,7 +52,8 @@ public partial class BattleHUD : Control
 
     private static void OnMovePressed()
     {
-        GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
+        if(GridManager.Instance.selectedCharacter.IsFriendly)
+            GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
     }
 
     private static void OnStandToEngagePressed()

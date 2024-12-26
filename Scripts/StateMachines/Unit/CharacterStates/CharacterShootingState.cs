@@ -4,7 +4,7 @@ public class CharacterShootingState : CharacterState
 {
     private bool _hasShot = false;
 
-    public override void Enter(Character character)
+    public override async void Enter(Character character)
     {
         _hasShot = false;  
 
@@ -17,8 +17,9 @@ public class CharacterShootingState : CharacterState
         if (character.Target != null)
         {
             character.CharacterController._stateMachine.RequestAnimation("shooting");
-            character.Attack(character.Target);
+            await character.Attack(character.Target);
             _hasShot = true;
+            
         }
         else
         {
@@ -34,7 +35,7 @@ public class CharacterShootingState : CharacterState
         // Ateş etme animasyonu bittiyse
         if (_hasShot && !character.AnimatorController.IsAnimationPlaying("shooting"))
         {
-            return CharacterStateType.Aiming; // Önce aiming'e dön
+            return CharacterStateType.Aiming; 
         }
         return CharacterStateType.Shooting;
     }

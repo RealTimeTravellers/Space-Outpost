@@ -49,13 +49,20 @@ public class EnemyAIStateMachine
     }
 
     public AIState UpdateCurrentState(Character aiCharacter)
-    {
+    { 
         if (!_states.ContainsKey(CurrentState))
         {
             GD.PrintErr($"Invalid state: {CurrentState}");
-            return AIState.Patrol; // Varsayılan duruma dön
+            return AIState.Patrol;
         }
-        return _states[CurrentState].Process(aiCharacter);
+        
+        AIState newState = _states[CurrentState].Process(aiCharacter);
+        if (newState != CurrentState)
+        {
+            GD.Print($"[AI Debug] State change requested from {CurrentState} to {newState}");
+            ChangeState(newState, aiCharacter);
+        }
+        return CurrentState;
     }
 
 }

@@ -7,24 +7,10 @@ public class AggressionState : EnemyState
 
     public override void Enter(Character enemy)
     {
+        GD.Print($"[AI Debug] {enemy.Name} Entering Aggression State");
+
         enemy.Target = enemy.enemiesInLos[0];
-        float distanceToTarget = enemy.GlobalPosition.DistanceTo(enemy.Target.GlobalPosition);
-
-        if (distanceToTarget > enemy.Stats.Perception.GetValue())
-        {
-            var grid = GridManager.Instance.GetGridObjectFromWorldPosition(enemy.Target.GlobalPosition);
-            enemy.CharacterController._stateMachine.ChangeState(CharacterStateType.Moving, enemy);
-            enemy.enemyController.MoveToGrid(grid);
-        }
-        else if (enemy.Stats.ActionPoints.GetValue() >= 2)
-        {
-            enemy.CharacterController._stateMachine.ChangeState(CharacterStateType.Aiming, enemy);
-            enemy.Attack(enemy.Target);
-            enemy.CharacterController._stateMachine.ChangeState(CharacterStateType.Idle, enemy);
-        }
-
-        enemy.CompletedTurn = true;
-        TurnManager.Instance.EndEnemyMovement(enemy);
+        enemy.enemyController.HandleAggression();
     }
 
     public override AIState Process(Character enemy)

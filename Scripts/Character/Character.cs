@@ -167,16 +167,20 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public async void SearchForEnemies(bool instantSearch = false)
 	{
+		var targetList = IsFriendly ? 
+			TurnManager.Instance.enemyCharacters : 
+			TurnManager.Instance.playerCharacters;
+
 		if (instantSearch)
 		{
-			enemiesInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+			enemiesInLos = QueryForEnemies(targetList);
 			doQuery = false;
 			return;
 		}
 
 		while (doQuery)
 		{
-			enemiesInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+			enemiesInLos = QueryForEnemies(targetList);
 
 			if (endTurnState == EndTurnState.StandToEngage)
 			{
@@ -410,10 +414,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
-				// wall check(layer 10)
-				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true);
 
-				// character check(layer 4)
+				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), false);
+				
 				if (!wallHit.NonEmpty)
 				{
 					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(4), true);
@@ -423,7 +426,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 						enemiesWithLos.Add(enemy);
 					}
 				}
-
 
 				if (limitedFov)
 				{
@@ -440,9 +442,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// </summary>
 	/// <param name="target"></param>
 	/// <param name="accuracy"></param>
-	public async void Attack(Character target)
+	public async Task Attack(Character target)
 	{
-		if (target == null || target.IsDead) return;
+		if (target == null || target.IsDead || Stats.ActionPoints.GetValue() <= 0) return;
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
 
@@ -450,6 +452,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		bool hit = GD.Randf() <= hitChance;
 
 		Vector3 direction = (target.Position - Position).Normalized();
+		if (!IsFriendly)
+			direction = -direction; // Düşman karakterler için yönü tersine çevir
+		
    		shootEffect.ProcessMaterial.Set("direction", direction);
 		
 		if (hit) // || true for test purposes
@@ -471,8 +476,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 		CharacterController._stateMachine.RequestAnimation("idle");
+		await ToSignal(GetTree().CreateTimer(0.3f), "timeout");
 
 		CompleteAction(actionData.attackCost);
+		Stats.DepleteActionPoints();
 	}
 
 	public void TakeDamage(int damage)

@@ -23,8 +23,11 @@ public class CharacterAimingState : CharacterState
 
             character.CharacterController._stateMachine.RequestAnimation("aiming");
             character.LookAt(character.Target.Position);
-            CameraManager.Instance.MainCameraSet.LookAt(character.Target.Position);
-            CameraManager.MoveToShoulder(character);
+            if (character.IsFriendly)
+            {
+                CameraManager.Instance.MainCameraSet.LookAt(character.Target.Position);
+                CameraManager.MoveToShoulder(character);
+            }
             character.RotateY(Mathf.Pi);
         }
         else
@@ -47,7 +50,7 @@ public class CharacterAimingState : CharacterState
     public override CharacterStateType CheckState(Character character)
     {
         // Aim modu kapatıldıysa idle'a dön
-        if (!CameraManager.Instance.AimingMode || 
+        if (!CameraManager.Instance.AimingMode && character.IsFriendly || 
             character.Stats.ActionPoints.GetValue() <= 0 || 
             character.actionPoints <= 0 )
             return CharacterStateType.Idle;

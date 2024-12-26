@@ -7,6 +7,7 @@ using Godot;
 
 public class EnemyState : BaseState<AIState>
 {
+    bool canSeePlayer = false;
     protected readonly Vector3[] directions = new[]
     {
         new Vector3(1, 0, 0),   // Sağ
@@ -23,25 +24,23 @@ public class EnemyState : BaseState<AIState>
 
     public override AIState CheckState(Character character)
     {
-        PlayerInSight(character);
-        GD.Print($"[AI Debug] {character.Name} - UnitType: {character.Stats.UnitType}, CanSeePlayer: {character.enemiesInLos.Count > 0}, EnemiesInLos: {character.enemiesInLos.Count}");
-        
-        // Önce Alien kontrolü yap
+        canSeePlayer = character.enemiesInLos.Count > 0;
+
         if (character.Stats.UnitType == UnitType.Alien)
         {
-            if (character.enemiesInLos.Count > 0)
+            if (canSeePlayer)
                 return AIState.Aggression;
             return AIState.Patrol;
         }
 
-        // Human için kontroller
-        if (character.Stats.Health.GetValue() <= 2)
+
+        if (character.Stats.Health.GetValue() <= 2 || character.Health <= 2)
             return AIState.Flee;
                 
         if (character.Stats.Morale.GetValue() < 5)
             return AIState.Cower;
 
-        if (character.enemiesInLos.Count > 0)
+        if (canSeePlayer)
             return AIState.Tactical;
 
         return AIState.Patrol;

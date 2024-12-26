@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 
 public interface ICombat
@@ -9,6 +10,6 @@ public interface ICombat
 
     // methods
     public Godot.Collections.Array<Character> QueryForEnemies(Godot.Collections.Array<Character> enemies, bool limitedFov = false);
-    public void Attack(Character enemy);
+    public Task Attack(Character enemy);
     public void TakeDamage(int damage);
 }
