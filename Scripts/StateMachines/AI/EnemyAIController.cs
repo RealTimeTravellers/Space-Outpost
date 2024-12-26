@@ -67,9 +67,7 @@ public partial class EnemyAIController : Node
                 
                 var nearestGrid = GridManager.Instance.GetGridObjectFromWorldPosition(limitedPoint);
                 if (nearestGrid != null && !nearestGrid.IsOccupied && nearestGrid != _character.currentGrid)
-                {
                     await _character.Move(nearestGrid);
-                }
                 break;
             }
             

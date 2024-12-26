@@ -1,32 +1,39 @@
+using System.Threading.Tasks;
 using Godot;
 
 public class FleeState : EnemyState
 {
-    public override void Enter(Character aiController)
+    private bool _isMoving = false;
+    private const int FLEE_DISTANCE = 10;
+
+    public override async void Enter(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Entering Flee State");
+        GD.Print($"[AI] {enemy.Name} Entering Alert State");
+        enemy.CharacterController.IsEnemyAlerted = false;
+
+        if (enemy.Target != null)
+        {
+            Vector3 fleeDirection = (enemy.GlobalPosition - enemy.Target.GlobalPosition).Normalized();
+            Vector3 targetPosition = enemy.GlobalPosition + fleeDirection * FLEE_DISTANCE;
+            
+            var escapeGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPosition);
+
+            _isMoving = true;
+            await enemy.enemyController.MoveToGrid(escapeGrid, FLEE_DISTANCE);
+            _isMoving = false;
+            
+            enemy.CompletedTurn = true;
+            TurnManager.Instance.EndEnemyMovement(enemy);
+        }
     }
 
     public override AIState Process(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Flee)
-            return nextState;
-
-        // Kaçış davranışı
-        if (enemy.Target != null)
-        {
-            // Hedeften uzaklaş
-            Vector3 fleeDirection = (enemy.Position - enemy.Target.Position).Normalized();
-            // Kaçış noktasına hareket et
-            enemy.Move(null); // GridManager'dan en uygun kaçış noktası bulunmalı
-        }
-        
-        return AIState.Flee;
+        return base.Process(enemy);
     }
 
-    public override void Exit(Character aiController)
+    public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Exiting Flee State");
+
     }
 }
