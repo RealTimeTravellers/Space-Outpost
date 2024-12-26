@@ -235,13 +235,21 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void EndTurn()
 	{
-		if (CompletedTurn || actionPoints > 0)
+		// Hareket devam ediyorsa bekle
+		if (!CharacterController._navAgent.IsNavigationFinished())
 		{
 			return;
 		}
 		
-		// Hareket devam ediyorsa bekle
-		if (!CharacterController._navAgent.IsNavigationFinished())
+		if (!IsFriendly && CompletedTurn)
+		{
+			GD.Print($"[Character] {this.Name} ending enemy movement");
+			TurnManager.Instance.EndEnemyMovement(this);
+			return;
+		}
+
+		// Player için normal kontroller
+		if (CompletedTurn || actionPoints > 0)
 		{
 			return;
 		}
@@ -479,7 +487,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		await ToSignal(GetTree().CreateTimer(0.3f), "timeout");
 
 		CompleteAction(actionData.attackCost);
-		Stats.DepleteActionPoints();
+
+		if (!IsFriendly && actionPoints <= 0)
+		{
+			CompletedTurn = true;
+			TurnManager.Instance.EndEnemyMovement(this);
+		}
 	}
 
 	public void TakeDamage(int damage)
@@ -580,6 +593,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CompletedTurn = false;
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
+			Stats.ResetActionPoints();
 			endTurnState = EndTurnState.None;
 		}
 		else if(!IsFriendly && !playerTurn)
@@ -587,6 +601,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CompletedTurn = false;
 			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
+			Stats.ResetActionPoints();
 			endTurnState = EndTurnState.None;
 		}
 	}

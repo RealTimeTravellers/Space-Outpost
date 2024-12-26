@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 public partial class EnemyAIController : Node
@@ -37,17 +38,16 @@ public partial class EnemyAIController : Node
         }
     }
 
-    public async void MoveToGrid(GridObject targetGrid)
+    public async Task MoveToGrid(GridObject targetGrid)
     {
         if (targetGrid == null) return;
         await _character.Move(targetGrid);
     }
 
-    public async void HandleAggression()
+    public async Task HandleAggression()
     {
         TurnManager.Instance.StartEnemyMovement(_character);
         float distanceToTarget = _character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition);
-        GD.Print($"[AI] {_character.Name} distance to target: {distanceToTarget}, Perception: {_character.Stats.Perception.GetValue()}");
 
         if (distanceToTarget > _character.Stats.Perception.GetValue())
         {
@@ -56,7 +56,6 @@ public partial class EnemyAIController : Node
             {
                 _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Moving, _character);
                 await _character.Move(grid);
-                return;
             }
         }
         else if (_character.Stats.ActionPoints.GetValue() > 0)
@@ -69,6 +68,12 @@ public partial class EnemyAIController : Node
                 await ToSignal(GetTree().CreateTimer(.1f), "timeout");
                 _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Idle, _character);
             }
+        }
+
+        if (_character.Stats.ActionPoints.GetValue() <= 0)
+        {
+            _character.CompletedTurn = true;
+            TurnManager.Instance.EndEnemyMovement(_character);
         }
     }
 

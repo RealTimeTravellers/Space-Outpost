@@ -5,12 +5,12 @@ public class AggressionState : EnemyState
 {
     private const float MAX_MOVE_DISTANCE = 10f;
 
-    public override void Enter(Character enemy)
+    public async override void Enter(Character enemy)
     {
         GD.Print($"[AI Debug] {enemy.Name} Entering Aggression State");
 
         enemy.Target = enemy.enemiesInLos[0];
-        enemy.enemyController.HandleAggression();
+        await enemy.enemyController.HandleAggression();
     }
 
     public override AIState Process(Character enemy)

@@ -3,10 +3,23 @@ using System.Linq;
 public class PatrolState : EnemyState
 {
     private GridObject _patrolTarget;
+    private bool _isMoving = false;
     
-    public override void Enter(Character enemy)
+    public async override void Enter(Character enemy)
     {
-        ChooseNewDirection(enemy);
+        if (_patrolTarget == null)
+            ChooseNewDirection(enemy);
+            
+        if (_patrolTarget != null && !_isMoving)
+        {
+            _isMoving = true;
+            await enemy.enemyController.MoveToGrid(_patrolTarget);
+            _isMoving = false;
+            
+            // Hareket tamamlandığında
+            enemy.CompletedTurn = true;
+            TurnManager.Instance.EndEnemyMovement(enemy);
+        }
     }
 
     private void ChooseNewDirection(Character enemy)
@@ -31,13 +44,6 @@ public class PatrolState : EnemyState
 
     public override AIState Process(Character enemy)
     {
-        
-        if (_patrolTarget == null)
-        {
-            ChooseNewDirection(enemy);
-            enemy.enemyController.MoveToGrid(_patrolTarget);
-        }
-
         return base.Process(enemy);
     }
 
