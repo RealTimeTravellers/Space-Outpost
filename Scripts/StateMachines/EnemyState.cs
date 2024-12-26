@@ -26,6 +26,9 @@ public class EnemyState : BaseState<AIState>
     {
         canSeePlayer = character.enemiesInLos.Count > 0;
 
+        if (character.Stats.Health.GetValue() <= 2 || character.Health <= 2)
+            return AIState.Flee;
+
         if (character.Stats.UnitType == UnitType.Alien)
         {
             if (canSeePlayer)
@@ -33,17 +36,14 @@ public class EnemyState : BaseState<AIState>
             return AIState.Patrol;
         }
 
+        if (canSeePlayer)
+            return AIState.Tactical;
+
         if (EnemyManager.Instance.ShotFired && !canSeePlayer)
             return AIState.Alert;
-
-        if (character.Stats.Health.GetValue() <= 2 || character.Health <= 2)
-            return AIState.Flee;
                 
         if (character.Stats.Morale.GetValue() < 5)
             return AIState.Cower;
-
-        if (canSeePlayer)
-            return AIState.Tactical;
 
         return AIState.Patrol;
     }

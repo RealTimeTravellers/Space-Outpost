@@ -8,7 +8,7 @@ public class PatrolState : EnemyState
     public async override void Enter(Character enemy)
     {
         GD.Print($"[AI] {enemy.Name} Entering Patrol State");
-        enemy.CharacterController.IsEnemyAlerted = true;
+        enemy.CharacterController.IsEnemyAlerted = false;
 
         if (_patrolTarget == null)
             ChooseNewDirection(enemy);

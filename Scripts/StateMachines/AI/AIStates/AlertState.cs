@@ -6,7 +6,7 @@ public class AlertState : EnemyState
     public override async void Enter(Character enemy)
     {
         GD.Print($"[AI] {enemy.Name} Entering Alert State");
-        enemy.CharacterController.IsEnemyAlerted = true;
+        enemy.CharacterController.IsEnemyAlerted = false;
 
         if (EnemyManager.Instance.LastShotGrid != null)
         {

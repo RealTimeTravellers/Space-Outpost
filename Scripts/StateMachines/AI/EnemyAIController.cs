@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Godot;
-
+using System.Linq;
 public partial class EnemyAIController : Node
 {
     public EnemyAIStateMachine _stateMachine {get; private set;}
@@ -28,9 +28,11 @@ public partial class EnemyAIController : Node
 
     private void OnTurnChanged(bool isPlayerTurn)
     {
-        if (!isPlayerTurn && _character != null && !_character.IsFriendly)
+        if (!isPlayerTurn && _character != null && !_character.IsDead)
         {
             _isActive = true;
+            _character.CompletedTurn = false;
+            _character.Stats.ResetActionPoints();
         }
         else
         {
@@ -79,6 +81,18 @@ public partial class EnemyAIController : Node
         }
     }
 
+    public async Task EnemyShoot()
+    {
+        _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Aiming, _character);
+        await ToSignal(GetTree().CreateTimer(.8f), "timeout");
+        if (_character.Target != null)
+        {
+            _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Shooting, _character);
+            await ToSignal(GetTree().CreateTimer(.1f), "timeout");
+            _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Idle, _character);
+        }
+    }
+
     public async Task HandleAggression()
     {
         TurnManager.Instance.StartEnemyMovement(_character);
@@ -90,21 +104,41 @@ public partial class EnemyAIController : Node
             if (grid != null)
             {
                 _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Moving, _character);
-                await _character.Move(grid);
+                await MoveToGrid(grid, 10);
             }
         }
         else if (_character.Stats.ActionPoints.GetValue() > 0)
         {
-            _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Aiming, _character);
-            await ToSignal(GetTree().CreateTimer(.8f), "timeout");
-            if (_character.Target != null)
-            {
-                _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Shooting, _character);
-                await ToSignal(GetTree().CreateTimer(.1f), "timeout");
-                _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Idle, _character);
-            }
+            await EnemyShoot();
         }
 
+        if (_character.Stats.ActionPoints.GetValue() <= 0)
+        {
+            _character.CompletedTurn = true;
+            TurnManager.Instance.EndEnemyMovement(_character);
+        }
+    }
+
+    public async Task HandleTactical()
+    {
+        TurnManager.Instance.StartEnemyMovement(_character);
+              
+        // Cover bulma
+        var availableCover = _character.QueryForCover();
+        
+        // Cover'a gitme ve savaşma mantığı
+        if (!_character.IsInCover && availableCover != null)
+        {
+            await MoveToGrid(availableCover, 10);
+        }
+        else if (_character.IsInCover)
+        {
+            if (_character.Stats.ActionPoints.GetValue() > 0)
+            {
+                await EnemyShoot();
+            }
+        }
+        
         if (_character.Stats.ActionPoints.GetValue() <= 0)
         {
             _character.CompletedTurn = true;

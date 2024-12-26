@@ -52,6 +52,7 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
         }
     }
 
+    /*
     protected GridObject FindNearestCover(Character enemy, Character target)
     {
         float maxDistance = enemy.Stats.Perception.GetValue();
@@ -91,4 +92,5 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
 
         return bestCover;
     }
+    */
 }

@@ -93,22 +93,10 @@ public partial class TurnManager : Node
 
     private void OnPlayerMovementChanged(bool started)
     {
-        if (started)
-        {
-            if (!_isProcessingTurn)
-            {
-                _isProcessingTurn = true;
-                // Oyuncu turu başlarken düşmanların durumunu sıfırla
-                foreach (Character enemy in enemyCharacters)
-                {
-                    if (enemy == null || enemy.IsDead) continue;
-                    enemy.CompletedTurn = false;
-                }
-            }
-            return;
-        }
+        if (started)  return;
 
         bool allCompletedTurns = true;
+
         foreach (Character player in playerCharacters)
         {
             if (player == null || player.IsDead) continue;
@@ -118,10 +106,10 @@ public partial class TurnManager : Node
         if (allCompletedTurns)
         {
             GD.Print("[TurnManager] All players completed, switching to enemy turn");
-            _isProcessingTurn = false;
+
             TurnChanged?.Invoke(false);
             EndPlayerTurn();
-            //StartEnemyMovement();
+            _isProcessingTurn = true;
         }
     }
 
@@ -133,11 +121,6 @@ public partial class TurnManager : Node
             return;
         }
 
-        foreach (Character enemy in enemyCharacters)
-        {
-            if (enemy == null || enemy.IsDead) continue;
-        }
-
         bool allEnemiesCompleted = enemyCharacters
             .Where(e => e != null && !e.IsDead)
             .All(e => e.CompletedTurn);
@@ -145,24 +128,23 @@ public partial class TurnManager : Node
         if (allEnemiesCompleted)
         {
             GD.Print("[TurnManager] All enemies completed, switching to player turn");
+
+            TurnChanged?.Invoke(true);
             EndEnemyTurn();
-            
-            _isProcessingTurn = false;
+            _isProcessingTurn = true;
             _isEnemyMoving = false;
             
-            // Player karakterleri hazırla
-            foreach (Character player in playerCharacters.Where(p => p != null && !p.IsDead))
-            {
-                player.CompletedTurn = false;
-                player.Stats.ResetActionPoints();
-            }
-            
-            TurnChanged?.Invoke(true);
         }
     }
 
     private void EndPlayerTurn()
     {
+        foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
+        {
+            enemy.CompletedTurn = false;
+            enemy.Stats.ResetActionPoints();
+            enemy.enemyController._isActive = true;
+        }
         
         foreach (Character player in playerCharacters.Where(p => p != null && !p.IsDead))
         {
@@ -170,13 +152,6 @@ public partial class TurnManager : Node
             player.CompletedTurn = true;
         }
         
-        foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
-        {
-            enemy.CompletedTurn = false;
-            enemy.Stats.ResetActionPoints();
-            enemy.enemyController._isActive = true;
-        }
-
         _isProcessingTurn = true;
         GD.Print("[TurnManager] Player turn ended");
     }

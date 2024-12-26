@@ -8,7 +8,7 @@ public class AggressionState : EnemyState
     public async override void Enter(Character enemy)
     {
         GD.Print($"[AI Debug] {enemy.Name} Entering Aggression State");
-        enemy.CharacterController.IsEnemyAlerted = false;
+        enemy.CharacterController.IsEnemyAlerted = true;
         enemy.Target = enemy.enemiesInLos[0];
         await enemy.enemyController.HandleAggression();
     }

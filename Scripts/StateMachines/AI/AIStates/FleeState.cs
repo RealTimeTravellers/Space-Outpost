@@ -9,7 +9,7 @@ public class FleeState : EnemyState
     public override async void Enter(Character enemy)
     {
         GD.Print($"[AI] {enemy.Name} Entering Alert State");
-        enemy.CharacterController.IsEnemyAlerted = false;
+        enemy.CharacterController.IsEnemyAlerted = true;
 
         if (enemy.Target != null)
         {

@@ -48,7 +48,7 @@ public partial class CharacterController : Node
         }
         
         // Hareketi uygula
-        float currentSpeed = IsEnemyAlerted ? _alertSpeed : _movementSpeed;
+        float currentSpeed = IsEnemyAlerted ? _movementSpeed : _alertSpeed;
         _character.Velocity = direction * currentSpeed;
         _character.MoveAndSlide();
     }

@@ -5,25 +5,12 @@ public class CowerState : EnemyState
     public override void Enter(Character aiController)
     {
         GD.Print($"[AI] {aiController.Name} Entering Cower State");
+        aiController.CharacterController.IsEnemyAlerted = true;
     }
 
     public override AIState Process(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Cower)
-            return nextState;
-
-        // Sinmiş durumda bekle
-        if (!enemy.IsInCover)
-        {
-            enemy.TakeCover();
-        }
-        
-        // Moral yükseldiyse Alert state'e geç
-        if (enemy.Stats.Morale.GetValue() >= 20)
-            return AIState.Alert;
-            
-        return AIState.Cower;
+        return base.Process(enemy);
     }
 
     public override void Exit(Character aiController)
