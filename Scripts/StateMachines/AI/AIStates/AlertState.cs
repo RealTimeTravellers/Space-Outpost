@@ -13,7 +13,7 @@ public class AlertState : EnemyState
     public override AIState Process(Character enemy)
     {
         if (enemy.enemyController._turnPlayed) return AIState.Alert;
-        
+
         var baseState = base.Process(enemy);
         if (baseState != AIState.Alert)
             return baseState;
@@ -21,7 +21,7 @@ public class AlertState : EnemyState
         if (enemy.CompletedTurn)
             return AIState.Alert;
 
-        if (!_isHandlingAlert && !enemy.IsMoving)
+        if (!_isHandlingAlert && !enemy.IsMoving && !enemy.enemyController._turnPlayed)
         {
             _isHandlingAlert = true;
             enemy.enemyController._turnPlayed = true;

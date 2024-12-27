@@ -23,6 +23,9 @@ public partial class CharacterController : Node
 
     public override void _Process(double delta)
     {
+        if (!_character.IsFriendly && !_character.enemyController._isActive)
+            return;
+
         ProcessPlayerState();
         if (_stateMachine.CurrentStateType == CharacterStateType.Moving) 
             UpdateNavigation();
@@ -68,6 +71,7 @@ public partial class CharacterController : Node
 
     public void SetState(CharacterStateType newState, Character character)
     {
+        if (!CanChangeState()) return;
         _stateMachine.ChangeState(newState, character);
     }
 
@@ -82,5 +86,12 @@ public partial class CharacterController : Node
         {
             _stateMachine.OnStateChanged -= OnStateChanged;
         }   
+    }
+
+    public bool CanChangeState()
+    {
+        if (!_character.IsFriendly && !_character.enemyController._isActive)
+            return false;
+        return true;
     }
 }

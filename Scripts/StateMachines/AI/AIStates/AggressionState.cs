@@ -24,7 +24,7 @@ public class AggressionState : EnemyState
         if (enemy.CompletedTurn)
             return AIState.Aggression;
 
-        if (!_isHandlingAggression)
+        if (!_isHandlingAggression && !enemy.enemyController._turnPlayed)
         {
             _isHandlingAggression = true;
             enemy.enemyController._turnPlayed = true;

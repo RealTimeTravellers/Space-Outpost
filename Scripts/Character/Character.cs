@@ -127,18 +127,20 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				enemyController.Name = "EnemyAIController";
 				AddChild(enemyController);
 			}
+			//enemyController.SetState(AIState.Patrol, this);
 		}
 
 		SubscribeToEvents();
 		if (IsFriendly)
 		{
-			TurnManager.Instance.playerCharacters.Add(this);
+			if (!TurnManager.Instance.playerCharacters.Contains(this))
+				TurnManager.Instance.playerCharacters.Add(this);
 			HealthLabel.Modulate = new Color(0,0,1,1);
 		}
 		else
 		{
-			EnemyManager.Instance.allEnemies.Add(this);
-			TurnManager.Instance.enemyCharacters.Add(this);
+			if (!TurnManager.Instance.enemyCharacters.Contains(this))
+				TurnManager.Instance.enemyCharacters.Add(this);
 			HealthLabel.Modulate = new Color(1,0,0,1);
 		}
 
@@ -204,16 +206,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void CompleteAction(int cost)
 	{
-		if (this.actionPoints - cost < 0)
+		if (actionPoints - cost <= 0)
 		{
 			actionPoints = 0;
-			Stats.DepleteActionPoints();
+			DepleteActionPoints();
+			EndTurn();
 		}
 		else
 		{
-			this.actionPoints -= cost;
+			actionPoints -= cost;
 		}
-		ActionCompleted?.Invoke(this.actionPoints);
+		ActionCompleted?.Invoke(actionPoints);
 		
 		CheckTurnEnd();
 
@@ -235,7 +238,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	private void CheckTurnEnd()
 	{
-		if (this.actionPoints <= 0 && !CompletedTurn)
+		if (actionPoints <= 0 && !CompletedTurn)
 		{
 			EndTurn();
 		}
@@ -244,7 +247,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	public void EndTurn()
 	{
 		// Hareket devam ediyorsa bekle
-		if (CompletedTurn) return;
+		// if (CompletedTurn) return;
 		
 		/*
 		if (!IsFriendly && CompletedTurn)
@@ -457,7 +460,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// <param name="accuracy"></param>
 	public async Task Attack(Character target)
 	{
-		if (target == null || target.IsDead || Stats.ActionPoints.GetValue() <= 0) return;
+		if (target == null || target.IsDead || actionPoints <= 0) return;
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
 
@@ -490,8 +493,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 		CharacterController._stateMachine.RequestAnimation("idle");
 		await ToSignal(GetTree().CreateTimer(0.3f), "timeout");
-
-		CompleteAction(actionData.attackCost);
+		
+		CompleteAction(2);
 	}
 
 	public void TakeDamage(int damage)
@@ -500,7 +503,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		if (Health <= 0)
 		{
-			CharacterController._stateMachine.ChangeState(CharacterStateType.Death, this);
+			CharacterController.SetState(CharacterStateType.Death, this);
 			UpdateHealthText();
 		}
 		else
@@ -528,17 +531,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hedef pozisyonu ayarla
 		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
 		
-		// State'i Moving'e geçir
+		if (IsFriendly)
+			TurnManager.Instance.StartPlayerMovement(this);
+		CharacterController.SetState(CharacterStateType.Moving, this);
+		
+		/*
 		if (IsFriendly)
 		{
 			TurnManager.Instance.StartPlayerMovement(this);
 			CharacterController.SetState(CharacterStateType.Moving, this);
 		}
-		else
-		{
-			TurnManager.Instance.StartEnemyMovement(this);
-			CharacterController.SetState(CharacterStateType.Moving, this);
-		}
+		*/
 
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
@@ -591,7 +594,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (IsFriendly && playerTurn)
 		{
 			CompletedTurn = false;
-			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
 			ResetActionPoints();
 			endTurnState = EndTurnState.None;
@@ -599,7 +601,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		else if(!IsFriendly && !playerTurn)
 		{
 			CompletedTurn = false;
-			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
 			ResetActionPoints();
 			endTurnState = EndTurnState.None;

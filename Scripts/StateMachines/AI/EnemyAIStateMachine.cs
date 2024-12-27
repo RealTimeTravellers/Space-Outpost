@@ -51,18 +51,12 @@ public class EnemyAIStateMachine
         OnStateChanged?.Invoke(oldState, newState);
     }
 
-    public AIState UpdateCurrentState(Character aiCharacter)
+    public AIState ProcessState(Character aiCharacter)
     { 
         if (!_states.ContainsKey(CurrentState))
             return AIState.Patrol;
         
-        AIState newState = _states[CurrentState].Process(aiCharacter);
-        
-        // State değişimi olacaksa ve karakter uygunsa değiştir
-        if (newState != CurrentState && !aiCharacter.IsMoving && !aiCharacter.CompletedTurn)
-            ChangeState(newState, aiCharacter);
-            
-        return CurrentState;
+        return _states[CurrentState].Process(aiCharacter);
     }
 
 }

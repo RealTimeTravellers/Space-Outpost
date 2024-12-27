@@ -12,7 +12,7 @@ public partial class EnemyAIController : Node
     };
 
     public EnemyAIStateMachine _stateMachine {get; private set;}
-    private Character _character;
+    [Export] public Character _character;
     [Export] public bool _isActive = false;
     [Export] private bool _isBeingDestroyed = false;
     [Export] public bool _turnPlayed {get; set;} = false;
@@ -22,7 +22,7 @@ public partial class EnemyAIController : Node
     public override void _Ready()
     {
         base._Ready();
-        _character = GetParent<Character>();
+
         _stateMachine = new EnemyAIStateMachine();
         TurnManager.Instance.TurnChanged += OnTurnChanged;
         SetState(AIState.Patrol, _character);
@@ -30,29 +30,42 @@ public partial class EnemyAIController : Node
 
     public override void _Process(double delta)
     {
-        if (!_isActive || _character.IsDead || _character.CompletedTurn || _isHandlingState || 
-            !_character.CharacterController._navAgent.IsNavigationFinished())
+        if (!_isActive || _character.IsDead)
             return;
         
-        _stateMachine.UpdateCurrentState(_character);
+        ProcessEnemyState();
         base._Process(delta);
     }
 
-    private async void OnTurnChanged(bool isPlayerTurn)
+    public override void _ExitTree()
+    {
+        TurnManager.Instance.TurnChanged -= OnTurnChanged;
+    }
+
+    private void OnTurnChanged(bool isPlayerTurn)
     {
         if (isPlayerTurn)
         {
             _isActive = false;
-            _turnPlayed = false;
+            _isHandlingState = false;
         }
         else
         {
-            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             _isActive = true;
+            _isHandlingState = false;
             _turnPlayed = false;
-            
-            SetState(_stateMachine.CurrentState, _character);
+            _character.CompletedTurn = false;
+            //SetState(_stateMachine.CurrentState, _character);
         }
+    }
+
+    private void ProcessEnemyState()
+    {
+        if (_isHandlingState) return;
+        
+        var newState = _stateMachine.ProcessState(_character);
+        if (newState != _stateMachine.CurrentState)
+            SetState(newState, _character);
     }
 
     public async Task MoveToGrid(GridObject targetGrid, int maxDistance = 10)
@@ -98,21 +111,29 @@ public partial class EnemyAIController : Node
 
     public async Task EnemyShoot()
     {
-        _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Aiming, _character);
+        _character.CharacterController.SetState(CharacterStateType.Aiming, _character);
         await ToSignal(GetTree().CreateTimer(.8f), "timeout");
         if (_character.Target != null)
         {
-            _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Shooting, _character);
+            _character.CharacterController.SetState(CharacterStateType.Shooting, _character);
             await ToSignal(GetTree().CreateTimer(.1f), "timeout");
-            _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Idle, _character);
+            _character.CharacterController.SetState(CharacterStateType.Idle, _character);
         }
+    }
+
+    public async Task PrepareForHandlingState()
+    {
+        while (!_character.CharacterController.CanChangeState())
+            await ToSignal(GetTree().CreateTimer(.1f), "timeout");
+
+        if (_character.CompletedTurn) return;
+        TurnManager.Instance.StartEnemyMovement(_character);
+        _isHandlingState = true;
     }
 
     public async Task HandleAggression()
     {
-        if (_character.CompletedTurn) return;
-        TurnManager.Instance.StartEnemyMovement(_character);
-        _isHandlingState = true;
+        await PrepareForHandlingState();
 
         try
         {
@@ -123,7 +144,7 @@ public partial class EnemyAIController : Node
                 var grid = GridManager.Instance.GetGridObjectFromWorldPosition(_character.Target.GlobalPosition);
                 if (grid != null)
                 {
-                    _character.CharacterController._stateMachine.ChangeState(CharacterStateType.Moving, _character);
+                    _character.CharacterController.SetState(CharacterStateType.Moving, _character);
                     await MoveToGrid(grid, 10);
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                 }
@@ -143,9 +164,7 @@ public partial class EnemyAIController : Node
 
     public async Task HandleTactical()
     {
-        if (_character.CompletedTurn) return;
-        TurnManager.Instance.StartEnemyMovement(_character);
-        _isHandlingState = true;
+        await PrepareForHandlingState();
 
         try
         {
@@ -181,9 +200,7 @@ public partial class EnemyAIController : Node
 
     public async Task HandleCower()
     {
-        if (_character.CompletedTurn) return;
-        TurnManager.Instance.StartEnemyMovement(_character);
-        _isHandlingState = true;
+        await PrepareForHandlingState();
 
         try
         {
@@ -198,9 +215,7 @@ public partial class EnemyAIController : Node
 
     public async Task HandleFlee()
     {
-        if (_character.CompletedTurn) return;
-        TurnManager.Instance.StartEnemyMovement(_character);
-        _isHandlingState = true;
+        await PrepareForHandlingState();
 
         try
         {
@@ -229,9 +244,7 @@ public partial class EnemyAIController : Node
     }
     public async Task HandleAlert()
     {
-        if (_character.CompletedTurn) return;
-        _isHandlingState = true;
-        TurnManager.Instance.StartEnemyMovement(_character);
+        await PrepareForHandlingState();
         
         try 
         {

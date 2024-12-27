@@ -23,7 +23,7 @@ public class PatrolState : EnemyState
         if (enemy.CompletedTurn)
             return AIState.Patrol;
 
-        if (_patrolTarget != null && !_isMoving)
+        if (_patrolTarget != null && !_isMoving && !enemy.enemyController._turnPlayed)
         {
             GD.Print($"[AI Debug] {enemy.Name} moving to patrol target");
             _isMoving = true;

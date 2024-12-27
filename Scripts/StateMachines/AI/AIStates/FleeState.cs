@@ -22,7 +22,7 @@ public class FleeState : EnemyState
         if (enemy.CompletedTurn)
             return AIState.Flee;
 
-        if (!_isHandlingFlee && !enemy.IsMoving)
+        if (!_isHandlingFlee && !enemy.IsMoving && !enemy.enemyController._turnPlayed)
         {
             _isHandlingFlee = true;
             enemy.enemyController._turnPlayed = true;

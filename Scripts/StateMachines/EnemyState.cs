@@ -11,7 +11,10 @@ public class EnemyState : BaseState<AIState>
 
     public override AIState Process(Character character)
     {
-        if (character.CompletedTurn || character.IsMoving)
+        if (character.CompletedTurn)
+            return character.enemyController._stateMachine.CurrentState;
+            
+        if (character.enemyController._isHandlingState)
             return character.enemyController._stateMachine.CurrentState;
             
         return CheckState(character);

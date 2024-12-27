@@ -59,8 +59,9 @@ _navAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
 
-[node name="EnemyAIController" type="Node3D" parent="."]
+[node name="EnemyAIController" type="Node3D" parent="." node_paths=PackedStringArray("_character")]
 script = ExtResource("5_dakxj")
+_character = NodePath("..")
 
 [node name="AnimatorController" type="Node3D" parent="."]
 script = ExtResource("6_2miie")
