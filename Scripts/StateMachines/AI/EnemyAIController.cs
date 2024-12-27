@@ -1,6 +1,9 @@
 using System.Threading.Tasks;
 using Godot;
 using System.Linq;
+using System;
+using System.Collections.Generic;
+
 public partial class EnemyAIController : Node
 {
     protected readonly Vector3[] directions = new[]
@@ -14,8 +17,6 @@ public partial class EnemyAIController : Node
     public EnemyAIStateMachine _stateMachine {get; private set;}
     [Export] public Character _character;
     [Export] public bool _isActive = false;
-    [Export] private bool _isBeingDestroyed = false;
-    [Export] public bool _turnPlayed {get; set;} = false;
     [Export] public bool _isHandlingState {get; set;} = false;
 
 
@@ -24,39 +25,35 @@ public partial class EnemyAIController : Node
         base._Ready();
 
         _stateMachine = new EnemyAIStateMachine();
-        TurnManager.Instance.TurnChanged += OnTurnChanged;
-        SetState(AIState.Patrol, _character);
-    }
+        TurnManager.Instance.TurnChangedAsync += OnTurnChangedAsync;
 
-    public override void _Process(double delta)
-    {
-        if (!_isActive || _character.IsDead)
-            return;
-        
-        ProcessEnemyState();
-        base._Process(delta);
+        // SetState(AIState.Patrol, _character);
     }
 
     public override void _ExitTree()
     {
-        TurnManager.Instance.TurnChanged -= OnTurnChanged;
+        TurnManager.Instance.TurnChangedAsync -= OnTurnChangedAsync;
     }
 
-    private void OnTurnChanged(bool isPlayerTurn)
+    private async Task OnTurnChangedAsync(bool isPlayerTurn)
     {
-        if (isPlayerTurn)
+        if (!isPlayerTurn && _character != null && !_character.IsDead)
         {
-            _isActive = false;
+            _isActive = true;
+            _character.CompletedTurn = false;
             _isHandlingState = false;
+            await _character.ProcessAITurn();
         }
         else
         {
-            _isActive = true;
-            _isHandlingState = false;
-            _turnPlayed = false;
-            _character.CompletedTurn = false;
-            //SetState(_stateMachine.CurrentState, _character);
+            _isActive = false;
+            _isHandlingState = true;
         }
+    }
+
+    public async Task DecideNextState()
+    {
+        await _stateMachine.DecideNextState(_character);
     }
 
     private void ProcessEnemyState()
@@ -72,40 +69,42 @@ public partial class EnemyAIController : Node
     {
         if (targetGrid == null) return;
 
-        var agent = _character.CharacterController._navAgent;
-        agent.TargetPosition = targetGrid.GlobalPosition;
+        if (_character.currentGrid != null)
+            _character.currentGrid.ClearOccupied();
+
+        var directionToTarget = (targetGrid.GlobalPosition - _character.GlobalPosition).Normalized();
+        var distanceToTarget = _character.GlobalPosition.DistanceTo(targetGrid.GlobalPosition);
         
-        await ToSignal(GetTree().CreateTimer(.1f), "timeout");
+        // Maksimum mesafeyi aşmayacak şekilde hedef pozisyonu belirle
+        var actualDistance = Mathf.Min(distanceToTarget, maxDistance);
+        var targetPosition = _character.GlobalPosition + directionToTarget * actualDistance;
         
-        // Save start position
-        Vector3 startPos = _character.GlobalPosition;
-        Vector3 currentPos = startPos;
-        float totalDistance = 0;
-        
-        // Move along the path and calculate distance
-        while (totalDistance < maxDistance)
+        // NavMesh üzerinde path hesapla
+        var navMap = _character.CharacterController._navAgent.GetNavigationMap();
+        var pathArray = NavigationServer3D.MapGetPath(
+            navMap,
+            _character.GlobalPosition,
+            targetPosition,
+            true
+        );
+
+        if (pathArray.Length == 0) return;
+
+        // Path üzerindeki son geçerli grid'i bul
+        GridObject finalGrid = null;
+        foreach (var point in pathArray)
         {
-            Vector3 nextPos = agent.GetNextPathPosition();
-            float stepDistance = currentPos.DistanceTo(nextPos);
-            
-            if (totalDistance + stepDistance > maxDistance)
+            var grid = GridManager.Instance.GetGridObjectFromWorldPosition(point);
+            if (grid != null && !grid.IsOccupied && !grid.IsBlocked)
             {
-                // Calculate remaining distance
-                float remaining = maxDistance - totalDistance;
-                Vector3 direction = (nextPos - currentPos).Normalized();
-                Vector3 limitedPoint = currentPos + direction * remaining;
-                
-                var nearestGrid = GridManager.Instance.GetGridObjectFromWorldPosition(limitedPoint);
-                if (nearestGrid != null && !nearestGrid.IsOccupied && nearestGrid != _character.currentGrid)
-                    await _character.Move(nearestGrid);
-                break;
+                finalGrid = grid;
             }
-            
-            currentPos = nextPos;
-            totalDistance += stepDistance;
-            
-            if (agent.IsNavigationFinished())
-                break;
+        }
+
+        if (finalGrid != null)
+        {
+            GD.Print($"[AI Debug] Moving to final grid: {finalGrid.GlobalPosition}");
+            await _character.Move(finalGrid);
         }
     }
 
@@ -121,13 +120,10 @@ public partial class EnemyAIController : Node
         }
     }
 
-    public async Task PrepareForHandlingState()
+    public void PrepareForHandlingState()
     {
         if (_isHandlingState) return;
         _isHandlingState = true;
-
-        while (!_character.CharacterController.CanChangeState())
-            await ToSignal(GetTree().CreateTimer(.1f), "timeout");
 
         if (_character.CompletedTurn) 
         {
@@ -140,7 +136,7 @@ public partial class EnemyAIController : Node
 
     public async Task HandleAggression()
     {
-        await PrepareForHandlingState();
+        PrepareForHandlingState();
 
         try
         {
@@ -162,6 +158,10 @@ public partial class EnemyAIController : Node
                 await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
             }
         }
+        catch (Exception e)
+        {
+            GD.Print($"[AI Debug] HandleAggression - Error: {e.Message}");
+        }
         finally 
         {
             _isHandlingState = false;
@@ -171,7 +171,7 @@ public partial class EnemyAIController : Node
 
     public async Task HandleTactical()
     {
-        await PrepareForHandlingState();
+        PrepareForHandlingState();
 
         try
         {
@@ -195,9 +195,13 @@ public partial class EnemyAIController : Node
                 {
                     await EnemyShoot();
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-                    }
                 }
             }
+        }
+        catch (Exception e)
+        {
+            GD.Print($"[AI Debug] HandleTactical - Error: {e.Message}");
+        }
         finally 
         {
             _isHandlingState = false;
@@ -207,11 +211,15 @@ public partial class EnemyAIController : Node
 
     public async Task HandleCower()
     {
-        await PrepareForHandlingState();
+        PrepareForHandlingState();
 
         try
         {
             await ToSignal(GetTree().CreateTimer(.1f), "timeout");
+        }
+        catch (Exception e)
+        {
+            GD.Print($"[AI Debug] HandleCower - Error: {e.Message}");
         }
         finally 
         {
@@ -222,7 +230,7 @@ public partial class EnemyAIController : Node
 
     public async Task HandleFlee()
     {
-        await PrepareForHandlingState();
+        PrepareForHandlingState();
 
         try
         {
@@ -243,6 +251,10 @@ public partial class EnemyAIController : Node
                 }
             }
         }
+        catch (Exception e)
+        {
+            GD.Print($"[AI Debug] HandleFlee - Error: {e.Message}");
+        }
         finally 
         {
             _isHandlingState = false;
@@ -251,15 +263,24 @@ public partial class EnemyAIController : Node
     }
     public async Task HandleAlert()
     {
-        await PrepareForHandlingState();
+        PrepareForHandlingState();
         
         try 
         {
             if (EnemyManager.Instance.LastShotGrid != null)
             {
+                GD.Print($"[AI Debug] {_character.Name} moving to LastShotGrid: {EnemyManager.Instance.LastShotGrid.GlobalPosition}");
                 await MoveToGrid(EnemyManager.Instance.LastShotGrid, 10);
                 await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
             }
+            else
+            {
+                GD.Print($"[AI Debug] {_character.Name} LastShotGrid is null!");
+            }
+        }
+        catch (Exception e)
+        {
+            GD.Print($"[AI Debug] HandleAlert - Error: {e.Message}");
         }
         finally 
         {
@@ -268,36 +289,41 @@ public partial class EnemyAIController : Node
         }
     }
 
-    public GridObject HandlePatrol(Character enemy)
+    public async Task HandlePatrol(Character enemy)
     {   
-        var random = new RandomNumberGenerator();
-        random.Randomize();
-        var shuffledDirections = directions.OrderBy(x => random.Randf()).ToArray();
+        PrepareForHandlingState();
         
-        foreach (var dir in shuffledDirections)
+        try
         {
-            int steps = random.RandiRange(1, 2);
-            Vector3 targetPos = enemy.GlobalPosition + dir * steps;
+            var random = new RandomNumberGenerator();
+            random.Randomize();
+            var direction = directions[random.RandiRange(0, directions.Length - 1)];
+            var steps = random.RandiRange(1, 2);
+            var targetPos = enemy.GlobalPosition + direction * steps * 2; // 2 birim grid size
             
-            var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPos);GD.Print($"[AI Debug] HandlePatrol - Checking position {targetPos}, found grid: {targetGrid}");
+            var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPos);
             
             if (targetGrid != null && !targetGrid.IsOccupied && !targetGrid.IsBlocked)
-                return targetGrid;
+            {
+                enemy.CharacterController.SetState(CharacterStateType.Moving, enemy);
+                await enemy.Move(targetGrid);
+            }
         }
-        
-        return null;
+        catch (Exception e)
+        {
+            GD.Print($"[AI Desdbug] HandlePatrol - Error: {e.Message}");
+        }
+        finally
+        {
+            _isHandlingState = false;
+            enemy.CompleteAction(2);
+        }
     }
 
     public void SetState(AIState newState, Character aiCharacter)
     {
+        if(_isHandlingState) return;
         GD.Print($"[AI Debug] {aiCharacter.Name} changing to {newState} state");
         _stateMachine.ChangeState(newState, aiCharacter);
-    }
-
-    public void PrepareForDestruction()
-    {
-        _isBeingDestroyed = true;
-        _isActive = false;
-        SetProcess(false);
     }
 }

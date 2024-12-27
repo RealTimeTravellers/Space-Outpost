@@ -515,7 +515,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead || CompletedTurn) 
+		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead) 
 			return;
 
 		// Grid işlemleri
@@ -533,6 +533,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		
 		if (IsFriendly)
 			TurnManager.Instance.StartPlayerMovement(this);
+		
 		CharacterController.SetState(CharacterStateType.Moving, this);
 		
 		/*
@@ -546,7 +547,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
-			if (IsDead || CompletedTurn)
+			if (IsDead || (IsFriendly && CompletedTurn)) // Sadece friendly karakterler için CompletedTurn kontrolü
 				break;
 			
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
@@ -604,6 +605,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			actionPoints = actionData.defaultActionPoints;
 			ResetActionPoints();
 			endTurnState = EndTurnState.None;
+			// await ProcessAITurn();
 		}
 	}
 
@@ -620,6 +622,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
+	public async Task ProcessAITurn()
+	{
+		if (IsFriendly || IsDead || CompletedTurn) return;
+		
+		var nextState = enemyController._stateMachine._states[enemyController._stateMachine.CurrentState].CheckState(this);
+		if (nextState != enemyController._stateMachine.CurrentState)
+		{
+			enemyController.SetState(nextState, this);
+		}
+		
+		await enemyController._stateMachine._states[enemyController._stateMachine.CurrentState].Decide(this);
+	}
 	private void OnPlayerMovementChanged(bool started)
 	{
 		if (!started) // ended

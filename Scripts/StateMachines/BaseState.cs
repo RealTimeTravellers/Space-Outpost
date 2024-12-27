@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Godot;
 
 public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStateType : Enum
@@ -7,6 +8,11 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
     public virtual void Enter(Character character)
     {
         
+    }
+
+    public virtual Task Decide(Character character)
+    {
+        return Task.CompletedTask;
     }
 
     public virtual TStateType Process(Character character)

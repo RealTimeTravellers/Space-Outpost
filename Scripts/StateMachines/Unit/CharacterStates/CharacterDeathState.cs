@@ -20,7 +20,7 @@ public class CharacterDeathState : CharacterState
                 if (aiController != null)
                 {
                     GD.Print("[DeathState] Disabling AI Controller");
-                    aiController.PrepareForDestruction();
+                    //aiController.PrepareForDestruction();
                 }
             }
 

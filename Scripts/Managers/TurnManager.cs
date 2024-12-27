@@ -14,6 +14,11 @@ public partial class TurnManager : Node
     public event Action<bool> TurnChanged;
 
     /// <summary>
+    /// Invokes True if player turn async
+    /// </summary>
+    public event Func<bool, Task> TurnChangedAsync;
+
+    /// <summary>
     /// if started True, false when finished
     /// </summary>
     public event Action<bool> EnemyMovementChanged;
@@ -145,7 +150,7 @@ public partial class TurnManager : Node
         }
     }
 
-    private void EndPlayerTurn()
+    private async void EndPlayerTurn()
     {
         foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
         {
@@ -157,6 +162,14 @@ public partial class TurnManager : Node
         {
             player.CompletedTurn = false;
             player.DepleteActionPoints();
+        }
+
+        if (TurnChangedAsync != null)
+        {
+            var tasks = TurnChangedAsync.GetInvocationList()
+                .Cast<Func<bool, Task>>()
+                .Select(handler => handler.Invoke(false));
+            await Task.WhenAll(tasks);
         }
         
         GD.Print("[TurnManager] Player turn ended");

@@ -1,40 +1,30 @@
 using Godot;
+using System.Threading.Tasks;
+
 public class AlertState : EnemyState
 {
-    private bool _isHandlingAlert = false;
 
     public override void Enter(Character enemy)
     {
+        base.Enter(enemy);
         GD.Print($"[AI] {enemy.Name} Entering Alert State");
         enemy.CharacterController.IsEnemyAlerted = true;
-
     }
 
-    public override AIState Process(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        if (enemy.enemyController._turnPlayed) return AIState.Alert;
-
-        var baseState = base.Process(enemy);
-        if (baseState != AIState.Alert)
-            return baseState;
-
-        if (enemy.CompletedTurn)
-            return AIState.Alert;
-
-        if (!_isHandlingAlert && !enemy.IsMoving && !enemy.enemyController._turnPlayed)
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            _isHandlingAlert = true;
-            enemy.enemyController._turnPlayed = true;
-            enemy.enemyController.HandleAlert().ContinueWith(_ => {
-                _isHandlingAlert = false;
-            });
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
-
-        return AIState.Alert;
+        await enemy.enemyController.HandleAlert();
     }
+
 
     public override void Exit(Character enemy)
     {
-        _isHandlingAlert = false;
+        base.Exit(enemy);
     }
 }

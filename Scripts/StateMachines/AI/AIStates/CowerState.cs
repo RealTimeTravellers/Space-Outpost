@@ -1,41 +1,29 @@
 using Godot;
-
+using System.Threading.Tasks;
 public class CowerState : EnemyState
 {
-    private bool _isHandlingCower = false;
-
-    public override void Enter(Character aiController)
+    public override void Enter(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Entering Cower State");
-        aiController.CharacterController.IsEnemyAlerted = true;
+        base.Enter(enemy);
+        GD.Print($"[AI] {enemy.Name} Entering Cower State");
+        enemy.CharacterController.IsEnemyAlerted = true;
     }
 
-    public override AIState Process(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        if (enemy.enemyController._turnPlayed) return AIState.Cower;
-        
-        var baseState = base.Process(enemy);
-        if (baseState != AIState.Cower)
-            return baseState;
-
-        if (enemy.CompletedTurn)
-            return AIState.Cower;
-
-        if (!_isHandlingCower)
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            _isHandlingCower = true;
-            enemy.enemyController._turnPlayed = true;
-            enemy.enemyController.HandleCower().ContinueWith(_ => {
-                _isHandlingCower = false;
-            });
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
-
-        return AIState.Cower;
+        await enemy.enemyController.HandleCower();
     }
 
-    public override void Exit(Character aiController)
+
+    public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Exiting Cower State");
-        _isHandlingCower = false;
+        GD.Print($"[AI] {enemy.Name} Exiting Cower State");
+        base.Exit(enemy);
     }
 }

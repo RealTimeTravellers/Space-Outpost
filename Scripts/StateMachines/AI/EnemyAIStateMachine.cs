@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
-
+using System.Threading.Tasks;
 public enum AIState
 {
     Patrol,
@@ -30,7 +30,14 @@ public class EnemyAIStateMachine
             { AIState.Tactical, new TacticalState() }
         };
 
-        CurrentState = AIState.Patrol;
+        // CurrentState = AIState.Patrol;
+    }
+
+    public async Task DecideNextState(Character character)
+    {
+        if (!_states.ContainsKey(CurrentState)) return;
+        
+        await _states[CurrentState].Decide(character);
     }
 
     public void ChangeState(AIState newState, Character character)
@@ -38,7 +45,6 @@ public class EnemyAIStateMachine
         if (CurrentState == newState) return;
         
         AIState oldState = CurrentState;
-        var characterName = character.Name ?? character.GetParent()?.Name;
         
         if (_states.ContainsKey(CurrentState))
             _states[CurrentState].Exit(character);

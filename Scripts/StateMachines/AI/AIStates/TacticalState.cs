@@ -1,42 +1,31 @@
 using Godot;
+using System.Threading.Tasks;
 public class TacticalState : EnemyState
 {
     private GridObject _targetCover;
-    private bool _isHandlingTactical = false;
 
     public override void Enter(Character enemy)
     {
+        base.Enter(enemy);
         enemy.CharacterController.IsEnemyAlerted = true;
         enemy.Target = enemy.enemiesInLos[0];
     }
 
-    public override AIState Process(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        if (enemy.enemyController._turnPlayed) return AIState.Tactical;
-        
-        var baseState = base.Process(enemy);
-        if (baseState != AIState.Tactical)
-            return baseState;
-
-        if (enemy.CompletedTurn)
-            return AIState.Tactical;
-
-        if (!_isHandlingTactical)
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            _isHandlingTactical = true;
-            enemy.enemyController._turnPlayed = true;
-            enemy.enemyController.HandleTactical().ContinueWith(_ => {
-                _isHandlingTactical = false;
-            });
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
-
-        return AIState.Tactical;
+        await enemy.enemyController.HandleTactical();
     }
 
     public override void Exit(Character enemy)
     {
         GD.Print($"[AI] {enemy.Name} Exiting Tactical State");
         _targetCover = null;
-        _isHandlingTactical = false;
+        base.Exit(enemy);
     }
 }

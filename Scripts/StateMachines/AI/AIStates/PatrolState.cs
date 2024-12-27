@@ -1,47 +1,29 @@
 using Godot;
-using System.Linq;
+using System.Threading.Tasks;
 public class PatrolState : EnemyState
 {
-    private GridObject _patrolTarget;
-    private bool _isMoving = false;
 
     public override void Enter(Character enemy)
     {
+        base.Enter(enemy);
         enemy.CharacterController.IsEnemyAlerted = false;
-        _isMoving = false;
-        _patrolTarget = enemy.enemyController.HandlePatrol(enemy);
     }
 
-    public override AIState Process(Character enemy)
-    {       
-        if (enemy.enemyController._turnPlayed) return AIState.Patrol;
-
-        var baseState = base.Process(enemy);
-        if (baseState != AIState.Patrol)
-            return baseState;
-
-        if (enemy.CompletedTurn)
-            return AIState.Patrol;
-
-        if (_patrolTarget != null && !_isMoving && !enemy.enemyController._turnPlayed)
+    public override async Task Decide(Character enemy)
+    {
+        
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            GD.Print($"[AI Debug] {enemy.Name} moving to patrol target");
-            _isMoving = true;
-            enemy.enemyController._turnPlayed = true;
-            enemy.Move(_patrolTarget).ContinueWith(_ => 
-            {
-                GD.Print($"[AI Debug] {enemy.Name} movement completed");
-                _isMoving = false;
-                _patrolTarget = null;
-            });
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
         
-        return AIState.Patrol;
+        await enemy.enemyController.HandlePatrol(enemy);
     }
 
     public override void Exit(Character enemy)
     {
-        _patrolTarget = null;
-        _isMoving = false;
+        base.Exit(enemy);
     }
 }

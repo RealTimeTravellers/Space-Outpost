@@ -1,45 +1,32 @@
 using System.Linq;
 using Godot;
-
+using System.Threading.Tasks;
 public class AggressionState : EnemyState
 {
-    private const float MAX_MOVE_DISTANCE = 10f;
-    private bool _isHandlingAggression = false;
-
     public override void Enter(Character enemy)
     {
         GD.Print($"[AI Debug] {enemy.Name} Entering Aggression State");
+        base.Enter(enemy);
         enemy.CharacterController.IsEnemyAlerted = true;
-        enemy.Target = enemy.enemiesInLos[0];
+
+        if (enemy.enemiesInLos.Count > 0)
+            enemy.Target = enemy.enemiesInLos[0];
     }
 
-    public override AIState Process(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        if (enemy.enemyController._turnPlayed) return AIState.Aggression;
-        
-        var baseState = base.Process(enemy);
-        if (baseState != AIState.Aggression)
-            return baseState;
-
-        if (enemy.CompletedTurn)
-            return AIState.Aggression;
-
-        if (!_isHandlingAggression && !enemy.enemyController._turnPlayed)
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            _isHandlingAggression = true;
-            enemy.enemyController._turnPlayed = true;
-            enemy.enemyController.HandleAggression().ContinueWith(_ => {
-                _isHandlingAggression = false;
-            });
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
-
-        return AIState.Aggression;
+        await enemy.enemyController.HandleAggression();
     }
 
     public override void Exit(Character enemy)
     {
         GD.Print($"[AI] {enemy.Name} Exiting Aggression State");
         enemy.Target = null;
-        _isHandlingAggression = false;
     }
 }

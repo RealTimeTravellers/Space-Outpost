@@ -9,20 +9,30 @@ public class EnemyState : BaseState<AIState>
 {
     bool canSeePlayer = false;
 
+    public override void Enter(Character character)
+    {
+        base.Enter(character);
+    }
+
     public override AIState Process(Character character)
     {
-        if (character.CompletedTurn)
-            return character.enemyController._stateMachine.CurrentState;
-            
-        if (character.enemyController._isHandlingState)
-            return character.enemyController._stateMachine.CurrentState;
-            
-        return CheckState(character);
+        return AIState.Patrol;
+    }
+
+    public override Task Decide(Character character)
+    {
+        return Task.CompletedTask;
+    }
+
+    public override void Exit(Character character)
+    {
+        base.Exit(character);
     }
     
 
     public override AIState CheckState(Character character)
     {
+        // character.SearchForEnemies();
         canSeePlayer = character.enemiesInLos.Count > 0;
 
         // Düşük can durumunda Flee
@@ -42,13 +52,6 @@ public class EnemyState : BaseState<AIState>
         else if (EnemyManager.Instance.ShotFired)
         {
             return AIState.Alert;
-        }
-
-        if (!canSeePlayer && (character.enemyController._stateMachine.CurrentState == AIState.Alert || 
-            character.enemyController._stateMachine.CurrentState == AIState.Aggression || 
-            character.enemyController._stateMachine.CurrentState == AIState.Tactical))
-        {
-            return AIState.Patrol;
         }
 
         return character.enemyController._stateMachine.CurrentState;

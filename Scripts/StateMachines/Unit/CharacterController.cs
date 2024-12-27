@@ -1,5 +1,5 @@
 using Godot;
-
+using System.Collections.Generic;
 public partial class CharacterController : Node
 {
     public bool IsEnemyAlerted { get; set; } = false;
@@ -23,9 +23,6 @@ public partial class CharacterController : Node
 
     public override void _Process(double delta)
     {
-        if (!_character.IsFriendly && !_character.enemyController._isActive)
-            return;
-
         ProcessPlayerState();
         if (_stateMachine.CurrentStateType == CharacterStateType.Moving) 
             UpdateNavigation();
@@ -56,7 +53,6 @@ public partial class CharacterController : Node
         _character.Velocity = direction * currentSpeed;
         _character.MoveAndSlide();
     }
-
     private void ProcessPlayerState()
     {
         currentState = _stateMachine.CurrentStateType;
