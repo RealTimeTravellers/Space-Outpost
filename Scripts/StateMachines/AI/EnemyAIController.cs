@@ -75,11 +75,11 @@ public partial class EnemyAIController : Node
         var directionToTarget = (targetGrid.GlobalPosition - _character.GlobalPosition).Normalized();
         var distanceToTarget = _character.GlobalPosition.DistanceTo(targetGrid.GlobalPosition);
         
-        // Maksimum mesafeyi aşmayacak şekilde hedef pozisyonu belirle
+        // Determine position
         var actualDistance = Mathf.Min(distanceToTarget, maxDistance);
         var targetPosition = _character.GlobalPosition + directionToTarget * actualDistance;
         
-        // NavMesh üzerinde path hesapla
+        // What is path ? nav server.
         var navMap = _character.CharacterController._navAgent.GetNavigationMap();
         var pathArray = NavigationServer3D.MapGetPath(
             navMap,
@@ -90,7 +90,6 @@ public partial class EnemyAIController : Node
 
         if (pathArray.Length == 0) return;
 
-        // Path üzerindeki son geçerli grid'i bul
         GridObject finalGrid = null;
         foreach (var point in pathArray)
         {
@@ -102,10 +101,7 @@ public partial class EnemyAIController : Node
         }
 
         if (finalGrid != null)
-        {
-            GD.Print($"[AI Debug] Moving to final grid: {finalGrid.GlobalPosition}");
             await _character.Move(finalGrid);
-        }
     }
 
     public async Task EnemyShoot()
@@ -269,13 +265,8 @@ public partial class EnemyAIController : Node
         {
             if (EnemyManager.Instance.LastShotGrid != null)
             {
-                GD.Print($"[AI Debug] {_character.Name} moving to LastShotGrid: {EnemyManager.Instance.LastShotGrid.GlobalPosition}");
                 await MoveToGrid(EnemyManager.Instance.LastShotGrid, 10);
                 await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-            }
-            else
-            {
-                GD.Print($"[AI Debug] {_character.Name} LastShotGrid is null!");
             }
         }
         catch (Exception e)
@@ -311,7 +302,7 @@ public partial class EnemyAIController : Node
         }
         catch (Exception e)
         {
-            GD.Print($"[AI Desdbug] HandlePatrol - Error: {e.Message}");
+            GD.Print($"[AI Debug] HandlePatrol - Error: {e.Message}");
         }
         finally
         {

@@ -6,7 +6,6 @@ public class FleeState : EnemyState
     public override void Enter(Character enemy)
     {
         base.Enter(enemy);
-        GD.Print($"[AI] {enemy.Name} Entering Flee State");
         enemy.CharacterController.IsEnemyAlerted = true;
     }
 

@@ -316,37 +316,30 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void Die()
 	{
-		GD.Print("[Character] Die() method entered");
-		
 		if (IsDead)
 		{
 			GD.Print("[Character] Already dead, returning");
 			return;
 		}
 		
-		// Diğer karakterlerin hedeflerini temizle
 		if (IsFriendly)
 		{
-			GD.Print("[Character] Cleaning up friendly character");
 			foreach (var enemy in TurnManager.Instance.enemyCharacters)
 			{
 				if (enemy.Target == this)
 				{
 					enemy.Target = null;
-					GD.Print("[Character] Cleared enemy target reference");
 				}
 			}
 			TurnManager.Instance.playerCharacters.Remove(this);
 		}
 		else
 		{
-			GD.Print("[Character] Cleaning up enemy character");
 			foreach (var player in TurnManager.Instance.playerCharacters)
 			{
 				if (player.Target == this)
 				{
 					player.Target = null;
-					GD.Print("[Character] Cleared player target reference");
 				}
 			}
 			enemiesInLos.Remove(this);
@@ -355,9 +348,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 		CompletedTurn = true;
 		IsDead = true;
-		GD.Print($"[Character] {Name} marked as dead");
-		
-
 
 		GD.Print("[Character] Invoking CharacterDied event");
 		TurnManager.Instance.CharacterDied.Invoke(this);
@@ -469,7 +459,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		Vector3 direction = (target.Position - Position).Normalized();
 		if (!IsFriendly)
-			direction = -direction; // Düşman karakterler için yönü tersine çevir
+			direction = -direction; // Reverse is needed why ?_
 		
    		shootEffect.ProcessMaterial.Set("direction", direction);
 		
@@ -547,17 +537,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
-			if (IsDead || (IsFriendly && CompletedTurn)) // Sadece friendly karakterler için CompletedTurn kontrolü
+			if (IsDead || (IsFriendly && CompletedTurn)) // only friendly turn ends
 				break;
 			
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
-		// Hedef grid'e yerleş
+		// move to target grid
 		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
-		// Hareketi tamamla
+		// move completed	
 		CompleteAction(actionData.moveCost);
 		IsMoving = false;
 		//CompletedTurn = true;

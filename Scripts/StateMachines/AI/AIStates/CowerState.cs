@@ -5,7 +5,6 @@ public class CowerState : EnemyState
     public override void Enter(Character enemy)
     {
         base.Enter(enemy);
-        GD.Print($"[AI] {enemy.Name} Entering Cower State");
         enemy.CharacterController.IsEnemyAlerted = true;
     }
 
@@ -23,7 +22,6 @@ public class CowerState : EnemyState
 
     public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Exiting Cower State");
         base.Exit(enemy);
     }
 }

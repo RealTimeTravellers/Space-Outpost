@@ -24,7 +24,6 @@ public class TacticalState : EnemyState
 
     public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Exiting Tactical State");
         _targetCover = null;
         base.Exit(enemy);
     }

@@ -5,7 +5,6 @@ public class AggressionState : EnemyState
 {
     public override void Enter(Character enemy)
     {
-        GD.Print($"[AI Debug] {enemy.Name} Entering Aggression State");
         base.Enter(enemy);
         enemy.CharacterController.IsEnemyAlerted = true;
 
@@ -26,7 +25,6 @@ public class AggressionState : EnemyState
 
     public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Exiting Aggression State");
         enemy.Target = null;
     }
 }

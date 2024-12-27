@@ -27,7 +27,6 @@ public partial class EnemyManager : Node
     {
         ShotFired = true;
         LastShotGrid = shotLocation;
-        GD.Print($"[EnemyManager] Shot reported at {shotLocation.GlobalPosition}");
     }
     
     public void ResetShotStatus()
