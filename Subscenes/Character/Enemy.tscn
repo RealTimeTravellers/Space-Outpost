@@ -63,8 +63,10 @@ _navAgent = NodePath("NavigationAgent3D")
 script = ExtResource("5_dakxj")
 _character = NodePath("..")
 
-[node name="AnimatorController" type="Node3D" parent="."]
+[node name="AnimatorController" type="Node3D" parent="." node_paths=PackedStringArray("_character", "_characterController")]
 script = ExtResource("6_2miie")
+_character = NodePath("..")
+_characterController = NodePath("../CharacterController")
 
 [node name="Asker" parent="AnimatorController" instance=ExtResource("3_n1nwx")]
 

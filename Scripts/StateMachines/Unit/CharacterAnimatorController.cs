@@ -4,8 +4,8 @@ public partial class CharacterAnimatorController : Node
 {
     private AnimationPlayer _animationPlayer;
     public AnimationTree _animationTree {get; private set;}
-    private Character _character;
-    private CharacterController _characterController;
+    [Export] public Character _character;
+    [Export] public CharacterController _characterController;
     private CharacterStateMachine _stateMachine;
 
     public override void _Ready()
@@ -50,7 +50,7 @@ public partial class CharacterAnimatorController : Node
     {
         if (_animationTree == null) return;
         
-        string stateName = newState.ToString().ToLower();
+        string stateName = newState.ToString().ToLowerInvariant();
         GD.Print($"[Animation] State changed to: {stateName}");
         
         // State değişiminde animasyon isteğini tetikle

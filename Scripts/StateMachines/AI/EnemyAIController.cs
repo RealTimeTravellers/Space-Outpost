@@ -123,12 +123,19 @@ public partial class EnemyAIController : Node
 
     public async Task PrepareForHandlingState()
     {
+        if (_isHandlingState) return;
+        _isHandlingState = true;
+
         while (!_character.CharacterController.CanChangeState())
             await ToSignal(GetTree().CreateTimer(.1f), "timeout");
 
-        if (_character.CompletedTurn) return;
+        if (_character.CompletedTurn) 
+        {
+            _isHandlingState = false;
+            return;
+        }
+        
         TurnManager.Instance.StartEnemyMovement(_character);
-        _isHandlingState = true;
     }
 
     public async Task HandleAggression()
