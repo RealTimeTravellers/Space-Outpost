@@ -185,7 +185,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -194,8 +193,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					//Attack(TurnManager.CurrentlyMovingCharacter);
-					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -205,7 +202,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
-	private void CompleteAction(int cost)
+	public void CompleteAction(int cost)
 	{
 		if (this.actionPoints - cost < 0)
 		{
@@ -247,11 +244,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	public void EndTurn()
 	{
 		// Hareket devam ediyorsa bekle
-		if (!CharacterController._navAgent.IsNavigationFinished())
-		{
-			return;
-		}
+		if (CompletedTurn) return;
 		
+		/*
 		if (!IsFriendly && CompletedTurn)
 		{
 			GD.Print($"[Character] {this.Name} ending enemy movement");
@@ -259,11 +254,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			return;
 		}
 
-		// Player için normal kontroller
-		if (CompletedTurn || actionPoints > 0)
+		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
-			return;
+			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
+		*/
 		
 		CompletedTurn = true;
 
@@ -497,12 +492,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		await ToSignal(GetTree().CreateTimer(0.3f), "timeout");
 
 		CompleteAction(actionData.attackCost);
-
-		if (!IsFriendly && actionPoints <= 0)
-		{
-			CompletedTurn = true;
-			TurnManager.Instance.EndEnemyMovement(this);
-		}
 	}
 
 	public void TakeDamage(int damage)
@@ -523,7 +512,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
+		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead || CompletedTurn) 
 			return;
 
 		// Grid işlemleri
@@ -554,9 +543,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
+			if (IsDead || CompletedTurn)
+				break;
+			
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
-
 		// Hedef grid'e yerleş
 		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
@@ -565,12 +556,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketi tamamla
 		CompleteAction(actionData.moveCost);
 		IsMoving = false;
-		CompletedTurn = true;
-		
-		if (IsFriendly)
-			TurnManager.Instance.EndPlayerMovement(this);
-		else
-			TurnManager.Instance.EndEnemyMovement(this);
+		//CompletedTurn = true;
 	}
 
 	public void TakeCover()
@@ -597,8 +583,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#endregion
 
 	#region Event Handles
+
+
 	private void OnTurnChanged(bool playerTurn)
 	{
+		
 		if (IsFriendly && playerTurn)
 		{
 			CompletedTurn = false;

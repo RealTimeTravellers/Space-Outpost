@@ -4,22 +4,18 @@ public partial class CharacterController : Node
 {
     public bool IsEnemyAlerted { get; set; } = false;
     public CharacterStateMachine _stateMachine {get; private set;}
-    private Character _character;
-    public NavigationAgent3D _navAgent {get; private set;}
+    [Export] private Character _character;
+    [Export] public NavigationAgent3D _navAgent {get; private set;}
+    private CharacterStateType currentState;
     private bool _isActive = false;
     [Export] public float _alertSpeed = 3.0f;
     [Export] public float _movementSpeed = 5.0f;
+    private bool _isMoving = false;
     public override void _Ready()
     {
         base._Ready();
-        _character = GetParent<Character>();
-        _navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
         _stateMachine = new CharacterStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
-        
-        TurnManager.Instance.TurnChanged += OnTurnChanged;
-        TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
-        TurnManager.Instance.EnemyMovementChanged += OnEnemyMovementChanged;
 
         _character.Velocity = Vector3.Zero;
         SetState(CharacterStateType.Idle, _character);
@@ -27,21 +23,25 @@ public partial class CharacterController : Node
 
     public override void _Process(double delta)
     {
-        base._Process(delta);
         ProcessPlayerState();
-        UpdateNavigation();
+        if (_stateMachine.CurrentStateType == CharacterStateType.Moving) 
+            UpdateNavigation();
+           
+        base._Process(delta);
     }
 
     private void UpdateNavigation()
     {
-        if (_stateMachine.CurrentStateType != CharacterStateType.Moving)
+        if (_navAgent.IsNavigationFinished())
+        {
+            _character.Velocity = Vector3.Zero;
             return;
+        }
 
         var nextPos = _navAgent.GetNextPathPosition();
         var currentPos = _character.GlobalPosition;
         var direction = (nextPos - currentPos).Normalized();
         
-        // Karakteri yönlendir
         if (!nextPos.IsEqualApprox(currentPos))
         {
             var lookAtPos = new Vector3(nextPos.X, currentPos.Y, nextPos.Z);
@@ -49,7 +49,6 @@ public partial class CharacterController : Node
             _character.RotateY(Mathf.Pi);
         }
         
-        // Hareketi uygula
         float currentSpeed = IsEnemyAlerted ? _alertSpeed : _movementSpeed;
         _character.Velocity = direction * currentSpeed;
         _character.MoveAndSlide();
@@ -57,7 +56,7 @@ public partial class CharacterController : Node
 
     private void ProcessPlayerState()
     {
-        CharacterStateType currentState = _stateMachine.CurrentStateType;
+        currentState = _stateMachine.CurrentStateType;
         _stateMachine.UpdateState(_character);
         
         if (_stateMachine.CurrentStateType != currentState)
@@ -65,29 +64,6 @@ public partial class CharacterController : Node
             string animationName = _stateMachine.CurrentStateType.ToString().ToLowerInvariant();
             _stateMachine.RequestAnimation(animationName);
         }
-    }
-
-    private void OnTurnChanged(bool isPlayerTurn)
-    {
-        if (isPlayerTurn && _character != null && _character.IsFriendly)
-        {
-            _isActive = true;
-            ProcessPlayerState();
-        }
-        else
-        {
-            _isActive = false;
-        }
-    }
-
-    private void OnPlayerMovementChanged(bool started)
-    {
-        _isActive = started && _character.IsFriendly;
-    }
-
-    private void OnEnemyMovementChanged(bool started)
-    {
-        _isActive = started && !_character.IsFriendly;
     }
 
     public void SetState(CharacterStateType newState, Character character)
@@ -105,13 +81,6 @@ public partial class CharacterController : Node
         if (_stateMachine != null)
         {
             _stateMachine.OnStateChanged -= OnStateChanged;
-        }
-        
-        if (TurnManager.Instance != null)
-        {
-            TurnManager.Instance.TurnChanged -= OnTurnChanged;
-            TurnManager.Instance.PlayerMovementChanged -= OnPlayerMovementChanged;
-            TurnManager.Instance.EnemyMovementChanged -= OnEnemyMovementChanged;
-        }
+        }   
     }
 }

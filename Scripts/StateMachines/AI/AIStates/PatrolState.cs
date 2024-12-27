@@ -5,55 +5,43 @@ public class PatrolState : EnemyState
     private GridObject _patrolTarget;
     private bool _isMoving = false;
 
-    public async override void Enter(Character enemy)
+    public override void Enter(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Entering Patrol State");
         enemy.CharacterController.IsEnemyAlerted = false;
-
-        if (_patrolTarget == null)
-            ChooseNewDirection(enemy);
-            
-        if (_patrolTarget != null)
-        {
-            _isMoving = true;
-            await enemy.enemyController.MoveToGrid(_patrolTarget);
-            _isMoving = false;
-            _patrolTarget = null;
-        }
-    }
-
-    private void ChooseNewDirection(Character enemy)
-    {
-        var random = new RandomNumberGenerator();
-        random.Randomize();
-        var shuffledDirections = directions.OrderBy(x => random.Randf()).ToArray();
-
-        foreach (var dir in shuffledDirections)
-        {
-            int steps = random.RandiRange(1, 2);
-            Vector3 targetPos = enemy.GlobalPosition + dir * steps;
-
-            var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPos);
-            if (targetGrid != null && !targetGrid.IsOccupied && !targetGrid.IsBlocked)
-            {
-                _patrolTarget = targetGrid;
-                return;
-            }
-        }
+        _isMoving = false;
+        _patrolTarget = enemy.enemyController.HandlePatrol(enemy);
     }
 
     public override AIState Process(Character enemy)
-    {
-        if (!_isMoving && _patrolTarget == null)
+    {       
+        if (enemy.enemyController._turnPlayed) return AIState.Patrol;
+
+        var baseState = base.Process(enemy);
+        if (baseState != AIState.Patrol)
+            return baseState;
+
+        if (enemy.CompletedTurn)
+            return AIState.Patrol;
+
+        if (_patrolTarget != null && !_isMoving)
         {
-            ChooseNewDirection(enemy);
+            GD.Print($"[AI Debug] {enemy.Name} moving to patrol target");
+            _isMoving = true;
+            enemy.enemyController._turnPlayed = true;
+            enemy.Move(_patrolTarget).ContinueWith(_ => 
+            {
+                GD.Print($"[AI Debug] {enemy.Name} movement completed");
+                _isMoving = false;
+                _patrolTarget = null;
+            });
         }
         
-        return base.Process(enemy);
+        return AIState.Patrol;
     }
 
     public override void Exit(Character enemy)
     {
         _patrolTarget = null;
+        _isMoving = false;
     }
 }

@@ -33,17 +33,20 @@ public class EnemyAIStateMachine
         CurrentState = AIState.Patrol;
     }
 
-    public void ChangeState(AIState newState, Character aiCharacter)
+    public void ChangeState(AIState newState, Character character)
     {
         if (CurrentState == newState) return;
         
         AIState oldState = CurrentState;
-        var characterName = aiCharacter.Name ?? aiCharacter.GetParent()?.Name;
-        GD.Print($"[AI StateMachine] {characterName} changing state from {oldState} to {newState}");
+        var characterName = character.Name ?? character.GetParent()?.Name;
         
-        _states[CurrentState].Exit(aiCharacter);
+        if (_states.ContainsKey(CurrentState))
+            _states[CurrentState].Exit(character);
+        
         CurrentState = newState;
-        _states[CurrentState].Enter(aiCharacter);
+        
+        if (_states.ContainsKey(newState))
+            _states[newState].Enter(character);
         
         OnStateChanged?.Invoke(oldState, newState);
     }
@@ -51,20 +54,14 @@ public class EnemyAIStateMachine
     public AIState UpdateCurrentState(Character aiCharacter)
     { 
         if (!_states.ContainsKey(CurrentState))
-        {
-            GD.PrintErr($"Invalid state: {CurrentState}");
             return AIState.Patrol;
-        }
-        
-        // Debug için state process başlangıcını logla
-        GD.Print($"[AI Debug] Processing state {CurrentState} for {aiCharacter.Name}");
         
         AIState newState = _states[CurrentState].Process(aiCharacter);
-        if (newState != CurrentState)
-        {
-            GD.Print($"[AI Debug] State change requested from {CurrentState} to {newState}");
+        
+        // State değişimi olacaksa ve karakter uygunsa değiştir
+        if (newState != CurrentState && !aiCharacter.IsMoving && !aiCharacter.CompletedTurn)
             ChangeState(newState, aiCharacter);
-        }
+            
         return CurrentState;
     }
 

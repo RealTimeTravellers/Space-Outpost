@@ -66,8 +66,10 @@ modulate = Color(0, 1, 1, 1)
 pixel_size = 0.005
 texture = ExtResource("3_c2hrg")
 
-[node name="CharacterController" type="Node3D" parent="."]
+[node name="CharacterController" type="Node3D" parent="." node_paths=PackedStringArray("_character", "_navAgent")]
 script = ExtResource("6_hmskt")
+_character = NodePath("..")
+_navAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
 

@@ -52,8 +52,10 @@ modulate = Color(1, 0, 0, 1)
 outline_modulate = Color(0.41598, 0.41598, 0.41598, 1)
 text = "XXX/XXX"
 
-[node name="CharacterController" type="Node3D" parent="."]
+[node name="CharacterController" type="Node3D" parent="." node_paths=PackedStringArray("_character", "_navAgent")]
 script = ExtResource("4_4upge")
+_character = NodePath("..")
+_navAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
 

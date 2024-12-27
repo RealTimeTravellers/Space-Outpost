@@ -8,16 +8,12 @@ using Godot;
 public class EnemyState : BaseState<AIState>
 {
     bool canSeePlayer = false;
-    protected readonly Vector3[] directions = new[]
-    {
-        new Vector3(1, 0, 0),   // Sağ
-        new Vector3(-1, 0, 0),  // Sol
-        new Vector3(0, 0, 1),   // İleri
-        new Vector3(0, 0, -1)   // Geri
-    };
 
     public override AIState Process(Character character)
     {
+        if (character.CompletedTurn || character.IsMoving)
+            return character.enemyController._stateMachine.CurrentState;
+            
         return CheckState(character);
     }
     
@@ -26,26 +22,33 @@ public class EnemyState : BaseState<AIState>
     {
         canSeePlayer = character.enemiesInLos.Count > 0;
 
+        // Düşük can durumunda Flee
         if (character.Stats.Health.GetValue() <= 2 || character.Health <= 2)
             return AIState.Flee;
 
+        // State değişimlerini kontrol et
         if (character.Stats.UnitType == UnitType.Alien)
         {
             if (canSeePlayer)
                 return AIState.Aggression;
+        }
+        else if (canSeePlayer)
+        {
+            return AIState.Tactical;
+        }
+        else if (EnemyManager.Instance.ShotFired)
+        {
+            return AIState.Alert;
+        }
+
+        if (!canSeePlayer && (character.enemyController._stateMachine.CurrentState == AIState.Alert || 
+            character.enemyController._stateMachine.CurrentState == AIState.Aggression || 
+            character.enemyController._stateMachine.CurrentState == AIState.Tactical))
+        {
             return AIState.Patrol;
         }
 
-        if (canSeePlayer)
-            return AIState.Tactical;
-
-        if (EnemyManager.Instance.ShotFired && !canSeePlayer)
-            return AIState.Alert;
-                
-        if (character.Stats.Morale.GetValue() < 5)
-            return AIState.Cower;
-
-        return AIState.Patrol;
+        return character.enemyController._stateMachine.CurrentState;
     }
 
     

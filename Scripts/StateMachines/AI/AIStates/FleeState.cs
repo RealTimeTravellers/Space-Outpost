@@ -3,33 +3,39 @@ using Godot;
 
 public class FleeState : EnemyState
 {
-    private bool _isMoving = false;
-    private const int FLEE_DISTANCE = 10;
+    private bool _isHandlingFlee = false;
 
-    public override async void Enter(Character enemy)
+    public override void Enter(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Entering Alert State");
+        GD.Print($"[AI] {enemy.Name} Entering Flee State");
         enemy.CharacterController.IsEnemyAlerted = true;
-
-        if (enemy.Target != null)
-        {
-            Vector3 fleeDirection = (enemy.GlobalPosition - enemy.Target.GlobalPosition).Normalized();
-            Vector3 targetPosition = enemy.GlobalPosition + fleeDirection * FLEE_DISTANCE;
-            
-            var escapeGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPosition);
-
-            _isMoving = true;
-            await enemy.enemyController.MoveToGrid(escapeGrid, FLEE_DISTANCE);
-        }
     }
 
     public override AIState Process(Character enemy)
     {
-        return base.Process(enemy);
+        if (enemy.enemyController._turnPlayed) return AIState.Flee;
+
+        var baseState = base.Process(enemy);
+        if (baseState != AIState.Flee)
+            return baseState;
+
+        if (enemy.CompletedTurn)
+            return AIState.Flee;
+
+        if (!_isHandlingFlee && !enemy.IsMoving)
+        {
+            _isHandlingFlee = true;
+            enemy.enemyController._turnPlayed = true;
+            enemy.enemyController.HandleFlee().ContinueWith(_ => {
+                _isHandlingFlee = false;
+            });
+        }
+
+        return AIState.Flee;
     }
 
     public override void Exit(Character enemy)
     {
-        _isMoving = false;
+        _isHandlingFlee = false;
     }
 }
