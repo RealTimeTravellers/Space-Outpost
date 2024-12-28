@@ -6,6 +6,7 @@ public partial class AudioManager : Node
     public static AudioManager Instance { get; private set; }
 
     [Export] public AudioStreamPlayer BrownNoisePlayer { get; private set; }
+    [Export] public AudioStreamPlayer MenuMusicPlayer { get; private set; }
 
     [Export] public float combatLoopCutoff = 129.7f;
     [Export] public AudioStreamPlayer CombatMusicPlayer { get; private set; }
@@ -23,6 +24,10 @@ public partial class AudioManager : Node
     public override void _Ready()
     {
         GameManager.GameStateChanged += OnGameStateChanged;
+
+        // this is for if gameStateChanged event fires before subbing
+        if (GameManager.Instance.gameState == GameState.Menu)
+            PlayMenuMusic();
     }
 
     public override async void _Process(double delta)
@@ -47,11 +52,10 @@ public partial class AudioManager : Node
     private void OnGameStateChanged(GameState oldstate, GameState currentstate)
     {
         if (currentstate == GameState.Battle)
-        {
-            GD.Print("gameState battle");
-            //PlayBackgroundNoise();
             PlayCombatMusic();
-        }
+        else if (currentstate == GameState.Menu)
+            PlayMenuMusic();
+
     }
 
     public void PlayBackgroundNoise()
@@ -59,8 +63,19 @@ public partial class AudioManager : Node
         BrownNoisePlayer.Play();
     }
 
+    public void PlayMenuMusic()
+    {
+        BrownNoisePlayer.Stop();
+        CombatMusicPlayer.Stop();
+        CombatMusicLoopPlayer.Stop();
+
+        MenuMusicPlayer.Play();
+    }
+
     public void PlayCombatMusic(float playFrom = -1)
     {
+        MenuMusicPlayer.Stop();
+
         CombatMusicPlayer.Play();
         playingCombatMusic = true;
 

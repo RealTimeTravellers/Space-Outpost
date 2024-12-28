@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bt26kcnftym2f"
+path="res://.godot/imported/sci-fi-background-258999.mp3-a36abf8a92000f40e043d58c32ac6f7d.mp3str"
+
+[deps]
+
+source_file="res://Sound Assets/Background/sci-fi-background-258999.mp3"
+dest_files=["res://.godot/imported/sci-fi-background-258999.mp3-a36abf8a92000f40e043d58c32ac6f7d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
