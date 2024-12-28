@@ -10,7 +10,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// Stats and equipment - EXPORT etme problemi
 	[Export] public PlayerType PlayerType { get; private set; } = PlayerType.Soldier;
 	[Export] public EnemyType EnemyType { get; private set; } = EnemyType.Creeper;
-	public UnitStats Stats;
+
+	[Export] public UnitType UnitType { get; private set; } = UnitType.Human;
+	[Export] public int Evasion { get; set; } = 15;
+	[Export] public int Perception { get; private set; } = 20;
+	//public UnitStats Stats;
 	public StatContainer StatContainer;
 
 	// Equipment controller
@@ -25,9 +29,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public EnemyAIController enemyController { get; private set; }
 
 	[Export] public bool move = false; // temp for test only
-	public int FirstMovementRange => Stats.MovementRange.GetValue();
-	public int SecondMovementRange => Stats.MovementRange.GetValue();
-	[Export] public float range = 25; // test
+	public int FirstMovementRange => 8;//Stats.MovementRange.GetValue();
+	public int SecondMovementRange => 6;//Stats.MovementRange.GetValue();
 
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
@@ -37,7 +40,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	#region ICombat Variables
 	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
-	public int Health { get; private set; }
+	public int Health { get; private set; } = 8;
 	public int Damage { get; private set; }
 	#endregion
 
@@ -96,8 +99,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			// Player Stats
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
-			Stats = new PlayerStats(PlayerType, StatContainer);
-			Health = Stats.Health.GetValue();
+			//Stats = new PlayerStats(PlayerType, StatContainer);
+			//Health = Stats.Health.GetValue();
 			// Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
@@ -110,8 +113,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			// Enemy Stats
 			StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
-			Stats = new EnemyStats(EnemyType, StatContainer);
-			Health = Stats.Health.GetValue();
+			//Stats = new EnemyStats(EnemyType, StatContainer);
+			//Health = Stats.Health.GetValue();
 			/* Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Enemy Equipment
@@ -145,7 +148,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		UpdateHealthText();
-		actionPoints = Stats.ActionPoints.GetValue();
+		actionPoints = 2;//Stats.ActionPoints.GetValue();
 	}
 
 	private void SubscribeToEvents()
@@ -226,14 +229,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void ResetActionPoints()
 	{
-		Stats.ResetActionPoints();
-		actionPoints = Stats.ActionPoints.GetValue();
+		actionPoints = 2;
+		//Stats.ResetActionPoints();
+		//actionPoints = Stats.ActionPoints.GetValue();
 	}
 
 	public void DepleteActionPoints()
 	{
-		Stats.DepleteActionPoints();
-		actionPoints = Stats.ActionPoints.GetValue();
+		actionPoints = 0;
+		//Stats.DepleteActionPoints();
+		//actionPoints = Stats.ActionPoints.GetValue();
 	}
 
 	private void CheckTurnEnd()
@@ -358,7 +363,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (Health <0) 
 			Health = 0;
-		HealthLabel.Text = Health +"/"+ Stats.Health.GetValue();
+		HealthLabel.Text = Health +"/"+ 8;//Stats.Health.GetValue();
 	}
 
 	/// <summary>
@@ -417,7 +422,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => !e.IsDead && e != this)) 
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
-			if (distance < Stats.Perception.GetValue()) // is in identification range
+			if (distance < Perception/* Stats.Perception.GetValue() */) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
@@ -454,7 +459,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
 
-		float hitChance = Stats.Accuracy.GetValue() / 100f;
+		float hitChance = /* Stats.Accuracy.GetValue() */ 75f / 100f;
 		bool hit = GD.Randf() <= hitChance;
 
 		Vector3 direction = (target.Position - Position).Normalized();
@@ -505,14 +510,16 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead) 
+		if (targetGrid == null || /* Stats.ActionPoints.GetValue() */ actionPoints <= 0 || IsDead) 
 			return;
 
+		bool secondMovement = currentGrid.Position.DistanceTo(targetGrid.Position) > this.FirstMovementRange;
+		GD.Print("second? " + secondMovement);
+
 		// Grid işlemleri
-		if(currentGrid != null)
-			currentGrid.ClearOccupied();
+		currentGrid?.ClearOccupied();
 		
-		if(CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
+		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
 			IsMoving = true;
 			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
@@ -547,8 +554,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
-		// move completed	
-		CompleteAction(actionData.moveCost);
+		// move completed
+		if (secondMovement)
+			CompleteAction(/* actionData.moveCost *  */2);
+		else 
+			CompleteAction(actionData.moveCost);
+
 		IsMoving = false;
 		//CompletedTurn = true;
 	}

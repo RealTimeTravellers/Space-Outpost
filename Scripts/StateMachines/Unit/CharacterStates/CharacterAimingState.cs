@@ -16,7 +16,7 @@ public class CharacterAimingState : CharacterState
             character.IsFriendly ? TurnManager.Instance.enemyCharacters : TurnManager.Instance.playerCharacters
         );
         
-        if (character.Stats.ActionPoints.GetValue() > 0 && character.enemiesInLos.Count > 0)
+        if (character.actionPoints/* Stats.ActionPoints.GetValue() */ > 0 && character.enemiesInLos.Count > 0)
         {
             character.targetIndex = Mathf.Clamp(character.targetIndex, 0, character.enemiesInLos.Count - 1);
             character.Target = character.enemiesInLos[character.targetIndex];
@@ -51,7 +51,7 @@ public class CharacterAimingState : CharacterState
     {
         // Aim modu kapatıldıysa idle'a dön
         if (!CameraManager.Instance.AimingMode && character.IsFriendly || 
-            character.Stats.ActionPoints.GetValue() <= 0 || 
+            character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0 || 
             character.actionPoints <= 0 )
             return CharacterStateType.Idle;
             

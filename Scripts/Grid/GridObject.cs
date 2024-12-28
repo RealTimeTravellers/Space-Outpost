@@ -106,6 +106,16 @@ public partial class GridObject : Node3D
 			if (GridManager.Instance.selectedCharacter != null)
 			{
 				var character = GridManager.Instance.selectedCharacter;
+				if (character.actionPoints <= 0)
+				{
+					if (this.Position.DistanceTo(character.Position) < character.FirstMovementRange + character.SecondMovementRange)
+						ChangeGridMaterial(blockedMaterial, standardTransparency, blockedColour, isSpriteOnly);
+					else
+						ChangeGridMaterial(standardMaterial, 1f, standardColour, isSpriteOnly);
+
+					return;
+				}
+				
 				if (this.Position.DistanceTo(character.Position) < character.FirstMovementRange)
 					ChangeGridMaterial(innerMaterial, standardTransparency, innerColour, isSpriteOnly);
 				else if (this.Position.DistanceTo(character.Position) < character.FirstMovementRange + character.SecondMovementRange)

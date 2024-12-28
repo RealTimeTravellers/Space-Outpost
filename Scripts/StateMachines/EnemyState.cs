@@ -36,11 +36,11 @@ public class EnemyState : BaseState<AIState>
         canSeePlayer = character.enemiesInLos.Count > 0;
 
         // Düşük can durumunda Flee
-        if (character.Stats.Health.GetValue() <= 2 || character.Health <= 2)
+        if (character.Health/* Stats.Health.GetValue() */ <= 2 || character.Health <= 2)
             return AIState.Flee;
 
         // State değişimlerini kontrol et
-        if (character.Stats.UnitType == UnitType.Alien)
+        if (character./* Stats. */UnitType == UnitType.Alien)
         {
             if (canSeePlayer)
                 return AIState.Aggression;
