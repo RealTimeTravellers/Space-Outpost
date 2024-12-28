@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bo4jfwaq32t13"
+path="res://.godot/imported/gun-chamber-round-96258.mp3-278c7545f37dc033ea97cc7ab75bc48e.mp3str"
+
+[deps]
+
+source_file="res://Sound Assets/Guns/Reload/gun-chamber-round-96258.mp3"
+dest_files=["res://.godot/imported/gun-chamber-round-96258.mp3-278c7545f37dc033ea97cc7ab75bc48e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
