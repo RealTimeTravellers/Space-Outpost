@@ -13,7 +13,7 @@ public partial class AudioManager : Node
     [Export] public AudioStreamPlayer CombatMusicLoopPlayer { get; private set; }
 
     private bool playingCombatMusic = false;
-    [Export] private bool stopLoop = false;
+    [Export] public bool combatEnded = false; // mostly for test
 
 
     private AudioManager()
@@ -34,7 +34,7 @@ public partial class AudioManager : Node
     {
         if (playingCombatMusic)
         {
-            if (stopLoop) // change to out of combat
+            if (combatEnded) // change to out of combat
             {
                 playingCombatMusic = false;
                 StopLoopedCombatMusic();
