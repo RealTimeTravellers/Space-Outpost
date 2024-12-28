@@ -63,10 +63,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
-	[Export] private GpuParticles3D shootHitEffect;
-	[Export] private GpuParticles3D shootMissEffect;
-	[Export] private Node3D MuzzlePosition; // play muzzle flash and shoot pos
-
 	[Export] private Gun gun;
 
 	[Export] private Label3D HealthLabel;
@@ -452,22 +448,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (!IsFriendly)
 			direction = -direction; // Reverse is needed why ?_
 		
-		gun?.Fire(hit);
 
 		if (hit) // || true for test purposes
 		{
-			shootHitEffect.Restart();
-
 			int damage = 4; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
-			// and play animation
 		}
-		else
-		{
-			shootMissEffect.Restart();
 
-			// shoot animation but no hit
-		}
+		gun.Fire(hit);
 
 		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 

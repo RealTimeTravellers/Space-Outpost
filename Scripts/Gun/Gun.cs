@@ -23,6 +23,7 @@ public partial class Gun : Node3D
     public override void _Ready()
     {
         PlaySound(GunActionState.Ready);
+        Reload();
         base._Ready();
     }
 
