@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bqbandhe4kj5o"
+path="res://.godot/imported/Dead Space RIG Flatline (Death) Sound 4.mp3-b484c091b9012918ce551cbc09c95158.mp3str"
+
+[deps]
+
+source_file="res://Sound Assets/Sound Effects/Enemy Death Sound/Dead Space RIG Flatline (Death) Sound 4.mp3"
+dest_files=["res://.godot/imported/Dead Space RIG Flatline (Death) Sound 4.mp3-b484c091b9012918ce551cbc09c95158.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

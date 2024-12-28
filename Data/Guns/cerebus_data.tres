@@ -1,6 +1,10 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cwr02fuuyynlc"]
+[gd_resource type="Resource" load_steps=6 format=3 uid="uid://cwr02fuuyynlc"]
 
+[ext_resource type="AudioStream" uid="uid://b3s1ig8fbvopt" path="res://Sound Assets/Guns/Firing/machine-gun-129929.mp3" id="1_6adjl"]
 [ext_resource type="Script" path="res://Scripts/Gun/GunData.cs" id="1_w8cdg"]
+[ext_resource type="AudioStream" uid="uid://b424fx8t5t73l" path="res://Sound Assets/Guns/Empty/empty-gun-shot-6209.mp3" id="2_nr0cy"]
+[ext_resource type="AudioStream" uid="uid://co6hf1uf4hlru" path="res://Sound Assets/Guns/Reload/gun-cocking-sound-270163.mp3" id="3_4svsi"]
+[ext_resource type="AudioStream" uid="uid://bo4jfwaq32t13" path="res://Sound Assets/Guns/Reload/gun-chamber-round-96258.mp3" id="4_x461o"]
 
 [resource]
 script = ExtResource("1_w8cdg")
@@ -10,7 +14,7 @@ MagazineCapacity = 5
 Accuracy = 10
 MinDamage = 2
 MaxDamage = 4
-readySounds = Array[AudioStream]([])
-ShootSounds = Array[AudioStream]([])
-emptySounds = Array[AudioStream]([])
-reloadSounds = Array[AudioStream]([])
+readySounds = Array[AudioStream]([ExtResource("3_4svsi")])
+ShootSounds = Array[AudioStream]([ExtResource("1_6adjl")])
+emptySounds = Array[AudioStream]([ExtResource("2_nr0cy")])
+reloadSounds = Array[AudioStream]([ExtResource("4_x461o")])
