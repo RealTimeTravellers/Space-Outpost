@@ -21,11 +21,14 @@ parameters/looping = true
 
 [node name="Combat Music Audio Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_q1qxo")
+volume_db = -10.0
 
 [node name="Combat Music looped Audio Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_qy2cw")
+volume_db = -10.0
 parameters/looping = true
 
 [node name="Menu Music player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_0eth6")
+volume_db = -10.0
 parameters/looping = true
