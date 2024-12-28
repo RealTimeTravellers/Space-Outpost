@@ -1,33 +1,27 @@
 using Godot;
-
+using System.Threading.Tasks;
 public class CowerState : EnemyState
 {
-    public override void Enter(Character aiController)
+    public override void Enter(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Entering Cower State");
+        base.Enter(enemy);
+        enemy.CharacterController.IsEnemyAlerted = true;
     }
 
-    public override AIState Process(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Cower)
-            return nextState;
-
-        // Sinmiş durumda bekle
-        if (!enemy.IsInCover)
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            enemy.TakeCover();
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
-        
-        // Moral yükseldiyse Alert state'e geç
-        if (enemy.Stats.Morale.GetValue() >= 20)
-            return AIState.Alert;
-            
-        return AIState.Cower;
+        await enemy.enemyController.HandleCower();
     }
 
-    public override void Exit(Character aiController)
+
+    public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Exiting Cower State");
+        base.Exit(enemy);
     }
 }

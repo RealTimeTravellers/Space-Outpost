@@ -1,29 +1,45 @@
+using System;
 using Godot;
 
 public class CharacterDeathState : CharacterState
 {
+    private bool _deathAnimationStarted = false;
+    private bool _deathProcessed = false;
+
     public override void Enter(Character character)
     {
-        GD.Print("Entering Death State");
-        // Ölüm animasyonunu başlat
-        // Input'ları devre dışı bırak
-        // Gerekli event'leri tetikle
+        if (!_deathAnimationStarted)
+        {
+            _deathAnimationStarted = true;
+
+            if (!character.IsFriendly)
+            {
+                var aiController = character.GetNode<EnemyAIController>("EnemyAIController");
+                if (aiController != null)
+                {
+                    //aiController.PrepareForDestruction();
+                }
+            }
+
+            character.CharacterController._stateMachine.RequestAnimation("death");
+            character.Die();
+        }
     }
 
     public override CharacterStateType Process(Character character)
     {
-        return CheckState(character);
+        base.Process(character);
+        return CharacterStateType.Death;
     }
 
     public override CharacterStateType CheckState(Character character)
     {
-        // Ölüm state'inden başka bir state'e geçiş yok
         return CharacterStateType.Death;
     }
 
     public override void Exit(Character character)
     {
-        GD.Print("Exiting Death State");
-        // Bu state'ten çıkış olmayacak ama yine de implement edelim
+        // Hiçbir zaman çıkış yapılmayacak
     }
 }
+

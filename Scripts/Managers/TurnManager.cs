@@ -14,6 +14,11 @@ public partial class TurnManager : Node
     public event Action<bool> TurnChanged;
 
     /// <summary>
+    /// Invokes True if player turn async
+    /// </summary>
+    public event Func<bool, Task> TurnChangedAsync;
+
+    /// <summary>
     /// if started True, false when finished
     /// </summary>
     public event Action<bool> EnemyMovementChanged;
@@ -29,7 +34,6 @@ public partial class TurnManager : Node
     
     public static Character CurrentlyMovingCharacter { get; private set; } = null;
     private bool _isProcessingTurn = false;
-    private bool _isEnemyMoving = false;
     private int currentEnemyIndex = -1;
 
     public Action<Character> CharacterDied;
@@ -67,167 +71,129 @@ public partial class TurnManager : Node
 
     public void StartEnemyMovement(Character character)
     {
-        GD.Print("[TurnManager] Starting enemy movement");
         CurrentlyMovingCharacter = character;
-        _isEnemyMoving = true;
+        CurrentlyMovingCharacter.IsMoving = true;
         EnemyMovementChanged?.Invoke(true);
     }
 
     public void EndEnemyMovement(Character character)
     {
-        GD.Print("[TurnManager] Ending enemy movement");
         CurrentlyMovingCharacter = character;
-        _isEnemyMoving = false;
         EnemyMovementChanged?.Invoke(false);
     }
 
     public void StartPlayerMovement(Character character)
     {
-        GD.Print("[TurnManager] Starting player movement");
         CurrentlyMovingCharacter = character;
         PlayerMovementChanged?.Invoke(true);
     }
 
     public void EndPlayerMovement(Character character)
     {
-        GD.Print("[TurnManager] Ending player movement");
         CurrentlyMovingCharacter = character;
         PlayerMovementChanged?.Invoke(false);
     }
 
     private void OnPlayerMovementChanged(bool started)
     {
-        GD.Print($"[TurnManager] Player Movement Changed: {started}");
-        CheckEnemyState();
         if (started)
         {
-            if (!_isProcessingTurn)
-            {
-                _isProcessingTurn = true;
-                // Oyuncu turu başlarken düşmanların durumunu sıfırla
-                foreach (Character enemy in enemyCharacters)
-                {
-                    enemy.CompletedTurn = false;
-                }
-                GD.Print("[TurnManager] Starting player turn processing");
-            }
+            GD.Print("[TurnManager] Player movement started");
+            CurrentlyMovingCharacter.IsMoving = true;
             return;
         }
 
-        bool allCompletedTurns = true;
-        GD.Print("[TurnManager] Checking all player turns:");
-        foreach (Character player in playerCharacters)
-        {
-            GD.Print($"[TurnManager] - {player.Name}: {player.CompletedTurn}");
-            allCompletedTurns &= player.CompletedTurn;
-        }
-        
-        if (allCompletedTurns)
+        GD.Print("[TurnManager] Player movement ended");
+
+        bool allCompletedTurns = playerCharacters
+            .Where(e => e != null && !e.IsDead)
+            .All(e => e.CompletedTurn);
+
+        if (allCompletedTurns && !_isProcessingTurn)
         {
             GD.Print("[TurnManager] All players completed, switching to enemy turn");
-            _isProcessingTurn = false;
-            TurnChanged?.Invoke(false);
+            _isProcessingTurn = true;
             EndPlayerTurn();
-            //StartEnemyMovement();
+            TurnChanged.Invoke(false);
+            _isProcessingTurn = false;
         }
     }
 
-    private async void OnEnemyMovementChanged(bool started)
+    private void OnEnemyMovementChanged(bool started)
     {
-        CheckEnemyState();
-        GD.Print($"[TurnManager] Enemy Movement Changed: {started}");
-        
         if (started)
         {
-            _isEnemyMoving = true;
+            GD.Print("[TurnManager] Enemy movement started");
+            CurrentlyMovingCharacter.IsMoving = true;
             return;
         }
 
-        _isEnemyMoving = false;
+        GD.Print("[TurnManager] Enemy movement ended");
+        CurrentlyMovingCharacter.IsMoving = false;
 
-        // Tüm düşmanlar tamamlandıysa oyuncu turuna geç
-        await WaitForAllEnemiesCompleted();
+        if (_isProcessingTurn) return;
 
-        _isProcessingTurn = false;
-        TurnChanged?.Invoke(true);   // player turn başlat
-        EndEnemyTurn();             // düşman turn’unu kapat
-    }
+        bool allEnemiesCompleted = enemyCharacters
+            .Where(e => e != null && !e.IsDead)
+            .All(e => e.CompletedTurn);
 
-    private async Task WaitForAllEnemiesCompleted()
-    {
-        // Her 0.2s bir "hepsi bitti mi?" kontrolü
-        while (true)
+        if (allEnemiesCompleted && !_isProcessingTurn)
         {
-            bool allEnemiesCompleted = enemyCharacters.All(e => e == null || e.CompletedTurn);
-            if (allEnemiesCompleted)
-                break;
-
-            // 0.2 saniye bekle, sonra tekrar dene
-            await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+            GD.Print("[TurnManager] All enemies completed, switching to player turn");
+            _isProcessingTurn = true;
+            EndEnemyTurn();
+            TurnChanged.Invoke(true);
+            _isProcessingTurn = false;
         }
     }
 
-    private void EndPlayerTurn()
+    private async void EndPlayerTurn()
     {
-        foreach (Character player in playerCharacters)
-        {
-            //player.CompletedTurn = true;
-            player.Stats.DepleteActionPoints();
-        }
-        
-        foreach (Character enemy in enemyCharacters)
+        foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
         {
             enemy.CompletedTurn = false;
-            enemy.Stats.ResetActionPoints();
-            var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
-            if (aiController != null)
-            {
-                aiController._isActive = true;  // Tüm düşmanları aktif et
-            }
+            enemy.ResetActionPoints();
+        }
+
+        foreach (Character player in playerCharacters.Where(p => p != null && !p.IsDead))
+        {
+            player.CompletedTurn = false;
+            player.DepleteActionPoints();
+        }
+
+        if (TurnChangedAsync != null)
+        {
+            var tasks = TurnChangedAsync.GetInvocationList()
+                .Cast<Func<bool, Task>>()
+                .Select(handler => handler.Invoke(false));
+            await Task.WhenAll(tasks);
         }
     }
 
     private void EndEnemyTurn()
     {
-        foreach (Character enemy in enemyCharacters)
+        foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
         {
-            if (enemy != null)
-            {
-                enemy.CompletedTurn = true;
-                enemy.Stats.DepleteActionPoints();
-                var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
-                if (aiController != null)
-                {
-                    aiController._isActive = false;
-                }
-            }
+            enemy.CompletedTurn = false;
+            enemy.DepleteActionPoints();
         }
 
-        foreach (Character player in playerCharacters)
+        foreach (Character player in playerCharacters.Where(e => e != null && !e.IsDead))
         {
-            //player.CompletedTurn = false;
-            player.Stats.ResetActionPoints();
+            player.CompletedTurn = false;
+            player.ResetActionPoints();
         }
     }
 
-    private void CheckEnemyState()
+    public void RemovePlayerCharacter(Character character)
     {
-        foreach (Character enemy in enemyCharacters)
-        {
-            if (enemy == null || enemy.CompletedTurn) continue;
-            
-            var aiController = enemy.GetNode<EnemyAIController>("EnemyAIController");
-            if (aiController != null)
-            {
-                var currentState = aiController._stateMachine._states[aiController._stateMachine.CurrentState];
-                var nextState = currentState.CheckState(enemy);
-                
-                if (nextState != aiController._stateMachine.CurrentState)
-                {
-                    aiController.SetState(nextState, enemy);
-                }
-            }
-        }
+        if (playerCharacters.Contains(character))
+            playerCharacters.Remove(character);
     }
 
+    public void RemoveEnemyCharacter(Character character)
+    {
+        if (enemyCharacters.Contains(character))
+            enemyCharacters.Remove(character);
+    }
 }

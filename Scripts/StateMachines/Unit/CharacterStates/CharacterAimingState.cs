@@ -5,40 +5,34 @@ public class CharacterAimingState : CharacterState
     public override void Enter(Character character)
     {
         base.Enter(character);
-        character.CharacterController._stateMachine.RequestAnimation("aiming");
-        
-        // EnemyInSight metodunu kullanarak düşman kontrolü
+
         if (!EnemyInSight(character))
         {
-            GD.Print($"[AimingState] {character.Name} no enemies in sight!");
-            CameraManager.ReturnCameraToTactical();
-            character.CharacterController.SetState(CharacterStateType.Idle, character);
+            character.ToggleAim(); 
             return;
         }
-
-        // Düşmanları sorgula
-        var enemies = character.IsFriendly ? 
-            TurnManager.Instance.enemyCharacters : 
-            TurnManager.Instance.playerCharacters;
-            
-        character.enemiesInLos = character.QueryForEnemies(enemies);
-        GD.Print($"[AimingState] {character.Name} found {character.enemiesInLos.Count} enemies in LOS");
         
-        // Kamera ayarları ve hedef seçimi
+        character.enemiesInLos = character.QueryForEnemies(
+            character.IsFriendly ? TurnManager.Instance.enemyCharacters : TurnManager.Instance.playerCharacters
+        );
+        
         if (character.Stats.ActionPoints.GetValue() > 0 && character.enemiesInLos.Count > 0)
         {
             character.targetIndex = Mathf.Clamp(character.targetIndex, 0, character.enemiesInLos.Count - 1);
             character.Target = character.enemiesInLos[character.targetIndex];
 
+            character.CharacterController._stateMachine.RequestAnimation("aiming");
             character.LookAt(character.Target.Position);
-            CameraManager.Instance.MainCameraSet.LookAt(character.Target.Position);
-            CameraManager.MoveToShoulder(character);
+            if (character.IsFriendly)
+            {
+                CameraManager.Instance.MainCameraSet.LookAt(character.Target.Position);
+                CameraManager.MoveToShoulder(character);
+            }
             character.RotateY(Mathf.Pi);
         }
         else
         {
-            CameraManager.ReturnCameraToTactical();
-            character.CharacterController.SetState(CharacterStateType.Idle, character);
+            CameraManager.Instance.AimingMode = false;
         }
     }
 
@@ -56,7 +50,9 @@ public class CharacterAimingState : CharacterState
     public override CharacterStateType CheckState(Character character)
     {
         // Aim modu kapatıldıysa idle'a dön
-        if (!CameraManager.Instance.AimingMode)
+        if (!CameraManager.Instance.AimingMode && character.IsFriendly || 
+            character.Stats.ActionPoints.GetValue() <= 0 || 
+            character.actionPoints <= 0 )
             return CharacterStateType.Idle;
             
         return CharacterStateType.Aiming;
@@ -66,5 +62,6 @@ public class CharacterAimingState : CharacterState
     {
         base.Exit(character);
         CameraManager.ReturnCameraToTactical();
+        CameraManager.Instance.AimingMode = false;
     }
 }

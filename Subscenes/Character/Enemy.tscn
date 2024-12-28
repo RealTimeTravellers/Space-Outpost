@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bpnxwfh1wbjam"]
+[gd_scene load_steps=12 format=3 uid="uid://bpnxwfh1wbjam"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_fooxj"]
 [ext_resource type="Resource" uid="uid://b0e0ffdgmwpvx" path="res://Data/Chracter Action Data/EnemyCharacterActionData.tres" id="2_nxhog"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterController.cs" id="4_4upge"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/AI/EnemyAIController.cs" id="5_dakxj"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="6_2miie"]
+[ext_resource type="PackedScene" uid="uid://bskr6j2q3f2nt" path="res://Subscenes/Particle Effects/shoot_effect.tscn" id="8_ge1xp"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
 
@@ -14,15 +15,17 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
-[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("AnimatorController", "CharacterController", "enemyController", "ShoulderCamera", "HealthLabel")]
-collision_layer = 512
-collision_mask = 512
+[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("AnimatorController", "CharacterController", "enemyController", "ShoulderCamera", "shootEffect", "MuzzlePosition", "HealthLabel")]
+collision_layer = 8
+collision_mask = 8
 script = ExtResource("1_fooxj")
 AnimatorController = NodePath("AnimatorController")
 CharacterController = NodePath("CharacterController")
 enemyController = NodePath("EnemyAIController")
 actionData = ExtResource("2_nxhog")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
+shootEffect = NodePath("muzzle Position/Shoot Effect")
+MuzzlePosition = NodePath("muzzle Position")
 HealthLabel = NodePath("Health Text")
 
 [node name="Model" type="MeshInstance3D" parent="."]
@@ -49,15 +52,26 @@ modulate = Color(1, 0, 0, 1)
 outline_modulate = Color(0.41598, 0.41598, 0.41598, 1)
 text = "XXX/XXX"
 
-[node name="CharacterController" type="Node3D" parent="."]
+[node name="CharacterController" type="Node3D" parent="." node_paths=PackedStringArray("_character", "_navAgent")]
 script = ExtResource("4_4upge")
+_character = NodePath("..")
+_navAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
 
-[node name="EnemyAIController" type="Node3D" parent="."]
+[node name="EnemyAIController" type="Node3D" parent="." node_paths=PackedStringArray("_character")]
 script = ExtResource("5_dakxj")
+_character = NodePath("..")
 
-[node name="AnimatorController" type="Node3D" parent="."]
+[node name="AnimatorController" type="Node3D" parent="." node_paths=PackedStringArray("_character", "_characterController")]
 script = ExtResource("6_2miie")
+_character = NodePath("..")
+_characterController = NodePath("../CharacterController")
 
 [node name="Asker" parent="AnimatorController" instance=ExtResource("3_n1nwx")]
+
+[node name="muzzle Position" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32562, 1.13263, -0.748313)
+
+[node name="Shoot Effect" parent="muzzle Position" instance=ExtResource("8_ge1xp")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)

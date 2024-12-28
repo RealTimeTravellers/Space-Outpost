@@ -1,68 +1,30 @@
 using Godot;
+using System.Threading.Tasks;
 public class TacticalState : EnemyState
 {
     private GridObject _targetCover;
 
     public override void Enter(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Entering Tactical State");
-        FindClosestTarget(enemy);
-        if (enemy.Target != null)
-        {
-            _targetCover = FindNearestCover(enemy, enemy.Target);
-        }
+        base.Enter(enemy);
+        enemy.CharacterController.IsEnemyAlerted = true;
+        enemy.Target = enemy.enemiesInLos[0];
     }
 
-    public override AIState Process(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Tactical)
-            return nextState;
-
-        if (enemy.Target == null || enemy.Target.Stats.Health.GetValue() <= 0)
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            FindClosestTarget(enemy);
-            if (enemy.Target == null)
-                return AIState.Patrol;
-                
-            _targetCover = FindNearestCover(enemy, enemy.Target);
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
-
-        // Cover'a gitme ve savaşma mantığı
-        if (!enemy.IsInCover && _targetCover != null)
-        {
-            enemy.Move(_targetCover);
-            enemy.TakeCover();
-            enemy.CompletedTurn = true;
-            TurnManager.Instance.EndEnemyMovement(enemy);
-        }
-        else if (enemy.IsInCover)
-        {
-            if (enemy.Equipment.CurrentWeapon.NeedsReload())
-            {
-                enemy.Equipment.CurrentWeapon.Reload();
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-            }
-            else if (enemy.Stats.ActionPoints.GetValue() >= 2)
-            {
-                enemy.Attack(enemy.Target);
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-            }
-            else
-            {
-                enemy.CompletedTurn = true;
-                TurnManager.Instance.EndEnemyMovement(enemy);
-            }
-        }
-        
-        return AIState.Tactical;
+        await enemy.enemyController.HandleTactical();
     }
 
     public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {enemy.Name} Exiting Tactical State");
         _targetCover = null;
+        base.Exit(enemy);
     }
 }

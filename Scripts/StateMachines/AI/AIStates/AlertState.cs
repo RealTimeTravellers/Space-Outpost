@@ -1,31 +1,29 @@
 using Godot;
+using System.Threading.Tasks;
 
 public class AlertState : EnemyState
 {
-    public override void Enter(Character aiController)
+
+    public override void Enter(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Entering Alert State");
+        base.Enter(enemy);
+        enemy.CharacterController.IsEnemyAlerted = true;
     }
 
-    public override AIState Process(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Alert)
-            return nextState;
-            
-        // Alert durumunda çevreyi tara
-        if (!enemy.IsInCover)
-            enemy.TakeCover();
-            
-        // Mühimmat kontrolü
-        if (enemy.Equipment.CurrentWeapon.NeedsReload())
-            enemy.Equipment.CurrentWeapon.Reload();
-            
-        return AIState.Alert;
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
+        {
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
+        }
+        await enemy.enemyController.HandleAlert();
     }
 
-    public override void Exit(Character aiController)
+
+    public override void Exit(Character enemy)
     {
-        GD.Print($"[AI] {aiController.Name} Exiting Alert State");
+        base.Exit(enemy);
     }
 }

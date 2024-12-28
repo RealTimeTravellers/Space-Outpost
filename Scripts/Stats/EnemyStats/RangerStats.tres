@@ -4,14 +4,15 @@
 
 [resource]
 script = ExtResource("1_chl1b")
-UnitType = 1
 EnemyType = 3
+UnitType = 1
 Health = 5
 Armor = 2
 Accuracy = 80
 MovementRange = 8
 Morale = 22
 ActionPoints = 2
-Perception = 10
+Perception = 20
 Evasion = 15
 CriticalHitChance = 30
+Cover = 0

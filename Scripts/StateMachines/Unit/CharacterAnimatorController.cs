@@ -4,8 +4,8 @@ public partial class CharacterAnimatorController : Node
 {
     private AnimationPlayer _animationPlayer;
     public AnimationTree _animationTree {get; private set;}
-    private Character _character;
-    private CharacterController _characterController;
+    [Export] public Character _character;
+    [Export] public CharacterController _characterController;
     private CharacterStateMachine _stateMachine;
 
     public override void _Ready()
@@ -19,15 +19,8 @@ public partial class CharacterAnimatorController : Node
         _animationTree = askerNode.GetNode<AnimationTree>("AnimationTree");
 
         if (_animationTree != null)
-        {
             _animationTree.Active = true;
-            GD.Print("[Animation] AnimationTree activated");
-        }
-        else
-        {
-            GD.PrintErr("[Animation] AnimationTree node not found!");
-        }
-
+        
         if (_character != null && _stateMachine != null)
         {
             _stateMachine.OnStateChanged += HandleStateChanged;
@@ -50,7 +43,7 @@ public partial class CharacterAnimatorController : Node
     {
         if (_animationTree == null) return;
         
-        string stateName = newState.ToString().ToLower();
+        string stateName = newState.ToString().ToLowerInvariant();
         GD.Print($"[Animation] State changed to: {stateName}");
         
         // State değişiminde animasyon isteğini tetikle
@@ -66,66 +59,38 @@ public partial class CharacterAnimatorController : Node
         {
             case "idle":
                 _animationTree.Set("parameters/conditions/idle", true);
-                GD.Print("[Animation] Setting idle true");
                 break;
             case "moving":
                 _animationTree.Set("parameters/conditions/moving", true);
-                GD.Print("[Animation] Setting moving true");
                 break;
-            case "shoot":
+            case "shooting":
                 _animationTree.Set("parameters/conditions/shooting", true);
-                GD.Print("[Animation] Setting shooting true");
                 break;
             case "incover":
                 _animationTree.Set("parameters/conditions/incover", true);
-                GD.Print("[Animation] Setting in_cover true");
                 break;
             case "outcover":
                 _animationTree.Set("parameters/conditions/outcover", true);
-                GD.Print("[Animation] Setting out_cover true");
                 break;
             case "aiming":
                 _animationTree.Set("parameters/conditions/aiming", true);
-                GD.Print("[Animation] Setting aiming true");
                 break;
             case "death":
                 _animationTree.Set("parameters/conditions/death", true);
-                GD.Print("[Animation] Setting death true");
                 break;
             default:
                 GD.PrintErr($"Unknown animation requested: {animationName}");
                 break;
         }
     }
-
-
-    private void PlayAnimationWithBlend(string animationName, bool shouldLoop = true)
-    {
-        if (_animationPlayer != null)
-        {
-            // Animasyonu durdur
-            _animationPlayer.Stop();
-            
-            // Loop modunu ayarla
-            var animation = _animationPlayer.GetAnimation(animationName);
-            if (animation != null)
-            {
-                animation.LoopMode = shouldLoop ? Animation.LoopModeEnum.Linear : Animation.LoopModeEnum.None;
-            }
-            
-            // Animasyonu başlat
-            _animationPlayer.Play(animationName);
-            GD.Print($"Playing animation: {animationName}, Loop: {shouldLoop}");
-        }
-        else
-        {
-            GD.PrintErr("AnimationPlayer is null!");
-        }
-    }
         
     public bool IsAnimationPlaying(string animationName)
     {
-        return _animationPlayer?.CurrentAnimation == animationName && _animationPlayer.IsPlaying();
+        if (_animationTree == null) return false;
+        
+        // Animasyon ağacından shooting condition'ını kontrol et
+        bool isPlaying = _animationTree.Get($"parameters/conditions/{animationName}").AsBool();
+        return isPlaying;
     }
 
     public override void _ExitTree()
