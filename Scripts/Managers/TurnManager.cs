@@ -52,6 +52,7 @@ public partial class TurnManager : Node
         SetInitialTurn();
         Instance.PlayerMovementChanged += Instance.OnPlayerMovementChanged;
         Instance.EnemyMovementChanged += Instance.OnEnemyMovementChanged;
+
         base._Ready();
     }
 
@@ -106,7 +107,7 @@ public partial class TurnManager : Node
         GD.Print("[TurnManager] Player movement ended");
 
         bool allCompletedTurns = playerCharacters
-            .Where(e => e != null && !e.IsDead)
+            .Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death)
             .All(e => e.CompletedTurn);
 
         if (allCompletedTurns && !_isProcessingTurn)
@@ -134,7 +135,7 @@ public partial class TurnManager : Node
         if (_isProcessingTurn) return;
 
         bool allEnemiesCompleted = enemyCharacters
-            .Where(e => e != null && !e.IsDead)
+            .Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death)
             .All(e => e.CompletedTurn);
 
         if (allEnemiesCompleted && !_isProcessingTurn)
@@ -149,13 +150,13 @@ public partial class TurnManager : Node
 
     private async void EndPlayerTurn()
     {
-        foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
+        foreach (Character enemy in enemyCharacters.Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death))
         {
             enemy.CompletedTurn = false;
             enemy.ResetActionPoints();
         }
 
-        foreach (Character player in playerCharacters.Where(p => p != null && !p.IsDead))
+        foreach (Character player in playerCharacters.Where(p => p != null && p.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death))
         {
             player.CompletedTurn = false;
             player.DepleteActionPoints();
@@ -172,28 +173,42 @@ public partial class TurnManager : Node
 
     private void EndEnemyTurn()
     {
-        foreach (Character enemy in enemyCharacters.Where(e => e != null && !e.IsDead))
+        foreach (Character enemy in enemyCharacters.Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death))
         {
             enemy.CompletedTurn = false;
             enemy.DepleteActionPoints();
         }
 
-        foreach (Character player in playerCharacters.Where(e => e != null && !e.IsDead))
+        foreach (Character player in playerCharacters.Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death))
         {
             player.CompletedTurn = false;
             player.ResetActionPoints();
         }
     }
 
-    public void RemovePlayerCharacter(Character character)
+    public void RemoveCharacterSafely(Character character)
     {
-        if (playerCharacters.Contains(character))
-            playerCharacters.Remove(character);
-    }
-
-    public void RemoveEnemyCharacter(Character character)
-    {
-        if (enemyCharacters.Contains(character))
-            enemyCharacters.Remove(character);
+        // Önce current character'ı kontrol et
+        if (CurrentlyMovingCharacter == character)
+            CurrentlyMovingCharacter = null;
+            
+        // Sonra listelerden güvenli bir şekilde çıkar
+        if (character.IsFriendly)
+        {
+            if (playerCharacters.Contains(character))
+                playerCharacters.Remove(character);
+        }
+        else
+        {
+            if (enemyCharacters.Contains(character))
+                enemyCharacters.Remove(character);
+        }
+        
+        // Turn processing kontrolü
+        if (_isProcessingTurn && currentEnemyIndex >= 0)
+        {
+            if (currentEnemyIndex >= enemyCharacters.Count)
+                currentEnemyIndex = enemyCharacters.Count - 1;
+        }
     }
 }

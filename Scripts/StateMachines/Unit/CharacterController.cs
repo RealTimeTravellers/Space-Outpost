@@ -23,6 +23,8 @@ public partial class CharacterController : Node
 
     public override void _Process(double delta)
     {
+        if (_character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return;
+
         ProcessPlayerState();
         if (_stateMachine.CurrentStateType == CharacterStateType.Moving) 
             UpdateNavigation();
@@ -32,6 +34,8 @@ public partial class CharacterController : Node
 
     private void UpdateNavigation()
     {
+        if (_character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return;
+        
         if (_navAgent.IsNavigationFinished())
         {
             _character.Velocity = Vector3.Zero;
@@ -86,7 +90,9 @@ public partial class CharacterController : Node
 
     public bool CanChangeState()
     {
-        if (!_character.IsFriendly && !_character.enemyController._isActive)
+        if (!_character.IsFriendly 
+            && !_character.enemyController._isActive 
+            && _character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death)
             return false;
         return true;
     }
