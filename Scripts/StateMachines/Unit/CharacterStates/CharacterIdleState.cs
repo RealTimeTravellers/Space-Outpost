@@ -20,7 +20,7 @@ public class CharacterIdleState : CharacterState
                 return CharacterStateType.InCover;
         }
 
-        if (character.Health <= 0 || character.Stats.Health.GetValue() <= 0)
+        if (character.Health <= 0 || character.Health/* Stats.Health.GetValue() */ <= 0)
             return CharacterStateType.Death;
         
         return CharacterStateType.Idle;

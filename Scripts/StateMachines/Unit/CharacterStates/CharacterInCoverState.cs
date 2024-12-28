@@ -11,7 +11,7 @@ public class CharacterInCoverState : CharacterState
         coverExiting = false;
         outCoverAnimationStarted = false;
         character.IsInCover = true;
-        character.Stats.Evasion.AddModifier(15);
+        character.Evasion += 15;//.AddModifier(15);
         character.CharacterController._stateMachine.RequestAnimation("incover");
     }
 
@@ -42,6 +42,6 @@ public class CharacterInCoverState : CharacterState
         coverExiting = false;
         outCoverAnimationStarted = false;
         character.IsInCover = false;
-        character.Stats.Evasion.RemoveModifier(15);
+        character.Evasion -= 15;//Stats.Evasion.RemoveModifier(15);
     }
 }

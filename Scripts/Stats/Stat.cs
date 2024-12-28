@@ -7,7 +7,7 @@ public partial class Stat
     private int baseValue;
     private int currentValue;
     public List<int> modifiers = new List<int>();
-    public int MinValue { get; private set; } = 0;
+    public int MinValue { get; private set; } = -1;
     public int MaxValue { get; private set; } = 50;
 
     // Event: Stat sıfırlandığında veya belirli bir seviyeye geldiğinde tetiklenir

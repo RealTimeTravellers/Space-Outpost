@@ -43,7 +43,7 @@ public partial class BattleHUD : Control
         Character character = GridManager.Instance.selectedCharacter;
         if (CameraManager.Instance.AimingMode && 
             character.Target != null &&
-            character.Stats.ActionPoints.GetValue() > 0 &&
+            character.actionPoints/* Stats.ActionPoints.GetValue() */ > 0 &&
             character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
         {
             character.CharacterController.SetState(CharacterStateType.Shooting, character);
@@ -70,7 +70,7 @@ public partial class BattleHUD : Control
     private static void OnAttackModePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        if (character.Stats.ActionPoints.GetValue() <= 0)
+        if (character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0)
             return;
 
         character.ToggleAim();
