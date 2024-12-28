@@ -29,8 +29,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public EnemyAIController enemyController { get; private set; }
 
 	[Export] public bool move = false; // temp for test only
-	public int FirstMovementRange => 15;//Stats.MovementRange.GetValue();
-	public int SecondMovementRange => 15;//Stats.MovementRange.GetValue();
+	public int FirstMovementRange => 8;//Stats.MovementRange.GetValue();
+	public int SecondMovementRange => 6;//Stats.MovementRange.GetValue();
 
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
