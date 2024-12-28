@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bg6omebyib8fj"]
+
+[ext_resource type="Script" path="res://Scripts/Character/ChracterAudio.cs" id="1_ar7e5"]
+[ext_resource type="AudioStream" uid="uid://bqbandhe4kj5o" path="res://Sound Assets/Sound Effects/Enemy Death Sound/Dead Space RIG Flatline (Death) Sound 4.mp3" id="2_k1rev"]
+
+[node name="Character Audio" type="Node3D" node_paths=PackedStringArray("DeathSoundPlayer")]
+script = ExtResource("1_ar7e5")
+DeathSoundPlayer = NodePath("AudioStreamPlayer3D")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_k1rev")

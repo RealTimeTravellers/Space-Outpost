@@ -64,6 +64,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
 	[Export] private Gun gun;
+	[Export] ChracterAudio chracterAudioPlayer;
 
 	[Export] private Label3D HealthLabel;
 	[Export] private Sprite3D SelectionSprite;
@@ -337,13 +338,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			currentGrid = null;
 		}
 
+		chracterAudioPlayer?.PlayDeathSound();
+
 		//IsDead = true;
 		CompletedTurn = true;
 	}
 
 	private void UpdateHealthText()
 	{
-		if (Health <0) 
+		if (Health <0)
 			Health = 0;
 		HealthLabel.Text = Health +"/"+ 8;//Stats.Health.GetValue();
 	}
