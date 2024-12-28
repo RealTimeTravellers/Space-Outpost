@@ -73,9 +73,9 @@ public partial class Gun : Node3D
         if (currentAmmo > 0)
         {
             if (hit)
-                shootHitEffect.Restart();
+                shootHitEffect.Emitting = true;
             else
-                shootMissEffect.Restart();
+                shootMissEffect.Emitting = true;
             
             PlaySound(GunActionState.Shoot);
 
