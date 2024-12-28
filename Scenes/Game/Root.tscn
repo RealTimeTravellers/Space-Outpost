@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://77qkpxdiae0u"]
+[gd_scene load_steps=8 format=3 uid="uid://77qkpxdiae0u"]
 
 [ext_resource type="PackedScene" uid="uid://byqw1oqs82ord" path="res://Subscenes/Managers/game_manager.tscn" id="1_87e0o"]
 [ext_resource type="PackedScene" uid="uid://cbhkfpor6datm" path="res://Subscenes/Configs/settings.tscn" id="2_aa3yh"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bjcy4ncqw8tru" path="res://Subscenes/Maps/inside_building.tscn" id="3_naolu"]
 [ext_resource type="PackedScene" uid="uid://blo2rc7isqhmi" path="res://Subscenes/Managers/camera_manager.tscn" id="5_wmvow"]
 [ext_resource type="PackedScene" uid="uid://d2eqd4gi0desn" path="res://Subscenes/Camera/camera.tscn" id="6_x3h47"]
+[ext_resource type="PackedScene" uid="uid://dvgw1w85ktxjo" path="res://Subscenes/Managers/audio_manager.tscn" id="7_4ane3"]
 
 [node name="Root" type="Node3D"]
 
@@ -19,6 +20,8 @@ gameScenes = Array[PackedScene]([ExtResource("3_naolu"), ExtResource("3_naolu")]
 [node name="Camera Manager" parent="." node_paths=PackedStringArray("MainCameraSet", "TacticalCameraPostion") instance=ExtResource("5_wmvow")]
 MainCameraSet = NodePath("../Camera")
 TacticalCameraPostion = NodePath("../Camera")
+
+[node name="AudioManager" parent="." instance=ExtResource("7_4ane3")]
 
 [node name="Camera" parent="." instance=ExtResource("6_x3h47")]
 transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707106, 0, -0.707106, 0.707106, 0, 10, 15)

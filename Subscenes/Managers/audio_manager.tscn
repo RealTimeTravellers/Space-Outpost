@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dvgw1w85ktxjo"]
+
+[ext_resource type="Script" path="res://Scripts/Managers/AudioManager.cs" id="1_o4rxo"]
+[ext_resource type="AudioStream" uid="uid://bubugjmyw6gsi" path="res://Sound Assets/Background/Brown Noise.ogg" id="2_bgq1b"]
+
+[node name="AudioManager" type="Node" node_paths=PackedStringArray("backgorundPlayer")]
+script = ExtResource("1_o4rxo")
+backgorundPlayer = NodePath("Background Audio Player")
+
+[node name="Background Audio Player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_bgq1b")
+pitch_scale = 0.5
+parameters/looping = false
