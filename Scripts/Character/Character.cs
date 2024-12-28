@@ -457,7 +457,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			shootEffect.ProcessMaterial.Set("spread", 2);
 			shootEffect.Restart();
 
-			int damage = 8; //Equipment.GetCurrentWeaponDamage(); // temporary
+			int damage = 4; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
 			// and play animation
 		}

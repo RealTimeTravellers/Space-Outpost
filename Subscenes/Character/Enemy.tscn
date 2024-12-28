@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_fooxj"]
 [ext_resource type="Resource" uid="uid://b0e0ffdgmwpvx" path="res://Data/Chracter Action Data/EnemyCharacterActionData.tres" id="2_nxhog"]
 [ext_resource type="Material" uid="uid://1r2gc36i3pw2" path="res://Visual Assets/Materials/RED.tres" id="3_b3ioq"]
-[ext_resource type="PackedScene" uid="uid://chb7julp82npg" path="res://Visual Assets/Models/Units/asker.tscn" id="3_n1nwx"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterController.cs" id="4_4upge"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/AI/EnemyAIController.cs" id="5_dakxj"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="6_2miie"]
+[ext_resource type="PackedScene" uid="uid://dlhh8isy223jk" path="res://Visual Assets/Models/Units/enemy_seperatist.tscn" id="7_ctbk1"]
 [ext_resource type="PackedScene" uid="uid://bskr6j2q3f2nt" path="res://Subscenes/Particle Effects/shoot_effect.tscn" id="8_ge1xp"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
@@ -68,7 +68,7 @@ script = ExtResource("6_2miie")
 _character = NodePath("..")
 _characterController = NodePath("../CharacterController")
 
-[node name="Asker" parent="AnimatorController" instance=ExtResource("3_n1nwx")]
+[node name="Asker" parent="AnimatorController" instance=ExtResource("7_ctbk1")]
 
 [node name="muzzle Position" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32562, 1.13263, -0.748313)
