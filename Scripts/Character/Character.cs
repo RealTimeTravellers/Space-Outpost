@@ -27,7 +27,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public bool move = false; // temp for test only
 	public int FirstMovementRange => Stats.MovementRange.GetValue();
 	public int SecondMovementRange => Stats.MovementRange.GetValue();
-	[Export] public float range = 25; // test
 
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
