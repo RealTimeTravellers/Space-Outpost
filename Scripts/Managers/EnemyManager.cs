@@ -34,4 +34,10 @@ public partial class EnemyManager : Node
         ShotFired = false;
         LastShotGrid = null;
     }
+
+    public void OnEnemyDeath(Character enemy)
+    {
+        allEnemies.Remove(enemy);
+        spottedEnemies.Remove(enemy);
+    }
 }

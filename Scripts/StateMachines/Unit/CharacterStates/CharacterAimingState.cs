@@ -1,4 +1,5 @@
 using Godot;
+using System.Linq;
 
 public class CharacterAimingState : CharacterState
 {
@@ -12,9 +13,11 @@ public class CharacterAimingState : CharacterState
             return;
         }
         
-        character.enemiesInLos = character.QueryForEnemies(
-            character.IsFriendly ? TurnManager.Instance.enemyCharacters : TurnManager.Instance.playerCharacters
-        );
+        character.enemiesInLos = character.QueryForEnemies(new Godot.Collections.Array<Character>(
+            character.IsFriendly ? 
+            TurnManager.Instance.enemyCharacters.Where(e => e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death).ToList() : 
+            TurnManager.Instance.playerCharacters.Where(e => e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death).ToList()
+        ));
         
         if (character.actionPoints/* Stats.ActionPoints.GetValue() */ > 0 && character.enemiesInLos.Count > 0)
         {
@@ -23,11 +26,13 @@ public class CharacterAimingState : CharacterState
 
             character.CharacterController._stateMachine.RequestAnimation("aiming");
             character.LookAt(character.Target.Position);
+
             if (character.IsFriendly)
             {
                 CameraManager.Instance.MainCameraSet.LookAt(character.Target.Position);
                 CameraManager.MoveToShoulder(character);
             }
+            
             character.RotateY(Mathf.Pi);
         }
         else
