@@ -27,7 +27,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public bool move = false; // temp for test only
 	public int FirstMovementRange => Stats.MovementRange.GetValue();
 	public int SecondMovementRange => Stats.MovementRange.GetValue();
-	[Export] public float range = 25; // test
 
 	// More of an idea, make the non identified chracters show up but black
 	// only meaning full if there are civilians in the combat zone
@@ -505,14 +504,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead) 
+		if (targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead) 
 			return;
 
+		bool secondMovement = currentGrid.Position.DistanceTo(targetGrid.Position) > this.FirstMovementRange;
+
 		// Grid işlemleri
-		if(currentGrid != null)
-			currentGrid.ClearOccupied();
+		currentGrid?.ClearOccupied();
 		
-		if(CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
+		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
 			IsMoving = true;
 			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
@@ -547,8 +547,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
-		// move completed	
-		CompleteAction(actionData.moveCost);
+		// move completed
+		if (secondMovement)
+			CompleteAction(actionData.moveCost * 2);
+		else 
+			CompleteAction(actionData.moveCost);
+
 		IsMoving = false;
 		//CompletedTurn = true;
 	}
