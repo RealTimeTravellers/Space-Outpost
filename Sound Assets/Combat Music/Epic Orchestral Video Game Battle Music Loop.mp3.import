@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://buifynpnrjfrq"
+path="res://.godot/imported/Epic Orchestral Video Game Battle Music Loop.mp3-3a3cb6b5c3c82fca3b94b84378fc048a.mp3str"
+
+[deps]
+
+source_file="res://Sound Assets/Combat Music/Epic Orchestral Video Game Battle Music Loop.mp3"
+dest_files=["res://.godot/imported/Epic Orchestral Video Game Battle Music Loop.mp3-3a3cb6b5c3c82fca3b94b84378fc048a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -39,5 +39,9 @@ public partial class EnemyManager : Node
     {
         allEnemies.Remove(enemy);
         spottedEnemies.Remove(enemy);
+
+        // stops combat loop so music can end
+        if (allEnemies.Count <= 0)
+            AudioManager.Instance.combatEnded = true;
     }
 }

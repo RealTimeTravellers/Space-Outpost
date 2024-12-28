@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b3s1ig8fbvopt"
+path="res://.godot/imported/machine-gun-129929.mp3-ac7e57bb1d433710ca65603ea87db53d.mp3str"
+
+[deps]
+
+source_file="res://Sound Assets/Guns/Firing/machine-gun-129929.mp3"
+dest_files=["res://.godot/imported/machine-gun-129929.mp3-ac7e57bb1d433710ca65603ea87db53d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

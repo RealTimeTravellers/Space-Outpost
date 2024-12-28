@@ -210,5 +210,8 @@ public partial class TurnManager : Node
             if (currentEnemyIndex >= enemyCharacters.Count)
                 currentEnemyIndex = enemyCharacters.Count - 1;
         }
+
+        if (enemyCharacters.Count <= 0)
+            AudioManager.Instance.combatEnded = true;
     }
 }

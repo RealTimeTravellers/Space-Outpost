@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cvih2mrcr7nvc"
+path="res://.godot/imported/082268_machine-gun-002-87161.mp3-7606da23b9fa3af6410cd3714d2d9446.mp3str"
+
+[deps]
+
+source_file="res://Sound Assets/Guns/Firing/082268_machine-gun-002-87161.mp3"
+dest_files=["res://.godot/imported/082268_machine-gun-002-87161.mp3-7606da23b9fa3af6410cd3714d2d9446.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
