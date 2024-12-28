@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
-
+using System.Threading.Tasks;
 public enum AIState
 {
     Patrol,
@@ -30,31 +30,39 @@ public class EnemyAIStateMachine
             { AIState.Tactical, new TacticalState() }
         };
 
-        CurrentState = AIState.Patrol;
+        // CurrentState = AIState.Patrol;
     }
 
-
-
-    public void ChangeState(AIState newState, Character aiCharacter)
+    public async Task DecideNextState(Character character)
     {
-        AIState oldState = CurrentState;
-        var characterName = aiCharacter.Name ?? aiCharacter.GetParent()?.Name;
-        GD.Print($"[AI StateMachine] {characterName} changing state from {oldState} to {newState}");
+        if (!_states.ContainsKey(CurrentState)) return;
         
-        _states[CurrentState].Exit(aiCharacter);
+        await _states[CurrentState].Decide(character);
+    }
+
+    public void ChangeState(AIState newState, Character character)
+    {
+        if (CurrentState == newState) return;
+        
+        AIState oldState = CurrentState;
+        
+        if (_states.ContainsKey(CurrentState))
+            _states[CurrentState].Exit(character);
+        
         CurrentState = newState;
-        _states[CurrentState].Enter(aiCharacter);
+        
+        if (_states.ContainsKey(newState))
+            _states[newState].Enter(character);
         
         OnStateChanged?.Invoke(oldState, newState);
     }
 
-    public AIState UpdateCurrentState(Character aiCharacter)
-    {
+    public AIState ProcessState(Character aiCharacter)
+    { 
         if (!_states.ContainsKey(CurrentState))
-        {
-            GD.PrintErr($"Invalid state: {CurrentState}");
-            return AIState.Patrol; // Varsayılan duruma dön
-        }
+            return AIState.Patrol;
+        
         return _states[CurrentState].Process(aiCharacter);
     }
+
 }

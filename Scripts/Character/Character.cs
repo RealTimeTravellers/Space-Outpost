@@ -44,11 +44,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Variables
 	public bool IsTakingCover { get ; private set ; }
 	public bool IsMoving { get; set; }
+	public bool IsDead { get; set; } = false;
 	#endregion
 
 	[Export] private ActionData actionData = null;
 
-	[Export] private int actionPoints; // take form a resource data
+	[Export] public int actionPoints;  // take form a resource data
 	[Export] public bool CompletedTurn {get; set;} = false;
 
 	[Export] public Godot.Collections.Array<Character> enemiesInLos {get; set;} = new();
@@ -125,20 +126,21 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				enemyController = new EnemyAIController();
 				enemyController.Name = "EnemyAIController";
 				AddChild(enemyController);
-				enemyController.SetState(AIState.Patrol, this);
 			}
+			//enemyController.SetState(AIState.Patrol, this);
 		}
 
 		SubscribeToEvents();
 		if (IsFriendly)
 		{
-			TurnManager.Instance.playerCharacters.Add(this);
+			if (!TurnManager.Instance.playerCharacters.Contains(this))
+				TurnManager.Instance.playerCharacters.Add(this);
 			HealthLabel.Modulate = new Color(0,0,1,1);
 		}
 		else
 		{
-			EnemyManager.Instance.allEnemies.Add(this);
-			TurnManager.Instance.enemyCharacters.Add(this);
+			if (!TurnManager.Instance.enemyCharacters.Contains(this))
+				TurnManager.Instance.enemyCharacters.Add(this);
 			HealthLabel.Modulate = new Color(1,0,0,1);
 		}
 
@@ -166,22 +168,25 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public async void SearchForEnemies(bool instantSearch = false)
 	{
+		var targetList = IsFriendly ? 
+			TurnManager.Instance.enemyCharacters : 
+			TurnManager.Instance.playerCharacters;
+
 		if (instantSearch)
 		{
-			enemiesInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+			enemiesInLos = QueryForEnemies(targetList);
 			doQuery = false;
 			return;
 		}
 
 		while (doQuery)
 		{
-			enemiesInLos = QueryForEnemies(EnemyManager.Instance.allEnemies);
+			enemiesInLos = QueryForEnemies(targetList);
 
 			if (endTurnState == EndTurnState.StandToEngage)
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -190,8 +195,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			{
 				if (enemiesInLos.Contains(TurnManager.CurrentlyMovingCharacter))
 				{
-					//Attack(TurnManager.CurrentlyMovingCharacter);
-					//Attack(TurnManager.CurrentlyMovingCharacter);
 					endTurnState = EndTurnState.None;
 					doQuery = false;
 				}
@@ -201,11 +204,19 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
-	private void CompleteAction(int cost)
+	public void CompleteAction(int cost)
 	{
-		GD.Print($"[Character] {this.Name} Action Done: {cost}");
-		this.actionPoints -= cost;
-		ActionCompleted?.Invoke(this.actionPoints);
+		if (actionPoints - cost <= 0)
+		{
+			actionPoints = 0;
+			DepleteActionPoints();
+			EndTurn();
+		}
+		else
+		{
+			actionPoints -= cost;
+		}
+		ActionCompleted?.Invoke(actionPoints);
 		
 		CheckTurnEnd();
 
@@ -213,31 +224,45 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CameraManager.ReturnCameraToTactical();
 	}
 
+	public void ResetActionPoints()
+	{
+		Stats.ResetActionPoints();
+		actionPoints = Stats.ActionPoints.GetValue();
+	}
+
+	public void DepleteActionPoints()
+	{
+		Stats.DepleteActionPoints();
+		actionPoints = Stats.ActionPoints.GetValue();
+	}
+
 	private void CheckTurnEnd()
 	{
-		if (this.actionPoints <= 0 && !CompletedTurn)
+		if (actionPoints <= 0 && !CompletedTurn)
 		{
-			GD.Print($"[Character] {this.Name} out of action points");
 			EndTurn();
 		}
 	}
 
 	public void EndTurn()
 	{
-		if (CompletedTurn || actionPoints > 0)
-		{
-			GD.Print($"[Character] {this.Name} cannot end turn yet - CompletedTurn:{CompletedTurn}, AP:{actionPoints}");
-			return;
-		}
-		
 		// Hareket devam ediyorsa bekle
-		if (!CharacterController._navAgent.IsNavigationFinished())
+		// if (CompletedTurn) return;
+		
+		/*
+		if (!IsFriendly && CompletedTurn)
 		{
-			GD.Print($"[Character] {this.Name} still moving, cannot end turn");
+			GD.Print($"[Character] {this.Name} ending enemy movement");
+			TurnManager.Instance.EndEnemyMovement(this);
 			return;
 		}
+
+		while (!CharacterController._navAgent.IsNavigationFinished())
+		{
+			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+		}
+		*/
 		
-		GD.Print($"[Character] {this.Name} Ending Turn");
 		CompletedTurn = true;
 
 		if (IsFriendly)
@@ -256,24 +281,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (CameraManager.Instance.AimingMode)
 		{
+			CameraManager.Instance.AimingMode = false;
 			CameraManager.ReturnCameraToTactical();
-			CharacterController.SetState(CharacterStateType.Idle, this);
-			return;
 		}
-
-		// İlk kez açılıyorsa:
-		if (IsFriendly)
-			enemiesInLos = QueryForEnemies(TurnManager.Instance.enemyCharacters);
 		else
-			enemiesInLos = QueryForEnemies(TurnManager.Instance.playerCharacters);
-
-		if (Stats.ActionPoints.GetValue() > 0 && enemiesInLos.Count > 0)
 		{
-			targetIndex = Mathf.Clamp(targetIndex, 0, enemiesInLos.Count - 1);
-			Target = enemiesInLos[targetIndex];
-			LookAt(Target.Position);
-			CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
-			CameraManager.MoveToShoulder(this);   // AimingMode=true
+			CameraManager.Instance.AimingMode = true;
 			CharacterController.SetState(CharacterStateType.Aiming, this);
 		}
 	}
@@ -301,29 +314,50 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
 	}
 
-	private void Die()
+	public void Die()
 	{
-		CompletedTurn = true;
-		// TODO: play Death animation and sound
+		if (IsDead)
+		{
+			GD.Print("[Character] Already dead, returning");
+			return;
+		}
 		
-		// Test
 		if (IsFriendly)
+		{
+			foreach (var enemy in TurnManager.Instance.enemyCharacters)
+			{
+				if (enemy.Target == this)
+				{
+					enemy.Target = null;
+				}
+			}
 			TurnManager.Instance.playerCharacters.Remove(this);
+		}
 		else
 		{
+			foreach (var player in TurnManager.Instance.playerCharacters)
+			{
+				if (player.Target == this)
+				{
+					player.Target = null;
+				}
+			}
 			enemiesInLos.Remove(this);
 			EnemyManager.Instance.allEnemies.Remove(this);
 			TurnManager.Instance.enemyCharacters.Remove(this);
-			// need to do a global query check
-
 		}
+		CompletedTurn = true;
+		IsDead = true;
 
+		GD.Print("[Character] Invoking CharacterDied event");
 		TurnManager.Instance.CharacterDied.Invoke(this);
-		QueueFree();
+		
 	}
 
 	private void UpdateHealthText()
 	{
+		if (Health <0) 
+			Health = 0;
 		HealthLabel.Text = Health +"/"+ Stats.Health.GetValue();
 	}
 
@@ -376,21 +410,28 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		// this needs to be active in enemy turn
 		// this needs to be active last time once moving is done
+		if (IsDead) return new Godot.Collections.Array<Character>();
 
 		Godot.Collections.Array<Character> enemiesWithLos = new();
 
-		foreach (Character enemy in enemies.Select(v => (Character)v))
+		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => !e.IsDead && e != this)) 
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
 			if (distance < Stats.Perception.GetValue()) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
-				CastHit hit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), true); // Make enemy 10
+
+				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), false);
 				
-				if (hit.NonEmpty)
-					enemiesWithLos.Add(enemy);
-					// GD.Print("vURULDU.");
+				if (!wallHit.NonEmpty)
+				{
+					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(4), true);
+					if (characterHit.NonEmpty)
+					{
+						enemiesWithLos.Add(enemy);
+					}
+				}
 
 				if (limitedFov)
 				{
@@ -407,20 +448,28 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// </summary>
 	/// <param name="target"></param>
 	/// <param name="accuracy"></param>
-	public void Attack(Character target)
+	public async Task Attack(Character target)
 	{
+		if (target == null || target.IsDead || actionPoints <= 0) return;
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
+
 		float hitChance = Stats.Accuracy.GetValue() / 100f;
 		bool hit = GD.Randf() <= hitChance;
+
+		Vector3 direction = (target.Position - Position).Normalized();
+		if (!IsFriendly)
+			direction = -direction; // Reverse is needed why ?_
+		
+   		shootEffect.ProcessMaterial.Set("direction", direction);
 		
 		if (hit) // || true for test purposes
 		{
 			shootEffect.ProcessMaterial.Set("spread", 2);
 			shootEffect.Restart();
 
-			//int damage = 3; //Equipment.GetCurrentWeaponDamage(); // temporary
-			target.TakeDamage(Equipment.GetCurrentWeaponDamage());
+			int damage = 4; //Equipment.GetCurrentWeaponDamage(); // temporary
+			target.TakeDamage(damage);
 			// and play animation
 		}
 		else
@@ -431,7 +480,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			// shoot animation but no hit
 		}
 
-		CompleteAction(actionData.attackCost);
+		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+		CharacterController._stateMachine.RequestAnimation("idle");
+		await ToSignal(GetTree().CreateTimer(0.3f), "timeout");
+		
+		CompleteAction(2);
 	}
 
 	public void TakeDamage(int damage)
@@ -439,7 +492,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		Health -= damage;
 
 		if (Health <= 0)
-			Die();
+		{
+			CharacterController.SetState(CharacterStateType.Death, this);
+			UpdateHealthText();
+		}
 		else
 			UpdateHealthText();
 	}
@@ -449,7 +505,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if(CompletedTurn || targetGrid == null || Stats.ActionPoints.GetValue() <= 0) 
+		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead) 
 			return;
 
 		// Grid işlemleri
@@ -465,37 +521,36 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hedef pozisyonu ayarla
 		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
 		
-		// State'i Moving'e geçir
+		if (IsFriendly)
+			TurnManager.Instance.StartPlayerMovement(this);
+		
+		CharacterController.SetState(CharacterStateType.Moving, this);
+		
+		/*
 		if (IsFriendly)
 		{
 			TurnManager.Instance.StartPlayerMovement(this);
 			CharacterController.SetState(CharacterStateType.Moving, this);
 		}
-		else
-		{
-			TurnManager.Instance.StartEnemyMovement(this);
-			CharacterController.SetState(CharacterStateType.Moving, this);
-		}
+		*/
 
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
+			if (IsDead || (IsFriendly && CompletedTurn)) // only friendly turn ends
+				break;
+			
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
-
-		// Hedef grid'e yerleş
+		// move to target grid
 		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
-		// Hareketi tamamla
+		// move completed	
 		CompleteAction(actionData.moveCost);
 		IsMoving = false;
-		
-		if (IsFriendly)
-			TurnManager.Instance.EndPlayerMovement(this);
-		else
-			TurnManager.Instance.EndEnemyMovement(this);
+		//CompletedTurn = true;
 	}
 
 	public void TakeCover()
@@ -522,21 +577,25 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#endregion
 
 	#region Event Handles
+
+
 	private void OnTurnChanged(bool playerTurn)
 	{
+		
 		if (IsFriendly && playerTurn)
 		{
 			CompletedTurn = false;
-			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
+			ResetActionPoints();
 			endTurnState = EndTurnState.None;
 		}
 		else if(!IsFriendly && !playerTurn)
 		{
 			CompletedTurn = false;
-			IsTakingCover = false;
 			actionPoints = actionData.defaultActionPoints;
+			ResetActionPoints();
 			endTurnState = EndTurnState.None;
+			// await ProcessAITurn();
 		}
 	}
 
@@ -553,6 +612,18 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
+	public async Task ProcessAITurn()
+	{
+		if (IsFriendly || IsDead || CompletedTurn) return;
+		
+		var nextState = enemyController._stateMachine._states[enemyController._stateMachine.CurrentState].CheckState(this);
+		if (nextState != enemyController._stateMachine.CurrentState)
+		{
+			enemyController.SetState(nextState, this);
+		}
+		
+		await enemyController._stateMachine._states[enemyController._stateMachine.CurrentState].Decide(this);
+	}
 	private void OnPlayerMovementChanged(bool started)
 	{
 		if (!started) // ended

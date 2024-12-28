@@ -4,14 +4,15 @@
 
 [resource]
 script = ExtResource("1_2vitv")
-UnitType = 0
 EnemyType = 0
+UnitType = 0
 Health = 6
 Armor = 2
 Accuracy = 75
 MovementRange = 6
 Morale = 40
 ActionPoints = 2
-Perception = 10
+Perception = 20
 Evasion = 20
 CriticalHitChance = 30
+Cover = 0

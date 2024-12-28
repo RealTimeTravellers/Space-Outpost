@@ -4,7 +4,6 @@
 
 [resource]
 script = ExtResource("1_ngk65")
-UnitType = 1
 PlayerType = 0
 UnitType = 1
 Health = 7
@@ -13,6 +12,7 @@ Accuracy = 70
 MovementRange = 9
 Morale = 20
 ActionPoints = 2
-Perception = 10
+Perception = 20
 Evasion = 12
 CriticalHitChance = 30
+Cover = 0

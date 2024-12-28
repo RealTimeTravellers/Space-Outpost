@@ -4,7 +4,6 @@
 
 [resource]
 script = ExtResource("1_wjvuv")
-UnitType = 0
 EnemyType = 5
 UnitType = 0
 Health = 10
@@ -13,6 +12,7 @@ Accuracy = 85
 MovementRange = 5
 Morale = 40
 ActionPoints = 2
-Perception = 10
+Perception = 20
 Evasion = 30
 CriticalHitChance = 30
+Cover = 0

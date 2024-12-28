@@ -1,58 +1,29 @@
 using Godot;
-using System.Linq;
+using System.Threading.Tasks;
 public class PatrolState : EnemyState
 {
-    private GridObject _patrolTarget;
-    
+
     public override void Enter(Character enemy)
     {
-        ChooseNewDirection(enemy);
+        base.Enter(enemy);
+        enemy.CharacterController.IsEnemyAlerted = false;
     }
 
-    private void ChooseNewDirection(Character enemy)
+    public override async Task Decide(Character enemy)
     {
-        var random = new RandomNumberGenerator();
-        random.Randomize();
-        var shuffledDirections = directions.OrderBy(x => random.Randf()).ToArray();
-
-        foreach (var dir in shuffledDirections)
+        
+        var nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
         {
-            int steps = random.RandiRange(1, 2);
-            Vector3 targetPos = enemy.GlobalPosition + dir * steps;
-
-            var targetGrid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPos);
-            if (targetGrid != null && !targetGrid.IsOccupied && !targetGrid.IsBlocked)
-            {
-                _patrolTarget = targetGrid;
-                return;
-            }
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
         }
-    }
-
-    public override AIState Process(Character enemy)
-    {
-        var nextState = base.CheckState(enemy);
-        if (nextState != AIState.Patrol) 
-            return nextState;
-
-        if (enemy.CompletedTurn)
-            return nextState;
         
-        if (_patrolTarget == null)
-            ChooseNewDirection(enemy);
-        
-        // Hareket başlatılmamışsa başlat
-        enemy.enemyController.MoveToGrid(_patrolTarget);
-
-        nextState = base.CheckState(enemy);
-        if (nextState != AIState.Patrol) 
-            return nextState;
-
-        return AIState.Patrol;
+        await enemy.enemyController.HandlePatrol(enemy);
     }
 
     public override void Exit(Character enemy)
     {
-        _patrolTarget = null;
+        base.Exit(enemy);
     }
 }

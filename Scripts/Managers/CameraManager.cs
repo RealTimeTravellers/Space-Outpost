@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+using System.Threading.Tasks;
 public partial class CameraManager : Node
 {
     public static CameraManager Instance { get; set; }
@@ -10,31 +10,41 @@ public partial class CameraManager : Node
     [Export] public bool AimingMode { get; set; } = false;
     [Export] public bool AreaSelection { get; set; } = false;
 
+    private Transform3D _tacticalTransform;
+
     public override void _Ready()
+    {
+        InitializeAsync();
+        // TODO: check if camera is ready.
+    }
+
+    private async void InitializeAsync()
     {
         if (Instance == null)
             Instance = this;
         else
             QueueFree();
-            
-        SetMainCamera();
+
+        await SetMainCamera();
     }
 
-    private async void SetMainCamera()
+    private async Task SetMainCamera()
     {
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         MainCamera = MainCameraSet.Camera;
+        _tacticalTransform = TacticalCameraPostion.GlobalTransform;
     }
 
     public static void ReturnCameraToTactical()
     {
-        Instance.MainCameraSet.Transform = Instance.TacticalCameraPostion.GlobalTransform;
+        Instance.MainCameraSet.GlobalTransform = Instance._tacticalTransform;
         Instance.AimingMode = false;
     }
 
     public static void MoveToShoulder(Character character)
     {
-        Instance.MainCameraSet.Transform = character.ShoulderCamera.GlobalTransform;
+        Instance._tacticalTransform = Instance.MainCameraSet.GlobalTransform;
+        Instance.MainCameraSet.GlobalTransform = character.ShoulderCamera.GlobalTransform;
         Instance.AimingMode = true;
     }
 

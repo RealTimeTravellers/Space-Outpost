@@ -7,44 +7,54 @@ using Godot;
 
 public class EnemyState : BaseState<AIState>
 {
-    protected readonly Vector3[] directions = new[]
+    bool canSeePlayer = false;
+
+    public override void Enter(Character character)
     {
-        new Vector3(1, 0, 0),   // Sağ
-        new Vector3(-1, 0, 0),  // Sol
-        new Vector3(0, 0, 1),   // İleri
-        new Vector3(0, 0, -1)   // Geri
-    };
+        base.Enter(character);
+    }
 
     public override AIState Process(Character character)
     {
         return AIState.Patrol;
     }
+
+    public override Task Decide(Character character)
+    {
+        return Task.CompletedTask;
+    }
+
+    public override void Exit(Character character)
+    {
+        base.Exit(character);
+    }
     
 
     public override AIState CheckState(Character character)
     {
-        // Debug için player görüş kontrolü
-        bool canSeePlayer = PlayerInSight(character);
-        
-        // Önce Alien kontrolü yap
+        // character.SearchForEnemies();
+        canSeePlayer = character.enemiesInLos.Count > 0;
+
+        // Düşük can durumunda Flee
+        if (character.Stats.Health.GetValue() <= 2 || character.Health <= 2)
+            return AIState.Flee;
+
+        // State değişimlerini kontrol et
         if (character.Stats.UnitType == UnitType.Alien)
         {
             if (canSeePlayer)
                 return AIState.Aggression;
-            return AIState.Patrol;
+        }
+        else if (canSeePlayer)
+        {
+            return AIState.Tactical;
+        }
+        else if (EnemyManager.Instance.ShotFired)
+        {
+            return AIState.Alert;
         }
 
-        // Human için kontroller
-        if (character.Stats.Health.GetValue() <= 2)
-            return AIState.Flee;
-                
-        if (character.Stats.Morale.GetValue() < 5)
-            return AIState.Cower;
-
-        if (canSeePlayer)
-            return AIState.Tactical;
-
-        return AIState.Patrol;
+        return character.enemyController._stateMachine.CurrentState;
     }
 
     

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Godot;
 
 public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStateType : Enum
@@ -7,6 +8,11 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
     public virtual void Enter(Character character)
     {
         
+    }
+
+    public virtual Task Decide(Character character)
+    {
+        return Task.CompletedTask;
     }
 
     public virtual TStateType Process(Character character)
@@ -26,22 +32,21 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
 
     protected bool PlayerInSight(Character enemy)
     {
-        if (TurnManager.Instance == null) return false;
+        if (TurnManager.Instance == null || enemy.IsDead) return false;
 
-        var enemiesInSight = enemy.QueryForEnemies(TurnManager.Instance.playerCharacters);
-        return enemiesInSight.Count > 0;
+        if(enemy.IsFriendly)
+            return enemy.QueryForEnemies(TurnManager.Instance.playerCharacters).Count > 0;
+        else
+            return enemy.QueryForEnemies(TurnManager.Instance.enemyCharacters).Count > 0;
     }
 
     protected bool EnemyInSight(Character character)
     {
-        if (TurnManager.Instance == null) return false;
-
-        var enemies = character.IsFriendly ? 
-            TurnManager.Instance.enemyCharacters : 
-            TurnManager.Instance.playerCharacters;
-
-        var enemiesInSight = character.QueryForEnemies(enemies);
-        return enemiesInSight.Count > 0;
+        if (TurnManager.Instance == null || character.IsDead) return false;
+        if(character.IsFriendly)
+            return character.QueryForEnemies(TurnManager.Instance.enemyCharacters).Count > 0;
+        else
+            return character.QueryForEnemies(TurnManager.Instance.playerCharacters).Count > 0;
     }
 
     protected void FindClosestTarget(Character enemy)
@@ -49,11 +54,11 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
         var enemiesInSight = enemy.QueryForEnemies(TurnManager.Instance.playerCharacters);
         if (enemiesInSight.Count > 0)
         {
-            enemy.Target = enemiesInSight[0]; // İlk düşmanı hedef al
-            GD.Print($"[AI] {enemy.Name} found target: {enemy.Target?.Name}");
+            enemy.Target = enemiesInSight[0];
         }
     }
 
+    /*
     protected GridObject FindNearestCover(Character enemy, Character target)
     {
         float maxDistance = enemy.Stats.Perception.GetValue();
@@ -93,4 +98,5 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
 
         return bestCover;
     }
+    */
 }
