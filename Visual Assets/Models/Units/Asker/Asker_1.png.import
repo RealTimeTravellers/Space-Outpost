@@ -2,24 +2,23 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhbwhwvvxin23"
-path.s3tc="res://.godot/imported/Asker_0.png-527ab5950e303313fabcef4db9afb088.s3tc.ctex"
+uid="uid://b3xcee72kby2h"
+path="res://.godot/imported/Asker_1.png-072d444794948b525f0f7ecb80ace993.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
-"md5": "2cc2aefbf3f60f87ec6ddcaa993422c3"
+"md5": "2447b6a1672dfe1f2cae9e1229e8407d"
 }
 
 [deps]
 
-source_file="res://Visual Assets/Models/Units/Core/Asker_0.png"
-dest_files=["res://.godot/imported/Asker_0.png-527ab5950e303313fabcef4db9afb088.s3tc.ctex"]
+source_file="res://Visual Assets/Models/Units/Asker/Asker_1.png"
+dest_files=["res://.godot/imported/Asker_1.png-072d444794948b525f0f7ecb80ace993.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
@@ -35,4 +34,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1
