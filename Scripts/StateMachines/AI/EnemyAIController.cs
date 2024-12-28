@@ -17,6 +17,7 @@ public partial class EnemyAIController : Node
     public EnemyAIStateMachine _stateMachine {get; private set;}
     [Export] public Character _character;
     [Export] public bool _isActive = false;
+    public bool _isDead = false;
     [Export] public bool _isHandlingState {get; set;} = false;
 
 
@@ -37,7 +38,7 @@ public partial class EnemyAIController : Node
 
     private async Task OnTurnChangedAsync(bool isPlayerTurn)
     {
-        if (!isPlayerTurn && _character != null && !_character.IsDead)
+        if (!isPlayerTurn && _character != null && !_isDead)
         {
             _isActive = true;
             _character.CompletedTurn = false;
@@ -121,7 +122,7 @@ public partial class EnemyAIController : Node
         if (_isHandlingState) return;
         _isHandlingState = true;
 
-        if (_character.CompletedTurn) 
+        if (_character.CompletedTurn || _character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) 
         {
             _isHandlingState = false;
             return;
@@ -316,5 +317,15 @@ public partial class EnemyAIController : Node
         if(_isHandlingState) return;
         GD.Print($"[AI Debug] {aiCharacter.Name} changing to {newState} state");
         _stateMachine.ChangeState(newState, aiCharacter);
+    }
+
+    public void PrepareForDispose()
+    {
+        _isDead = true;
+        _isActive = false;
+        _isHandlingState = false;
+        TurnManager.Instance.TurnChangedAsync -= OnTurnChangedAsync;
+        _character = null;
+        _stateMachine = null;
     }
 }

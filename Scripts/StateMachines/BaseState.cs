@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Godot;
-
+using System.Linq;
 public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStateType : Enum
 {
     protected TStateType PreviousState { get; private set; }
@@ -30,28 +30,23 @@ public abstract class BaseState<TStateType> : IBaseState<TStateType> where TStat
         return default;
     }
 
-    protected bool PlayerInSight(Character enemy)
-    {
-        if (TurnManager.Instance == null || enemy.IsDead) return false;
-
-        if(enemy.IsFriendly)
-            return enemy.QueryForEnemies(TurnManager.Instance.playerCharacters).Count > 0;
-        else
-            return enemy.QueryForEnemies(TurnManager.Instance.enemyCharacters).Count > 0;
-    }
-
     protected bool EnemyInSight(Character character)
     {
-        if (TurnManager.Instance == null || character.IsDead) return false;
-        if(character.IsFriendly)
-            return character.QueryForEnemies(TurnManager.Instance.enemyCharacters).Count > 0;
-        else
-            return character.QueryForEnemies(TurnManager.Instance.playerCharacters).Count > 0;
+        if (TurnManager.Instance == null || character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return false;
+        
+        var enemies = character.QueryForEnemies(new Godot.Collections.Array<Character>(
+            character.IsFriendly ? 
+            TurnManager.Instance.enemyCharacters : 
+            TurnManager.Instance.playerCharacters
+        ));
+        
+        return enemies.Count > 0;
     }
 
     protected void FindClosestTarget(Character enemy)
     {
-        var enemiesInSight = enemy.QueryForEnemies(TurnManager.Instance.playerCharacters);
+        var enemiesInSight = enemy.QueryForEnemies(new Godot.Collections.Array<Character>
+        (TurnManager.Instance.playerCharacters.Where(e => e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death)));
         if (enemiesInSight.Count > 0)
         {
             enemy.Target = enemiesInSight[0];
