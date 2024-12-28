@@ -504,14 +504,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if(targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead) 
+		if (targetGrid == null || Stats.ActionPoints.GetValue() <= 0 || IsDead) 
 			return;
 
+		bool secondMovement = currentGrid.Position.DistanceTo(targetGrid.Position) > this.FirstMovementRange;
+
 		// Grid işlemleri
-		if(currentGrid != null)
-			currentGrid.ClearOccupied();
+		currentGrid?.ClearOccupied();
 		
-		if(CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
+		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
 			IsMoving = true;
 			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
@@ -546,8 +547,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
-		// move completed	
-		CompleteAction(actionData.moveCost);
+		// move completed
+		if (secondMovement)
+			CompleteAction(actionData.moveCost * 2);
+		else 
+			CompleteAction(actionData.moveCost);
+
 		IsMoving = false;
 		//CompletedTurn = true;
 	}
