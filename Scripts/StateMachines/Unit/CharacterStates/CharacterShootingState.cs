@@ -8,7 +8,7 @@ public class CharacterShootingState : CharacterState
     {
         _hasShot = false;  
 
-        if (character.Stats.ActionPoints.GetValue() <= 0)
+        if (character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0)
         {
             return;
         }

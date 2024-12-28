@@ -139,7 +139,7 @@ public partial class EnemyAIController : Node
         {
             float distanceToTarget = _character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition);
 
-            if (distanceToTarget > _character.Stats.Perception.GetValue())
+            if (distanceToTarget > _character.Perception/* .Stats.Perception.GetValue() */)
             {
                 var grid = GridManager.Instance.GetGridObjectFromWorldPosition(_character.Target.GlobalPosition);
                 if (grid != null)
@@ -149,7 +149,7 @@ public partial class EnemyAIController : Node
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                 }
             }
-            else if (_character.Stats.ActionPoints.GetValue() > 0)
+            else if (_character.Perception/* .Stats.ActionPoints.GetValue() */ > 0)
             {
                 await EnemyShoot();
                 await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
@@ -180,7 +180,7 @@ public partial class EnemyAIController : Node
                 await MoveToGrid(availableCover, 10);
                 await ToSignal(GetTree().CreateTimer(0.8f), "timeout");
 
-                if (_character.Stats.ActionPoints.GetValue() > 0 || _character.actionPoints > 0)
+                if (_character.Perception/* .Stats.ActionPoints.GetValue() */ > 0 || _character.actionPoints > 0)
                 {
                     await EnemyShoot();
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
@@ -188,7 +188,7 @@ public partial class EnemyAIController : Node
             }
             else if (_character.IsInCover)
             {
-                if (_character.Stats.ActionPoints.GetValue() > 0)
+                if (_character.Perception/* .Stats.ActionPoints.GetValue() */ > 0)
                 {
                     await EnemyShoot();
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");

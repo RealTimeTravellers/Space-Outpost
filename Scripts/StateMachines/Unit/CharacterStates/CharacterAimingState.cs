@@ -19,7 +19,7 @@ public class CharacterAimingState : CharacterState
             TurnManager.Instance.playerCharacters.Where(e => e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death).ToList()
         ));
         
-        if (character.Stats.ActionPoints.GetValue() > 0 && character.enemiesInLos.Count > 0)
+        if (character.actionPoints/* Stats.ActionPoints.GetValue() */ > 0 && character.enemiesInLos.Count > 0)
         {
             character.targetIndex = Mathf.Clamp(character.targetIndex, 0, character.enemiesInLos.Count - 1);
             character.Target = character.enemiesInLos[character.targetIndex];
@@ -56,7 +56,7 @@ public class CharacterAimingState : CharacterState
     {
         // Aim modu kapatıldıysa idle'a dön
         if (!CameraManager.Instance.AimingMode && character.IsFriendly || 
-            character.Stats.ActionPoints.GetValue() <= 0 || 
+            character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0 || 
             character.actionPoints <= 0 )
             return CharacterStateType.Idle;
             
