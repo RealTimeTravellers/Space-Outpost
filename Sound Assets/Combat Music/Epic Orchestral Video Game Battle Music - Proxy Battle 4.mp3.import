@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cb8f1je86kkb"
+path="res://.godot/imported/Epic Orchestral Video Game Battle Music - Proxy Battle 4.mp3-594f40be5403dc6785f6e78e5d14e125.mp3str"
+
+[deps]
+
+source_file="res://Sound Assets/Combat Music/Epic Orchestral Video Game Battle Music - Proxy Battle 4.mp3"
+dest_files=["res://.godot/imported/Epic Orchestral Video Game Battle Music - Proxy Battle 4.mp3-594f40be5403dc6785f6e78e5d14e125.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,14 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://dvgw1w85ktxjo"]
+[gd_scene load_steps=5 format=3 uid="uid://dvgw1w85ktxjo"]
 
 [ext_resource type="Script" path="res://Scripts/Managers/AudioManager.cs" id="1_o4rxo"]
 [ext_resource type="AudioStream" uid="uid://bubugjmyw6gsi" path="res://Sound Assets/Background/Brown Noise.ogg" id="2_bgq1b"]
+[ext_resource type="AudioStream" uid="uid://cb8f1je86kkb" path="res://Sound Assets/Combat Music/Epic Orchestral Video Game Battle Music - Proxy Battle 4.mp3" id="3_q1qxo"]
+[ext_resource type="AudioStream" uid="uid://buifynpnrjfrq" path="res://Sound Assets/Combat Music/Epic Orchestral Video Game Battle Music Loop.mp3" id="4_qy2cw"]
 
-[node name="AudioManager" type="Node" node_paths=PackedStringArray("backgroundPlayer")]
+[node name="AudioManager" type="Node" node_paths=PackedStringArray("BrownNoisePlayer", "CombatMusicPlayer", "CombatMusicLoopPlayer")]
 script = ExtResource("1_o4rxo")
-backgroundPlayer = NodePath("Background Audio Player")
-BrownNoise = ExtResource("2_bgq1b")
+BrownNoisePlayer = NodePath("Brown Noise Audio Player")
+combatLoopCutoff = 129.5
+CombatMusicPlayer = NodePath("Combat Music Audio Player")
+CombatMusicLoopPlayer = NodePath("Combat Music looped Audio Player")
 
-[node name="Background Audio Player" type="AudioStreamPlayer" parent="."]
+[node name="Brown Noise Audio Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_bgq1b")
 pitch_scale = 0.5
-parameters/looping = false
+parameters/looping = true
+
+[node name="Combat Music Audio Player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_q1qxo")
+
+[node name="Combat Music looped Audio Player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_qy2cw")
+parameters/looping = true
