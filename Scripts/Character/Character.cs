@@ -47,7 +47,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Variables
 	public bool IsTakingCover { get ; private set ; }
 	public bool IsMoving { get; set; }
-	public bool IsDead { get; set; } = false;
 	#endregion
 
 	[Export] private ActionData actionData = null;
@@ -64,13 +63,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
-	[Export] private GpuParticles3D shootEffect;
-	[Export] private Node3D MuzzlePosition; // play muzzle flash and shoot pos
+	[Export] private Gun gun;
 
 	[Export] private Label3D HealthLabel;
 	[Export] private Sprite3D SelectionSprite;
 	
-
 	private RandomNumberGenerator rng = new();
 
 	public override void _Ready()
@@ -171,9 +168,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public async void SearchForEnemies(bool instantSearch = false)
 	{
+		// safe
 		var targetList = IsFriendly ? 
-			TurnManager.Instance.enemyCharacters : 
-			TurnManager.Instance.playerCharacters;
+			new Godot.Collections.Array<Character>(TurnManager.Instance.enemyCharacters.Where(e => e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death)) : 
+			new Godot.Collections.Array<Character>(TurnManager.Instance.playerCharacters.Where(e => e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death));
 
 		if (instantSearch)
 		{
@@ -321,42 +319,26 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void Die()
 	{
-		if (IsDead)
+		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return;
+		
+		// Önce AI'ı devre dışı bırak
+		if (!IsFriendly && enemyController != null)
 		{
-			GD.Print("[Character] Already dead, returning");
-			return;
+			EnemyManager.Instance.OnEnemyDeath(this);
+			enemyController.PrepareForDispose();
 		}
 		
-		if (IsFriendly)
+		TurnManager.Instance.CharacterDied?.Invoke(this);
+		
+		// Grid'den temizle
+		if (currentGrid != null)
 		{
-			foreach (var enemy in TurnManager.Instance.enemyCharacters)
-			{
-				if (enemy.Target == this)
-				{
-					enemy.Target = null;
-				}
-			}
-			TurnManager.Instance.playerCharacters.Remove(this);
+			currentGrid.ClearOccupied();
+			currentGrid = null;
 		}
-		else
-		{
-			foreach (var player in TurnManager.Instance.playerCharacters)
-			{
-				if (player.Target == this)
-				{
-					player.Target = null;
-				}
-			}
-			enemiesInLos.Remove(this);
-			EnemyManager.Instance.allEnemies.Remove(this);
-			TurnManager.Instance.enemyCharacters.Remove(this);
-		}
-		CompletedTurn = true;
-		IsDead = true;
 
-		GD.Print("[Character] Invoking CharacterDied event");
-		TurnManager.Instance.CharacterDied.Invoke(this);
-		
+		//IsDead = true;
+		CompletedTurn = true;
 	}
 
 	private void UpdateHealthText()
@@ -415,11 +397,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		// this needs to be active in enemy turn
 		// this needs to be active last time once moving is done
-		if (IsDead) return new Godot.Collections.Array<Character>();
 
 		Godot.Collections.Array<Character> enemiesWithLos = new();
 
-		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => !e.IsDead && e != this)) 
+		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => e != this)) 
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
 			if (distance < Perception/* Stats.Perception.GetValue() */) // is in identification range
@@ -455,7 +436,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	/// <param name="accuracy"></param>
 	public async Task Attack(Character target)
 	{
-		if (target == null || target.IsDead || actionPoints <= 0) return;
+		// safe
+		if (target == null || target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death || actionPoints <= 0) return;
 		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
 
@@ -466,26 +448,17 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (!IsFriendly)
 			direction = -direction; // Reverse is needed why ?_
 		
-   		shootEffect.ProcessMaterial.Set("direction", direction);
-		
+
 		if (hit) // || true for test purposes
 		{
-			shootEffect.ProcessMaterial.Set("spread", 2);
-			shootEffect.Restart();
-
 			int damage = 4; //Equipment.GetCurrentWeaponDamage(); // temporary
 			target.TakeDamage(damage);
-			// and play animation
 		}
-		else
-		{
-			shootEffect.ProcessMaterial.Set("spread", 10);
-			shootEffect.Restart();
 
-			// shoot animation but no hit
-		}
+		gun.Fire(hit);
 
 		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+
 		CharacterController._stateMachine.RequestAnimation("idle");
 		await ToSignal(GetTree().CreateTimer(0.3f), "timeout");
 		
@@ -510,7 +483,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if (targetGrid == null || /* Stats.ActionPoints.GetValue() */ actionPoints <= 0 || IsDead) 
+		if (targetGrid == null || /* Stats.ActionPoints.GetValue() */ actionPoints <= 0 || CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) 
 			return;
 
 		bool secondMovement = currentGrid.Position.DistanceTo(targetGrid.Position) > this.FirstMovementRange;
@@ -544,7 +517,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
-			if (IsDead || (IsFriendly && CompletedTurn)) // only friendly turn ends
+			if (IsFriendly && CompletedTurn) // only friendly turn ends
 				break;
 			
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
@@ -625,7 +598,13 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public async Task ProcessAITurn()
 	{
-		if (IsFriendly || IsDead || CompletedTurn) return;
+		if (IsFriendly || CompletedTurn) return;
+
+		if (enemyController == null || !enemyController._isActive)
+		{
+			CompletedTurn = true;
+			return;
+		}
 		
 		var nextState = enemyController._stateMachine._states[enemyController._stateMachine.CurrentState].CheckState(this);
 		if (nextState != enemyController._stateMachine.CurrentState)
@@ -657,8 +636,15 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 	}
 
-	private void OnCharacterDied(Character diedCharacter)
+	public void OnCharacterDied(Character diedCharacter)
 	{
+		if (enemiesInLos.Contains(diedCharacter))
+            enemiesInLos.Remove(diedCharacter);
+            
+        // Clear target if it was the dead character
+        if (Target == diedCharacter)
+            Target = null;
+
 		SearchForEnemies(true);
 	}
 	#endregion

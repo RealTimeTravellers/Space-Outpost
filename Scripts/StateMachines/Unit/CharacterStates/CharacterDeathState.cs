@@ -11,25 +11,25 @@ public class CharacterDeathState : CharacterState
         if (!_deathAnimationStarted)
         {
             _deathAnimationStarted = true;
-
-            if (!character.IsFriendly)
-            {
-                var aiController = character.GetNode<EnemyAIController>("EnemyAIController");
-                if (aiController != null)
-                {
-                    //aiController.PrepareForDestruction();
-                }
-            }
-
+            
+            GD.Print("CharacterDeathState: Enter");
             character.CharacterController._stateMachine.RequestAnimation("death");
-            character.Die();
+            
+            // Delay the Die() call until animation starts
+            character.GetTree().CreateTimer(0.1f).Connect("timeout", Callable.From(() => {
+                GD.Print("CharacterDeathState: Die");
+                character.Die();
+                _deathProcessed = true;
+            }));
         }
     }
 
     public override CharacterStateType Process(Character character)
     {
-        base.Process(character);
-        return CharacterStateType.Death;
+        if (_deathProcessed)
+            return CharacterStateType.Death;
+            
+        return base.Process(character);
     }
 
     public override CharacterStateType CheckState(Character character)
