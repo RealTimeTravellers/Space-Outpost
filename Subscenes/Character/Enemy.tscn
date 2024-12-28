@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpnxwfh1wbjam"]
+[gd_scene load_steps=13 format=3 uid="uid://bpnxwfh1wbjam"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_fooxj"]
 [ext_resource type="Resource" uid="uid://b0e0ffdgmwpvx" path="res://Data/Chracter Action Data/EnemyCharacterActionData.tres" id="2_nxhog"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="6_2miie"]
 [ext_resource type="PackedScene" uid="uid://dlhh8isy223jk" path="res://Visual Assets/Models/Units/enemy_seperatist.tscn" id="7_ctbk1"]
 [ext_resource type="PackedScene" uid="uid://bskr6j2q3f2nt" path="res://Subscenes/Particle Effects/shoot_effect.tscn" id="8_ge1xp"]
+[ext_resource type="PackedScene" uid="uid://drvh7ppc0c6g0" path="res://Subscenes/Particle Effects/shoot_miss_effect.tscn" id="9_y3wyq"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
 
@@ -15,7 +16,7 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fdfim"]
 
-[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("AnimatorController", "CharacterController", "enemyController", "ShoulderCamera", "shootEffect", "MuzzlePosition", "HealthLabel")]
+[node name="Enemy_Character" type="CharacterBody3D" node_paths=PackedStringArray("AnimatorController", "CharacterController", "enemyController", "ShoulderCamera", "shootHitEffect", "shootMissEffect", "MuzzlePosition", "HealthLabel")]
 collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_fooxj")
@@ -24,7 +25,8 @@ CharacterController = NodePath("CharacterController")
 enemyController = NodePath("EnemyAIController")
 actionData = ExtResource("2_nxhog")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
-shootEffect = NodePath("muzzle Position/Shoot Effect")
+shootHitEffect = NodePath("muzzle Position/Shoot Effect")
+shootMissEffect = NodePath("muzzle Position/Shoot Effect2")
 MuzzlePosition = NodePath("muzzle Position")
 HealthLabel = NodePath("Health Text")
 
@@ -71,7 +73,8 @@ _characterController = NodePath("../CharacterController")
 [node name="Asker" parent="AnimatorController" instance=ExtResource("7_ctbk1")]
 
 [node name="muzzle Position" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32562, 1.13263, -0.748313)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -1)
 
 [node name="Shoot Effect" parent="muzzle Position" instance=ExtResource("8_ge1xp")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="Shoot Effect2" parent="muzzle Position" instance=ExtResource("9_y3wyq")]
