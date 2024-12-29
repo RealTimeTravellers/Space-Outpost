@@ -12,6 +12,8 @@ public partial class GridObject : Node3D
 	
 	[Export] private bool isSpriteOnly = true;
 
+	[Export] private CollisionShape3D collisionShape;
+
 	#region 3D Variables and Materials
 	[Export] public Material standardMaterial;
 	[Export] public Material selectedMaterial;
@@ -68,6 +70,7 @@ public partial class GridObject : Node3D
 	{
 		GridManager.Instance.SelectionChanged += OnSelectionChanged;
 		TurnManager.Instance.PlayerMovementChanged += OnPlayerMovementChanged;
+		TurnManager.Instance.TurnChanged += OnTurnChanged;
 	}
 
 	private void ChangeGridMaterial(Material mat, float transparency, Color colour, bool spriteOnly)
@@ -75,9 +78,15 @@ public partial class GridObject : Node3D
 		if (spriteOnly)
 		{
 			if(transparency == 1)
+			{
+				collisionShape.Disabled = true;
 				gridSprite.Visible = false;
+			}
 			else
+			{
+				collisionShape.Disabled = false;
 				gridSprite.Visible = true;
+			}
 
 			gridSprite.Modulate = colour;
 			//gridSprite.Transparency = transparency;
@@ -135,6 +144,14 @@ public partial class GridObject : Node3D
 	private void OnSelectionChanged(GridObject gridObject)
 	{
 		UpdateColour(gridObject);
+	}
+
+	private void OnTurnChanged(bool playerTurn)
+	{
+		if (playerTurn)
+			ChangeGridMaterial(standardMaterial, standardTransparency, standardColour, isSpriteOnly);
+		else
+			ChangeGridMaterial(blockedMaterial, standardTransparency, blockedColour, isSpriteOnly);
 	}
 
 	private void CheckCoverStatus()
