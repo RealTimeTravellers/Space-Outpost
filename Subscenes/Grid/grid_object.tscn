@@ -14,8 +14,9 @@ size = Vector3(0.9, 0.9, 0.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_trh14"]
 
-[node name="Grid Object" type="Node3D" node_paths=PackedStringArray("meshInstance", "gridSprite")]
+[node name="Grid Object" type="Node3D" node_paths=PackedStringArray("collisionShape", "meshInstance", "gridSprite")]
 script = ExtResource("1_1vjro")
+collisionShape = NodePath("Area3D/CollisionShape3D")
 standardMaterial = ExtResource("2_oxrnx")
 selectedMaterial = ExtResource("3_2tx4k")
 innerMaterial = ExtResource("4_kx3cm")
