@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://5744h8ko4nu6"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Data/CharacterStatBoxCard.cs" id="1_lx2d0"]
+[ext_resource type="Texture2D" uid="uid://bv244ruum0807" path="res://Visual Assets/Sprites/UI/TeamSelect/SoldierDetails.svg" id="2_3dccd"]
+
+[node name="StatCard" type="HBoxContainer" node_paths=PackedStringArray("statName", "statValue")]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 55.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+script = ExtResource("1_lx2d0")
+statName = NodePath("MarginContainer/HBoxContainer/MarginContainer/StatName")
+statValue = NodePath("MarginContainer/HBoxContainer/MarginContainer2/StatValue")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+texture = ExtResource("2_3dccd")
+expand_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_stretch_ratio = 1.2
+theme_override_constants/separation = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="StatName" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 16
+vertical_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 2
+
+[node name="StatValue" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 2
+vertical_alignment = 1

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://cmh37bubpcpxt"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Data/ClassInfo.cs" id="1_afmi3"]
+[ext_resource type="Texture2D" uid="uid://81juoodnyi0w" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Sniper.svg" id="1_wu4nm"]
+[ext_resource type="Texture2D" uid="uid://snxbhpqq7usn" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Sniper_LongRange.svg" id="1_wuohb"]
+[ext_resource type="Texture2D" uid="uid://0wndnewvt0xc" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Sniper_Scan.svg" id="2_gocpg"]
+
+[resource]
+script = ExtResource("1_afmi3")
+UnitType = 1
+DetailsText = "Sniper"
+DescriptionText = "High ranged unit able to deal massive damage from a distance. "
+ClassIcon = ExtResource("1_wu4nm")
+AbilityIcon = ExtResource("1_wuohb")
+AbilityIcon2 = ExtResource("2_gocpg")

@@ -1,0 +1,605 @@
+[gd_scene load_steps=12 format=3 uid="uid://b56pp0puvm2v7"]
+
+[ext_resource type="Script" path="res://Scripts/UI/SettingsMenu.cs" id="1_0stov"]
+[ext_resource type="Texture2D" uid="uid://o4dr7sg4illo" path="res://Visual Assets/Sprites/UI/MainMenu/MainMenu_Bg.svg" id="1_olcas"]
+[ext_resource type="Texture2D" uid="uid://cdck3vc5tgh6d" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Hover.svg" id="1_qo2ll"]
+[ext_resource type="Texture2D" uid="uid://bj7epcl1j10qu" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Selected.svg" id="2_l1riu"]
+[ext_resource type="Texture2D" uid="uid://coohouu7jde7" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Defalut.svg" id="3_x8ufk"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jg6r5"]
+texture = ExtResource("1_qo2ll")
+region_rect = Rect2(0, 0, 260, 90)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_53ikr"]
+texture = ExtResource("2_l1riu")
+region_rect = Rect2(-1, 0, 261, 90)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s5sef"]
+texture = ExtResource("3_x8ufk")
+region_rect = Rect2(2, 0, 258, 90)
+modulate_color = Color(1, 0.737255, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c1jt4"]
+texture = ExtResource("1_qo2ll")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kujof"]
+texture = ExtResource("2_l1riu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2xx6w"]
+texture = ExtResource("3_x8ufk")
+
+[node name="SettingsPanel" type="Control" node_paths=PackedStringArray("graphicsContainer", "soundContainer", "mouseContainer", "displayMode", "resolutionButton")]
+layout_mode = 3
+anchor_left = 0.3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_0stov")
+graphicsContainer = NodePath("SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings")
+soundContainer = NodePath("SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings")
+mouseContainer = NodePath("SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings")
+displayMode = NodePath("SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/DisplayMode/OptionButton")
+resolutionButton = NodePath("SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/ResolutionMode/OptionButton")
+
+[node name="SettingsMenu" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="MenuBackground" type="TextureRect" parent="SettingsMenu"]
+layout_mode = 2
+size_flags_stretch_ratio = 4.0
+texture = ExtResource("1_olcas")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="Settings" type="VBoxContainer" parent="SettingsMenu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Content" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="Toggles" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Toggles"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ToggleContainer" type="VBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Toggles/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Graphics Toggle" type="Button" parent="SettingsMenu/MarginContainer/Settings/Content/Toggles/MarginContainer/ToggleContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 6
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxTexture_jg6r5")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_53ikr")
+theme_override_styles/normal = SubResource("StyleBoxTexture_s5sef")
+text = "GRAPHICS"
+
+[node name="Sound Toggle2" type="Button" parent="SettingsMenu/MarginContainer/Settings/Content/Toggles/MarginContainer/ToggleContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 6
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxTexture_jg6r5")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_53ikr")
+theme_override_styles/normal = SubResource("StyleBoxTexture_s5sef")
+text = "SOUND"
+
+[node name="Input Toggle3" type="Button" parent="SettingsMenu/MarginContainer/Settings/Content/Toggles/MarginContainer/ToggleContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 6
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxTexture_jg6r5")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_53ikr")
+theme_override_styles/normal = SubResource("StyleBoxTexture_s5sef")
+text = "INPUT"
+
+[node name="Settings" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GraphicsSettings" type="ScrollContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SettingsBox" type="VBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "GRAPHICS SETTINGS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DisplayMode" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/DisplayMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 20
+text = "DISPLAY MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/DisplayMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Exclusive Fullscreen"
+popup/item_2/id = 2
+popup/item_3/text = "Maximized"
+popup/item_3/id = 3
+
+[node name="ResolutionMode" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/ResolutionMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 20
+text = "RESOLUTION MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/ResolutionMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Exclusive Fullscreen"
+popup/item_2/id = 2
+popup/item_3/text = "Maximized"
+popup/item_3/id = 3
+
+[node name="FPS Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/FPS Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/FPS Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "FPS INDICATOR"
+icon_alignment = 1
+
+[node name="VSync Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/VSync Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/VSync Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "VYSNC"
+icon_alignment = 1
+
+[node name="Adaptive VSync Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/Adaptive VSync Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox/Adaptive VSync Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "ADAPTIVE VSYNC"
+icon_alignment = 1
+
+[node name="Setting5" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Setting6" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/GraphicsSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SoundSettings" type="ScrollContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SettingsBox" type="VBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "GRAPHICS SETTINGS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DisplayMode" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/DisplayMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 20
+text = "DISPLAY MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/DisplayMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Exclusive Fullscreen"
+popup/item_2/id = 2
+popup/item_3/text = "Maximized"
+popup/item_3/id = 3
+
+[node name="ResolutionMode" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/ResolutionMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 20
+text = "RESOLUTION MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/ResolutionMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Exclusive Fullscreen"
+popup/item_2/id = 2
+popup/item_3/text = "Maximized"
+popup/item_3/id = 3
+
+[node name="FPS Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/FPS Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/FPS Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "FPS INDICATOR"
+icon_alignment = 1
+
+[node name="VSync Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/VSync Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/VSync Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "VYSNC"
+icon_alignment = 1
+
+[node name="Adaptive VSync Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/Adaptive VSync Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox/Adaptive VSync Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "ADAPTIVE VSYNC"
+icon_alignment = 1
+
+[node name="Setting5" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Setting6" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/SoundSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InputSettings" type="ScrollContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SettingsBox" type="VBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "GRAPHICS SETTINGS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DisplayMode" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/DisplayMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 20
+text = "DISPLAY MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/DisplayMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Exclusive Fullscreen"
+popup/item_2/id = 2
+popup/item_3/text = "Maximized"
+popup/item_3/id = 3
+
+[node name="ResolutionMode" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/ResolutionMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 20
+text = "RESOLUTION MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/ResolutionMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Exclusive Fullscreen"
+popup/item_2/id = 2
+popup/item_3/text = "Maximized"
+popup/item_3/id = 3
+
+[node name="FPS Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/FPS Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/FPS Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "FPS INDICATOR"
+icon_alignment = 1
+
+[node name="VSync Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/VSync Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/VSync Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "VYSNC"
+icon_alignment = 1
+
+[node name="Adaptive VSync Setting" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/Adaptive VSync Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="CheckButton" type="CheckButton" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox/Adaptive VSync Setting/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 5
+theme_override_font_sizes/font_size = 20
+text = "ADAPTIVE VSYNC"
+icon_alignment = 1
+
+[node name="Setting5" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Setting6" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/Content/Settings/InputSettings/SettingsBox"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ButtonContainer" type="MarginContainer" parent="SettingsMenu/MarginContainer/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Buttons" type="HBoxContainer" parent="SettingsMenu/MarginContainer/Settings/ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.7
+
+[node name="Back" type="Button" parent="SettingsMenu/MarginContainer/Settings/ButtonContainer/Buttons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 9
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxTexture_c1jt4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kujof")
+theme_override_styles/normal = SubResource("StyleBoxTexture_2xx6w")
+text = "BACK"
+
+[node name="Reset" type="Button" parent="SettingsMenu/MarginContainer/Settings/ButtonContainer/Buttons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxTexture_c1jt4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kujof")
+theme_override_styles/normal = SubResource("StyleBoxTexture_2xx6w")
+text = "RESET"
+
+[node name="Save" type="Button" parent="SettingsMenu/MarginContainer/Settings/ButtonContainer/Buttons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 9
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxTexture_c1jt4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kujof")
+theme_override_styles/normal = SubResource("StyleBoxTexture_2xx6w")
+text = "SAVE"
+
+[connection signal="pressed" from="SettingsMenu/MarginContainer/Settings/Content/Toggles/MarginContainer/ToggleContainer/Graphics Toggle" to="." method="OnGraphicsTogglePressed"]
+[connection signal="pressed" from="SettingsMenu/MarginContainer/Settings/Content/Toggles/MarginContainer/ToggleContainer/Sound Toggle2" to="." method="OnSoundTogglePressed"]
+[connection signal="pressed" from="SettingsMenu/MarginContainer/Settings/Content/Toggles/MarginContainer/ToggleContainer/Input Toggle3" to="." method="OnInputTogglePressed"]
+[connection signal="pressed" from="SettingsMenu/MarginContainer/Settings/ButtonContainer/Buttons/Back" to="." method="OnBackButtonPressed"]

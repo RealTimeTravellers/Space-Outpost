@@ -1,0 +1,358 @@
+[gd_scene load_steps=21 format=3 uid="uid://bdkgdtprsx7l7"]
+
+[ext_resource type="Script" path="res://Scripts/UI/TeamSelectionMenu.cs" id="1_ha2lc"]
+[ext_resource type="PackedScene" uid="uid://c5mbw3v6f60ah" path="res://Subscenes/UI/TeamSelection/Team_Selection_Unit_Card.tscn" id="2_1xvdx"]
+[ext_resource type="Texture2D" uid="uid://bvikwtk5ar24k" path="res://Visual Assets/Sprites/UI/TeamSelect/MissionSummary.svg" id="2_cisjn"]
+[ext_resource type="Texture2D" uid="uid://ck57kixyvv4sl" path="res://Visual Assets/Sprites/UI/TeamSelect/Loadout.svg" id="3_67w8r"]
+[ext_resource type="PackedScene" uid="uid://i13gxbfa7s0b" path="res://Subscenes/UI/TeamSelection/Team_Selection_Empty.tscn" id="3_f1lrf"]
+[ext_resource type="Texture2D" uid="uid://dt0hap0yha77h" path="res://Visual Assets/Sprites/UI/TeamSelect/SecondaryButton.svg" id="4_ai7as"]
+[ext_resource type="PackedScene" uid="uid://5744h8ko4nu6" path="res://Subscenes/UI/TeamSelection/Team_Selection_Stat_Card.tscn" id="4_snaot"]
+[ext_resource type="Texture2D" uid="uid://dskqys0ho5p3b" path="res://Visual Assets/Sprites/UI/TeamSelect/RightButton.svg" id="5_8nk3u"]
+[ext_resource type="Texture2D" uid="uid://bv244ruum0807" path="res://Visual Assets/Sprites/UI/TeamSelect/SoldierDetails.svg" id="6_nig77"]
+[ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="7_3gf72"]
+[ext_resource type="Texture2D" uid="uid://cqr8pq4ihev71" path="res://Visual Assets/Sprites/UI/Right Triangle.png" id="8_uqayv"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_px67q"]
+texture = ExtResource("4_ai7as")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qagbl"]
+texture = ExtResource("4_ai7as")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ujkvh"]
+texture = ExtResource("4_ai7as")
+texture_margin_left = 20.0
+texture_margin_right = 20.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_of1hv"]
+texture = ExtResource("5_8nk3u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xw5pf"]
+texture = ExtResource("5_8nk3u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oi5gn"]
+texture = ExtResource("5_8nk3u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tyeqr"]
+texture = ExtResource("5_8nk3u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ajolv"]
+texture = ExtResource("5_8nk3u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hy1ie"]
+texture = ExtResource("5_8nk3u")
+
+[node name="TeamSelectionHUD" type="Control" node_paths=PackedStringArray("characterDescriptionLabel", "characterClassLabel", "characterClassNameLabel", "characterClassIcon", "characterClassIcon2", "characterAbilityIcon", "characterAbilityIcon2", "partyContainer", "statContainer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ha2lc")
+characterDescriptionLabel = NodePath("ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer/VBoxContainer/MarginContainer/DescriptionText")
+characterClassLabel = NodePath("ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer/VBoxContainer/DetailsText")
+characterClassNameLabel = NodePath("CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer/ClassText")
+characterClassIcon = NodePath("ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Gun Icon/Class Texture")
+characterClassIcon2 = NodePath("CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer/ClassText2")
+characterAbilityIcon = NodePath("ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Ability Icon/Ability Texture")
+characterAbilityIcon2 = NodePath("ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Ability Icon2/Ability Texture2")
+partyContainer = NodePath("PartyDetailsContainer/MarginContainer/VBoxContainer/PartyContainer")
+partySelectionCard = ExtResource("2_1xvdx")
+partySelectionEmptyCard = ExtResource("3_f1lrf")
+statContainer = NodePath("StatContainer/MarginContainer/VBoxContainer/StatContainer")
+statBoxScene = ExtResource("4_snaot")
+
+[node name="StatContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.24
+anchor_bottom = 0.3
+offset_right = 0.127991
+offset_bottom = 0.135986
+
+[node name="MarginContainer" type="MarginContainer" parent="StatContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 20
+
+[node name="TextureRect" type="TextureRect" parent="StatContainer/MarginContainer"]
+layout_mode = 2
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StatContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label" type="Label" parent="StatContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+text = "STATS"
+horizontal_alignment = 1
+
+[node name="StatContainer" type="VBoxContainer" parent="StatContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 7.0
+
+[node name="ClassInfoContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.333
+anchor_right = 0.411
+anchor_bottom = 1.0
+offset_top = 237.816
+offset_right = -127.872
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="ClassInfoContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ClassInfoContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="DescriptionPanel" type="PanelContainer" parent="ClassInfoContainer/MarginContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 6.0
+
+[node name="TextureRect" type="TextureRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel"]
+layout_mode = 2
+texture = ExtResource("2_cisjn")
+
+[node name="MarginContainer" type="MarginContainer" parent="ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="DetailsText" type="Label" parent="ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 6
+size_flags_stretch_ratio = 0.1
+theme_override_font_sizes/font_size = 24
+text = "Details Text"
+horizontal_alignment = 2
+autowrap_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="DescriptionText" type="Label" parent="ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 24
+text = "Description Text"
+autowrap_mode = 2
+
+[node name="SquadButtons" type="HBoxContainer" parent="ClassInfoContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Gun Icon" type="TextureRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_67w8r")
+expand_mode = 3
+
+[node name="Class Texture" type="TextureRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Gun Icon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Ability Icon" type="TextureRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons"]
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_67w8r")
+expand_mode = 3
+
+[node name="Ability Texture" type="TextureRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Ability Icon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Ability Icon2" type="TextureRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons"]
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_67w8r")
+expand_mode = 3
+
+[node name="Ability Texture2" type="TextureRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Ability Icon2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Squad" type="Button" parent="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_px67q")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_qagbl")
+theme_override_styles/normal = SubResource("StyleBoxTexture_ujkvh")
+text = "Squad +"
+
+[node name="PartyDetailsContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PartyDetailsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PartyDetailsContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 60
+
+[node name="CancelButton" type="Button" parent="PartyDetailsContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_of1hv")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xw5pf")
+theme_override_styles/normal = SubResource("StyleBoxTexture_oi5gn")
+text = "Cancel"
+
+[node name="PartyContainer" type="VBoxContainer" parent="PartyDetailsContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SelectMissionButton" type="Button" parent="PartyDetailsContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_tyeqr")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ajolv")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hy1ie")
+text = "Select Mission"
+
+[node name="CharacterSelectContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.45
+anchor_top = 0.85
+anchor_right = 0.65
+anchor_bottom = 1.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="CharacterSelectContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 20
+
+[node name="TextureRect" type="TextureRect" parent="CharacterSelectContainer/MarginContainer2"]
+self_modulate = Color(1, 0.701961, 0.768627, 1)
+layout_mode = 2
+texture = ExtResource("6_nig77")
+expand_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="CharacterSelectContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterSelectContainer/MarginContainer2/MarginContainer"]
+layout_mode = 2
+
+[node name="LeftArrow" type="TextureButton" parent="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("7_3gf72")
+stretch_mode = 0
+
+[node name="ClassText2" type="TextureRect" parent="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.75
+expand_mode = 5
+stretch_mode = 5
+
+[node name="ClassText" type="Label" parent="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+size_flags_stretch_ratio = 4.0
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightArrow" type="TextureButton" parent="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("8_uqayv")
+stretch_mode = 0
+
+[connection signal="pressed" from="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Squad" to="." method="AddPartyMember"]
+[connection signal="pressed" from="PartyDetailsContainer/MarginContainer/VBoxContainer/CancelButton" to="." method="OnCancelPressed"]
+[connection signal="pressed" from="PartyDetailsContainer/MarginContainer/VBoxContainer/SelectMissionButton" to="." method="OnSelectMissionPressed"]
+[connection signal="pressed" from="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer/LeftArrow" to="." method="OnLeftArrowPressed"]
+[connection signal="pressed" from="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer/RightArrow" to="." method="OnRightArrowPressed"]

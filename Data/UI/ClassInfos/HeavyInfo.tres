@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://dcny2apfae75o"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Data/ClassInfo.cs" id="1_7de7p"]
+[ext_resource type="Texture2D" uid="uid://cg3v3ot2iu4oq" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Heavy_AmmoBox.svg" id="1_exdip"]
+[ext_resource type="Texture2D" uid="uid://d27hff2x33b8e" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Heavy.svg" id="1_h1po2"]
+[ext_resource type="Texture2D" uid="uid://dusr448of4nmi" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Heavy_ConeShot.svg" id="2_m745g"]
+
+[resource]
+script = ExtResource("1_7de7p")
+UnitType = 4
+DetailsText = "Heavy"
+DescriptionText = "Heavy weapons unit capable of dealing with large amount of enemies. Special ability allows for controlling the battlefield."
+ClassIcon = ExtResource("1_h1po2")
+AbilityIcon = ExtResource("1_exdip")
+AbilityIcon2 = ExtResource("2_m745g")

@@ -1,0 +1,261 @@
+[gd_scene load_steps=20 format=3 uid="uid://dtyb4fmy1cx88"]
+
+[ext_resource type="Texture2D" uid="uid://dndbqg0ofd8xm" path="res://Visual Assets/Sprites/UI/MissionSelect/SelectMissionbg.webp" id="1_87nqc"]
+[ext_resource type="Script" path="res://Scripts/UI/MissionSelectMenu.cs" id="1_r4fc6"]
+[ext_resource type="Resource" uid="uid://der7qiqbf02d3" path="res://Data/UI/MissionInfos/SpaceInterior.tres" id="2_74un6"]
+[ext_resource type="Texture2D" uid="uid://cdck3vc5tgh6d" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Hover.svg" id="2_wa8hd"]
+[ext_resource type="Resource" uid="uid://dfrigfccwpppu" path="res://Data/UI/MissionInfos/SpaceCompound.tres" id="3_arpei"]
+[ext_resource type="Texture2D" uid="uid://bj7epcl1j10qu" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Selected.svg" id="3_dmnkh"]
+[ext_resource type="Texture2D" uid="uid://bvikwtk5ar24k" path="res://Visual Assets/Sprites/UI/TeamSelect/MissionSummary.svg" id="5_rkawb"]
+[ext_resource type="Texture2D" uid="uid://iwpg774akbbq" path="res://Visual Assets/Sprites/UI/MissionSelect/space station.jpg" id="6_4pmpq"]
+[ext_resource type="Texture2D" uid="uid://fl8s21fmqtc1" path="res://Visual Assets/Sprites/UI/MissionSelect/spaceinterio.png" id="6_kovam"]
+[ext_resource type="Texture2D" uid="uid://dt0hap0yha77h" path="res://Visual Assets/Sprites/UI/TeamSelect/SecondaryButton.svg" id="9_qjrph"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3i71b"]
+texture = ExtResource("2_wa8hd")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aq3hd"]
+texture = ExtResource("3_dmnkh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_isugv"]
+texture = ExtResource("3_dmnkh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6n6xi"]
+texture = ExtResource("6_kovam")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x6jdx"]
+texture = ExtResource("6_kovam")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wkj8d"]
+texture = ExtResource("6_kovam")
+region_rect = Rect2(0, 2, 364, 238)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vxpg7"]
+texture = ExtResource("6_4pmpq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h55op"]
+texture = ExtResource("6_4pmpq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vg2hg"]
+texture = ExtResource("6_4pmpq")
+
+[node name="MissionSelect" type="Control" node_paths=PackedStringArray("missionButtons", "missionBackgrounds", "missionLaunchButton", "missionNameLabel", "missionDescriptionLabel")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r4fc6")
+missionButtons = [NodePath("Missions/HBoxContainer/MarginContainer/MissionNode/TextureRect/VBoxContainer/Button"), NodePath("Missions/HBoxContainer/MarginContainer3/MissionNode/TextureRect/VBoxContainer/Button")]
+missionDataCards = Array[Resource]([ExtResource("2_74un6"), ExtResource("3_arpei")])
+missionBackgrounds = [NodePath("Missions/HBoxContainer/MarginContainer/MissionNode/TextureRect"), NodePath("Missions/HBoxContainer/MarginContainer3/MissionNode/TextureRect")]
+missionLaunchButton = NodePath("GeneralContainer/MarginContainer/Launch")
+missionNameLabel = NodePath("MissionBriefingContainer/MarginContainer/MarginContainer/VBoxContainer/MissionName")
+missionDescriptionLabel = NodePath("MissionBriefingContainer/MarginContainer/MarginContainer/VBoxContainer/MissionDescription")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_87nqc")
+expand_mode = 2
+
+[node name="GeneralContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GeneralContainer"]
+layout_mode = 2
+mouse_filter = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Back" type="Button" parent="GeneralContainer/MarginContainer"]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_3i71b")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_aq3hd")
+theme_override_styles/normal = SubResource("StyleBoxTexture_isugv")
+text = "BACK"
+
+[node name="Launch" type="Button" parent="GeneralContainer/MarginContainer"]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_3i71b")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_aq3hd")
+theme_override_styles/normal = SubResource("StyleBoxTexture_isugv")
+text = "LAUNCH MISSION"
+
+[node name="Missions" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.3
+anchor_right = 0.8
+anchor_bottom = 0.7
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Missions"]
+layout_mode = 2
+theme_override_constants/separation = 80
+
+[node name="MarginContainer" type="MarginContainer" parent="Missions/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="MissionNode" type="PanelContainer" parent="Missions/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Missions/HBoxContainer/MarginContainer/MissionNode"]
+z_index = 2
+layout_mode = 2
+texture = ExtResource("9_qjrph")
+expand_mode = 5
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Missions/HBoxContainer/MarginContainer/MissionNode/TextureRect"]
+layout_mode = 2
+anchor_left = 0.038
+anchor_top = 0.023
+anchor_right = 0.962
+anchor_bottom = 0.954
+offset_left = -0.0699854
+offset_top = -0.0370007
+offset_right = 0.0699921
+offset_bottom = 0.0739899
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="Missions/HBoxContainer/MarginContainer/MissionNode/TextureRect/VBoxContainer"]
+layout_mode = 2
+text = "Spaceship"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Missions/HBoxContainer/MarginContainer/MissionNode/TextureRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_6n6xi")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_x6jdx")
+theme_override_styles/normal = SubResource("StyleBoxTexture_wkj8d")
+icon_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="Missions/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="MissionNode" type="PanelContainer" parent="Missions/HBoxContainer/MarginContainer3"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Missions/HBoxContainer/MarginContainer3/MissionNode"]
+z_index = 2
+layout_mode = 2
+texture = ExtResource("9_qjrph")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Missions/HBoxContainer/MarginContainer3/MissionNode/TextureRect"]
+layout_mode = 2
+anchor_left = 0.038
+anchor_top = 0.023
+anchor_right = 0.962
+anchor_bottom = 0.954
+offset_left = -0.107985
+offset_top = -0.0370007
+offset_right = 0.0699921
+offset_bottom = 0.0739899
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="Missions/HBoxContainer/MarginContainer3/MissionNode/TextureRect/VBoxContainer"]
+layout_mode = 2
+text = "Compound"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Missions/HBoxContainer/MarginContainer3/MissionNode/TextureRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_vxpg7")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_h55op")
+theme_override_styles/normal = SubResource("StyleBoxTexture_vg2hg")
+
+[node name="MissionBriefingContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.35
+anchor_top = 0.75
+anchor_right = 0.65
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MissionBriefingContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="MissionBriefingContainer/MarginContainer"]
+self_modulate = Color(0.0666667, 0.423529, 1, 1)
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("5_rkawb")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MissionBriefingContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = -5
+theme_override_constants/margin_right = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MissionBriefingContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="MissionName" type="Label" parent="MissionBriefingContainer/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+size_flags_stretch_ratio = 0.2
+theme_override_font_sizes/font_size = 24
+text = "Briefing"
+horizontal_alignment = 2
+
+[node name="MissionDescription" type="Label" parent="MissionBriefingContainer/MarginContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 24
+text = "Mission details provided here."
+autowrap_mode = 2
+
+[connection signal="pressed" from="GeneralContainer/MarginContainer/Back" to="." method="OnCancelPressed"]
+[connection signal="pressed" from="GeneralContainer/MarginContainer/Launch" to="." method="OnMissionLaunchPressed"]

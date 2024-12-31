@@ -1,9 +1,10 @@
-[gd_scene load_steps=65 format=3 uid="uid://chb7julp82npg"]
+[gd_scene load_steps=69 format=3 uid="uid://chb7julp82npg"]
 
 [ext_resource type="PackedScene" uid="uid://bwf51yhi3akik" path="res://Visual Assets/Models/Units/Asker/Asker.FBX" id="1_ftjwh"]
 [ext_resource type="AnimationLibrary" uid="uid://diq8qogds377v" path="res://Visual Assets/Models/Animations/Asker/Defeated.fbx" id="2_3et0n"]
 [ext_resource type="AnimationLibrary" uid="uid://diokyg3tqhw1u" path="res://Visual Assets/Models/Animations/Asker/Breathing Idle (2).fbx" id="2_d70k4"]
 [ext_resource type="AnimationLibrary" uid="uid://dqlqqmcxxhlyo" path="res://Visual Assets/Models/Animations/Asker/Rifle Kneel Hit To Back(1).fbx" id="2_dbiqf"]
+[ext_resource type="AnimationLibrary" uid="uid://cxghgjk0xfg1f" path="res://Visual Assets/Models/Animations/Asker/Asker@Salute.fbx" id="2_guhxh"]
 [ext_resource type="AnimationLibrary" uid="uid://b0o43suoxduhi" path="res://Visual Assets/Models/Animations/Asker/Crouch Rapid Fire.fbx" id="3_gbyjo"]
 [ext_resource type="AnimationLibrary" uid="uid://cw7qf1ux63njr" path="res://Visual Assets/Models/Animations/Asker/Idle Crouching.fbx" id="3_mt6a1"]
 [ext_resource type="AnimationLibrary" uid="uid://rseo42qjgj8p" path="res://Visual Assets/Models/Animations/Asker/Firing Rifle (2).fbx" id="3_q4akb"]
@@ -32,6 +33,9 @@
 [ext_resource type="AnimationLibrary" uid="uid://bmenbxj3ekptn" path="res://Visual Assets/Models/Animations/Asker/Walking (1).fbx" id="25_e78uv"]
 [ext_resource type="AnimationLibrary" uid="uid://dyrkt0dps3ywr" path="res://Visual Assets/Models/Animations/Asker/Stand To Crouch.fbx" id="29_8srom"]
 [ext_resource type="AnimationLibrary" uid="uid://e1iiiw8tl3xd" path="res://Visual Assets/Models/Animations/Asker/rifle aiming idle.fbx" id="30_su7wv"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8c5jn"]
+animation = &"Asker@Salute/mixamo_com"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h00g6"]
 animation = &"Defeated/mixamo_com"
@@ -189,7 +193,17 @@ advance_condition = &"shooting"
 switch_mode = 2
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w2dd7"]
+advance_mode = 2
+advance_condition = &"turn"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ybpl4"]
+switch_mode = 2
+advance_mode = 2
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_gm53w"]
+states/Asker_Salute_mixamo_com/node = SubResource("AnimationNodeAnimation_8c5jn")
+states/Asker_Salute_mixamo_com/position = Vector2(1014.39, -33)
 states/Defeated_mixamo_com/node = SubResource("AnimationNodeAnimation_h00g6")
 states/Defeated_mixamo_com/position = Vector2(281.392, -33)
 states/End/position = Vector2(1417, 185)
@@ -216,35 +230,35 @@ states/Soldier_IdleToCrouch_mixamo_com/position = Vector2(236, 185)
 "states/Soldier_Rifle Run (1)_mixamo_com/node" = SubResource("AnimationNodeAnimation_njeid")
 "states/Soldier_Rifle Run (1)_mixamo_com/position" = Vector2(515, -33)
 states/Start/position = Vector2(199, 100)
-transitions = ["Start", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_ubpiq"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Rifle Run (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_lk3jk"), "Soldier_Rifle Run (1)_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_8g7dv"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Dying_mixamo_com", SubResource("AnimationNodeStateMachineTransition_i7nip"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_IdleToCrouch_mixamo_com", SubResource("AnimationNodeStateMachineTransition_rtqo1"), "Soldier_IdleToCrouch_mixamo_com", "Soldier_Idle Crouching_mixamo_com", SubResource("AnimationNodeStateMachineTransition_01uqm"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchToIdle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_a3pnj"), "Soldier_CrouchToIdle_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_dpytv"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchDeath_mixamo_com", SubResource("AnimationNodeStateMachineTransition_5eatd"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Aim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_a4yxy"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchAim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_c2vw0"), "Soldier_Aim_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_8cgt3"), "Soldier_CrouchAim_mixamo_com", "Soldier_Idle Crouching_mixamo_com", SubResource("AnimationNodeStateMachineTransition_sfp4d"), "Soldier_CrouchAim_mixamo_com", "Soldier_Fire Rifle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_rivua"), "Soldier_Fire Rifle_mixamo_com", "Soldier_CrouchAim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_mb3r6"), "Soldier_Rifle Idle (1)_mixamo_com", "Defeated_mixamo_com", SubResource("AnimationNodeStateMachineTransition_4gckk"), "Defeated_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_f5sti"), "Soldier_Aim_mixamo_com", "Soldier_Firing Rifle (2)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1mbbr"), "Soldier_Firing Rifle (2)_mixamo_com", "Soldier_Aim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_2c4bu")]
-graph_offset = Vector2(306.392, -98)
+transitions = ["Start", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_ubpiq"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Rifle Run (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_lk3jk"), "Soldier_Rifle Run (1)_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_8g7dv"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Dying_mixamo_com", SubResource("AnimationNodeStateMachineTransition_i7nip"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_IdleToCrouch_mixamo_com", SubResource("AnimationNodeStateMachineTransition_rtqo1"), "Soldier_IdleToCrouch_mixamo_com", "Soldier_Idle Crouching_mixamo_com", SubResource("AnimationNodeStateMachineTransition_01uqm"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchToIdle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_a3pnj"), "Soldier_CrouchToIdle_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_dpytv"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchDeath_mixamo_com", SubResource("AnimationNodeStateMachineTransition_5eatd"), "Soldier_Rifle Idle (1)_mixamo_com", "Soldier_Aim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_a4yxy"), "Soldier_Idle Crouching_mixamo_com", "Soldier_CrouchAim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_c2vw0"), "Soldier_Aim_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_8cgt3"), "Soldier_CrouchAim_mixamo_com", "Soldier_Idle Crouching_mixamo_com", SubResource("AnimationNodeStateMachineTransition_sfp4d"), "Soldier_CrouchAim_mixamo_com", "Soldier_Fire Rifle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_rivua"), "Soldier_Fire Rifle_mixamo_com", "Soldier_CrouchAim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_mb3r6"), "Soldier_Rifle Idle (1)_mixamo_com", "Defeated_mixamo_com", SubResource("AnimationNodeStateMachineTransition_4gckk"), "Defeated_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_f5sti"), "Soldier_Aim_mixamo_com", "Soldier_Firing Rifle (2)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1mbbr"), "Soldier_Firing Rifle (2)_mixamo_com", "Soldier_Aim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_2c4bu"), "Soldier_Rifle Idle (1)_mixamo_com", "Asker_Salute_mixamo_com", SubResource("AnimationNodeStateMachineTransition_w2dd7"), "Asker_Salute_mixamo_com", "Soldier_Rifle Idle (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_ybpl4")]
+graph_offset = Vector2(-166.608, -154)
 
 [node name="Asker" instance=ExtResource("1_ftjwh")]
 
 [node name="Skeleton3D" parent="." index="0"]
-bones/0/position = Vector3(0.00703786, 0.939013, 0.00212053)
-bones/0/rotation = Quaternion(-0.0627943, -0.0402566, 0.0235711, 0.996936)
+bones/0/position = Vector3(0.0344456, 0.939258, 0.0102589)
+bones/0/rotation = Quaternion(-0.061248, -0.048877, 0.0217307, 0.996688)
 bones/1/position = Vector3(0, 10.0525, -1.53363)
-bones/1/rotation = Quaternion(-0.0354043, 0.0198302, -0.0130288, 0.999091)
+bones/1/rotation = Quaternion(-0.0377273, 0.0235147, -0.0166765, 0.998872)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/position = Vector3(0, 11.8636, 7.59422e-07)
-bones/2/rotation = Quaternion(0.0129538, 0.00739441, -0.00516211, 0.999875)
+bones/2/rotation = Quaternion(0.0129519, 0.00743082, -0.00547141, 0.999874)
 bones/3/position = Vector3(0, 13.5584, -3.27071e-07)
 bones/3/rotation = Quaternion(0.0129067, 0.0073757, -0.00485031, 0.999878)
 bones/4/position = Vector3(0, 15.2532, -2.01143e-06)
-bones/4/rotation = Quaternion(0.100025, 0.0442408, 0.018275, 0.993833)
+bones/4/rotation = Quaternion(0.0985012, 0.0452832, 0.0184793, 0.993934)
 bones/4/scale = Vector3(1, 1, 1)
 bones/5/position = Vector3(0, 4.91982, 2.49697)
-bones/5/rotation = Quaternion(0.0314292, -0.107986, 0.0212758, 0.993428)
+bones/5/rotation = Quaternion(0.0238838, -0.0923769, 0.0154478, 0.995318)
 bones/7/position = Vector3(6.72734, 13.2677, -0.320022)
-bones/7/rotation = Quaternion(-0.695445, -0.279823, 0.577122, -0.324013)
+bones/7/rotation = Quaternion(-0.695322, -0.279674, 0.577726, -0.323329)
 bones/8/position = Vector3(-2.66478e-08, 14.0619, 2.01179e-07)
-bones/8/rotation = Quaternion(0.169895, 0.0777672, 0.0493661, 0.981148)
+bones/8/rotation = Quaternion(0.175975, 0.0783566, 0.0583273, 0.979536)
 bones/8/scale = Vector3(1, 1, 1)
 bones/9/position = Vector3(6.113e-07, 22.5789, 1.30237e-06)
-bones/9/rotation = Quaternion(0.0957664, -0.0017443, 0.608501, 0.787751)
+bones/9/rotation = Quaternion(0.0940328, -0.00176351, 0.597487, 0.796344)
 bones/10/position = Vector3(1.07582e-06, 22.6743, 6.33648e-06)
-bones/10/rotation = Quaternion(-0.0373841, -0.836975, -0.0757408, 0.540684)
+bones/10/rotation = Quaternion(-0.0317879, -0.834814, -0.0786629, 0.543956)
 bones/11/position = Vector3(-3.43863, 4.07228, 1.83088)
 bones/11/rotation = Quaternion(0.130031, 0.00384594, 0.380984, 0.915384)
 bones/11/scale = Vector3(1, 1, 1)
@@ -269,11 +283,11 @@ bones/23/position = Vector3(-6.72734, 13.2626, -0.286606)
 bones/23/rotation = Quaternion(0.689877, -0.308445, 0.534541, 0.378413)
 bones/23/scale = Vector3(1, 1, 1)
 bones/24/position = Vector3(-1.23486e-07, 14.0619, 9.26525e-07)
-bones/24/rotation = Quaternion(0.215152, -0.185985, -0.100987, 0.953373)
+bones/24/rotation = Quaternion(0.213747, -0.186974, -0.0968438, 0.953926)
 bones/25/position = Vector3(-1.83444e-07, 22.615, 2.27227e-06)
-bones/25/rotation = Quaternion(0.111143, 0.0017669, -0.74355, 0.659377)
+bones/25/rotation = Quaternion(0.1108, 0.00177405, -0.741252, 0.662017)
 bones/26/position = Vector3(8.99839e-08, 22.6606, -4.483e-06)
-bones/26/rotation = Quaternion(0.246809, 0.233829, 0.157114, 0.927213)
+bones/26/rotation = Quaternion(0.245962, 0.236482, 0.153953, 0.927296)
 bones/26/scale = Vector3(1, 1, 1)
 bones/27/position = Vector3(3.20864, 4.14938, 1.93959)
 bones/27/rotation = Quaternion(0.389388, -0.221793, -0.23114, 0.863574)
@@ -301,27 +315,28 @@ bones/37/position = Vector3(0.000253334, 2.81467, -4.17726e-06)
 bones/37/rotation = Quaternion(0.446856, -0.00014907, 0.0281183, 0.894164)
 bones/37/scale = Vector3(1, 1, 1)
 bones/39/position = Vector3(7.94859, -5.58584, -0.0528408)
-bones/39/rotation = Quaternion(0.106704, 0.0291063, 0.992713, -0.047837)
+bones/39/rotation = Quaternion(0.103787, 0.0477719, 0.992772, -0.0367377)
 bones/39/scale = Vector3(1, 1, 1)
 bones/40/position = Vector3(-2.71274e-07, 37.0641, 8.10683e-08)
-bones/40/rotation = Quaternion(-0.0635267, -0.0731487, -0.0245052, 0.994994)
+bones/40/rotation = Quaternion(-0.115206, -0.0840843, -0.0229474, 0.98951)
 bones/40/scale = Vector3(1, 1, 1)
 bones/41/position = Vector3(3.35459e-07, 36.7633, -9.62931e-08)
-bones/41/rotation = Quaternion(0.398232, -0.0683252, -0.00742385, 0.914707)
+bones/41/rotation = Quaternion(0.43358, -0.0630476, 0.000393642, 0.898907)
 bones/42/position = Vector3(-1.00285e-08, 19.3724, 1.01337e-07)
-bones/42/rotation = Quaternion(0.35026, 0.0211126, -0.0079422, 0.936381)
+bones/42/rotation = Quaternion(0.353044, 0.0208507, -0.0080801, 0.935339)
 bones/44/position = Vector3(-7.94859, -5.58584, 0.324745)
-bones/44/rotation = Quaternion(-0.137396, -0.0588295, 0.986292, 0.069927)
+bones/44/rotation = Quaternion(-0.143759, -0.064129, 0.983627, 0.087749)
 bones/45/position = Vector3(2.84569e-08, 37.0682, -3.65474e-07)
-bones/45/rotation = Quaternion(-0.164259, 0.077818, -0.00289143, 0.983339)
+bones/45/rotation = Quaternion(-0.147578, 0.0795014, -0.00378057, 0.985843)
 bones/46/position = Vector3(-2.222e-07, 36.7757, 2.58027e-08)
-bones/46/rotation = Quaternion(0.563618, 0.103526, 0.0388521, 0.818601)
+bones/46/rotation = Quaternion(0.549565, 0.0917545, 0.0614846, 0.828118)
 bones/46/scale = Vector3(1, 1, 1)
 bones/47/position = Vector3(1.15784e-07, 19.4338, -6.43349e-09)
-bones/47/rotation = Quaternion(0.370439, -0.0198503, 0.00905099, 0.928601)
+bones/47/rotation = Quaternion(0.369607, -0.01993, 0.00900981, 0.928931)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
 libraries = {
+"Asker@Salute": ExtResource("2_guhxh"),
 "Defeated": ExtResource("2_3et0n"),
 "Firing Rifle (2)": ExtResource("3_q4akb"),
 "Idle Crouching": ExtResource("3_mt6a1"),
@@ -367,3 +382,4 @@ parameters/conditions/incover = false
 parameters/conditions/moving = false
 parameters/conditions/outcover = false
 parameters/conditions/shooting = false
+parameters/conditions/turn = false
