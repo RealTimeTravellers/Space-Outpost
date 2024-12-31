@@ -16,6 +16,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public int Perception { get; private set; } = 20;
 	//public UnitStats Stats;
 	public StatContainer StatContainer;
+	public PlayerStats Stats;
 
 	// Equipment controller
     [Export]
@@ -97,8 +98,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			// Player Stats
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
-			//Stats = new PlayerStats(PlayerType, StatContainer);
-			//Health = Stats.Health.GetValue();
+			Stats = new PlayerStats(PlayerType, StatContainer);
+			Health = Stats.Health.GetValue();
 			// Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
