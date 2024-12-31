@@ -76,6 +76,7 @@ public partial class TeamSelectionMenu : Control
 
     public void OnSelectMissionPressed()
     {
+        if (TeamSelectionManager.Instance.partyMembers.Count < 3) return;
         GameManager.ChangeGameState(GameState.TeamSelect, GameState.MissionSelect);
     }
 
