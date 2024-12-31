@@ -42,6 +42,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ICombat Variables
 	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
 	public int Health { get; private set; } = 8;
+	public int MaxHealth { get; private set; } = 8;
 	public int Damage { get; private set; }
 	#endregion
 
@@ -99,7 +100,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			// Player Stats
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
 			Stats = new PlayerStats(PlayerType, StatContainer);
-			Health = Stats.Health.GetValue();
+			MaxHealth = Stats.Health.GetValue();
+			Health = MaxHealth;
 			// Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
@@ -349,7 +351,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		if (Health <0)
 			Health = 0;
-		HealthLabel.Text = Health +"/"+ 8;//Stats.Health.GetValue();
+		HealthLabel.Text = Health +"/"+ MaxHealth;//Stats.Health.GetValue();
 	}
 
 	/// <summary>
