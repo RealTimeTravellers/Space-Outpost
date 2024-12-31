@@ -108,7 +108,7 @@ public partial class UnitStats
         GetStatByName(statName)?.RemoveModifier(modifier);
     }
 
-    private Stat GetStatByName(string statName)
+    public Stat GetStatByName(string statName)
     {
         return statName switch
         {

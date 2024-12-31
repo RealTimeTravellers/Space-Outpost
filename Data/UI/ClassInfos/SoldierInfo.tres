@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://dp4agytvbjbj0"]
+
+[ext_resource type="Texture2D" uid="uid://kvbebofp4jru" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Soldier_Dash.svg" id="1_477uo"]
+[ext_resource type="Script" path="res://Scripts/UI/Data/ClassInfo.cs" id="1_brdc8"]
+[ext_resource type="Texture2D" uid="uid://cx35j3yuve6ty" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Soldier.svg" id="1_n14mx"]
+[ext_resource type="Texture2D" uid="uid://bmxaxovic50e1" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Soldier_Drone.svg" id="2_drd0e"]
+
+[resource]
+script = ExtResource("1_brdc8")
+UnitType = 0
+DetailsText = "Soldier"
+DescriptionText = "Quick and versatile unit to get in and out of encounters quickly."
+ClassIcon = ExtResource("1_n14mx")
+AbilityIcon = ExtResource("1_477uo")
+AbilityIcon2 = ExtResource("2_drd0e")

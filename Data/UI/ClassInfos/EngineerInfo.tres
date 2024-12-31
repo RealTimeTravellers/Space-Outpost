@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://b410jdqovb808"]
+
+[ext_resource type="Texture2D" uid="uid://turuwj6vab5v" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Engineer_GrenadeLauncher.svg" id="1_1r4bp"]
+[ext_resource type="Script" path="res://Scripts/UI/Data/ClassInfo.cs" id="1_5a10f"]
+[ext_resource type="Texture2D" uid="uid://b8i8vigdq81qm" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Engineer.svg" id="1_prcop"]
+[ext_resource type="Texture2D" uid="uid://456lkgy757lh" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Engineer_Reflector.svg" id="2_b8cws"]
+
+[resource]
+script = ExtResource("1_5a10f")
+UnitType = 2
+DetailsText = "Engineer"
+DescriptionText = "Versatile unit with mastery on explosives. Special ability allows unique explosive unlocks."
+ClassIcon = ExtResource("1_prcop")
+AbilityIcon = ExtResource("1_1r4bp")
+AbilityIcon2 = ExtResource("2_b8cws")

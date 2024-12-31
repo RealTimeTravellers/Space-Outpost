@@ -1,19 +1,24 @@
-[gd_scene load_steps=8 format=3 uid="uid://77qkpxdiae0u"]
+[gd_scene load_steps=12 format=3 uid="uid://77qkpxdiae0u"]
 
 [ext_resource type="PackedScene" uid="uid://byqw1oqs82ord" path="res://Subscenes/Managers/game_manager.tscn" id="1_87e0o"]
 [ext_resource type="PackedScene" uid="uid://cbhkfpor6datm" path="res://Subscenes/Configs/settings.tscn" id="2_aa3yh"]
-[ext_resource type="PackedScene" uid="uid://db5muqbbxse6b" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
+[ext_resource type="PackedScene" uid="uid://c26sfhh7246xk" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
 [ext_resource type="PackedScene" uid="uid://bjcy4ncqw8tru" path="res://Subscenes/Maps/inside_building.tscn" id="3_naolu"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/Settings Panel.tscn" id="3_tlav0"]
+[ext_resource type="PackedScene" uid="uid://cknbjtepcp8e8" path="res://Scenes/UI/Team Selection.tscn" id="4_vuu2a"]
 [ext_resource type="PackedScene" uid="uid://blo2rc7isqhmi" path="res://Subscenes/Managers/camera_manager.tscn" id="5_wmvow"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/Mission Selection.tscn" id="6_036c8"]
 [ext_resource type="PackedScene" uid="uid://d2eqd4gi0desn" path="res://Subscenes/Camera/camera.tscn" id="6_x3h47"]
-[ext_resource type="PackedScene" uid="uid://dvgw1w85ktxjo" path="res://Subscenes/Managers/audio_manager.tscn" id="7_4ane3"]
+[ext_resource type="PackedScene" path="res://Subscenes/Managers/audio_manager.tscn" id="7_4ane3"]
+[ext_resource type="Script" path="res://Scripts/Managers/TeamSelectionManager.cs" id="11_rimfl"]
 
 [node name="Root" type="Node3D"]
 
 [node name="GameManager" parent="." node_paths=PackedStringArray("settings") instance=ExtResource("1_87e0o")]
 settings = NodePath("../Settings")
 mainMenuSubScene = ExtResource("2_mgtbs")
-gameScenes = Array[PackedScene]([ExtResource("3_naolu"), ExtResource("3_naolu")])
+settingsSubScene = ExtResource("3_tlav0")
+gameScenes = Array[PackedScene]([ExtResource("4_vuu2a"), ExtResource("3_naolu"), ExtResource("6_036c8")])
 
 [node name="Settings" parent="." instance=ExtResource("2_aa3yh")]
 
@@ -25,3 +30,6 @@ TacticalCameraPostion = NodePath("../Camera")
 
 [node name="Camera" parent="." instance=ExtResource("6_x3h47")]
 transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707106, 0, -0.707106, 0.707106, 0, 10, 15)
+
+[node name="TeamSelection" type="Node" parent="."]
+script = ExtResource("11_rimfl")

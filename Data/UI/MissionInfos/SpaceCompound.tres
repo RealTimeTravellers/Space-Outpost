@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dfrigfccwpppu"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Data/MissionDataCard.cs" id="1_slh8x"]
+
+[resource]
+script = ExtResource("1_slh8x")
+missionNameLabel = "Space Compound"
+missionDescriptionLabel = "Valuable intel is hidden deep inside an alien compound. Your task is to take your three men and get what you can from inside."

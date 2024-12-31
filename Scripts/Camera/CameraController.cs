@@ -34,7 +34,7 @@ public partial class CameraController : Node3D
     {
         // TODO: Tween?
 
-        if (CameraManager.Instance.AimingMode) return;
+        if (CameraManager.Instance.AimingMode || CameraManager.Instance.TeamSelection) return;
 
         if(Input.IsActionPressed("Move Left"))
             this.Position += cameraSpeed * Vector3.Left * delta * multiplier;
@@ -52,7 +52,7 @@ public partial class CameraController : Node3D
 
     private void TacticalCameraZoom(InputEvent @event)
     {
-        if (CameraManager.Instance.AimingMode) return; // IDEA: maybe switch to fov zoom
+        if (CameraManager.Instance.AimingMode || CameraManager.Instance.TeamSelection) return; // IDEA: maybe switch to fov zoom
 
         if(@event.IsAction("Zoom In"))
             Position += zoomSpeed * Vector3.Up * multiplier;

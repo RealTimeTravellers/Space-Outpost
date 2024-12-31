@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://cqxnaw7xxur61"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Data/ClassInfo.cs" id="1_5kw55"]
+[ext_resource type="Texture2D" uid="uid://dogshn5uc2phh" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Medic_Medkit.svg" id="1_n5jic"]
+[ext_resource type="Texture2D" uid="uid://nugsvuqrsj6n" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Medic.svg" id="1_yervx"]
+[ext_resource type="Texture2D" uid="uid://b52xdofwvun5m" path="res://Visual Assets/Sprites/UI/TeamSelect/Class_Medic_Resuscitate.svg" id="2_vux5a"]
+
+[resource]
+script = ExtResource("1_5kw55")
+UnitType = 3
+DetailsText = "Medic"
+DescriptionText = "Versatile unit with the ability to heal the wounds of other players. Capable of quick assault tasks as well."
+ClassIcon = ExtResource("1_yervx")
+AbilityIcon = ExtResource("1_n5jic")
+AbilityIcon2 = ExtResource("2_vux5a")

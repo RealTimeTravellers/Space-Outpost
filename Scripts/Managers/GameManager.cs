@@ -8,6 +8,7 @@ public enum GameState
 	Loading,
 	// GamePlay Modes will be added here
     TeamSelect,
+	MissionSelect,
     Battle,
     // GamePlay Modes End
 	Settings,
@@ -23,18 +24,18 @@ public partial class GameManager : Node
 
 	[Export] public Settings settings;
 	[Export] private PackedScene mainMenuSubScene;
+	[Export] private PackedScene settingsSubScene;
 	private Node mainMenuNode;
+	private Node settingsNode;
+	public event Action<bool> OnSettingsVisibilityChanged;
 	[Export] private PackedScene[] gameScenes;
-	public Node currentSceneRoot;
 
-	public GameManager()
-	{
-		Instance = this;
-	}
+	public Node currentSceneRoot;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		Instance = this;
 		Initialize();
 		StartGame();
 	}
@@ -65,40 +66,90 @@ public partial class GameManager : Node
 		GameStateChanged += OnGameStateChanged;
 	}
 
+	public override void _ExitTree()
+	{
+		GameStateChanged -= OnGameStateChanged;
+	}
+
 	private async void LoadMainMenu(Node scene)
 	{
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 		GetTree().Root.AddChild(scene);
 	}
 
+	private async void LoadSettingsMenu(Node scene)
+	{
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		GetTree().Root.AddChild(scene);
+	}
+
+	public void ToggleSettingsPanel(bool show)
+	{
+		if (show && settingsNode == null)
+		{
+			settingsNode = settingsSubScene.Instantiate<Control>();
+			LoadSettingsMenu(settingsNode);
+		}
+		else if (!show && settingsNode != null)
+		{
+			settingsNode.QueueFree();
+			settingsNode = null;
+		}
+
+		OnSettingsVisibilityChanged?.Invoke(show);
+	}
+
 	private void SpawnGameScene()
 	{
 		GetTree().Root.AddChild(currentSceneRoot);
-		GetTree().QueueDelete(mainMenuNode);
+
+		if(mainMenuNode != null && mainMenuNode.IsInsideTree())
+		{
+			mainMenuNode.QueueFree();
+			mainMenuNode = null;
+		}
 	}
 
-	private void OnGameStateChanged(GameState current, GameState newState)
+	private async void OnGameStateChanged(GameState current, GameState newState)
 	{
+		Node newScene = null;
+
+		// Need to wait for all scenes.
+		if(currentSceneRoot != null)
+		{
+			GetTree().QueueDelete(currentSceneRoot);
+			currentSceneRoot = null;
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		}
+
+		// Load new scene based on new state.
 		switch(newState)
 		{
-			case GameState.TeamSelect:
-				currentSceneRoot = ResourceLoader.Load<PackedScene>(gameScenes[0].ResourcePath).Instantiate();
-				SpawnGameScene();
+			case GameState.TeamSelect:    
+				newScene = ResourceLoader.Load<PackedScene>(gameScenes[0].ResourcePath).Instantiate();
 				break;
+
+			case GameState.MissionSelect:
+				newScene = ResourceLoader.Load<PackedScene>(gameScenes[2].ResourcePath).Instantiate();
+				break;
+
 			case GameState.Menu:
 				mainMenuNode = ResourceLoader.Load<PackedScene>(mainMenuSubScene.ResourcePath).Instantiate();
 				LoadMainMenu(mainMenuNode);
-
-				if(currentSceneRoot != null)
-					GetTree().QueueDelete(currentSceneRoot);	
+				ToggleSettingsPanel(false);
 				break;
+				
 			case GameState.Battle:
-				currentSceneRoot = ResourceLoader.Load<PackedScene>(gameScenes[1].ResourcePath).Instantiate();
-				SpawnGameScene();
+				newScene = ResourceLoader.Load<PackedScene>(gameScenes[1].ResourcePath).Instantiate();
 				break;
-			case GameState.End:
-				// TODO: execute closing procedure, for future
-				break;
+		}
+
+		// Set new scene.
+		if (newScene != null)
+		{
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+			currentSceneRoot = newScene;
+			SpawnGameScene();
 		}
 	}
 }

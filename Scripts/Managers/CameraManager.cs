@@ -9,13 +9,20 @@ public partial class CameraManager : Node
     [Export] public Node3D TacticalCameraPostion;
     [Export] public bool AimingMode { get; set; } = false;
     [Export] public bool AreaSelection { get; set; } = false;
+    [Export] public bool TeamSelection { get; set; } = false;
 
     private Transform3D _tacticalTransform;
 
     public override void _Ready()
     {
         InitializeAsync();
+        GameManager.GameStateChanged += OnGameStateChanged;
         // TODO: check if camera is ready.
+    }
+
+    public override void _ExitTree()
+    {
+        GameManager.GameStateChanged -= OnGameStateChanged;
     }
 
     private async void InitializeAsync()
@@ -57,6 +64,21 @@ public partial class CameraManager : Node
     public void OnAreaSelected()
     {
         // If i manage to do it through raycaster this may be needed.
+    }
+
+        private void OnGameStateChanged(GameState current, GameState newState)
+    {
+        if (newState == GameState.TeamSelect)
+        {
+            TeamSelection = true;
+            MainCameraSet.GlobalPosition = new Vector3(0, 2.5f, 2.5f);
+            MainCameraSet.LookAt(new Vector3(0, 0, -2));
+        }
+        else if (current == GameState.TeamSelect)
+        {
+            TeamSelection = false;
+            MainCameraSet.GlobalTransform = _tacticalTransform;
+        }
     }
 
 }
