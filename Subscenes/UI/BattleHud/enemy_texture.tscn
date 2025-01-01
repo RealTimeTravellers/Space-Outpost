@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3 uid="uid://bmpsswpv2lb32"]
+
+[ext_resource type="Texture2D" uid="uid://dbw66uqixqjg2" path="res://Visual Assets/Sprites/UI/HUD/Window_Enemy.svg" id="1_1m71y"]
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD/EnemyStatusTextureHUD.cs" id="2_b7p7w"]
+[ext_resource type="Shader" path="res://Scripts/Shaders/icon_colour_shader.gdshader" id="2_glmwp"]
+[ext_resource type="Texture2D" uid="uid://wd7rar6p7nsg" path="res://Visual Assets/Sprites/UI/HUD/icons8-alien-512.svg" id="3_jd8d8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e47kp"]
+shader = ExtResource("2_glmwp")
+shader_parameter/replace_color = Color(1, 1, 0, 1)
+shader_parameter/threshold = 0.12
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6gtkq"]
+texture = ExtResource("3_jd8d8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ywyds"]
+texture = ExtResource("3_jd8d8")
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_updvv"]
+texture = ExtResource("3_jd8d8")
+modulate_color = Color(0.768627, 0.258824, 0.180392, 1)
+
+[node name="EnemyTexture" type="TextureRect" node_paths=PackedStringArray("enemyButton")]
+size_flags_horizontal = 3
+texture = ExtResource("1_1m71y")
+expand_mode = 2
+stretch_mode = 5
+script = ExtResource("2_b7p7w")
+enemyButton = NodePath("Button")
+
+[node name="Button" type="Button" parent="."]
+material = SubResource("ShaderMaterial_e47kp")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_6gtkq")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ywyds")
+theme_override_styles/normal = SubResource("StyleBoxTexture_updvv")
+
+[connection signal="pressed" from="Button" to="." method="OnEnemyTextureCall"]

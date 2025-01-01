@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=25 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
@@ -11,6 +11,12 @@
 [ext_resource type="Texture2D" uid="uid://ck57kixyvv4sl" path="res://Visual Assets/Sprites/UI/TeamSelect/Loadout.svg" id="8_llwxe"]
 [ext_resource type="Texture2D" uid="uid://bmleelbn0mec" path="res://Visual Assets/Sprites/UI/HUD/Button_NextPlayer.svg" id="8_yp7m8"]
 [ext_resource type="Texture2D" uid="uid://dkdbv7tyk4vdc" path="res://Visual Assets/Sprites/UI/HUD/Icon_NextPlayer.svg" id="9_jv0ys"]
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD/EnemyStatusPanelHUD.cs" id="12_joy1n"]
+[ext_resource type="PackedScene" uid="uid://bmpsswpv2lb32" path="res://Subscenes/UI/BattleHud/enemy_texture.tscn" id="13_gdv7b"]
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD/CharacterStatPanelHUD.cs" id="14_0nukx"]
+[ext_resource type="Texture2D" uid="uid://d04ug4wem3l8v" path="res://Visual Assets/Sprites/UI/HUD/Window_Weapon-Active.svg" id="14_l8fur"]
+[ext_resource type="Texture2D" uid="uid://bv3panvouyp2c" path="res://Visual Assets/Sprites/UI/MainMenu/gun2.png" id="15_g2rbs"]
+[ext_resource type="Texture2D" uid="uid://8ty2iadnksk0" path="res://Visual Assets/Sprites/UI/HUD/Window_Weapon-Default.svg" id="16_5bdia"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ps8jo"]
 texture = ExtResource("5_q0uqj")
@@ -30,6 +36,11 @@ texture = ExtResource("8_llwxe")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rvdt7"]
 texture = ExtResource("8_yp7m8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1mjmd"]
+texture = ExtResource("5_q0uqj")
+axis_stretch_horizontal = 2
+modulate_color = Color(0.720348, 0.861314, 1, 1)
 
 [node name="Battle HUD" type="Control"]
 layout_mode = 3
@@ -261,6 +272,336 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("9_jv0ys")
 expand_mode = 1
+
+[node name="EnemyStatusContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("EnemyListContainer")]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.05
+anchor_right = 0.6
+anchor_bottom = 0.15
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_joy1n")
+EnemyListContainer = NodePath("MarginContainer/EnemyList")
+EnemyStatusTexture = ExtResource("13_gdv7b")
+
+[node name="MarginContainer" type="MarginContainer" parent="EnemyStatusContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="EnemyList" type="HBoxContainer" parent="EnemyStatusContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 15
+
+[node name="CharacterStatsContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("HealthBar", "ArmorBar", "EvasionBar", "AccuracyBar", "DamageBar", "CriticalHitChanceBar")]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_top = 0.5
+anchor_right = 0.97
+anchor_bottom = 0.95
+script = ExtResource("14_0nukx")
+HealthBar = NodePath("VBoxContainer/CharacterStats/VBoxContainer/Health/StatContainer/HBoxContainer/ProgressBar")
+ArmorBar = NodePath("VBoxContainer/CharacterStats/VBoxContainer/Armor/StatContainer/HBoxContainer/ProgressBar")
+EvasionBar = NodePath("VBoxContainer/CharacterStats/VBoxContainer/Evasion/StatContainer/HBoxContainer/ProgressBar")
+AccuracyBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Accuracy/StatContainer/HBoxContainer/ProgressBar")
+DamageBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Damage/StatContainer/HBoxContainer/ProgressBar")
+CriticalHitChanceBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Crit/StatContainer/HBoxContainer/ProgressBar")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CharacterStatsContainer"]
+layout_mode = 2
+
+[node name="WeaponIcon" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon"]
+layout_mode = 2
+texture = ExtResource("14_l8fur")
+expand_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 13
+text = "Cerberus"
+vertical_alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("15_g2rbs")
+expand_mode = 3
+stretch_mode = 5
+flip_h = true
+
+[node name="Label2" type="Label" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 13
+text = "Primary Weapon"
+
+[node name="WeaponStats" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="CharacterStatsContainer/VBoxContainer/WeaponStats"]
+layout_mode = 2
+texture = ExtResource("16_5bdia")
+expand_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats"]
+layout_mode = 2
+
+[node name="Accuracy" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatContainer" type="MarginContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Accuracy"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Accuracy/StatContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Accuracy/StatContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.7
+theme_override_font_sizes/font_size = 16
+text = "Accuracy"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Accuracy/StatContainer/HBoxContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxTexture_1mjmd")
+value = 25.0
+show_percentage = false
+
+[node name="Damage" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatContainer" type="MarginContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Damage"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Damage/StatContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Damage/StatContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.7
+theme_override_font_sizes/font_size = 16
+text = "Damage"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Damage/StatContainer/HBoxContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxTexture_1mjmd")
+value = 25.0
+show_percentage = false
+
+[node name="Crit" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatContainer" type="MarginContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Crit"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Crit/StatContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Crit/StatContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.7
+theme_override_font_sizes/font_size = 16
+text = "Critical Hit"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterStatsContainer/VBoxContainer/WeaponStats/VBoxContainer/Crit/StatContainer/HBoxContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxTexture_1mjmd")
+value = 25.0
+show_percentage = false
+
+[node name="CharacterStats" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="CharacterStatsContainer/VBoxContainer/CharacterStats"]
+layout_mode = 2
+texture = ExtResource("16_5bdia")
+expand_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats"]
+layout_mode = 2
+
+[node name="Health" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatContainer" type="MarginContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Health"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Health/StatContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Health/StatContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.7
+theme_override_font_sizes/font_size = 16
+text = "Health"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Health/StatContainer/HBoxContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxTexture_1mjmd")
+value = 25.0
+show_percentage = false
+
+[node name="Armor" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatContainer" type="MarginContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Armor"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Armor/StatContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Armor/StatContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.7
+theme_override_font_sizes/font_size = 16
+text = "Armor"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Armor/StatContainer/HBoxContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxTexture_1mjmd")
+value = 25.0
+show_percentage = false
+
+[node name="Evasion" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatContainer" type="MarginContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Evasion"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Evasion/StatContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Evasion/StatContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.7
+theme_override_font_sizes/font_size = 16
+text = "Critical Hit"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterStatsContainer/VBoxContainer/CharacterStats/VBoxContainer/Evasion/StatContainer/HBoxContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxTexture_1mjmd")
+value = 25.0
+show_percentage = false
 
 [connection signal="mouse_entered" from="." to="." method="OnMouseEnteredUI"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExitedUI"]
