@@ -1,8 +1,34 @@
-[gd_scene load_steps=4 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=17 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
 [ext_resource type="Texture2D" uid="uid://cqr8pq4ihev71" path="res://Visual Assets/Sprites/UI/Right Triangle.png" id="2_50qdf"]
+[ext_resource type="Texture2D" uid="uid://b8fmaentchc7n" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health.svg" id="4_j2mds"]
+[ext_resource type="Texture2D" uid="uid://o7kei7hnormi" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health_Bar.svg" id="5_q0uqj"]
+[ext_resource type="Texture2D" uid="uid://cr23xplkamx20" path="res://Visual Assets/Sprites/UI/HUD/Button_PreviousPlayer.svg" id="6_bx4f5"]
+[ext_resource type="Texture2D" uid="uid://bibumyonh1lpn" path="res://Visual Assets/Sprites/UI/HUD/Icon_PreviousPlayer.svg" id="7_w27xi"]
+[ext_resource type="Texture2D" uid="uid://ck57kixyvv4sl" path="res://Visual Assets/Sprites/UI/TeamSelect/Loadout.svg" id="8_llwxe"]
+[ext_resource type="Texture2D" uid="uid://bmleelbn0mec" path="res://Visual Assets/Sprites/UI/HUD/Button_NextPlayer.svg" id="8_yp7m8"]
+[ext_resource type="Texture2D" uid="uid://dkdbv7tyk4vdc" path="res://Visual Assets/Sprites/UI/HUD/Icon_NextPlayer.svg" id="9_jv0ys"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ps8jo"]
+texture = ExtResource("5_q0uqj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fwu0b"]
+texture = ExtResource("6_bx4f5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1pk21"]
+texture = ExtResource("6_bx4f5")
+modulate_color = Color(0, 0.545098, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_of3bm"]
+texture = ExtResource("6_bx4f5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bggi3"]
+texture = ExtResource("8_llwxe")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rvdt7"]
+texture = ExtResource("8_yp7m8")
 
 [node name="Battle HUD" type="Control"]
 layout_mode = 3
@@ -71,6 +97,158 @@ text = "Supressive fire"
 [node name="Right" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
 layout_mode = 2
 icon = ExtResource("2_50qdf")
+
+[node name="CharacterContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02
+anchor_top = 0.8
+anchor_right = 0.2
+anchor_bottom = 0.95
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CharacterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CharacterInfoPanel" type="PanelContainer" parent="CharacterContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="TextureRect" type="TextureRect" parent="CharacterContainer/VBoxContainer/CharacterInfoPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("4_j2mds")
+expand_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CharacterContainer/VBoxContainer/CharacterInfoPanel"]
+layout_mode = 2
+
+[node name="Details" type="VBoxContainer" parent="CharacterContainer/VBoxContainer/CharacterInfoPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="MarginContainer" type="MarginContainer" parent="CharacterContainer/VBoxContainer/CharacterInfoPanel/VBoxContainer/Details"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = -3
+
+[node name="Label" type="Label" parent="CharacterContainer/VBoxContainer/CharacterInfoPanel/VBoxContainer/Details/MarginContainer"]
+layout_mode = 2
+text = "CharacterName"
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterContainer/VBoxContainer/CharacterInfoPanel/VBoxContainer/Details"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/fill = SubResource("StyleBoxTexture_ps8jo")
+show_percentage = false
+
+[node name="CharacterSelectionPanel" type="PanelContainer" parent="CharacterContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CharacterSelection" type="HBoxContainer" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftCharacterSwitch" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_fwu0b")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_1pk21")
+theme_override_styles/normal = SubResource("StyleBoxTexture_of3bm")
+
+[node name="TextureRect" type="TextureRect" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/LeftCharacterSwitch"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.15
+anchor_right = 0.9
+anchor_bottom = 0.85
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_w27xi")
+expand_mode = 1
+
+[node name="FirstCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
+
+[node name="Label" type="Label" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/FirstCharacter"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.25
+anchor_right = 0.75
+anchor_bottom = 0.75
+grow_horizontal = 2
+grow_vertical = 2
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SecondCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
+
+[node name="Label" type="Label" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/SecondCharacter"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.25
+anchor_right = 0.75
+anchor_bottom = 0.75
+grow_horizontal = 2
+grow_vertical = 2
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ThirdCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
+
+[node name="Label" type="Label" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/ThirdCharacter"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.25
+anchor_right = 0.75
+anchor_bottom = 0.75
+grow_horizontal = 2
+grow_vertical = 2
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightCharacterSwitch" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_fwu0b")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_1pk21")
+theme_override_styles/normal = SubResource("StyleBoxTexture_rvdt7")
+
+[node name="TextureRect" type="TextureRect" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/RightCharacterSwitch"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.15
+anchor_right = 0.8
+anchor_bottom = 0.85
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_jv0ys")
+expand_mode = 1
 
 [connection signal="mouse_entered" from="." to="." method="OnMouseEnteredUI"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExitedUI"]
