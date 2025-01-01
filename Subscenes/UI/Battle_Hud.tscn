@@ -1,8 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=18 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
 [ext_resource type="Texture2D" uid="uid://cqr8pq4ihev71" path="res://Visual Assets/Sprites/UI/Right Triangle.png" id="2_50qdf"]
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD/CharacterPanelHUD.cs" id="4_4dfk7"]
 [ext_resource type="Texture2D" uid="uid://b8fmaentchc7n" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health.svg" id="4_j2mds"]
 [ext_resource type="Texture2D" uid="uid://o7kei7hnormi" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health_Bar.svg" id="5_q0uqj"]
 [ext_resource type="Texture2D" uid="uid://cr23xplkamx20" path="res://Visual Assets/Sprites/UI/HUD/Button_PreviousPlayer.svg" id="6_bx4f5"]
@@ -98,7 +99,7 @@ text = "Supressive fire"
 layout_mode = 2
 icon = ExtResource("2_50qdf")
 
-[node name="CharacterContainer" type="PanelContainer" parent="."]
+[node name="CharacterContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("NameLabel", "HealthBar", "NextCharacterButton", "PreviousCharacterButton", "CharacterButtons")]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -106,6 +107,12 @@ anchor_left = 0.02
 anchor_top = 0.8
 anchor_right = 0.2
 anchor_bottom = 0.95
+script = ExtResource("4_4dfk7")
+NameLabel = NodePath("VBoxContainer/CharacterInfoPanel/VBoxContainer/Details/MarginContainer/Label")
+HealthBar = NodePath("VBoxContainer/CharacterInfoPanel/VBoxContainer/Details/ProgressBar")
+NextCharacterButton = NodePath("VBoxContainer/CharacterSelectionPanel/CharacterSelection/LeftCharacterSwitch")
+PreviousCharacterButton = NodePath("VBoxContainer/CharacterSelectionPanel/CharacterSelection/RightCharacterSwitch")
+CharacterButtons = [NodePath("VBoxContainer/CharacterSelectionPanel/CharacterSelection/FirstCharacter"), NodePath("VBoxContainer/CharacterSelectionPanel/CharacterSelection/SecondCharacter"), NodePath("VBoxContainer/CharacterSelectionPanel/CharacterSelection/ThirdCharacter")]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CharacterContainer"]
 layout_mode = 2
@@ -161,6 +168,7 @@ size_flags_vertical = 3
 [node name="LeftCharacterSwitch" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_fwu0b")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1pk21")
 theme_override_styles/normal = SubResource("StyleBoxTexture_of3bm")
@@ -180,6 +188,7 @@ expand_mode = 1
 [node name="FirstCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
 
 [node name="Label" type="Label" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/FirstCharacter"]
@@ -198,6 +207,7 @@ vertical_alignment = 1
 [node name="SecondCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
 
 [node name="Label" type="Label" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/SecondCharacter"]
@@ -216,6 +226,7 @@ vertical_alignment = 1
 [node name="ThirdCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
 
 [node name="Label" type="Label" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/ThirdCharacter"]
@@ -234,6 +245,7 @@ vertical_alignment = 1
 [node name="RightCharacterSwitch" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_fwu0b")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1pk21")
 theme_override_styles/normal = SubResource("StyleBoxTexture_rvdt7")
@@ -259,3 +271,8 @@ expand_mode = 1
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Stand To Engage Button" to="." method="OnStandToEngagePressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Supressive Fire Button" to="." method="OnSupressiveFirePressed"]
 [connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Right" to="." method="OnRigtArrowPressed"]
+[connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/LeftCharacterSwitch" to="CharacterContainer" method="OnPreviousCharacter"]
+[connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/FirstCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [0]]
+[connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/SecondCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [1]]
+[connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/ThirdCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [2]]
+[connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/RightCharacterSwitch" to="CharacterContainer" method="OnNextCharacter"]

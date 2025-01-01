@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://byqw1oqs82ord" path="res://Subscenes/Managers/game_manager.tscn" id="1_87e0o"]
 [ext_resource type="PackedScene" uid="uid://cbhkfpor6datm" path="res://Subscenes/Configs/settings.tscn" id="2_aa3yh"]
-[ext_resource type="PackedScene" uid="uid://db5muqbbxse6b" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
+[ext_resource type="PackedScene" uid="uid://c26sfhh7246xk" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
 [ext_resource type="PackedScene" uid="uid://bjcy4ncqw8tru" path="res://Subscenes/Maps/inside_building.tscn" id="3_naolu"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/Settings Panel.tscn" id="3_tlav0"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/Team Selection.tscn" id="4_vuu2a"]
