@@ -37,5 +37,10 @@ public partial class EnemyStatusTextureHUD :Control
         Color newColor = new Color(1f, healthRatio, 0f, 1f);
         
         iconMaterial.SetShaderParameter("replace_color", newColor);
+
+        if (enemyCharacter.Health <= 0)
+        {
+            QueueFree();
+        }
     }
 }

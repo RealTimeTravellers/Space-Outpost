@@ -1,8 +1,9 @@
-[gd_scene load_steps=55 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=71 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
 [ext_resource type="Texture2D" uid="uid://cqr8pq4ihev71" path="res://Visual Assets/Sprites/UI/Right Triangle.png" id="2_50qdf"]
+[ext_resource type="Texture2D" uid="uid://bbg7jum71f4wl" path="res://Visual Assets/Sprites/UI/HUD/Window_Attack.svg" id="2_lm34m"]
 [ext_resource type="Texture2D" uid="uid://dsfiujxje4llt" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 1_Default.svg" id="3_mieh3"]
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD/CharacterPanelHUD.cs" id="4_4dfk7"]
 [ext_resource type="Texture2D" uid="uid://btxjc2wlmenvv" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 1_Active.svg" id="4_71ch5"]
@@ -32,6 +33,30 @@
 [ext_resource type="Texture2D" uid="uid://dh5ej7e1x07yl" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 5_Default.svg" id="16_3bwcb"]
 [ext_resource type="Texture2D" uid="uid://8ty2iadnksk0" path="res://Visual Assets/Sprites/UI/HUD/Window_Weapon-Default.svg" id="16_5bdia"]
 [ext_resource type="Texture2D" uid="uid://ciubdqc8xfl7m" path="res://Visual Assets/Sprites/UI/HUD/Icon_Overwatch.svg" id="17_x65vg"]
+[ext_resource type="Texture2D" uid="uid://cxccaj7aypdcs" path="res://Visual Assets/Sprites/UI/HUD/Button_Menu.svg" id="34_4x4tk"]
+[ext_resource type="Texture2D" uid="uid://bhj32v8fhfvkm" path="res://Visual Assets/Sprites/UI/TeamSelect/Unit_Selected.svg" id="35_10vnc"]
+[ext_resource type="Texture2D" uid="uid://cdck3vc5tgh6d" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Hover.svg" id="36_3gsbf"]
+[ext_resource type="Script" path="res://Scripts/UI/GUI/GameMenuGUI.cs" id="36_lxhhc"]
+[ext_resource type="Texture2D" uid="uid://bj7epcl1j10qu" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Selected.svg" id="37_7ab5t"]
+[ext_resource type="Texture2D" uid="uid://coohouu7jde7" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Defalut.svg" id="38_ipmcw"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dxyef"]
+texture = ExtResource("36_3gsbf")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_evjtq"]
+texture = ExtResource("37_7ab5t")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p6gso"]
+texture = ExtResource("38_ipmcw")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dyy5y"]
+texture = ExtResource("2_lm34m")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3jctp"]
+texture = ExtResource("2_lm34m")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qeo3f"]
+texture = ExtResource("2_lm34m")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qkhfb"]
 texture = ExtResource("4_71ch5")
@@ -102,21 +127,141 @@ texture = ExtResource("5_q0uqj")
 axis_stretch_horizontal = 2
 modulate_color = Color(0.720348, 0.861314, 1, 1)
 
-[node name="Battle HUD" type="Control"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h4qg1"]
+texture = ExtResource("34_4x4tk")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dan5o"]
+texture = ExtResource("35_10vnc")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hiqga"]
+texture = ExtResource("34_4x4tk")
+
+[node name="Battle HUD" type="Control" node_paths=PackedStringArray("DamageLabel", "AccuracyLabel", "CriticalHitChanceLabel", "EvasionLabel", "fireButton", "GameMenuScene")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_hljih")
+DamageLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Damage")
+AccuracyLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/HitChance")
+CriticalHitChanceLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/CritChance")
+EvasionLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Evasion")
+fireButton = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/Fire Button")
+GameMenuScene = NodePath("GUIMenuContainer")
 
-[node name="Action Panel" type="Panel" parent="."]
+[node name="GUIMenuContainer" type="PanelContainer" parent="."]
+process_mode = 3
+z_index = 10
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.3
-anchor_top = 0.65
-anchor_right = 0.7
+anchor_left = 0.35
+anchor_top = 0.2
+anchor_right = 0.65
+anchor_bottom = 0.8
+mouse_filter = 2
+script = ExtResource("36_lxhhc")
+
+[node name="MarginContainer" type="MarginContainer" parent="GUIMenuContainer"]
+z_index = 2
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUIMenuContainer/MarginContainer"]
+z_index = 2
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="GUIMenuContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "GAME MENU"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button1" type="PanelContainer" parent="GUIMenuContainer/MarginContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 2
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ContinueButton" type="Button" parent="GUIMenuContainer/MarginContainer/VBoxContainer/Button1"]
+z_index = 2
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_dxyef")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_evjtq")
+theme_override_styles/normal = SubResource("StyleBoxTexture_p6gso")
+text = "CONTINUE"
+
+[node name="Button2" type="PanelContainer" parent="GUIMenuContainer/MarginContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 2
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="OptionsButton" type="Button" parent="GUIMenuContainer/MarginContainer/VBoxContainer/Button2"]
+z_index = 2
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_dxyef")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_evjtq")
+theme_override_styles/normal = SubResource("StyleBoxTexture_p6gso")
+text = "OPTIONS"
+
+[node name="Button3" type="PanelContainer" parent="GUIMenuContainer/MarginContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 2
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="MainMenuButton" type="Button" parent="GUIMenuContainer/MarginContainer/VBoxContainer/Button3"]
+z_index = 2
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_dxyef")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_evjtq")
+theme_override_styles/normal = SubResource("StyleBoxTexture_p6gso")
+text = "MAIN MENU"
+
+[node name="Button4" type="PanelContainer" parent="GUIMenuContainer/MarginContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 2
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ExitButton" type="Button" parent="GUIMenuContainer/MarginContainer/VBoxContainer/Button4"]
+z_index = 2
+layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxTexture_dxyef")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_evjtq")
+theme_override_styles/normal = SubResource("StyleBoxTexture_p6gso")
+text = "EXIT GAME"
+
+[node name="TextureRect" type="TextureRect" parent="GUIMenuContainer"]
+z_index = -2
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("8_llwxe")
+expand_mode = 1
+
+[node name="Action Panel" type="Panel" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.75
+anchor_right = 0.6
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 0
@@ -129,29 +274,80 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Action Panel/MarginContainer"]
+[node name="FireDetailsZone" type="VBoxContainer" parent="Action Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="FireButtonZone" type="PanelContainer" parent="Action Panel/MarginContainer/FireDetailsZone"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.5
+
+[node name="MarginContainer" type="MarginContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="Tempbox" type="VBoxContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer"]
 layout_mode = 2
 
-[node name="FireButtonZone" type="PanelContainer" parent="Action Panel/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Fire Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/FireButtonZone"]
+[node name="HitChance" type="Label" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CritChance" type="Label" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "Fire"
 
-[node name="Action HBox" type="HBoxContainer" parent="Action Panel/MarginContainer/VBoxContainer"]
+[node name="Damage" type="Label" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Evasion" type="Label" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_dyy5y")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3jctp")
+theme_override_styles/normal = SubResource("StyleBoxTexture_qeo3f")
+
+[node name="Action HBox" type="HBoxContainer" parent="Action Panel/MarginContainer/FireDetailsZone"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 5
 
-[node name="Left" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
+[node name="Left" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
 layout_mode = 2
 icon = ExtResource("1_l26u0")
 
-[node name="Attack Mode Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+[node name="Attack Mode Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -160,7 +356,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_nom10")
 theme_override_styles/normal = SubResource("StyleBoxTexture_acsxx")
 icon_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Attack Mode Button"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Attack Mode Button"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.25
@@ -171,8 +367,8 @@ texture = ExtResource("5_7oh6p")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Move" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+[node name="Move" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -180,7 +376,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_r3sjy")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_hjefy")
 theme_override_styles/normal = SubResource("StyleBoxTexture_hlyqh")
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Move"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Move"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.2
@@ -193,8 +389,8 @@ texture = ExtResource("8_sdoh6")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Stand To Engage Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+[node name="Stand To Engage Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -202,7 +398,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_yk8ew")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_jpq3v")
 theme_override_styles/normal = SubResource("StyleBoxTexture_r5kh3")
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Stand To Engage Button"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Stand To Engage Button"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.2
@@ -213,8 +409,8 @@ texture = ExtResource("11_bx6or")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Supressive Fire Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+[node name="Supressive Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -222,7 +418,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_k2x3s")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_5h1lj")
 theme_override_styles/normal = SubResource("StyleBoxTexture_hvr4u")
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Supressive Fire Button"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Supressive Fire Button"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.2
@@ -233,8 +429,8 @@ texture = ExtResource("14_tp2vp")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+[node name="Overwatch Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -243,7 +439,7 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_j7ir1")
 theme_override_styles/hover = SubResource("StyleBoxTexture_q0yph")
 theme_override_styles/normal = SubResource("StyleBoxTexture_25hli")
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Button"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Overwatch Button"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.2
@@ -254,7 +450,7 @@ texture = ExtResource("17_x65vg")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Right" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
+[node name="Right" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
 layout_mode = 2
 icon = ExtResource("2_50qdf")
 
@@ -447,7 +643,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 15
 
-[node name="CharacterStatsContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("HealthBar", "ArmorBar", "EvasionBar", "AccuracyBar", "DamageBar", "CriticalHitChanceBar")]
+[node name="CharacterStatsContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("StatPanel", "HealthBar", "ArmorBar", "EvasionBar", "AccuracyBar", "DamageBar", "CriticalHitChanceBar")]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -456,6 +652,7 @@ anchor_top = 0.5
 anchor_right = 0.97
 anchor_bottom = 0.95
 script = ExtResource("14_0nukx")
+StatPanel = NodePath(".")
 HealthBar = NodePath("VBoxContainer/CharacterStats/VBoxContainer/Health/StatContainer/HBoxContainer/ProgressBar")
 ArmorBar = NodePath("VBoxContainer/CharacterStats/VBoxContainer/Armor/StatContainer/HBoxContainer/ProgressBar")
 EvasionBar = NodePath("VBoxContainer/CharacterStats/VBoxContainer/Evasion/StatContainer/HBoxContainer/ProgressBar")
@@ -751,17 +948,43 @@ theme_override_styles/fill = SubResource("StyleBoxTexture_1mjmd")
 value = 25.0
 show_percentage = false
 
+[node name="GUIButtonContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 10
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.05
+anchor_bottom = 0.05
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="MenuButton" type="Button" parent="GUIButtonContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_h4qg1")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_dan5o")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hiqga")
+
 [connection signal="mouse_entered" from="." to="." method="OnMouseEnteredUI"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExitedUI"]
-[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/FireButtonZone/Fire Button" to="." method="OnFirePressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Left" to="." method="OnLeftArrowPressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Move" to="." method="OnMovePressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Stand To Engage Button" to="." method="OnStandToEngagePressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Supressive Fire Button" to="." method="OnSupressiveFirePressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Right" to="." method="OnRigtArrowPressed"]
+[connection signal="pressed" from="GUIMenuContainer/MarginContainer/VBoxContainer/Button1/ContinueButton" to="GUIMenuContainer" method="OnContinueButtonPressed"]
+[connection signal="pressed" from="GUIMenuContainer/MarginContainer/VBoxContainer/Button2/OptionsButton" to="GUIMenuContainer" method="OnOptionsButtonPressed"]
+[connection signal="pressed" from="GUIMenuContainer/MarginContainer/VBoxContainer/Button3/MainMenuButton" to="GUIMenuContainer" method="OnMainMenuButtonPressed"]
+[connection signal="pressed" from="GUIMenuContainer/MarginContainer/VBoxContainer/Button4/ExitButton" to="GUIMenuContainer" method="OnExitButtonPressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/Fire Button" to="." method="OnFirePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Left" to="." method="OnLeftArrowPressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Move" to="." method="OnMovePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Stand To Engage Button" to="." method="OnStandToEngagePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Supressive Fire Button" to="." method="OnSupressiveFirePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Right" to="." method="OnRigtArrowPressed"]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/LeftCharacterSwitch" to="CharacterContainer" method="OnPreviousCharacter"]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/FirstCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [0]]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/SecondCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [1]]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/ThirdCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [2]]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/RightCharacterSwitch" to="CharacterContainer" method="OnNextCharacter"]
+[connection signal="pressed" from="GUIButtonContainer/MenuButton" to="GUIMenuContainer" method="ToggleMenu"]

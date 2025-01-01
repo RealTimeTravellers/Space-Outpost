@@ -2,6 +2,7 @@ using Godot;
 
 public partial class CharacterStatPanelHUD : Control
 {
+    [Export] public Control StatPanel;
     [Export] public ProgressBar HealthBar;
     [Export] public ProgressBar ArmorBar;
     [Export] public ProgressBar EvasionBar;
@@ -14,8 +15,16 @@ public partial class CharacterStatPanelHUD : Control
 
     public override void _Ready()
     {
-        GridManager.Instance.SelectionChanged += UpdateCharacterUI;
-        InitializeStatPanel();
+        if (StatPanel != null)  // Add null check
+        {
+            GridManager.Instance.SelectionChanged += UpdateCharacterUI;
+            InitializeStatPanel();
+            StatPanel.Visible = false;
+        }
+        else
+        {
+            GD.PrintErr("StatPanel not assigned in CharacterStatPanelHUD");
+        }
     }
 
     public void UpdateCharacterUI(GridObject gridObject)
@@ -23,9 +32,14 @@ public partial class CharacterStatPanelHUD : Control
         if (gridObject == null) return;
 
         selectedCharacter = GridManager.Instance.selectedCharacter;
-        if (selectedCharacter == null) return;
+
+        if (selectedCharacter == null){
+            StatPanel.Visible = false;
+            return;
+        }
 
         UpdateStatPanel(selectedCharacter);
+        StatPanel.Visible = true;
     }
 
     public void InitializeStatPanel()
