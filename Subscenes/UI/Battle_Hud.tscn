@@ -1,22 +1,82 @@
-[gd_scene load_steps=25 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=55 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
 [ext_resource type="Texture2D" uid="uid://cqr8pq4ihev71" path="res://Visual Assets/Sprites/UI/Right Triangle.png" id="2_50qdf"]
+[ext_resource type="Texture2D" uid="uid://dsfiujxje4llt" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 1_Default.svg" id="3_mieh3"]
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD/CharacterPanelHUD.cs" id="4_4dfk7"]
+[ext_resource type="Texture2D" uid="uid://btxjc2wlmenvv" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 1_Active.svg" id="4_71ch5"]
 [ext_resource type="Texture2D" uid="uid://b8fmaentchc7n" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health.svg" id="4_j2mds"]
+[ext_resource type="Texture2D" uid="uid://k344bc81p0oi" path="res://Visual Assets/Sprites/UI/HUD/Icon_Attack.svg" id="5_7oh6p"]
 [ext_resource type="Texture2D" uid="uid://o7kei7hnormi" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health_Bar.svg" id="5_q0uqj"]
 [ext_resource type="Texture2D" uid="uid://cr23xplkamx20" path="res://Visual Assets/Sprites/UI/HUD/Button_PreviousPlayer.svg" id="6_bx4f5"]
+[ext_resource type="Texture2D" uid="uid://druxqvlpgev64" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 2_Default.svg" id="6_pb7fc"]
+[ext_resource type="Texture2D" uid="uid://dtoj27mwfjh7j" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 2_Active.svg" id="7_gnh5m"]
 [ext_resource type="Texture2D" uid="uid://bibumyonh1lpn" path="res://Visual Assets/Sprites/UI/HUD/Icon_PreviousPlayer.svg" id="7_w27xi"]
 [ext_resource type="Texture2D" uid="uid://ck57kixyvv4sl" path="res://Visual Assets/Sprites/UI/TeamSelect/Loadout.svg" id="8_llwxe"]
+[ext_resource type="Texture2D" uid="uid://b5py3uy7nj6a2" path="res://Visual Assets/Sprites/UI/HUD/Icon_Movement.svg" id="8_sdoh6"]
 [ext_resource type="Texture2D" uid="uid://bmleelbn0mec" path="res://Visual Assets/Sprites/UI/HUD/Button_NextPlayer.svg" id="8_yp7m8"]
+[ext_resource type="Texture2D" uid="uid://b27jp5hrj564j" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 3_Default.svg" id="9_7j0v5"]
 [ext_resource type="Texture2D" uid="uid://dkdbv7tyk4vdc" path="res://Visual Assets/Sprites/UI/HUD/Icon_NextPlayer.svg" id="9_jv0ys"]
+[ext_resource type="Texture2D" uid="uid://d28tfx4wgvpee" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 3_Active.svg" id="10_cp3pn"]
+[ext_resource type="Texture2D" uid="uid://cvdd8lbqivi07" path="res://Visual Assets/Sprites/UI/HUD/Icon_Reload.svg" id="11_bx6or"]
+[ext_resource type="Texture2D" uid="uid://bvvbabkq8dxsp" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 4_Active.svg" id="12_6tprl"]
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD/EnemyStatusPanelHUD.cs" id="12_joy1n"]
+[ext_resource type="Texture2D" uid="uid://b4mm5s0hml8r3" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 4_Default.svg" id="13_b8po8"]
 [ext_resource type="PackedScene" uid="uid://bmpsswpv2lb32" path="res://Subscenes/UI/BattleHud/enemy_texture.tscn" id="13_gdv7b"]
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD/CharacterStatPanelHUD.cs" id="14_0nukx"]
 [ext_resource type="Texture2D" uid="uid://d04ug4wem3l8v" path="res://Visual Assets/Sprites/UI/HUD/Window_Weapon-Active.svg" id="14_l8fur"]
+[ext_resource type="Texture2D" uid="uid://bbqndhn021meg" path="res://Visual Assets/Sprites/UI/HUD/Icon_Cover.svg" id="14_tp2vp"]
 [ext_resource type="Texture2D" uid="uid://bv3panvouyp2c" path="res://Visual Assets/Sprites/UI/MainMenu/gun2.png" id="15_g2rbs"]
+[ext_resource type="Texture2D" uid="uid://cclgdgcy2r5vl" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 5_Active.svg" id="15_jsilj"]
+[ext_resource type="Texture2D" uid="uid://dh5ej7e1x07yl" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 5_Default.svg" id="16_3bwcb"]
 [ext_resource type="Texture2D" uid="uid://8ty2iadnksk0" path="res://Visual Assets/Sprites/UI/HUD/Window_Weapon-Default.svg" id="16_5bdia"]
+[ext_resource type="Texture2D" uid="uid://ciubdqc8xfl7m" path="res://Visual Assets/Sprites/UI/HUD/Icon_Overwatch.svg" id="17_x65vg"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qkhfb"]
+texture = ExtResource("4_71ch5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nom10"]
+texture = ExtResource("4_71ch5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_acsxx"]
+texture = ExtResource("3_mieh3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r3sjy"]
+texture = ExtResource("7_gnh5m")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hjefy"]
+texture = ExtResource("7_gnh5m")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hlyqh"]
+texture = ExtResource("6_pb7fc")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yk8ew"]
+texture = ExtResource("9_7j0v5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jpq3v"]
+texture = ExtResource("10_cp3pn")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r5kh3"]
+texture = ExtResource("9_7j0v5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k2x3s"]
+texture = ExtResource("12_6tprl")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5h1lj"]
+texture = ExtResource("12_6tprl")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hvr4u"]
+texture = ExtResource("13_b8po8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j7ir1"]
+texture = ExtResource("15_jsilj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q0yph"]
+texture = ExtResource("15_jsilj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_25hli"]
+texture = ExtResource("16_3bwcb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ps8jo"]
 texture = ExtResource("5_q0uqj")
@@ -53,60 +113,148 @@ script = ExtResource("1_hljih")
 
 [node name="Action Panel" type="Panel" parent="."]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -218.0
-offset_top = -73.0
-offset_right = 216.0
+anchors_preset = -1
+anchor_left = 0.3
+anchor_top = 0.65
+anchor_right = 0.7
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Action Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Action Panel"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -216.0
-offset_top = -35.5
-offset_right = 216.0
-offset_bottom = 35.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Fire Button" type="Button" parent="Action Panel/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Action Panel/MarginContainer"]
 layout_mode = 2
+
+[node name="FireButtonZone" type="PanelContainer" parent="Action Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Fire Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/FireButtonZone"]
+layout_mode = 2
+size_flags_vertical = 3
 text = "Fire"
 
-[node name="Action HBox" type="HBoxContainer" parent="Action Panel/VBoxContainer"]
+[node name="Action HBox" type="HBoxContainer" parent="Action Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 5
 
-[node name="Left" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+[node name="Left" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
 layout_mode = 2
 icon = ExtResource("1_l26u0")
 
-[node name="Move" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+[node name="Attack Mode Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Move"
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/hover = SubResource("StyleBoxTexture_qkhfb")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_nom10")
+theme_override_styles/normal = SubResource("StyleBoxTexture_acsxx")
+icon_alignment = 1
 
-[node name="Attack Mode Button" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Attack Mode Button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.15
+anchor_right = 0.85
+anchor_bottom = 0.8
+texture = ExtResource("5_7oh6p")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Move" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Aim
-"
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/hover = SubResource("StyleBoxTexture_r3sjy")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_hjefy")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hlyqh")
 
-[node name="Stand To Engage Button" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Move"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.15
+anchor_right = 0.8
+anchor_bottom = 0.75
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_sdoh6")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Stand To Engage Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Stand To Engage"
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/hover = SubResource("StyleBoxTexture_yk8ew")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_jpq3v")
+theme_override_styles/normal = SubResource("StyleBoxTexture_r5kh3")
 
-[node name="Supressive Fire Button" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Stand To Engage Button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.15
+anchor_right = 0.8
+anchor_bottom = 0.75
+texture = ExtResource("11_bx6or")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Supressive Fire Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Supressive fire"
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/hover = SubResource("StyleBoxTexture_k2x3s")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5h1lj")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hvr4u")
 
-[node name="Right" type="Button" parent="Action Panel/VBoxContainer/Action HBox"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Supressive Fire Button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.15
+anchor_right = 0.8
+anchor_bottom = 0.75
+texture = ExtResource("14_tp2vp")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Button" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+focus_mode = 0
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_j7ir1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_q0yph")
+theme_override_styles/normal = SubResource("StyleBoxTexture_25hli")
+
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox/Button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.15
+anchor_right = 0.8
+anchor_bottom = 0.75
+texture = ExtResource("17_x65vg")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Right" type="Button" parent="Action Panel/MarginContainer/VBoxContainer/Action HBox"]
 layout_mode = 2
 icon = ExtResource("2_50qdf")
 
@@ -605,13 +753,13 @@ show_percentage = false
 
 [connection signal="mouse_entered" from="." to="." method="OnMouseEnteredUI"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExitedUI"]
-[connection signal="pressed" from="Action Panel/VBoxContainer/Fire Button" to="." method="OnFirePressed"]
-[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Left" to="." method="OnLeftArrowPressed"]
-[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Move" to="." method="OnMovePressed"]
-[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
-[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Stand To Engage Button" to="." method="OnStandToEngagePressed"]
-[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Supressive Fire Button" to="." method="OnSupressiveFirePressed"]
-[connection signal="pressed" from="Action Panel/VBoxContainer/Action HBox/Right" to="." method="OnRigtArrowPressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/FireButtonZone/Fire Button" to="." method="OnFirePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Left" to="." method="OnLeftArrowPressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Move" to="." method="OnMovePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Stand To Engage Button" to="." method="OnStandToEngagePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Supressive Fire Button" to="." method="OnSupressiveFirePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/VBoxContainer/Action HBox/Right" to="." method="OnRigtArrowPressed"]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/LeftCharacterSwitch" to="CharacterContainer" method="OnPreviousCharacter"]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/FirstCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [0]]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/SecondCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [1]]
