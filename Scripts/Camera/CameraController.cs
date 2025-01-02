@@ -3,7 +3,7 @@ using System;
 
 public partial class CameraController : Node3D
 {
-    [Export] Raycaster raycaster;
+    [Export] public Raycaster raycaster;
     [Export] public Camera3D Camera {get; private set; }
     [Export] float cameraSpeed = 5f;
     [Export] float zoomSpeed = 0.1f;

@@ -4,8 +4,8 @@ public partial class Raycaster : Node3D // random name idk
 {
 
     public static bool MouseOverUI = false;
-
     [Export] private float rayLength = 300;
+    
 
     public override void _Input(InputEvent @event)
     {
@@ -14,10 +14,10 @@ public partial class Raycaster : Node3D // random name idk
         base._Input(@event);
     }
 
-    private void ChangeGridSelection(GridObject gridObject)
+    public void ChangeGridSelection(GridObject gridObject)
     {
-            GridManager.Instance.selectedGrid = gridObject;
-            GridManager.Instance.SelectionChanged.Invoke(GridManager.Instance.selectedGrid);
+        GridManager.Instance.selectedGrid = gridObject;
+        GridManager.Instance.SelectionChanged.Invoke(GridManager.Instance.selectedGrid);
     }
 
     private void SelectViaRaycast()
