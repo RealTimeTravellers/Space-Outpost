@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=72 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
@@ -33,6 +33,7 @@
 [ext_resource type="Texture2D" uid="uid://dh5ej7e1x07yl" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 5_Default.svg" id="16_3bwcb"]
 [ext_resource type="Texture2D" uid="uid://8ty2iadnksk0" path="res://Visual Assets/Sprites/UI/HUD/Window_Weapon-Default.svg" id="16_5bdia"]
 [ext_resource type="Texture2D" uid="uid://ciubdqc8xfl7m" path="res://Visual Assets/Sprites/UI/HUD/Icon_Overwatch.svg" id="17_x65vg"]
+[ext_resource type="Texture2D" uid="uid://dskqys0ho5p3b" path="res://Visual Assets/Sprites/UI/TeamSelect/RightButton.svg" id="29_cmcgi"]
 [ext_resource type="Texture2D" uid="uid://cxccaj7aypdcs" path="res://Visual Assets/Sprites/UI/HUD/Button_Menu.svg" id="34_4x4tk"]
 [ext_resource type="Texture2D" uid="uid://bhj32v8fhfvkm" path="res://Visual Assets/Sprites/UI/TeamSelect/Unit_Selected.svg" id="35_10vnc"]
 [ext_resource type="Texture2D" uid="uid://cdck3vc5tgh6d" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Hover.svg" id="36_3gsbf"]
@@ -110,7 +111,7 @@ texture = ExtResource("5_q0uqj")
 texture = ExtResource("6_bx4f5")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1pk21"]
-texture = ExtResource("6_bx4f5")
+texture = ExtResource("29_cmcgi")
 modulate_color = Color(0, 0.545098, 1, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_of3bm"]
@@ -343,11 +344,12 @@ size_flags_vertical = 3
 theme_override_constants/separation = 5
 
 [node name="Left" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 icon = ExtResource("1_l26u0")
 
 [node name="Attack Mode Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -368,7 +370,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Move" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -390,7 +392,7 @@ expand_mode = 3
 stretch_mode = 5
 
 [node name="Stand To Engage Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -410,7 +412,7 @@ expand_mode = 3
 stretch_mode = 5
 
 [node name="Supressive Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -430,7 +432,7 @@ expand_mode = 3
 stretch_mode = 5
 
 [node name="Overwatch Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -451,6 +453,7 @@ expand_mode = 3
 stretch_mode = 5
 
 [node name="Right" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 icon = ExtResource("2_50qdf")
 
