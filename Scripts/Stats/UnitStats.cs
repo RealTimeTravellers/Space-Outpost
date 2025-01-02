@@ -132,7 +132,7 @@ public partial class UnitStats
         Accuracy = new Stat(30, 100);
         MovementRange = new Stat(0, 10);
         Morale = new Stat(0, 20);
-        ActionPoints = new Stat(1, 3);
+        ActionPoints = new Stat(0, 3);
         Perception = new Stat(10, 100);
         Evasion = new Stat(0, 30);
         CriticalHitChance = new Stat(0, 100);

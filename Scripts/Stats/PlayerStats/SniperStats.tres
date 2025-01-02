@@ -6,7 +6,7 @@
 script = ExtResource("1_ene0x")
 PlayerType = 1
 UnitType = 1
-Health = 2
+Health = 5
 Armor = 5
 Accuracy = 86
 MovementRange = 8
