@@ -16,7 +16,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public int Perception { get; private set; } = 20;
 	public UnitStats Stats;
 	public StatContainer StatContainer;
-	public PlayerStats Stats;
 
 	// Equipment controller
     [Export]
@@ -446,11 +445,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	{
 		// safe
 		if (target == null || target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death || actionPoints <= 0) return;
-		// TODO: chance calculations here define if miss or hit - done
 		// Calculate hit chance based on attacker's accuracy
 
-		float hitChance = /* Stats.Accuracy.GetValue() */ 75f / 100f;
-		bool hit = GD.Randf() <= hitChance;
+		float hitChance = Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue();
+		hitChance = Mathf.Clamp(hitChance, 10f, 95f);
+		bool hit = GD.Randf() <= hitChance / 100f;
 
 		Vector3 direction = (target.Position - Position).Normalized();
 		if (!IsFriendly)
@@ -459,8 +458,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		if (hit) // || true for test purposes
 		{
-			int damage = 4; //Equipment.GetCurrentWeaponDamage(); // temporary
-			target.TakeDamage(damage);
+			int baseDamage = 7; //Equipment.GetCurrentWeaponDamage(); 
+			bool isCritical = GD.Randf() <= Stats.CriticalHitChance.GetValue() / 100f;
+			int damage = isCritical ? baseDamage * 2 : baseDamage;
+
+			int armorValue = target.Stats.Armor.GetValue();
+			int armorReduction = GD.RandRange(1, armorValue);
+			int finalDamage = Mathf.Max(1, damage - armorReduction);
+			target.TakeDamage(finalDamage);
 		}
 
 		gun.Fire(hit);
