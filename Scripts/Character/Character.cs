@@ -14,7 +14,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public UnitType UnitType { get; private set; } = UnitType.Human;
 	[Export] public int Evasion { get; set; } = 15;
 	[Export] public int Perception { get; private set; } = 20;
-	//public UnitStats Stats;
+	public UnitStats Stats;
 	public StatContainer StatContainer;
 
 	// Equipment controller
@@ -37,6 +37,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public float VisualRange { get; private set; } = 35; 
 	public bool IsInCover { get; set; } = false;
 	public event Action<int> ActionCompleted;
+	public event Action<int, int> HealthChanged;
 
 	#region ICombat Variables
 	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
@@ -97,8 +98,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			// Player Stats
 			StatContainer = PlayerStatsFactory.CreateStatsForPlayerType(PlayerType);
-			//Stats = new PlayerStats(PlayerType, StatContainer);
-			//Health = Stats.Health.GetValue();
+			Stats = new PlayerStats(PlayerType, StatContainer);
+			Health = Stats.Health.GetValue();
 			// Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Player Equipment
@@ -111,8 +112,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			// Enemy Stats
 			StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
-			//Stats = new EnemyStats(EnemyType, StatContainer);
-			//Health = Stats.Health.GetValue();
+			Stats = new EnemyStats(EnemyType, StatContainer);
+			Health = Stats.Health.GetValue();
 			/* Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Enemy Equipment
@@ -349,6 +350,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (Health <0)
 			Health = 0;
 		HealthLabel.Text = Health +"/"+ 8;//Stats.Health.GetValue();
+		HealthChanged?.Invoke(Health, 8);
 	}
 
 	/// <summary>

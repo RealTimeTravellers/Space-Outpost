@@ -4,7 +4,7 @@ public partial class GridObject : Node3D
 {
 	private bool _isOccupied = false;
     private bool _isBlocked = false;
-    private Character _occupyingCharacter;
+    public Character _occupyingCharacter {get; private set;}
 	[Export] public CoverType coverType = CoverType.None;
 	public bool HasCover { get; private set; }
 	public Vector3 CoverNormal { get; private set; }

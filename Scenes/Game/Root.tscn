@@ -5,11 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://c26sfhh7246xk" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
 [ext_resource type="PackedScene" uid="uid://bjcy4ncqw8tru" path="res://Subscenes/Maps/inside_building.tscn" id="3_naolu"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/Settings Panel.tscn" id="3_tlav0"]
-[ext_resource type="PackedScene" uid="uid://cknbjtepcp8e8" path="res://Scenes/UI/Team Selection.tscn" id="4_vuu2a"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/Team Selection.tscn" id="4_vuu2a"]
 [ext_resource type="PackedScene" uid="uid://blo2rc7isqhmi" path="res://Subscenes/Managers/camera_manager.tscn" id="5_wmvow"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/Mission Selection.tscn" id="6_036c8"]
 [ext_resource type="PackedScene" uid="uid://d2eqd4gi0desn" path="res://Subscenes/Camera/camera.tscn" id="6_x3h47"]
-[ext_resource type="PackedScene" path="res://Subscenes/Managers/audio_manager.tscn" id="7_4ane3"]
+[ext_resource type="PackedScene" uid="uid://dvgw1w85ktxjo" path="res://Subscenes/Managers/audio_manager.tscn" id="7_4ane3"]
 [ext_resource type="Script" path="res://Scripts/Managers/TeamSelectionManager.cs" id="11_rimfl"]
 
 [node name="Root" type="Node3D"]
