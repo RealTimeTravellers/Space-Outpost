@@ -31,8 +31,20 @@ public partial class TurnManager : Node
     /// <summary>
     /// True if completed. false if not completed
     /// </summary>
+    /// 
+    
+    /// <summary>
+    /// When game is over with victory
+    /// </summary>    
+    public event Action OnVictory;
+
+    /// <summary>
+    /// When game is over with defeat
+    /// </summary>
+    public event Action OnDefeat;
     
     public static Character CurrentlyMovingCharacter { get; private set; } = null;
+    public bool isGameOver = false;
     private bool _isProcessingTurn = false;
     private int currentEnemyIndex = -1;
 
@@ -40,7 +52,6 @@ public partial class TurnManager : Node
     [Export] public Godot.Collections.Array<Character> playerCharacters = new();
     [Export] public Godot.Collections.Array<Character> enemyCharacters = new();
 
-    
 
     private TurnManager()
     {
@@ -191,20 +202,7 @@ public partial class TurnManager : Node
         // Önce current character'ı kontrol et
         if (CurrentlyMovingCharacter == character)
             CurrentlyMovingCharacter = null;
-            
-        // Sonra listelerden güvenli bir şekilde çıkar
-        if (character.IsFriendly)
-        {
-            if (playerCharacters.Contains(character))
-                playerCharacters.Remove(character);
-        }
-        else
-        {
-            if (enemyCharacters.Contains(character))
-                enemyCharacters.Remove(character);
-        }
         
-        // Turn processing kontrolü
         if (_isProcessingTurn && currentEnemyIndex >= 0)
         {
             if (currentEnemyIndex >= enemyCharacters.Count)
@@ -213,5 +211,38 @@ public partial class TurnManager : Node
 
         if (enemyCharacters.Count <= 0)
             AudioManager.Instance.combatEnded = true;
+
+        CheckGameOver();
+    }
+
+    private void CheckGameOver()
+    {
+        if (isGameOver) return;
+
+        // Defeat check, all dead ?
+        int deadPlayerCount = playerCharacters.Count(p => 
+            p.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death);
+        
+        if (deadPlayerCount >= 3)
+        {
+            isGameOver = true;
+            OnDefeat?.Invoke();
+            return;
+        }
+
+        // Victory check, all enemies dead ?
+        int deadEnemyCount = enemyCharacters.Count(e => 
+            e.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death);
+
+        if (deadPlayerCount < enemyCharacters.Count)
+        {
+            return;
+        }
+
+        if (enemyCharacters.Count == deadEnemyCount)
+        {
+            isGameOver = true;
+            OnVictory?.Invoke();
+        }
     }
 }

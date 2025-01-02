@@ -323,7 +323,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void Die()
 	{
-		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return;
+		//if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return;
 		
 		// Önce AI'ı devre dışı bırak
 		if (!IsFriendly && enemyController != null)
@@ -345,6 +345,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		//IsDead = true;
 		CompletedTurn = true;
+		TurnManager.Instance.RemoveCharacterSafely(this);
 	}
 
 	private void UpdateHealthText()
