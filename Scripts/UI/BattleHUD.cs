@@ -99,10 +99,18 @@ public partial class BattleHUD : Control
     private void UpdateAttackPanel()
     {
         var character = GridManager.Instance.selectedCharacter;
-
-        DamageLabel.Text = "Damage: " + (character.Damage - character.Target.Stats.Armor.GetValue()).ToString();
-        AccuracyLabel.Text = "Accuracy: " + (character.Stats.Accuracy.GetValue() - character.Target.Stats.Evasion.GetValue()).ToString();
+        var target = character.Target;
+        var armorValue = target.Stats.Armor.GetValue();
+        
+        // Base damage
+        int baseDamage = 7; 
+        
+        int minDamage = Mathf.Max(1, baseDamage - armorValue);
+        int maxDamage = baseDamage;
+        
+        DamageLabel.Text = $"Damage: {minDamage} - {maxDamage}";
+        AccuracyLabel.Text = "Accuracy: " + (character.Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue()).ToString();
         CriticalHitChanceLabel.Text = "Crit Chance: " + character.Stats.CriticalHitChance.GetValue().ToString();
-        EvasionLabel.Text = "Evasion: " + character.Stats.Evasion.GetValue().ToString();
+        EvasionLabel.Text = "Evasion: " + target.Stats.Evasion.GetValue().ToString();
     }
 }
