@@ -46,7 +46,7 @@ public partial class CharacterSpawner : Node
             {
                 var spawnedCharacter = prefab.Instantiate<Node3D>();
                 AddChild(spawnedCharacter);
-                spawnedCharacter.Name = $"Character{i}";
+                spawnedCharacter.Name = $"{teamMembers[i].Name}";
                 var character = spawnedCharacter.GetNode<Character>(".");
                 
                 // Önce pozisyonu ayarla

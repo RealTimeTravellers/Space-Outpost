@@ -1,4 +1,4 @@
-[gd_scene load_steps=72 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=74 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
@@ -40,6 +40,8 @@
 [ext_resource type="Script" path="res://Scripts/UI/GUI/GameMenuGUI.cs" id="36_lxhhc"]
 [ext_resource type="Texture2D" uid="uid://bj7epcl1j10qu" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Selected.svg" id="37_7ab5t"]
 [ext_resource type="Texture2D" uid="uid://coohouu7jde7" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Defalut.svg" id="38_ipmcw"]
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD/LoggingPanelHUD.cs" id="41_528aa"]
+[ext_resource type="Texture2D" uid="uid://bvikwtk5ar24k" path="res://Visual Assets/Sprites/UI/TeamSelect/MissionSummary.svg" id="42_5nsu1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dxyef"]
 texture = ExtResource("36_3gsbf")
@@ -137,7 +139,7 @@ texture = ExtResource("35_10vnc")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hiqga"]
 texture = ExtResource("34_4x4tk")
 
-[node name="Battle HUD" type="Control" node_paths=PackedStringArray("DamageLabel", "AccuracyLabel", "CriticalHitChanceLabel", "EvasionLabel", "fireButton", "GameMenuScene")]
+[node name="Battle HUD" type="Control" node_paths=PackedStringArray("DamageLabel", "AccuracyLabel", "CriticalHitChanceLabel", "EvasionLabel", "fireButton", "GameMenuScene", "loggingPanel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -152,6 +154,7 @@ CriticalHitChanceLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/
 EvasionLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Evasion")
 fireButton = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/Fire Button")
 GameMenuScene = NodePath("GUIMenuContainer")
+loggingPanel = NodePath("LogPanelContainer")
 
 [node name="GUIMenuContainer" type="PanelContainer" parent="."]
 process_mode = 3
@@ -972,6 +975,53 @@ focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_h4qg1")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_dan5o")
 theme_override_styles/normal = SubResource("StyleBoxTexture_hiqga")
+
+[node name="LogPanelContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("logContainer")]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.77
+anchor_top = 0.03
+anchor_right = 0.97
+anchor_bottom = 0.23
+grow_horizontal = 0
+mouse_filter = 1
+script = ExtResource("41_528aa")
+logContainer = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
+
+[node name="Label" type="Label" parent="LogPanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 14
+text = "Combat Status "
+
+[node name="TextureRect" type="TextureRect" parent="LogPanelContainer"]
+self_modulate = Color(1, 1, 1, 0.509804)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("42_5nsu1")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="LogPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 45
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LogPanelContainer/MarginContainer"]
+layout_mode = 2
+mouse_force_pass_scroll_events = false
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LogPanelContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 5
 
 [connection signal="mouse_entered" from="." to="." method="OnMouseEnteredUI"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExitedUI"]

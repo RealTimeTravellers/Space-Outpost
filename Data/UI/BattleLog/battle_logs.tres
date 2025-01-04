@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://ehs62u1ysa1q"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Data/BattleLogTexts.cs" id="1_qq58p"]
+
+[resource]
+script = ExtResource("1_qq58p")
+MissionSuccessfulKill = "Commander, the enemy has been eliminated. Continue to the next objective."
+MissionEnemySighted = "Commander, the enemy has been sighted. Marking their position."
+MissionAlliesLost = "Commander, an ally has been eliminated. We cannot lose any more allies."
+MissionSevereCasualties = "Commander, we have lost too many allies. We must retreat."
+MissionCiviliansCasualties = "Commander, civilians have been eliminated. Remember our purpose."
+MissionCriticalHit = "Nice shot commander! We knew we could count on you."
+MissionEnemyCriticalHit = "Commander, the enemy has dealt a critical blow. Exercise caution."
+CharacterHitLog = "{0} hit {1} for {2} damage!"
+CharacterMissedLog = "{0} missed the shot at {1}!"
+CharacterDeathLog = "{0} has been eliminated!"
+CharacterCriticalHitLog = "{0} landed a critical hit on {1}!"
+TurnStartLog = "{0}'s turn has started."
+TurnEndLog = "{0}'s turn has ended."

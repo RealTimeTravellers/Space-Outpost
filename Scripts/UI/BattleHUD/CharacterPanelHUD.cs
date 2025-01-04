@@ -44,7 +44,7 @@ public partial class CharacterPanelHUD : Node
 	{
 		NameLabel.Text = selectedCharacter.Name;
 		HealthBar.Value = selectedCharacter.Health;
-		HealthBar.MaxValue = 8;
+		HealthBar.MaxValue = selectedCharacter.MaxHealth;
 	}
 
 	private void ResetCharacterUI()

@@ -10,7 +10,7 @@ public partial class TeamSelectionMenu : Control
 {
     private Random rng = new Random();
     public event Action<int> OnCharacterChanged;
-    public event Action OnPartyMemberAdded;
+    public event Action<string> OnPartyMemberAdded;
     public event Action<int> OnPartyMemberRemoved;
 
     #region CharacterUIInfos
@@ -132,11 +132,12 @@ public partial class TeamSelectionMenu : Control
         if (currentClassInfo == null || partyMemberCount >= 3) return;
         
         var instance = partySelectionCard.Instantiate<CharacterUIUnitCard>();
-        instance.InitCard(this, currentClassInfo, partyContainer.GetChildCount() - 1, GenerateCharacterName());
+        var name = GenerateCharacterName();
+        instance.InitCard(this, currentClassInfo, partyContainer.GetChildCount() - 1, name);
         partyContainer.AddChild(instance);
         partyMemberCount++;
         CheckPartyMemberCount();
-        OnPartyMemberAdded?.Invoke();
+        OnPartyMemberAdded?.Invoke(name);
     }
 
     

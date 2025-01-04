@@ -16,7 +16,6 @@ public partial class TeamSelectionController : Node
     [Export] public TeamSelectionMenu teamSelectionHUD;
     [Export] public TeamSelectionAnimatorController teamSelectionAnimatorController;
     public int currentModelIndex { get; private set; } = 0;
-    
     public override void _Ready()
     {
         teamSelectionHUD.OnPartyMemberAdded += AddPartyMember;
@@ -54,13 +53,13 @@ public partial class TeamSelectionController : Node
         }
     }
 
-    public void AddPartyMember()
+    public void AddPartyMember(string Name)
     {
         TeamSelectionManager.Instance.AddPartyMember(
             classInfoList[currentModelIndex].UnitType,
             TeamSelectionManager.Instance.GetPartyMembers().Count,
             classInfoList[currentModelIndex],
-            teamSelectionHUD.GenerateCharacterName()
+            Name
         );
     }
 
