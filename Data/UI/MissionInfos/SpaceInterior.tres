@@ -6,3 +6,7 @@
 script = ExtResource("1_4ognr")
 missionNameLabel = "Space Interior"
 missionDescriptionLabel = "An ambush by the griyer caught a distant spice base off guard. Your task is to remove your valuable assets with the least amount of casualties from conflict."
+missionStatusLabel = "The griyer agents convinced some of the local rebellion forces to destroy our base of operations. Your task is to elimiate all rebels on the space station."
+missionSuccessLabel = "Congratulations Commander, you have successfully removed the rebellion threat. Proceed for further instuctions."
+missionFailureLabel = "This is a catastrophy, we have lost many good men and assets on this rebellious effort. Get yourself together, Commander."
+missionType = 0

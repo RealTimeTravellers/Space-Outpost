@@ -25,8 +25,10 @@ public partial class GameManager : Node
 	[Export] public Settings settings;
 	[Export] private PackedScene mainMenuSubScene;
 	[Export] private PackedScene settingsSubScene;
+	[Export] private PackedScene endScreenSubScene;
 	private Node mainMenuNode;
 	private Node settingsNode;
+	private Node endScreenNode;
 	public event Action<bool> OnSettingsVisibilityChanged;
 	[Export] private PackedScene[] gameScenes;
 
@@ -69,6 +71,14 @@ public partial class GameManager : Node
 	public override void _ExitTree()
 	{
 		GameStateChanged -= OnGameStateChanged;
+	}
+
+	public async void LoadEndScreen(bool isVictory)
+	{
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		endScreenNode = ResourceLoader.Load<PackedScene>(endScreenSubScene.ResourcePath).Instantiate();
+		endScreenNode.GetNode<EndScreenGUI>(".").InitEndScreen(isVictory);
+		GetTree().Root.AddChild(endScreenNode);
 	}
 
 	private async void LoadMainMenu(Node scene)
@@ -141,6 +151,10 @@ public partial class GameManager : Node
 				
 			case GameState.Battle:
 				newScene = ResourceLoader.Load<PackedScene>(gameScenes[1].ResourcePath).Instantiate();
+				break;
+
+			case GameState.End:
+				newScene = ResourceLoader.Load<PackedScene>(gameScenes[3].ResourcePath).Instantiate();
 				break;
 		}
 

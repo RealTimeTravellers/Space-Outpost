@@ -75,6 +75,7 @@ public partial class MissionSelectMenu : Control
     {
         if (selectedMissionIndex != -1)
         {
+            MissionManager.Instance.SetMissionDetails(selectedMissionDataCard);
             GameManager.ChangeGameState(GameState.MissionSelect, GameState.Battle);
         }
     }

@@ -28,21 +28,6 @@ public partial class TurnManager : Node
     /// </summary>
     public event Action<bool> PlayerMovementChanged;
 
-    /// <summary>
-    /// True if completed. false if not completed
-    /// </summary>
-    /// 
-    
-    /// <summary>
-    /// When game is over with victory
-    /// </summary>    
-    public event Action OnVictory;
-
-    /// <summary>
-    /// When game is over with defeat
-    /// </summary>
-    public event Action OnDefeat;
-    
     public static Character CurrentlyMovingCharacter { get; private set; } = null;
     public bool isGameOver = false;
     private bool _isProcessingTurn = false;
@@ -180,6 +165,8 @@ public partial class TurnManager : Node
                 .Select(handler => handler.Invoke(false));
             await Task.WhenAll(tasks);
         }
+
+        MissionManager.Instance.RecordTurnComplete();
     }
 
     private void EndEnemyTurn()
@@ -219,6 +206,8 @@ public partial class TurnManager : Node
     {
         if (isGameOver) return;
 
+        GD.Print($"[TurnManager] CheckGameOver called. isGameOver: {isGameOver}");
+
         // Defeat check, all dead ?
         int deadPlayerCount = playerCharacters.Count(p => 
             p.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death);
@@ -226,7 +215,7 @@ public partial class TurnManager : Node
         if (deadPlayerCount >= 3)
         {
             isGameOver = true;
-            OnDefeat?.Invoke();
+            GameManager.Instance.LoadEndScreen(false);
             return;
         }
 
@@ -234,15 +223,11 @@ public partial class TurnManager : Node
         int deadEnemyCount = enemyCharacters.Count(e => 
             e.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death);
 
-        if (deadPlayerCount < enemyCharacters.Count)
-        {
-            return;
-        }
-
         if (enemyCharacters.Count == deadEnemyCount)
         {
+            GD.Print($"Dead enemies: {deadEnemyCount}, Total enemies: {enemyCharacters.Count}");
             isGameOver = true;
-            OnVictory?.Invoke();
+            GameManager.Instance.LoadEndScreen(true);
         }
     }
 }

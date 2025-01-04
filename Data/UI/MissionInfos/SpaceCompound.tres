@@ -6,3 +6,7 @@
 script = ExtResource("1_slh8x")
 missionNameLabel = "Space Compound"
 missionDescriptionLabel = "Valuable intel is hidden deep inside an alien compound. Your task is to take your three men and get what you can from inside."
+missionStatusLabel = "Your task is to eliminate an alien overlord who has been raiding our supply posts. Codename is Telepath."
+missionSuccessLabel = "Congratulations Commander, outer worlds are now safer due to your efforts."
+missionFailureLabel = "Unfortunately, telepath lives and this mission has been costly to our efforts."
+missionType = 1

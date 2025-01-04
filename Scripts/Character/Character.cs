@@ -323,7 +323,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void Die()
 	{
-		//if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return;
 		
 		// Önce AI'ı devre dışı bırak
 		if (!IsFriendly && enemyController != null)
@@ -342,6 +341,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		chracterAudioPlayer?.PlayDeathSound();
+
+		if (!IsFriendly)
+			MissionManager.Instance.RecordEnemyKill();
+		else
+			MissionManager.Instance.RecordAllyLoss();
 
 		//IsDead = true;
 		CompletedTurn = true;
@@ -452,6 +456,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		hitChance = Mathf.Clamp(hitChance, 10f, 95f);
 		bool hit = GD.Randf() <= hitChance / 100f;
 
+		MissionManager.Instance.RecordShot(hit);
+
 		Vector3 direction = (target.Position - Position).Normalized();
 		if (!IsFriendly)
 			direction = -direction; // Reverse is needed why ?_
@@ -462,6 +468,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			int baseDamage = 7; //Equipment.GetCurrentWeaponDamage(); 
 			bool isCritical = GD.Randf() <= Stats.CriticalHitChance.GetValue() / 100f;
 			int damage = isCritical ? baseDamage * 2 : baseDamage;
+
+			if (isCritical)
+				MissionManager.Instance.RecordCriticalHit();
 
 			int armorValue = target.Stats.Armor.GetValue();
 			int armorReduction = GD.RandRange(1, armorValue);
