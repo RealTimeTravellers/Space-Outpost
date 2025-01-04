@@ -156,6 +156,8 @@ public partial class TurnManager : Node
         {
             player.CompletedTurn = false;
             player.DepleteActionPoints();
+            MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.TurnEndLog, false, player.Name);
+
         }
 
         if (TurnChangedAsync != null)
@@ -175,6 +177,7 @@ public partial class TurnManager : Node
         {
             enemy.CompletedTurn = false;
             enemy.DepleteActionPoints();
+            MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.TurnEndLog, true, enemy.Name);
         }
 
         foreach (Character player in playerCharacters.Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death))
