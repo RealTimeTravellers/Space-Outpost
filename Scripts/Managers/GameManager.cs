@@ -118,6 +118,18 @@ public partial class GameManager : Node
 			mainMenuNode.QueueFree();
 			mainMenuNode = null;
 		}
+
+		if(settingsNode != null && settingsNode.IsInsideTree())
+		{
+			settingsNode.QueueFree();
+			settingsNode = null;
+		}
+
+		if(endScreenNode != null && endScreenNode.IsInsideTree())
+		{
+			endScreenNode.QueueFree();
+			endScreenNode = null;
+		}
 	}
 
 	private async void OnGameStateChanged(GameState current, GameState newState)

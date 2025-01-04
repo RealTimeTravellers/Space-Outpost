@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c6ruaohrtkgoa" path="res://Subscenes/UI/GUI/EndScreen.tscn" id="4_o0kdk"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/Team Selection.tscn" id="4_vuu2a"]
 [ext_resource type="PackedScene" uid="uid://blo2rc7isqhmi" path="res://Subscenes/Managers/camera_manager.tscn" id="5_wmvow"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/Mission Selection.tscn" id="6_036c8"]
+[ext_resource type="PackedScene" uid="uid://cljtioruwbssj" path="res://Scenes/UI/Mission Selection.tscn" id="6_036c8"]
 [ext_resource type="PackedScene" uid="uid://d2eqd4gi0desn" path="res://Subscenes/Camera/camera.tscn" id="6_x3h47"]
 [ext_resource type="PackedScene" uid="uid://dvgw1w85ktxjo" path="res://Subscenes/Managers/audio_manager.tscn" id="7_4ane3"]
 [ext_resource type="Script" path="res://Scripts/Managers/TeamSelectionManager.cs" id="11_rimfl"]
@@ -21,7 +21,7 @@ settings = NodePath("../Settings")
 mainMenuSubScene = ExtResource("2_mgtbs")
 settingsSubScene = ExtResource("3_tlav0")
 endScreenSubScene = ExtResource("4_o0kdk")
-gameScenes = Array[PackedScene]([ExtResource("4_vuu2a"), ExtResource("3_naolu"), ExtResource("6_036c8")])
+gameScenes = Array[PackedScene]([ExtResource("4_vuu2a"), ExtResource("3_naolu"), ExtResource("6_036c8"), ExtResource("4_o0kdk")])
 
 [node name="Settings" parent="." instance=ExtResource("2_aa3yh")]
 

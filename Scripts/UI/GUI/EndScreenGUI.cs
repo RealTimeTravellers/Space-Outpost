@@ -1,16 +1,15 @@
 using Godot;
 public partial class EndScreenGUI : Control
 {
-    [Export] private Label missionBriefingLabel;
+    //[Export] private Label missionBriefingLabel;
     [Export] private string victoryText = "MISSION COMPLETE!";
     [Export] private string defeatText = "MISSION FAILED!";
-
-
     [Export] private Texture2D missionSuccessImage;
     [Export] private Texture2D missionFailureImage;
     [Export] private TextureRect missionStatusImage;
 
     [Export] private Label missionStatusLabel;
+    [Export] private MissionBriefingCard missionBriefingCard;
 
     private const float ANIMATION_DURATION = 0.3f;
     private const float MIN_SCALE = 0.8f;
@@ -28,7 +27,7 @@ public partial class EndScreenGUI : Control
 
         tween.TweenProperty(this, "scale", Vector2.One * MAX_SCALE, ANIMATION_DURATION)
             .From(Vector2.One * MIN_SCALE);
-        tween.TweenProperty(this, "modulate:a", .7f, ANIMATION_DURATION)
+        tween.TweenProperty(this, "modulate:a", .85f, ANIMATION_DURATION)
             .From(0.0f);
     }
 
@@ -45,7 +44,7 @@ public partial class EndScreenGUI : Control
     {
         missionStatusImage.Texture = isVictory ? missionSuccessImage : missionFailureImage;
         missionStatusLabel.Text = isVictory ? victoryText : defeatText;
-        missionBriefingLabel.Text = isVictory ? MissionManager.Instance.MissionSuccessBriefing : MissionManager.Instance.MissionFailureBriefing;
+        missionBriefingCard.SetMissionBriefing(isVictory ? MissionManager.Instance.MissionSuccessBriefing : MissionManager.Instance.MissionFailureBriefing);
     }
 
     public void OnEndMissionClicked()

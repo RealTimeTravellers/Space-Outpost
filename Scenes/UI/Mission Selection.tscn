@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dtyb4fmy1cx88"]
+[gd_scene load_steps=20 format=3 uid="uid://cljtioruwbssj"]
 
 [ext_resource type="Texture2D" uid="uid://dndbqg0ofd8xm" path="res://Visual Assets/Sprites/UI/MissionSelect/SelectMissionbg.webp" id="1_87nqc"]
 [ext_resource type="Script" path="res://Scripts/UI/MissionSelectMenu.cs" id="1_r4fc6"]
