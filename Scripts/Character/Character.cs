@@ -463,19 +463,28 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			direction = -direction; // Reverse is needed why ?_
 		
 
-		if (hit) // || true for test purposes
+		if (hit)
 		{
-			int baseDamage = 7; //Equipment.GetCurrentWeaponDamage(); 
+			int baseDamage = 7;
 			bool isCritical = GD.Randf() <= Stats.CriticalHitChance.GetValue() / 100f;
 			int damage = isCritical ? baseDamage * 2 : baseDamage;
 
 			if (isCritical)
+			{
 				MissionManager.Instance.RecordCriticalHit();
+				MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterCriticalHitLog, !IsFriendly, Name, target.Name);
+			}
 
 			int armorValue = target.Stats.Armor.GetValue();
 			int armorReduction = GD.RandRange(1, armorValue);
 			int finalDamage = Mathf.Max(1, damage - armorReduction);
+			
 			target.TakeDamage(finalDamage);
+			MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterHitLog, !IsFriendly, Name, target.Name, finalDamage);
+		}
+		else
+		{
+			MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterMissedLog, !IsFriendly, Name, target.Name);
 		}
 
 		gun.Fire(hit);
@@ -496,6 +505,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			CharacterController.SetState(CharacterStateType.Death, this);
 			UpdateHealthText();
+			MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterDeathLog, !IsFriendly, Name);
 		}
 		else
 			UpdateHealthText();

@@ -10,7 +10,10 @@ public partial class MissionManager : Node
 {
     public static MissionManager Instance { get; private set; }
     [Export] private PackedScene briefingScene;
+    [Export] public BattleLogTexts logTexts;
     public MissionType MissionType;
+    private LoggingPanelHUD logPanel;
+
 
     // Combat Statistics
     public int TotalShotsFired { get; private set; } = 0;
@@ -32,14 +35,6 @@ public partial class MissionManager : Node
     public string MissionSuccessBriefing { get; private set; } 
     public string MissionFailureBriefing { get; private set; }
     public string MissionIntroBriefing { get; private set; }
-
-    private string MissionSuccessfulKill = "Commander, the enemy has been eliminated. Continue to the next objective.";
-    private string MissionEnemySighted = "Commander, the enemy has been sighted. Marking their position.";
-    private string MissionAlliesLost = "Commander, an ally has been eliminated. We cannot lose any more allies.";
-    private string MissionSevereCasualties = "Commander, we have lost too many allies. We must retreat.";
-    private string MissionCiviliansCasualties = "Commander, civilians have been eliminated. Remember our purpose.";
-    private string MissionCriticalHit = "Nice shot commander! We knew we could count on you.";
-    private string MissionEnemyCriticalHit = "Commander, the enemy has dealt a critical blow. Exercise caution.";
     private bool enemySighted = false;
     public override void _Ready()
     {
@@ -49,6 +44,8 @@ public partial class MissionManager : Node
         GameManager.GameStateChanged += OnGameStateChanged;
     }
 
+    #region Mission Setup
+
     public void SetMissionDetails(MissionDataCard missionDataCard)
     {
         MissionSuccessBriefing = missionDataCard.missionSuccessLabel;
@@ -57,40 +54,59 @@ public partial class MissionManager : Node
         MissionType = missionDataCard.missionType;
     }
 
+    #endregion
+
+    #region Mission Briefing
+
     public async Task ShowMissionBriefing(string message, bool autoClose = true, float timer = 3.0f)
     {
+        if (briefingScene == null)
+        {
+            GD.PrintErr("Briefing scene is not assigned!");
+            return;
+        }
+
         if (currentBriefing != null)
         {
             currentBriefing.QueueFree();
             currentBriefing = null;
         }
 
-        currentBriefing = briefingScene.Instantiate();
-        GetTree().Root.AddChild(currentBriefing);
+        currentBriefing = briefingScene.Instantiate<Node>();
+        if (currentBriefing == null)
+        {
+            GD.PrintErr("Failed to instantiate briefing scene!");
+            return;
+        }
 
+        GetTree().Root.AddChild(currentBriefing);
         var briefingCard = currentBriefing.GetNode<MissionBriefingCard>(".");
         briefingCard.SetMissionBriefing(message);
 
-         var tween = CreateTween();
+        var tween = CreateTween();
         tween.SetTrans(Tween.TransitionType.Sine);
         tween.SetEase(Tween.EaseType.Out);
         tween.TweenProperty(currentBriefing, "modulate:a", .85f, 0.3f).From(0.0f);
 
         if (autoClose)
         {
-            // 3 seconds
             await ToSignal(GetTree().CreateTimer(timer), "timeout");
             
-            // Fade-out
-            tween = CreateTween();
-            tween.SetTrans(Tween.TransitionType.Sine);
-            tween.SetEase(Tween.EaseType.In);
-            tween.TweenProperty(currentBriefing, "modulate:a", 0.0f, 0.3f);
-            
-            // Queue free when animation is finished
-            await ToSignal(tween, "finished");
-            currentBriefing.QueueFree();
-            currentBriefing = null;
+            if (currentBriefing != null)
+            {
+                tween = CreateTween();
+                tween.SetTrans(Tween.TransitionType.Sine);
+                tween.SetEase(Tween.EaseType.In);
+                tween.TweenProperty(currentBriefing, "modulate:a", 0.0f, 0.3f);
+                
+                await ToSignal(tween, "finished");
+                
+                if (currentBriefing != null)
+                {
+                    currentBriefing.QueueFree();
+                    currentBriefing = null;
+                }
+            }
         }
     }
 
@@ -109,7 +125,7 @@ public partial class MissionManager : Node
         TotalShotsFired++;
         if (!enemySighted)
         {
-            await ShowMissionBriefing(MissionEnemySighted, true);
+            await ShowMissionBriefing(logTexts.MissionEnemySighted, true);
             enemySighted = true;
         }
         if (hit) TotalHits++;
@@ -118,29 +134,29 @@ public partial class MissionManager : Node
     public async void RecordEnemyKill() {
         EnemiesKilled++;
         if (CalculateShowChance(40))
-            await ShowMissionBriefing(MissionSuccessfulKill, true);
+            await ShowMissionBriefing(logTexts.MissionSuccessfulKill, true);
     }
 
     public async void RecordAllyLoss() {
         AlliesLost++;
         if (CalculateShowChance(100) && AlliesLost < 2)
-            await ShowMissionBriefing(MissionAlliesLost, true);
+            await ShowMissionBriefing(logTexts.MissionAlliesLost, true);
         else if (CalculateShowChance(100) && AlliesLost >= 2)
-            await ShowMissionBriefing(MissionAlliesLost, true);
+            await ShowMissionBriefing(logTexts. MissionAlliesLost, true);
     }
     public async void RecordCivilianCasualty(){
         CiviliansCasualties++;
         if (CalculateShowChance(100))
-            await ShowMissionBriefing(MissionCiviliansCasualties, true);
+            await ShowMissionBriefing(logTexts.MissionCiviliansCasualties, true);
     }
     public void RecordCoverUse() => CoverUsed++;
     public void RecordTurnComplete() => TurnsCompleted++;
     public async void RecordCriticalHit() {
         CriticalHits++;
         if (CalculateShowChance(50))
-            await ShowMissionBriefing(MissionCriticalHit, true);
+            await ShowMissionBriefing(logTexts.MissionCriticalHit, true);
         else if (CalculateShowChance(100))
-            await ShowMissionBriefing(MissionEnemyCriticalHit, true);
+            await ShowMissionBriefing(logTexts.MissionEnemyCriticalHit, true);
     }
 
     // Reset statistics for new mission
@@ -157,10 +173,38 @@ public partial class MissionManager : Node
         enemySighted = false;
     }
 
+    #endregion
+
     private bool CalculateShowChance(int chancePercentage)
     {
         if (GD.Randf() < chancePercentage / 100.0f)
             return true;
         return false;
     }
+
+    #region Logger
+
+    public void InitializeLogger(LoggingPanelHUD panel)
+    {
+        logPanel = panel;
+    }
+
+    public void AddBattleLog(string message, bool isEnemy = false, bool isFriendly = false)
+    {
+        if (logPanel == null) return;
+        
+        Color color = isEnemy ? new Color(1, 0.3f, 0.3f) : (isFriendly ? new Color(0.3f, 0.7f, 1) : new Color(1, 1, 1));
+        logPanel.AddLogEntry(message, color);
+    }
+
+    public void AddCharacterLog(string format, bool isEnemy, params object[] args)
+    {
+        if (logPanel == null) return;
+        
+        string message = string.Format(format, args);
+        Color color = isEnemy ? new Color(1, 0.3f, 0.3f) : new Color(0.3f, 0.7f, 1);
+        logPanel.AddLogEntry(message, color);
+    }
+
+    #endregion
 }

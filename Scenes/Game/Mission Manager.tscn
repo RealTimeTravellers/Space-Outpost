@@ -1,8 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://cn2h3jox2j87d"]
+[gd_scene load_steps=4 format=3 uid="uid://cn2h3jox2j87d"]
 
 [ext_resource type="Script" path="res://Scripts/Managers/MissionManager.cs" id="1_ej1bt"]
 [ext_resource type="PackedScene" uid="uid://clm0pxjthvmjo" path="res://Subscenes/UI/GUI/mission_briefing.tscn" id="2_wdash"]
+[ext_resource type="Resource" uid="uid://ehs62u1ysa1q" path="res://Data/UI/BattleLog/battle_logs.tres" id="3_byibk"]
 
 [node name="MissionManager" type="Node"]
 script = ExtResource("1_ej1bt")
 briefingScene = ExtResource("2_wdash")
+logTexts = ExtResource("3_byibk")

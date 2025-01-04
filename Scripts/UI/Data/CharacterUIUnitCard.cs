@@ -27,10 +27,4 @@ public partial class CharacterUIUnitCard : Control
         teamSelectionMenu.RemovePartyMember(this, slotIndex);
         QueueFree();
     }
-
-    public string GenerateCharacterName()
-    {
-        //return $"{UnitType.ToString()} {Random.IntRange(1, 1000)}";
-        return "Test";
-    }
 }

@@ -9,6 +9,12 @@ public partial class BattleHUD : Control
     [Export] public Label EvasionLabel;
     [Export] public Button fireButton;
     [Export] public Control GameMenuScene;
+    [Export] public LoggingPanelHUD loggingPanel;
+
+    public override void _Ready()
+    {
+        MissionManager.Instance.InitializeLogger(loggingPanel);
+    }
     
     private Character ChangeSelectedCharacter(bool toLeft)
     {
