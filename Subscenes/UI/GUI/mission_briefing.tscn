@@ -1,0 +1,92 @@
+[gd_scene load_steps=5 format=3 uid="uid://clm0pxjthvmjo"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Data/MissionBriefingCard.cs" id="1_5ejwc"]
+[ext_resource type="Texture2D" uid="uid://btxjc2wlmenvv" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 1_Active.svg" id="1_mukfd"]
+[ext_resource type="Texture2D" uid="uid://ds28baj3c6r7g" path="res://Visual Assets/Sprites/UI/EndScreen/GEneral.webp" id="2_rgdev"]
+[ext_resource type="Texture2D" uid="uid://dt0hap0yha77h" path="res://Visual Assets/Sprites/UI/TeamSelect/SecondaryButton.svg" id="3_lfun5"]
+
+[node name="Mission Briefing" type="PanelContainer" node_paths=PackedStringArray("missionBriefingLabel")]
+self_modulate = Color(1, 1, 1, 0)
+anchors_preset = -1
+anchor_left = 0.3
+anchor_top = 0.55
+anchor_right = 0.7
+anchor_bottom = 0.72
+script = ExtResource("1_5ejwc")
+missionBriefingLabel = NodePath("HBoxContainer/MarginContainer2/TextureRect/MarginContainer/VBoxContainer/MissionBriefing")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/MarginContainer"]
+clip_children = 2
+layout_mode = 2
+texture = ExtResource("1_mukfd")
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/MarginContainer/TextureRect"]
+show_behind_parent = true
+clip_children = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+offset_left = 7.7
+offset_top = -6.5
+offset_right = 7.3
+offset_bottom = -7.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_rgdev")
+expand_mode = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/MarginContainer2"]
+self_modulate = Color(1, 1, 1, 0.858824)
+texture_repeat = 2
+layout_mode = 2
+texture = ExtResource("3_lfun5")
+expand_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/MarginContainer2/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer2/TextureRect/MarginContainer"]
+layout_mode = 2
+
+[node name="Speaking Character" type="Label" parent="HBoxContainer/MarginContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Lt. General Porsuk"
+
+[node name="MissionBriefing" type="Label" parent="HBoxContainer/MarginContainer2/TextureRect/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 55)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 3

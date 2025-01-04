@@ -28,11 +28,8 @@ public partial class TurnManager : Node
     /// </summary>
     public event Action<bool> PlayerMovementChanged;
 
-    /// <summary>
-    /// True if completed. false if not completed
-    /// </summary>
-    
     public static Character CurrentlyMovingCharacter { get; private set; } = null;
+    public bool isGameOver = false;
     private bool _isProcessingTurn = false;
     private int currentEnemyIndex = -1;
 
@@ -40,7 +37,6 @@ public partial class TurnManager : Node
     [Export] public Godot.Collections.Array<Character> playerCharacters = new();
     [Export] public Godot.Collections.Array<Character> enemyCharacters = new();
 
-    
 
     private TurnManager()
     {
@@ -169,6 +165,8 @@ public partial class TurnManager : Node
                 .Select(handler => handler.Invoke(false));
             await Task.WhenAll(tasks);
         }
+
+        MissionManager.Instance.RecordTurnComplete();
     }
 
     private void EndEnemyTurn()
@@ -191,20 +189,7 @@ public partial class TurnManager : Node
         // Önce current character'ı kontrol et
         if (CurrentlyMovingCharacter == character)
             CurrentlyMovingCharacter = null;
-            
-        // Sonra listelerden güvenli bir şekilde çıkar
-        if (character.IsFriendly)
-        {
-            if (playerCharacters.Contains(character))
-                playerCharacters.Remove(character);
-        }
-        else
-        {
-            if (enemyCharacters.Contains(character))
-                enemyCharacters.Remove(character);
-        }
         
-        // Turn processing kontrolü
         if (_isProcessingTurn && currentEnemyIndex >= 0)
         {
             if (currentEnemyIndex >= enemyCharacters.Count)
@@ -213,5 +198,36 @@ public partial class TurnManager : Node
 
         if (enemyCharacters.Count <= 0)
             AudioManager.Instance.combatEnded = true;
+
+        CheckGameOver();
+    }
+
+    private void CheckGameOver()
+    {
+        if (isGameOver) return;
+
+        GD.Print($"[TurnManager] CheckGameOver called. isGameOver: {isGameOver}");
+
+        // Defeat check, all dead ?
+        int deadPlayerCount = playerCharacters.Count(p => 
+            p.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death);
+        
+        if (deadPlayerCount >= 3)
+        {
+            isGameOver = true;
+            GameManager.Instance.LoadEndScreen(false);
+            return;
+        }
+
+        // Victory check, all enemies dead ?
+        int deadEnemyCount = enemyCharacters.Count(e => 
+            e.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death);
+
+        if (enemyCharacters.Count == deadEnemyCount)
+        {
+            GD.Print($"Dead enemies: {deadEnemyCount}, Total enemies: {enemyCharacters.Count}");
+            isGameOver = true;
+            GameManager.Instance.LoadEndScreen(true);
+        }
     }
 }

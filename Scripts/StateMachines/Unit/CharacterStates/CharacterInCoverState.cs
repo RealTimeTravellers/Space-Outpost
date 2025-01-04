@@ -7,6 +7,7 @@ public class CharacterInCoverState : CharacterState
 
     public override void Enter(Character character)
     {
+        MissionManager.Instance.RecordCoverUse();
         base.Enter(character);
         coverExiting = false;
         outCoverAnimationStarted = false;

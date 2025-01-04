@@ -17,11 +17,20 @@ public partial class EnemyStatusTextureHUD :Control
         //iconMaterial.SetShaderParameter("replace_color", new Color(1f, 0.65f, 0f, 1f));
     }
 
+    public override void _ExitTree()
+    {
+        if (enemyCharacter != null)
+        {
+            enemyCharacter.HealthChanged -= UpdateIconColor;
+        }
+        base._ExitTree();
+    }
+
     public void InitializeEnemyTexture(Character enemy)
     {
         enemyCharacter = enemy;
         enemyCharacter.HealthChanged += UpdateIconColor;
-        UpdateIconColor(enemyCharacter.Health, 8); //TODO: max health should be from stats
+        UpdateIconColor(enemyCharacter.Health, enemyCharacter.MaxHealth); 
     }
 
     public void OnEnemyTextureCall()
@@ -34,12 +43,13 @@ public partial class EnemyStatusTextureHUD :Control
         if (iconMaterial == null) return;
         
         float healthRatio = (float)currentHealth / maxHealth;
-        Color newColor = new Color(1f, healthRatio, 0f, 1f);
+        Color newColor = new Color(1f, 1 -healthRatio, 0f, 1f);
         
         iconMaterial.SetShaderParameter("replace_color", newColor);
 
         if (enemyCharacter.Health <= 0)
         {
+            enemyCharacter.HealthChanged -= UpdateIconColor;
             QueueFree();
         }
     }

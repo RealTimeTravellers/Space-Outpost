@@ -52,6 +52,8 @@ public partial class TeamSelectionManager : Node
     {
         if(partyMembers.Count > 0)
             partyMembers.Clear();
+        
+        TurnManager.Instance.isGameOver = false;
     }
 
     public List<PartySelection> GetPartyMembers()

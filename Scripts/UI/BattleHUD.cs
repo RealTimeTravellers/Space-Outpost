@@ -45,7 +45,7 @@ public partial class BattleHUD : Control
         }
     }
 
-    private static void OnFirePressed()
+    private void OnFirePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
         if (CameraManager.Instance.AimingMode && 
@@ -54,6 +54,7 @@ public partial class BattleHUD : Control
             character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
         {
             character.CharacterController.SetState(CharacterStateType.Shooting, character);
+            OnAimUIUpdate();
         }
     }
 
@@ -82,7 +83,6 @@ public partial class BattleHUD : Control
 
         character.ToggleAim();
         OnAimUIUpdate();
-
     }
 
     private void OnAimUIUpdate()
@@ -90,27 +90,39 @@ public partial class BattleHUD : Control
         if (CameraManager.Instance.AimingMode)
         {
             fireButton.Visible = true;
-            UpdateAttackPanel();
+            UpdateAttackPanel(true);
         }
         else
+        {
             fireButton.Visible = false;
+            UpdateAttackPanel(false);
+        }
     }
 
-    private void UpdateAttackPanel()
+    private void UpdateAttackPanel(bool isAiming)
     {
-        var character = GridManager.Instance.selectedCharacter;
-        var target = character.Target;
-        var armorValue = target.Stats.Armor.GetValue();
-        
-        // Base damage
-        int baseDamage = 7; 
-        
-        int minDamage = Mathf.Max(1, baseDamage - armorValue);
-        int maxDamage = baseDamage;
-        
-        DamageLabel.Text = $"Damage: {minDamage} - {maxDamage}";
-        AccuracyLabel.Text = "Accuracy: " + (character.Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue()).ToString();
-        CriticalHitChanceLabel.Text = "Crit Chance: " + character.Stats.CriticalHitChance.GetValue().ToString();
-        EvasionLabel.Text = "Evasion: " + target.Stats.Evasion.GetValue().ToString();
+        if (isAiming)
+        {
+            var character = GridManager.Instance.selectedCharacter;
+            var target = character.Target;
+            var armorValue = target.Stats.Armor.GetValue();
+            // Base damage
+            int baseDamage = 7; 
+            
+            int minDamage = Mathf.Max(1, baseDamage - armorValue);
+            int maxDamage = baseDamage;
+            
+            DamageLabel.Text = $"Damage: {minDamage} - {maxDamage}";
+            AccuracyLabel.Text = "Accuracy: " + (character.Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue()).ToString();
+            CriticalHitChanceLabel.Text = "Crit Chance: " + character.Stats.CriticalHitChance.GetValue().ToString();
+            EvasionLabel.Text = "Evasion: " + target.Stats.Evasion.GetValue().ToString();
+        }
+        else
+        {
+            DamageLabel.Text = "";
+            AccuracyLabel.Text = "";
+            CriticalHitChanceLabel.Text = "";
+            EvasionLabel.Text = "";
+        }
     }
 }

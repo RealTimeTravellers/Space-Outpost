@@ -16,11 +16,7 @@ public class CharacterDeathState : CharacterState
             character.CharacterController._stateMachine.RequestAnimation("death");
             
             // Delay the Die() call until animation starts
-            character.GetTree().CreateTimer(0.1f).Connect("timeout", Callable.From(() => {
-                GD.Print("CharacterDeathState: Die");
-                character.Die();
-                _deathProcessed = true;
-            }));
+            character.Die();
         }
     }
 
@@ -29,7 +25,8 @@ public class CharacterDeathState : CharacterState
         if (_deathProcessed)
             return CharacterStateType.Death;
             
-        return base.Process(character);
+        //return base.Process(character);
+        return CharacterStateType.Death;
     }
 
     public override CharacterStateType CheckState(Character character)

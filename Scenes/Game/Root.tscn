@@ -1,16 +1,19 @@
-[gd_scene load_steps=12 format=3 uid="uid://77qkpxdiae0u"]
+[gd_scene load_steps=15 format=3 uid="uid://77qkpxdiae0u"]
 
 [ext_resource type="PackedScene" uid="uid://byqw1oqs82ord" path="res://Subscenes/Managers/game_manager.tscn" id="1_87e0o"]
 [ext_resource type="PackedScene" uid="uid://cbhkfpor6datm" path="res://Subscenes/Configs/settings.tscn" id="2_aa3yh"]
 [ext_resource type="PackedScene" uid="uid://c26sfhh7246xk" path="res://Scenes/UI/Main Menu.tscn" id="2_mgtbs"]
 [ext_resource type="PackedScene" uid="uid://bjcy4ncqw8tru" path="res://Subscenes/Maps/inside_building.tscn" id="3_naolu"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/Settings Panel.tscn" id="3_tlav0"]
+[ext_resource type="PackedScene" uid="uid://c6ruaohrtkgoa" path="res://Subscenes/UI/GUI/EndScreen.tscn" id="4_o0kdk"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/Team Selection.tscn" id="4_vuu2a"]
 [ext_resource type="PackedScene" uid="uid://blo2rc7isqhmi" path="res://Subscenes/Managers/camera_manager.tscn" id="5_wmvow"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/Mission Selection.tscn" id="6_036c8"]
+[ext_resource type="PackedScene" uid="uid://cljtioruwbssj" path="res://Scenes/UI/Mission Selection.tscn" id="6_036c8"]
 [ext_resource type="PackedScene" uid="uid://d2eqd4gi0desn" path="res://Subscenes/Camera/camera.tscn" id="6_x3h47"]
 [ext_resource type="PackedScene" uid="uid://dvgw1w85ktxjo" path="res://Subscenes/Managers/audio_manager.tscn" id="7_4ane3"]
+[ext_resource type="PackedScene" uid="uid://dmdjq5t67xo5v" path="res://Scenes/Game/EndMission.tscn" id="8_3p38b"]
 [ext_resource type="Script" path="res://Scripts/Managers/TeamSelectionManager.cs" id="11_rimfl"]
+[ext_resource type="PackedScene" uid="uid://cn2h3jox2j87d" path="res://Scenes/Game/Mission Manager.tscn" id="12_xbffx"]
 
 [node name="Root" type="Node3D"]
 
@@ -18,7 +21,8 @@
 settings = NodePath("../Settings")
 mainMenuSubScene = ExtResource("2_mgtbs")
 settingsSubScene = ExtResource("3_tlav0")
-gameScenes = Array[PackedScene]([ExtResource("4_vuu2a"), ExtResource("3_naolu"), ExtResource("6_036c8")])
+endScreenSubScene = ExtResource("4_o0kdk")
+gameScenes = Array[PackedScene]([ExtResource("4_vuu2a"), ExtResource("3_naolu"), ExtResource("6_036c8"), ExtResource("8_3p38b")])
 
 [node name="Settings" parent="." instance=ExtResource("2_aa3yh")]
 
@@ -33,3 +37,5 @@ transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707106, 0, -0.707106, 0.707106, 
 
 [node name="TeamSelection" type="Node" parent="."]
 script = ExtResource("11_rimfl")
+
+[node name="MissionManager" parent="." instance=ExtResource("12_xbffx")]
