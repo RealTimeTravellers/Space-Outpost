@@ -154,6 +154,7 @@ public partial class MissionManager : Node
         CoverUsed = 0;
         TurnsCompleted = 0;
         CriticalHits = 0;
+        enemySighted = false;
     }
 
     private bool CalculateShowChance(int chancePercentage)

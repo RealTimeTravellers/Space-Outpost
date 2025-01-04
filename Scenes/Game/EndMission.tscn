@@ -1,8 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://dmdjq5t67xo5v"]
+[gd_scene load_steps=10 format=3 uid="uid://dmdjq5t67xo5v"]
 
 [ext_resource type="Script" path="res://Scripts/UI/EndMissionMenu.cs" id="1_abc12"]
+[ext_resource type="Texture2D" uid="uid://t7u0jtqrfdno" path="res://Visual Assets/Sprites/UI/EndScreen/MissionResults.png" id="2_chfug"]
+[ext_resource type="Texture2D" uid="uid://bvikwtk5ar24k" path="res://Visual Assets/Sprites/UI/TeamSelect/MissionSummary.svg" id="3_1e4kl"]
+[ext_resource type="Texture2D" uid="uid://cdck3vc5tgh6d" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Hover.svg" id="4_r3wto"]
+[ext_resource type="Texture2D" uid="uid://coohouu7jde7" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Defalut.svg" id="5_rcqy2"]
+[ext_resource type="Texture2D" uid="uid://dt0hap0yha77h" path="res://Visual Assets/Sprites/UI/TeamSelect/SecondaryButton.svg" id="6_eel8y"]
 
-[node name="EndMission" type="Control"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bvddh"]
+texture = ExtResource("3_1e4kl")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gjuv4"]
+texture = ExtResource("4_r3wto")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w008f"]
+texture = ExtResource("5_rcqy2")
+
+[node name="EndMission" type="Control" node_paths=PackedStringArray("statsContainer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,15 +24,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_abc12")
+statsContainer = NodePath("CenterContainer/StatsPanel/VBoxContainer/MarginContainer3/StatsContainer")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
+self_modulate = Color(0.611765, 0.682353, 1, 1)
+visibility_layer = 9
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0980392, 0.0627451, 0.172549, 1)
+texture = ExtResource("2_chfug")
+expand_mode = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -31,23 +49,55 @@ grow_vertical = 2
 [node name="StatsPanel" type="PanelContainer" parent="CenterContainer"]
 custom_minimum_size = Vector2(800, 500)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_bvddh")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/StatsPanel"]
 layout_mode = 2
 
-[node name="HeaderLabel" type="Label" parent="CenterContainer/StatsPanel/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/StatsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+
+[node name="HeaderLabel" type="Label" parent="CenterContainer/StatsPanel/VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Mission Results"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="StatsContainer" type="GridContainer" parent="CenterContainer/StatsPanel/VBoxContainer"]
+[node name="MarginContainer3" type="MarginContainer" parent="CenterContainer/StatsPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="StatsContainer" type="GridContainer" parent="CenterContainer/StatsPanel/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 50
+theme_override_constants/v_separation = 10
 columns = 2
 
-[node name="ContinueButton" type="Button" parent="CenterContainer/StatsPanel/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="CenterContainer/StatsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 20
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/StatsPanel/VBoxContainer/MarginContainer2"]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_styles/hover = SubResource("StyleBoxTexture_gjuv4")
+theme_override_styles/normal = SubResource("StyleBoxTexture_w008f")
 text = "Continue"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/StatsPanel"]
+visible = false
+self_modulate = Color(1, 1, 1, 0.552941)
+layout_mode = 2
+texture = ExtResource("6_eel8y")
+expand_mode = 1
+stretch_mode = 5
+
+[connection signal="pressed" from="CenterContainer/StatsPanel/VBoxContainer/MarginContainer2/ContinueButton" to="." method="OnContinuePressed"]
