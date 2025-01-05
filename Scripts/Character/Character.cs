@@ -343,7 +343,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			currentGrid = null;
 		}
 
-		chracterAudioPlayer?.PlayDeathSound();
+		chracterAudioPlayer?.PlayDeathSound(IsFriendly);
 
 		if (!IsFriendly)
 			MissionManager.Instance.RecordEnemyKill();
