@@ -10,6 +10,7 @@ public partial class CameraManager : Node
     [Export] public bool AimingMode { get; set; } = false;
     [Export] public bool AreaSelection { get; set; } = false;
     [Export] public bool TeamSelection { get; set; } = false;
+    [Export] public float defaultCameraY { get; private set; }
 
     private Transform3D _tacticalTransform;
 
@@ -40,6 +41,7 @@ public partial class CameraManager : Node
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         MainCamera = MainCameraSet.Camera;
         _tacticalTransform = TacticalCameraPostion.GlobalTransform;
+        defaultCameraY = (int)TacticalCameraPostion.GlobalPosition.Y;
     }
 
     public static void ReturnCameraToTactical()
