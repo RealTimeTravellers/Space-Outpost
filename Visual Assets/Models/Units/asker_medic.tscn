@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=4 uid="uid://bl73goxpi5n5u"]
+[gd_scene load_steps=78 format=4 uid="uid://bl73goxpi5n5u"]
 
 [ext_resource type="Texture2D" uid="uid://c1r66ickmjtrk" path="res://Visual Assets/Models/Units/Asker_Medic/Medic_Asker_0.png" id="1_uk7mb"]
 [ext_resource type="AnimationLibrary" uid="uid://0brseyk62gj0" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Crouch Death.fbx" id="2_7esfq"]
@@ -15,9 +15,13 @@
 [ext_resource type="AnimationLibrary" uid="uid://ckx108rxbnw5r" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Idle Crouching Aiming (1).fbx" id="13_bskc5"]
 [ext_resource type="AnimationLibrary" uid="uid://dlqb6ji1qah5k" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Medicanim.fbx" id="14_c4fab"]
 [ext_resource type="AnimationLibrary" uid="uid://bthqtct8qslly" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Rifle Aiming Idle.fbx" id="14_gsp6q"]
+[ext_resource type="AnimationLibrary" uid="uid://brb1c3msoecgk" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Medic@Hit Crouch.fbx" id="14_ra22t"]
 [ext_resource type="AnimationLibrary" uid="uid://evolfnnwmb1u" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Rifle Idle.fbx" id="15_gprdg"]
+[ext_resource type="AnimationLibrary" uid="uid://dco5lh01p002b" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Medic@Hit Idle.fbx" id="15_mo57a"]
 [ext_resource type="AnimationLibrary" uid="uid://dvq3g1wcdpjd" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Rifle Idle (1).fbx" id="16_g2e5s"]
+[ext_resource type="AnimationLibrary" uid="uid://cfpbtafblsgy5" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Medic@Reload.fbx" id="16_pw4i4"]
 [ext_resource type="AnimationLibrary" uid="uid://b6kwg0i8c01rl" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Rifle Run.fbx" id="17_7u4bm"]
+[ext_resource type="AnimationLibrary" uid="uid://c8u5yc5koscmf" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Medic@Reloading.fbx" id="17_8t7q8"]
 [ext_resource type="AnimationLibrary" uid="uid://dg5skmfnv5kvh" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Rifle Run (1).fbx" id="18_sba06"]
 [ext_resource type="AnimationLibrary" uid="uid://sgxnb0ob4kbg" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Rifle Stand To Kneel.fbx" id="19_23x5e"]
 [ext_resource type="AnimationLibrary" uid="uid://cvbo1y0c0fjpj" path="res://Visual Assets/Models/Animations/Medic_Asker_Anim/Rifle Turn.fbx" id="20_vwhyd"]
@@ -209,6 +213,28 @@ animation = &"Fire Rifle/mixamo_com"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d7r0o"]
 animation = &"Firing Rifle (2)/mixamo_com"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_n8ra3"]
+animation = &"Medic@Hit Crouch/mixamo_com"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3ehpb"]
+animation = &"Medic@Hit Idle/mixamo_com"
+use_custom_timeline = true
+timeline_length = 0.95
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_37jc8"]
+animation = &"Medic@Reload/mixamo_com"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_po7lr"]
+animation = &"Medic@Reloading/mixamo_com"
+use_custom_timeline = true
+timeline_length = 2.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jryjl"]
 animation = &"Rifle Aiming Idle/mixamo_com"
 use_custom_timeline = true
@@ -319,12 +345,44 @@ advance_mode = 2
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_arvfx"]
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rtalp"]
+advance_mode = 2
+advance_condition = &"hit"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lcftm"]
+advance_mode = 2
+advance_condition = &"reloading"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dqssb"]
+advance_mode = 2
+advance_condition = &"reloading"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1hyct"]
+advance_mode = 2
+advance_condition = &"hit"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ttpyn"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_os5g3"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_h1626"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4u183"]
+switch_mode = 2
+advance_mode = 2
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_dc3q1"]
 states/End/position = Vector2(1365, 105)
 "states/Medic Crouching Aiming (1)_mixamo_com/node" = SubResource("AnimationNodeAnimation_vwwlv")
 "states/Medic Crouching Aiming (1)_mixamo_com/position" = Vector2(752, 291)
 "states/Medic_Crouch Death_mixamo_com/node" = SubResource("AnimationNodeAnimation_mdcwb")
-"states/Medic_Crouch Death_mixamo_com/position" = Vector2(172, 395)
+"states/Medic_Crouch Death_mixamo_com/position" = Vector2(134, 395)
 "states/Medic_Crouch Idle_mixamo_com/node" = SubResource("AnimationNodeAnimation_74r5o")
 "states/Medic_Crouch Idle_mixamo_com/position" = Vector2(400, 291)
 "states/Medic_Crouch To Standing_mixamo_com/node" = SubResource("AnimationNodeAnimation_m11oo")
@@ -335,10 +393,18 @@ states/Medic_Dying_mixamo_com/position = Vector2(152, -22)
 "states/Medic_Fire Rifle_mixamo_com/position" = Vector2(1138, 291)
 "states/Medic_Firing Rifle (2)_mixamo_com/node" = SubResource("AnimationNodeAnimation_d7r0o")
 "states/Medic_Firing Rifle (2)_mixamo_com/position" = Vector2(1138, 100)
+"states/Medic_Hit Crouch_mixamo_com/node" = SubResource("AnimationNodeAnimation_n8ra3")
+"states/Medic_Hit Crouch_mixamo_com/position" = Vector2(668, 395)
+"states/Medic_Hit Idle_mixamo_com/node" = SubResource("AnimationNodeAnimation_3ehpb")
+"states/Medic_Hit Idle_mixamo_com/position" = Vector2(400, -22)
+states/Medic_Reload_mixamo_com/node = SubResource("AnimationNodeAnimation_37jc8")
+states/Medic_Reload_mixamo_com/position = Vector2(400, 395)
+states/Medic_Reloading_mixamo_com/node = SubResource("AnimationNodeAnimation_po7lr")
+states/Medic_Reloading_mixamo_com/position = Vector2(-106, -22)
 "states/Medic_Rifle Aiming Idle_mixamo_com/node" = SubResource("AnimationNodeAnimation_jryjl")
 "states/Medic_Rifle Aiming Idle_mixamo_com/position" = Vector2(752, 100)
 "states/Medic_Rifle Run (1)_mixamo_com/node" = SubResource("AnimationNodeAnimation_dthjh")
-"states/Medic_Rifle Run (1)_mixamo_com/position" = Vector2(400, -22)
+"states/Medic_Rifle Run (1)_mixamo_com/position" = Vector2(905, 190)
 "states/Medic_Stand To Crouch (1)_mixamo_com/node" = SubResource("AnimationNodeAnimation_ljr5b")
 "states/Medic_Stand To Crouch (1)_mixamo_com/position" = Vector2(576, 190)
 states/Medicanim_mixamo_com/node = SubResource("AnimationNodeAnimation_ofwc2")
@@ -346,8 +412,8 @@ states/Medicanim_mixamo_com/position = Vector2(668, -22)
 "states/Rifle Idle_mixamo_com/node" = SubResource("AnimationNodeAnimation_bw62r")
 "states/Rifle Idle_mixamo_com/position" = Vector2(400, 104)
 states/Start/position = Vector2(134, 100)
-transitions = ["Rifle Idle_mixamo_com", "Medic_Rifle Run (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_uw1e3"), "Medic_Rifle Run (1)_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_lk40l"), "Rifle Idle_mixamo_com", "Medic_Dying_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1c4uy"), "Rifle Idle_mixamo_com", "Medic_Stand To Crouch (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_jjfck"), "Medic_Crouch To Standing_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_p5gyu"), "Medic_Stand To Crouch (1)_mixamo_com", "Medic_Crouch Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_eipce"), "Medic_Crouch Idle_mixamo_com", "Medic_Crouch To Standing_mixamo_com", SubResource("AnimationNodeStateMachineTransition_usdoc"), "Medic_Crouch Idle_mixamo_com", "Medic_Crouch Death_mixamo_com", SubResource("AnimationNodeStateMachineTransition_g28dg"), "Rifle Idle_mixamo_com", "Medic_Rifle Aiming Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1qla3"), "Medic_Rifle Aiming Idle_mixamo_com", "Medic_Firing Rifle (2)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_6scbu"), "Medic_Firing Rifle (2)_mixamo_com", "Medic_Rifle Aiming Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_qaugi"), "Medic_Rifle Aiming Idle_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1mqky"), "Medic_Crouch Idle_mixamo_com", "Medic Crouching Aiming (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_acpdr"), "Medic Crouching Aiming (1)_mixamo_com", "Medic_Fire Rifle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_g0mww"), "Medic_Fire Rifle_mixamo_com", "Medic Crouching Aiming (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_qa7gp"), "Medic Crouching Aiming (1)_mixamo_com", "Medic_Crouch Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_mebuc"), "Rifle Idle_mixamo_com", "Medicanim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_23l3j"), "Medicanim_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_efanr"), "Start", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_arvfx")]
-graph_offset = Vector2(-368, -174)
+transitions = ["Rifle Idle_mixamo_com", "Medic_Rifle Run (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_uw1e3"), "Medic_Rifle Run (1)_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_lk40l"), "Rifle Idle_mixamo_com", "Medic_Dying_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1c4uy"), "Rifle Idle_mixamo_com", "Medic_Stand To Crouch (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_jjfck"), "Medic_Crouch To Standing_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_p5gyu"), "Medic_Stand To Crouch (1)_mixamo_com", "Medic_Crouch Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_eipce"), "Medic_Crouch Idle_mixamo_com", "Medic_Crouch To Standing_mixamo_com", SubResource("AnimationNodeStateMachineTransition_usdoc"), "Medic_Crouch Idle_mixamo_com", "Medic_Crouch Death_mixamo_com", SubResource("AnimationNodeStateMachineTransition_g28dg"), "Rifle Idle_mixamo_com", "Medic_Rifle Aiming Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1qla3"), "Medic_Rifle Aiming Idle_mixamo_com", "Medic_Firing Rifle (2)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_6scbu"), "Medic_Firing Rifle (2)_mixamo_com", "Medic_Rifle Aiming Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_qaugi"), "Medic_Rifle Aiming Idle_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1mqky"), "Medic_Crouch Idle_mixamo_com", "Medic Crouching Aiming (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_acpdr"), "Medic Crouching Aiming (1)_mixamo_com", "Medic_Fire Rifle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_g0mww"), "Medic_Fire Rifle_mixamo_com", "Medic Crouching Aiming (1)_mixamo_com", SubResource("AnimationNodeStateMachineTransition_qa7gp"), "Medic Crouching Aiming (1)_mixamo_com", "Medic_Crouch Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_mebuc"), "Rifle Idle_mixamo_com", "Medicanim_mixamo_com", SubResource("AnimationNodeStateMachineTransition_23l3j"), "Medicanim_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_efanr"), "Start", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_arvfx"), "Rifle Idle_mixamo_com", "Medic_Hit Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_rtalp"), "Rifle Idle_mixamo_com", "Medic_Reloading_mixamo_com", SubResource("AnimationNodeStateMachineTransition_lcftm"), "Medic_Crouch Idle_mixamo_com", "Medic_Reload_mixamo_com", SubResource("AnimationNodeStateMachineTransition_dqssb"), "Medic_Crouch Idle_mixamo_com", "Medic_Hit Crouch_mixamo_com", SubResource("AnimationNodeStateMachineTransition_1hyct"), "Medic_Reload_mixamo_com", "Medic_Crouch Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_ttpyn"), "Medic_Hit Crouch_mixamo_com", "Medic_Crouch Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_os5g3"), "Medic_Hit Idle_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_h1626"), "Medic_Reloading_mixamo_com", "Rifle Idle_mixamo_com", SubResource("AnimationNodeStateMachineTransition_4u183")]
+graph_offset = Vector2(-224, 28)
 
 [node name="AskerMedic" type="Node3D"]
 
@@ -356,43 +422,43 @@ bones/0/name = "mixamorig_Hips"
 bones/0/parent = -1
 bones/0/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.13513e-05, 1.10101, 0.00461718)
 bones/0/enabled = true
-bones/0/position = Vector3(0.014596, 1.07619, 0.00621043)
-bones/0/rotation = Quaternion(-0.0637252, -0.0353037, 0.0263474, 0.996995)
+bones/0/position = Vector3(-0.00516012, 0.497546, 0.0055057)
+bones/0/rotation = Quaternion(-0.283143, -0.318286, -0.0607246, 0.902683)
 bones/0/scale = Vector3(1, 1, 1)
 bones/1/name = "mixamorig_Spine"
 bones/1/parent = 0
 bones/1/rest = Transform3D(1, 0, 0, 0, 0.999971, 0.00763119, 0, -0.00763119, 0.999971, 0, 0.0955979, -0.000729547)
 bones/1/enabled = true
 bones/1/position = Vector3(0, 0.0955979, -0.000729547)
-bones/1/rotation = Quaternion(0.0435024, 0.0167507, -0.0178631, 0.998753)
+bones/1/rotation = Quaternion(0.487753, 0.0166535, 0.0242753, 0.872485)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/name = "mixamorig_Spine1"
 bones/2/parent = 1
 bones/2/rest = Transform3D(1, 0, 0, 0, 1, 5.59857e-09, 0, -5.59857e-09, 1, 0, 0.111534, 1.5764e-11)
 bones/2/enabled = true
 bones/2/position = Vector3(0, 0.111534, 1.5764e-11)
-bones/2/rotation = Quaternion(0.0129653, 0.00552015, -0.00527918, 0.999887)
+bones/2/rotation = Quaternion(0.0905733, 0.0103612, -0.0387501, 0.995082)
 bones/2/scale = Vector3(1, 1, 1)
 bones/3/name = "mixamorig_Spine2"
 bones/3/parent = 2
 bones/3/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.127468, -2.28295e-11)
 bones/3/enabled = true
 bones/3/position = Vector3(0, 0.127468, -2.28295e-11)
-bones/3/rotation = Quaternion(0.0129067, 0.00655608, -0.00591138, 0.999878)
+bones/3/rotation = Quaternion(0.150035, 0.00570659, -0.0395266, 0.987874)
 bones/3/scale = Vector3(1, 1, 1)
 bones/4/name = "mixamorig_Neck"
 bones/4/parent = 3
 bones/4/rest = Transform3D(1, 0, 0, 0, 0.999971, -0.00763119, 0, 0.00763119, 0.999971, 0, 0.143401, 1.0746e-09)
 bones/4/enabled = true
 bones/4/position = Vector3(0, 0.143401, 1.0746e-09)
-bones/4/rotation = Quaternion(0.0248575, 0.048743, 0.0161288, 0.998372)
+bones/4/rotation = Quaternion(-0.0886459, 0.0621164, 0.0176497, 0.993968)
 bones/4/scale = Vector3(1, 1, 1)
 bones/5/name = "mixamorig_Head"
 bones/5/parent = 4
 bones/5/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0763681, 0.00626871)
 bones/5/enabled = true
 bones/5/position = Vector3(0, 0.0763681, 0.00626871)
-bones/5/rotation = Quaternion(0.0341063, -0.090764, 0.00619227, 0.995269)
+bones/5/rotation = Quaternion(-0.116518, 0.182144, 0.0638848, 0.974252)
 bones/5/scale = Vector3(1, 1, 1)
 bones/6/name = "mixamorig_HeadTop_End"
 bones/6/parent = 5
@@ -406,49 +472,49 @@ bones/7/parent = 3
 bones/7/rest = Transform3D(-0.00276875, 0.96225, -0.272152, -2.70605e-05, -0.272153, -0.962254, -0.999996, -0.00265688, 0.00077951, 0.0804818, 0.120203, -0.00022608)
 bones/7/enabled = true
 bones/7/position = Vector3(0.0804818, 0.120203, -0.00022608)
-bones/7/rotation = Quaternion(-0.699785, -0.285074, 0.52951, -0.385556)
+bones/7/rotation = Quaternion(-0.39409, -0.234747, 0.636985, -0.619546)
 bones/7/scale = Vector3(1, 1, 1)
 bones/8/name = "mixamorig_LeftArm"
 bones/8/parent = 7
 bones/8/rest = Transform3D(0.998251, -0.0590626, 0.00248037, 0.0591146, 0.997372, -0.0418852, -1.39698e-09, 0.0419586, 0.999119, 3.23043e-11, 0.169125, 4.02976e-09)
 bones/8/enabled = true
 bones/8/position = Vector3(3.23043e-11, 0.169125, 4.02976e-09)
-bones/8/rotation = Quaternion(0.204856, 0.0804768, 0.052387, 0.97407)
+bones/8/rotation = Quaternion(0.287777, -0.357718, 0.492365, 0.739458)
 bones/8/scale = Vector3(1, 1, 1)
 bones/9/name = "mixamorig_LeftForeArm"
 bones/9/parent = 8
 bones/9/rest = Transform3D(0.981269, -0.192095, -0.0145018, 0.192641, 0.978485, 0.0738688, -1.39698e-09, -0.0752789, 0.997163, -5.26375e-10, 0.243101, 3.12081e-09)
 bones/9/enabled = true
 bones/9/position = Vector3(-5.26375e-10, 0.243101, 3.12081e-09)
-bones/9/rotation = Quaternion(0.0066412, -0.00283761, 0.632781, 0.774297)
+bones/9/rotation = Quaternion(0.00429181, -0.00334431, 0.408936, 0.912547)
 bones/9/scale = Vector3(1, 1, 1)
 bones/10/name = "mixamorig_LeftHand"
 bones/10/parent = 9
 bones/10/rest = Transform3D(0.999673, -0.0154884, -0.0203279, 0.0131034, 0.993551, -0.112625, 0.0219412, 0.112322, 0.99343, 7.35714e-10, 0.250765, -1.99618e-09)
 bones/10/enabled = true
 bones/10/position = Vector3(7.35714e-10, 0.250765, -1.99618e-09)
-bones/10/rotation = Quaternion(-0.162133, -0.857193, -0.00999146, 0.488706)
+bones/10/rotation = Quaternion(-0.138137, -0.831901, -0.13958, 0.519014)
 bones/10/scale = Vector3(1, 1, 1)
 bones/11/name = "mixamorig_LeftHandThumb1"
 bones/11/parent = 10
 bones/11/rest = Transform3D(0.687272, -0.705217, 0.174143, 0.7264, 0.667231, -0.164763, 1.49012e-08, 0.239734, 0.970839, -0.021136, 0.0310323, 0.0090577)
 bones/11/enabled = true
 bones/11/position = Vector3(-0.021136, 0.0310323, 0.0090577)
-bones/11/rotation = Quaternion(0.0959122, 0.0366407, 0.430367, 0.896796)
+bones/11/rotation = Quaternion(0.212791, 0.111422, 0.193545, 0.951234)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "mixamorig_LeftHandThumb2"
 bones/12/parent = 11
 bones/12/rest = Transform3D(1, 8.00367e-17, -1.13445e-16, -8.64967e-17, 0.998309, -0.0581372, 1.086e-16, 0.0581372, 0.998309, 0.00641257, 0.0302261, -1.13388e-10)
 bones/12/enabled = true
 bones/12/position = Vector3(0.00641257, 0.0302261, -1.13388e-10)
-bones/12/rotation = Quaternion(0.0159416, -0.000922841, -0.147508, 0.988932)
+bones/12/rotation = Quaternion(0.0488801, 0.168178, -0.193175, 0.965407)
 bones/12/scale = Vector3(1, 1, 1)
 bones/13/name = "mixamorig_LeftHandThumb3"
 bones/13/parent = 12
 bones/13/rest = Transform3D(1, -2.83148e-17, 9.00336e-17, 2.71964e-17, 0.999923, 0.0123974, -9.03777e-17, -0.0123974, 0.999923, -0.00265324, 0.0333575, -1.25107e-09)
 bones/13/enabled = true
 bones/13/position = Vector3(-0.00265324, 0.0333575, -1.25107e-09)
-bones/13/rotation = Quaternion(-0.128151, -0.0120054, -0.0439517, 0.990708)
+bones/13/rotation = Quaternion(-0.0490971, 0.00894483, 0.0610754, 0.996885)
 bones/13/scale = Vector3(1, 1, 1)
 bones/14/name = "mixamorig_LeftHandThumb4"
 bones/14/parent = 13
@@ -462,21 +528,21 @@ bones/15/parent = 10
 bones/15/rest = Transform3D(0.98175, -0.187546, 0.0315128, 0.190175, 0.968178, -0.16268, 1.67638e-08, 0.165704, 0.986175, -0.0188386, 0.105571, -0.00215693)
 bones/15/enabled = true
 bones/15/position = Vector3(-0.0188386, 0.105571, -0.00215693)
-bones/15/rotation = Quaternion(0.520936, -0.0807742, -0.066986, 0.847121)
+bones/15/rotation = Quaternion(0.307896, -0.0261778, -0.103996, 0.945357)
 bones/15/scale = Vector3(1, 1, 1)
 bones/16/name = "mixamorig_LeftHandIndex2"
 bones/16/parent = 15
 bones/16/rest = Transform3D(1, -1.10951e-16, -1.11657e-17, 1.11093e-16, 0.999907, 0.0136428, 9.65098e-18, -0.0136428, 0.999907, 4.46886e-06, 0.0322705, -8.83615e-10)
 bones/16/enabled = true
 bones/16/position = Vector3(4.46886e-06, 0.0322705, -8.83614e-10)
-bones/16/rotation = Quaternion(0.539317, -0.000296001, -0.0211399, 0.841837)
+bones/16/rotation = Quaternion(0.505632, -0.000277753, -0.0197889, 0.862522)
 bones/16/scale = Vector3(1, 1, 1)
 bones/17/name = "mixamorig_LeftHandIndex3"
 bones/17/parent = 16
 bones/17/rest = Transform3D(1, -5.45285e-17, 5.30899e-17, 5.64938e-17, 0.999287, -0.0377517, -5.09935e-17, 0.0377517, 0.999287, 3.12117e-05, 0.0322185, -7.83628e-10)
 bones/17/enabled = true
 bones/17/position = Vector3(3.12117e-05, 0.0322185, -7.83628e-10)
-bones/17/rotation = Quaternion(0.297886, 5.27219e-05, -0.0129718, 0.954513)
+bones/17/rotation = Quaternion(0.214581, 3.69984e-05, -0.00967675, 0.976658)
 bones/17/scale = Vector3(1, 1, 1)
 bones/18/name = "mixamorig_LeftHandIndex4"
 bones/18/parent = 17
@@ -490,21 +556,21 @@ bones/19/parent = 10
 bones/19/rest = Transform3D(0.997916, -0.0643347, 0.00504565, 0.0645322, 0.994861, -0.078025, -6.51926e-09, 0.078188, 0.996939, 0.0188386, 0.10249, -0.00096843)
 bones/19/enabled = true
 bones/19/position = Vector3(0.0188386, 0.10249, -0.00096843)
-bones/19/rotation = Quaternion(0.560895, -0.0680418, -0.115801, 0.816919)
+bones/19/rotation = Quaternion(0.434039, -0.0533846, -0.110546, 0.892491)
 bones/19/scale = Vector3(1, 1, 1)
 bones/20/name = "mixamorig_LeftHandMiddle2"
 bones/20/parent = 19
 bones/20/rest = Transform3D(1, 1.69073e-19, 1.38778e-17, 1.69073e-19, 0.999703, -0.0243623, -1.38778e-17, 0.0243623, 0.999703, 0.000199559, 0.0379672, 2.88822e-10)
 bones/20/enabled = true
 bones/20/position = Vector3(0.000199559, 0.0379672, 2.88821e-10)
-bones/20/rotation = Quaternion(0.53046, 0.00049147, -0.0375677, 0.846877)
+bones/20/rotation = Quaternion(0.537922, 0.000498603, -0.0379927, 0.842138)
 bones/20/scale = Vector3(1, 1, 1)
 bones/21/name = "mixamorig_LeftHandMiddle3"
 bones/21/parent = 20
 bones/21/rest = Transform3D(1, 2.74792e-17, 7.33477e-18, -2.80319e-17, 0.995866, 0.0908375, -4.8083e-18, -0.0908375, 0.995866, -0.000260439, 0.0363248, -2.35644e-10)
 bones/21/enabled = true
 bones/21/position = Vector3(-0.000260439, 0.0363248, -2.35644e-10)
-bones/21/rotation = Quaternion(0.259597, 0.00081638, -0.0114666, 0.965649)
+bones/21/rotation = Quaternion(0.156786, 0.000542558, -0.00511834, 0.987619)
 bones/21/scale = Vector3(1, 1, 1)
 bones/22/name = "mixamorig_LeftHandMiddle4"
 bones/22/parent = 21
@@ -518,49 +584,49 @@ bones/23/parent = 3
 bones/23/rest = Transform3D(-0.00156128, -0.96225, 0.272162, 1.95503e-05, -0.272162, -0.962251, 0.999999, -0.00149703, 0.000443757, -0.0804818, 0.120202, -0.000127999)
 bones/23/enabled = true
 bones/23/position = Vector3(-0.0804818, 0.120202, -0.000127999)
-bones/23/rotation = Quaternion(0.6837, -0.32099, 0.490002, 0.435221)
+bones/23/rotation = Quaternion(0.286777, -0.279336, 0.711762, 0.57717)
 bones/23/scale = Vector3(1, 1, 1)
 bones/24/name = "mixamorig_RightArm"
 bones/24/parent = 23
 bones/24/rest = Transform3D(0.998598, 0.0528904, -0.00221819, -0.0529369, 0.997721, -0.0418437, 9.31323e-10, 0.0419024, 0.999122, -3.1809e-11, 0.169125, 4.02977e-09)
 bones/24/enabled = true
 bones/24/position = Vector3(-3.1809e-11, 0.169125, 4.02977e-09)
-bones/24/rotation = Quaternion(0.237524, -0.171954, -0.140755, 0.945623)
+bones/24/rotation = Quaternion(0.420743, -0.0412144, -0.529827, 0.735228)
 bones/24/scale = Vector3(1, 1, 1)
 bones/25/name = "mixamorig_RightForeArm"
 bones/25/parent = 24
 bones/25/rest = Transform3D(0.979108, 0.202768, 0.0152765, -0.203343, 0.976341, 0.0735572, 5.58794e-09, -0.0751268, 0.997174, 7.53747e-11, 0.243031, 1.31709e-09)
 bones/25/enabled = true
 bones/25/position = Vector3(7.53746e-11, 0.243031, 1.31709e-09)
-bones/25/rotation = Quaternion(0.00786489, 0.00255194, -0.750957, 0.6603)
+bones/25/rotation = Quaternion(0.00820321, 0.00240257, -0.783258, 0.621638)
 bones/25/scale = Vector3(1, 1, 1)
 bones/26/name = "mixamorig_RightHand"
 bones/26/parent = 25
 bones/26/rest = Transform3D(0.999969, 0.00783967, 2.28491e-05, -0.00778816, 0.993724, -0.111586, -0.000897502, 0.111582, 0.993755, 3.38962e-09, 0.251148, 1.48595e-09)
 bones/26/enabled = true
 bones/26/position = Vector3(3.38962e-09, 0.251148, 1.48595e-09)
-bones/26/rotation = Quaternion(0.231394, 0.347962, 0.0270067, 0.908103)
+bones/26/rotation = Quaternion(-0.152501, 0.262819, 0.17111, 0.937225)
 bones/26/scale = Vector3(1, 1, 1)
 bones/27/name = "mixamorig_RightHandThumb1"
 bones/27/parent = 26
 bones/27/rest = Transform3D(0.732482, 0.665206, -0.144813, -0.680786, 0.715719, -0.155809, 2.23517e-08, 0.212714, 0.977114, 0.0222114, 0.032412, 0.00846001)
 bones/27/enabled = true
 bones/27/position = Vector3(0.0222114, 0.032412, 0.00846001)
-bones/27/rotation = Quaternion(0.436582, -0.176216, -0.239589, 0.849082)
+bones/27/rotation = Quaternion(0.322101, -0.0856284, -0.178043, 0.925862)
 bones/27/scale = Vector3(1, 1, 1)
 bones/28/name = "mixamorig_RightHandThumb2"
 bones/28/parent = 27
 bones/28/rest = Transform3D(1, -8.17053e-17, 3.84419e-17, 8.48282e-17, 0.995957, -0.0898286, -3.0947e-17, 0.0898286, 0.995957, -0.00463708, 0.0318182, -1.22668e-09)
 bones/28/enabled = true
 bones/28/position = Vector3(-0.00463708, 0.0318182, -1.22668e-09)
-bones/28/rotation = Quaternion(-0.205589, -0.138974, 0.333687, 0.909435)
+bones/28/rotation = Quaternion(-0.0364444, -0.18579, 0.379556, 0.905589)
 bones/28/scale = Vector3(1, 1, 1)
 bones/29/name = "mixamorig_RightHandThumb3"
 bones/29/parent = 28
 bones/29/rest = Transform3D(1, 8.77507e-17, -7.14362e-17, -7.87828e-17, 0.993122, 0.117088, 8.12194e-17, -0.117088, 0.993122, 0.00533057, 0.032868, 4.75158e-10)
 bones/29/enabled = true
 bones/29/position = Vector3(0.00533057, 0.032868, 4.75158e-10)
-bones/29/rotation = Quaternion(-0.166873, -0.00452592, 0.334666, 0.927433)
+bones/29/rotation = Quaternion(-0.11822, -0.0138367, 0.391311, 0.912529)
 bones/29/scale = Vector3(1, 1, 1)
 bones/30/name = "mixamorig_RightHandThumb4"
 bones/30/parent = 29
@@ -574,21 +640,21 @@ bones/31/parent = 26
 bones/31/rest = Transform3D(0.980918, 0.192703, -0.0257931, -0.194422, 0.972247, -0.130134, 0, 0.132666, 0.991161, 0.0193831, 0.107498, -0.00177049)
 bones/31/enabled = true
 bones/31/position = Vector3(0.0193831, 0.107498, -0.00177049)
-bones/31/rotation = Quaternion(0.098319, 0.00488867, 0.0789183, 0.992009)
+bones/31/rotation = Quaternion(0.0862122, 0.00275931, 0.0802548, 0.993035)
 bones/31/scale = Vector3(1, 1, 1)
 bones/32/name = "mixamorig_RightHandIndex2"
 bones/32/parent = 31
 bones/32/rest = Transform3D(1, -5.52085e-17, 2.16238e-17, 5.58138e-17, 0.999577, -0.0290742, -2.00095e-17, 0.0290742, 0.999577, -8.64155e-05, 0.0333364, 3.88276e-10)
 bones/32/enabled = true
 bones/32/position = Vector3(-8.64155e-05, 0.0333364, 3.88276e-10)
-bones/32/rotation = Quaternion(0.452784, 0.000783752, 0.0362903, 0.890881)
+bones/32/rotation = Quaternion(0.283019, 0.000479408, 0.0230046, 0.958838)
 bones/32/scale = Vector3(1, 1, 1)
 bones/33/name = "mixamorig_RightHandIndex3"
 bones/33/parent = 32
 bones/33/rest = Transform3D(1, 5.30474e-17, -5.13879e-17, -5.79749e-17, 0.994868, -0.101186, 4.57566e-17, 0.101186, 0.994868, -3.0092e-05, 0.0304845, -2.73406e-10)
 bones/33/enabled = true
 bones/33/position = Vector3(-3.0092e-05, 0.0304845, -2.73406e-10)
-bones/33/rotation = Quaternion(0.571509, -0.000964374, 0.0472445, 0.819234)
+bones/33/rotation = Quaternion(0.256757, -0.000378111, 0.0229023, 0.966204)
 bones/33/scale = Vector3(1, 1, 1)
 bones/34/name = "mixamorig_RightHandIndex4"
 bones/34/parent = 33
@@ -602,21 +668,21 @@ bones/35/parent = 26
 bones/35/rest = Transform3D(0.998105, 0.0606171, -0.0106094, -0.0615385, 0.98316, -0.172076, -8.84756e-09, 0.172403, 0.985026, -0.0193831, 0.102932, -0.0025534)
 bones/35/enabled = true
 bones/35/position = Vector3(-0.0193831, 0.102932, -0.0025534)
-bones/35/rotation = Quaternion(0.44412, 0.0492057, 0.128832, 0.88529)
+bones/35/rotation = Quaternion(0.413655, 0.0327661, 0.153995, 0.896717)
 bones/35/scale = Vector3(1, 1, 1)
 bones/36/name = "mixamorig_RightHandMiddle2"
 bones/36/parent = 35
 bones/36/rest = Transform3D(1, 3.07928e-16, -3.21276e-17, -3.02695e-16, 0.994215, 0.107412, 6.50169e-17, -0.107412, 0.994215, -0.000121961, 0.0388956, 7.87736e-10)
 bones/36/enabled = true
 bones/36/position = Vector3(-0.000121961, 0.0388956, 7.87736e-10)
-bones/36/rotation = Quaternion(0.770232, -0.00142229, 0.0653968, 0.634401)
+bones/36/rotation = Quaternion(0.819443, -0.00150319, 0.0690554, 0.568984)
 bones/36/scale = Vector3(1, 1, 1)
 bones/37/name = "mixamorig_RightHandMiddle3"
 bones/37/parent = 36
 bones/37/rest = Transform3D(1, -5.6234e-17, 1.70393e-17, 5.47883e-17, 0.99715, 0.0754399, -2.1233e-17, -0.0754399, 0.99715, 0.000230958, 0.0346152, 8.7941e-11)
 bones/37/enabled = true
 bones/37/position = Vector3(0.000230958, 0.0346152, 8.7941e-11)
-bones/37/rotation = Quaternion(0.713392, -0.0012814, 0.0541211, 0.698671)
+bones/37/rotation = Quaternion(0.163209, -0.000347249, 0.0082968, 0.986557)
 bones/37/scale = Vector3(1, 1, 1)
 bones/38/name = "mixamorig_RightHandMiddle4"
 bones/38/parent = 37
@@ -630,28 +696,28 @@ bones/39/parent = 0
 bones/39/rest = Transform3D(-0.99733, 0.073031, -7.27596e-12, -0.0730309, -0.997329, 0.00151577, 0.000110698, 0.00151172, 0.999999, 0.111026, -0.053209, -0.0145468)
 bones/39/enabled = true
 bones/39/position = Vector3(0.111026, -0.053209, -0.0145468)
-bones/39/rotation = Quaternion(0.103993, 0.0755167, 0.991198, -0.0317535)
+bones/39/rotation = Quaternion(0.109792, 0.513247, 0.832044, -0.179516)
 bones/39/scale = Vector3(1, 1, 1)
 bones/40/name = "mixamorig_LeftLeg"
 bones/40/parent = 39
 bones/40/rest = Transform3D(0.999988, 0.00486175, 0.000360575, -0.0048751, 0.997249, 0.0739617, 0, -0.0739626, 0.997261, -2.71288e-10, 0.487655, -2.05328e-11)
 bones/40/enabled = true
 bones/40/position = Vector3(-2.71288e-10, 0.487655, -2.05328e-11)
-bones/40/rotation = Quaternion(-0.147188, -0.068175, 0.013421, 0.986665)
+bones/40/rotation = Quaternion(-0.884363, 0.0371146, -0.0697037, 0.460072)
 bones/40/scale = Vector3(1, 1, 1)
 bones/41/name = "mixamorig_LeftFoot"
 bones/41/parent = 40
 bones/41/rest = Transform3D(0.990079, 0.124178, 0.0657566, 7.45058e-09, 0.467972, -0.883743, -0.140514, 0.874975, 0.463329, -2.94827e-10, 0.433885, 9.66635e-10)
 bones/41/enabled = true
 bones/41/position = Vector3(-2.94827e-10, 0.433885, 9.66635e-10)
-bones/41/rotation = Quaternion(0.481035, 0.0546613, -0.0438969, 0.873894)
+bones/41/rotation = Quaternion(0.669129, 0.129728, 0.00221784, 0.731732)
 bones/41/scale = Vector3(1, 1, 1)
 bones/42/name = "mixamorig_LeftToeBase"
 bones/42/parent = 41
 bones/42/rest = Transform3D(0.997418, 0.0399458, 0.0596823, 2.04891e-08, 0.831036, -0.556219, -0.0718168, 0.554783, 0.82889, 1.07508e-09, 0.222122, 3.12712e-09)
 bones/42/enabled = true
 bones/42/position = Vector3(1.07508e-09, 0.222122, 3.12712e-09)
-bones/42/rotation = Quaternion(0.290818, 0.0344284, -0.010397, 0.956102)
+bones/42/rotation = Quaternion(0.275811, 0.0349646, -0.0117252, 0.960504)
 bones/42/scale = Vector3(1, 1, 1)
 bones/43/name = "mixamorig_LeftToe_End"
 bones/43/parent = 42
@@ -665,28 +731,28 @@ bones/44/parent = 0
 bones/44/rest = Transform3D(-0.997331, -0.0730078, 5.82077e-11, 0.0729844, -0.997012, -0.0252872, 0.00184617, -0.0252198, 0.99968, -0.111026, -0.053209, 0.00176354)
 bones/44/enabled = true
 bones/44/position = Vector3(-0.111026, -0.053209, 0.00176354)
-bones/44/rotation = Quaternion(-0.137431, -0.0433979, 0.987546, 0.0631137)
+bones/44/rotation = Quaternion(0.171412, 0.0369687, 0.977574, 0.116623)
 bones/44/scale = Vector3(1, 1, 1)
 bones/45/name = "mixamorig_RightLeg"
 bones/45/parent = 44
 bones/45/rest = Transform3D(0.999988, -0.00495912, -0.000242667, 0.00496506, 0.998793, 0.0488743, -1.16415e-10, -0.0488749, 0.998805, 1.85512e-09, 0.48781, -2.51213e-10)
 bones/45/enabled = true
 bones/45/position = Vector3(1.85512e-09, 0.48781, -2.51213e-10)
-bones/45/rotation = Quaternion(-0.206396, 0.076035, -0.0378261, 0.974776)
+bones/45/rotation = Quaternion(-0.944632, -0.0310927, 0.112247, 0.306763)
 bones/45/scale = Vector3(1, 1, 1)
 bones/46/name = "mixamorig_RightFoot"
 bones/46/parent = 45
 bones/46/rest = Transform3D(0.990005, -0.124203, -0.0668145, 0, 0.473748, -0.88066, 0.141034, 0.871858, 0.469013, 1.63967e-09, 0.433938, -6.04025e-10)
 bones/46/enabled = true
 bones/46/position = Vector3(1.63967e-09, 0.433938, -6.04025e-10)
-bones/46/rotation = Quaternion(0.630283, -0.0110363, 0.0514785, 0.774578)
+bones/46/rotation = Quaternion(0.924044, 0.0712744, 0.119263, 0.356145)
 bones/46/scale = Vector3(1, 1, 1)
 bones/47/name = "mixamorig_RightToeBase"
 bones/47/parent = 46
 bones/47/rest = Transform3D(0.997632, -0.0387305, -0.0568443, -1.30385e-08, 0.82641, -0.56307, 0.0687846, 0.561736, 0.824452, 1.23805e-09, 0.219261, 9.44236e-09)
 bones/47/enabled = true
 bones/47/position = Vector3(1.23805e-09, 0.219261, 9.44236e-09)
-bones/47/rotation = Quaternion(0.31117, -0.0352331, 0.00788984, 0.949668)
+bones/47/rotation = Quaternion(0.528463, -0.0659902, -0.0229018, 0.846078)
 bones/47/scale = Vector3(1, 1, 1)
 bones/48/name = "mixamorig_RightToe_End"
 bones/48/parent = 47
@@ -705,10 +771,12 @@ tree_root = SubResource("AnimationNodeStateMachine_dc3q1")
 anim_player = NodePath("../AnimationPlayer")
 parameters/conditions/aiming = false
 parameters/conditions/death = false
+parameters/conditions/hit = false
 parameters/conditions/idle = false
 parameters/conditions/incover = false
 parameters/conditions/moving = false
 parameters/conditions/outcover = false
+parameters/conditions/reloading = false
 parameters/conditions/shooting = false
 parameters/conditions/turn = false
 
@@ -726,6 +794,10 @@ libraries = {
 "Idle Crouching (2)": ExtResource("11_2oftk"),
 "Idle Crouching (3)": ExtResource("12_yhr20"),
 "Idle Crouching Aiming (1)": ExtResource("13_bskc5"),
+"Medic@Hit Crouch": ExtResource("14_ra22t"),
+"Medic@Hit Idle": ExtResource("15_mo57a"),
+"Medic@Reload": ExtResource("16_pw4i4"),
+"Medic@Reloading": ExtResource("17_8t7q8"),
 "Medicanim": ExtResource("14_c4fab"),
 "Rifle Aiming Idle": ExtResource("14_gsp6q"),
 "Rifle Idle": ExtResource("15_gprdg"),
