@@ -9,6 +9,7 @@ public enum CharacterStateType
     Idle,
     Moving,
     InCover,
+    Hit,
     Aiming,
     Shooting,
     Death,
@@ -33,6 +34,7 @@ public class CharacterStateMachine
             { CharacterStateType.Aiming, new CharacterAimingState() },
             { CharacterStateType.Shooting, new CharacterShootingState() },
             { CharacterStateType.Death, new CharacterDeathState() },
+            { CharacterStateType.Hit, new CharacterHitState() },
         };
 
         CurrentStateType = CharacterStateType.Idle;

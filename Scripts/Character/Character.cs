@@ -508,7 +508,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterDeathLog, !IsFriendly, Name);
 		}
 		else
+		{
+			CharacterController.SetState(CharacterStateType.Hit, this);	
 			UpdateHealthText();
+		}
 	}
 
 	#endregion

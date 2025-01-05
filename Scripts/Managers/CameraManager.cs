@@ -46,15 +46,21 @@ public partial class CameraManager : Node
 
     public static void ReturnCameraToTactical()
     {
-        Instance.MainCameraSet.GlobalTransform = Instance._tacticalTransform;
+        if (Instance.AimingMode)
+        {
+            Instance.MainCameraSet.GlobalTransform = Instance._tacticalTransform;
+        }
         Instance.AimingMode = false;
     }
 
     public static void MoveToShoulder(Character character)
     {
-        Instance._tacticalTransform = Instance.MainCameraSet.GlobalTransform;
-        Instance.MainCameraSet.GlobalTransform = character.ShoulderCamera.GlobalTransform;
-        Instance.AimingMode = true;
+        if (character.IsFriendly)
+        {
+            Instance._tacticalTransform = Instance.MainCameraSet.GlobalTransform;
+            Instance.MainCameraSet.GlobalTransform = character.ShoulderCamera.GlobalTransform;
+            Instance.AimingMode = true;
+        }
     }
 
     public static void AreaSelectionMode()
