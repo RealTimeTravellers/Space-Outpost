@@ -191,6 +191,11 @@ public partial class GridObject : Node3D
         OccupyingCharacter = character;
     }
 
+	public void SetBlocked(bool value)
+	{
+		IsBlocked = value;
+	}
+
     public void ClearOccupied()
     {
         OccupyingCharacter = null;

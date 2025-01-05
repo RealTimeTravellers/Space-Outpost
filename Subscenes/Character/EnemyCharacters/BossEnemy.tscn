@@ -21,6 +21,7 @@ collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_83mcq")
 EnemyType = 5
+UnitType = 0
 AnimatorController = NodePath("AnimatorController")
 CharacterController = NodePath("CharacterController")
 enemyController = NodePath("EnemyAIController")

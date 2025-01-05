@@ -15,6 +15,8 @@ public partial class EnemyManager : Node
     [Export] // Exported for testing
     public Godot.Collections.Array<Character> spottedEnemies;
     public Dictionary<GridObject, Character> OccupiedCovers { get; private set; } = new();
+    private Dictionary<GridObject, bool> targetedGrids = new Dictionary<GridObject, bool>();
+
 
     public bool ShotFired { get; private set; }
     public GridObject LastShotGrid { get; private set; }
@@ -56,5 +58,22 @@ public partial class EnemyManager : Node
     {
         if (OccupiedCovers.ContainsKey(cover))
             OccupiedCovers.Remove(cover);
+    }
+
+    public bool IsGridTargeted(GridObject grid)
+    {
+        return targetedGrids.ContainsKey(grid);
+    }
+
+    public void RegisterTargetGrid(GridObject grid)
+    {
+        if (!targetedGrids.ContainsKey(grid))
+            targetedGrids[grid] = true;
+    }
+
+    public void UnregisterTargetGrid(GridObject grid)
+    {
+        if (targetedGrids.ContainsKey(grid))
+            targetedGrids.Remove(grid);
     }
 }

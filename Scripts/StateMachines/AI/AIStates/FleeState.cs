@@ -3,6 +3,7 @@ using Godot;
 
 public class FleeState : EnemyState
 {
+    private bool _isRunningAway = false;
     public override void Enter(Character enemy)
     {
         base.Enter(enemy);
@@ -17,7 +18,33 @@ public class FleeState : EnemyState
             enemy.enemyController.SetState(nextState, enemy);
             return;
         }
-        await enemy.enemyController.HandleFlee();
+
+        if (!_isRunningAway)
+        {
+            await enemy.enemyController.HandleFlee();
+            _isRunningAway = true;
+        }
+
+        nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
+        {
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
+        }
+    }
+
+    public override AIState CheckState(Character character)
+    {
+        if (!_isRunningAway){
+            return AIState.Flee;
+        }
+        else
+        {
+            if (character.Stats.UnitType == UnitType.Alien)
+                return AIState.Aggression;
+            else
+                return AIState.Tactical;
+        }
     }
 
     public override void Exit(Character enemy)

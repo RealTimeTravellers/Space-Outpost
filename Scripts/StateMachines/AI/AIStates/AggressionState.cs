@@ -16,19 +16,12 @@ public class AggressionState : EnemyState
 
     public override async Task Decide(Character enemy)
     {
-        var nextState = CheckState(enemy);
-        if (nextState != enemy.enemyController._stateMachine.CurrentState)
-        {
-            enemy.enemyController.SetState(nextState, enemy);
-            return;
-        }
         await enemy.enemyController.HandleAggression();
-        nextState = CheckState(enemy);
-        if (nextState != enemy.enemyController._stateMachine.CurrentState)
-        {
-            enemy.enemyController.SetState(nextState, enemy);
-            return;
-        }
+    }
+
+    public override AIState CheckState(Character enemy)
+    {
+        return AIState.Aggression;
     }
 
     public override void Exit(Character enemy)

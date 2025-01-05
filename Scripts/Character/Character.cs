@@ -333,18 +333,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			EnemyManager.Instance.OnEnemyDeath(this);
 			enemyController.PrepareForDispose();
 		}
-		else
-		{
-			// Eğer ölen bir oyuncu karakteriyse, tüm düşmanların hedeflerini yenilemesi gerekiyor
-			foreach (var enemy in TurnManager.Instance.enemyCharacters)
-			{
-				if (enemy != null && enemy.Target == this)
-				{
-					enemy.Target = null;
-					enemy.enemyController.RenewTarget(enemy);
-				}
-			}
-		}
 
 		CharacterController._navAgent.AvoidanceEnabled = false;
 		CharacterController._navAgent.ProcessMode = ProcessModeEnum.Disabled;
@@ -409,9 +397,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				}
 			}
 
-			foreach (GridObject grid in sortedList)
+			foreach (GridObject grid in sortedList )
 			{
-				if (!grid.IsOccupied)
+				if (!grid.IsOccupied && !EnemyManager.Instance.OccupiedCovers.ContainsKey(grid))
 					return grid;
 			}
 		}
@@ -558,7 +546,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
 			IsMoving = true;
-			await ToSignal(GetTree().CreateTimer(.85f), "timeout");
+			await ToSignal(GetTree().CreateTimer(.9f), "timeout");
 		}
 
 		// Hedef pozisyonu ayarla
@@ -585,6 +573,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
+
 		// move to target grid
 		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;

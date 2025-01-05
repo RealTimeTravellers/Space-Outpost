@@ -18,6 +18,7 @@ public partial class EnemyAIController : Node
     [Export] public Character _character;
     [Export] public bool _isActive = false;
     public bool _isDead = false;
+    public bool _isRunningAway = false;
     [Export] public bool _isHandlingState {get; set;} = false;
 
 
@@ -66,6 +67,14 @@ public partial class EnemyAIController : Node
             SetState(newState, _character);
     }
 
+    public Character GetNearestPlayer(Vector3 position)
+    {
+        return TurnManager.Instance.playerCharacters
+            .Where(p => p != null && p.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death)
+            .OrderBy(p => position.DistanceTo(p.GlobalPosition))
+            .FirstOrDefault();
+    }
+
     public bool RenewTarget(Character character)
     {
         if (character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death)
@@ -74,9 +83,11 @@ public partial class EnemyAIController : Node
         character.SearchForEnemies();
         
         if (character.Target == null || character.Target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death)
-            character.Target = character.enemiesInLos.FirstOrDefault();
-        
-    
+            if (character.enemiesInLos.Count > 0)
+                character.Target = character.enemiesInLos.FirstOrDefault();
+            else
+                character.Target = GetNearestPlayer(character.GlobalPosition);
+
         float distanceToTarget = character.GlobalPosition.DistanceTo(character.Target.GlobalPosition);
         bool canShoot = distanceToTarget <= character.Perception;
         
@@ -106,67 +117,71 @@ public partial class EnemyAIController : Node
         }
 
         await _character.Move(targetGrid);
-}
+    }
 
     public GridObject FindTacticalCover(Character character)
     {
-        if (character.Target == null)
+        GD.Print($"[AI Debug] FindTacticalCover - Starting for {character.Name}");
+        
+        var coverPoints = EnemyManager.Instance.coverGrids;
+        if (coverPoints == null || coverPoints.Count == 0)
         {
-            GD.Print("[AI Debug] FindTacticalCover - Target is null");
+            GD.Print("[AI Debug] No cover points found");
             return null;
         }
 
-        float bestScore = float.MinValue;
-        GridObject bestCover = null;
-        var coverPoints = EnemyManager.Instance.coverGrids;
+        var nearestPlayer = GetNearestPlayer(character.GlobalPosition);
+        if (nearestPlayer == null)
+        {
+            GD.Print("[AI Debug] No target player found");
+            return null;
+        }
 
-        GD.Print($"[AI Debug] FindTacticalCover - Checking {coverPoints.Count} cover points");
+        GridObject bestCover = null;
+        float bestScore = float.MinValue;
 
         foreach (var coverPoint in coverPoints)
         {
-            if (EnemyManager.Instance.OccupiedCovers.ContainsKey(coverPoint) || 
-                coverPoint.IsBlocked || coverPoint.IsOccupied)
+            if (coverPoint.IsOccupied || coverPoint.IsBlocked || 
+                EnemyManager.Instance.OccupiedCovers.ContainsKey(coverPoint))
             {
-                GD.Print($"[AI Debug] Cover point skipped - Occupied: {EnemyManager.Instance.OccupiedCovers.ContainsKey(coverPoint)}, Blocked: {coverPoint.IsBlocked}, IsOccupied: {coverPoint.IsOccupied}");
                 continue;
             }
 
-            float distanceToTarget = coverPoint.GlobalPosition.DistanceTo(character.Target.GlobalPosition);
+            float distanceToPlayer = coverPoint.GlobalPosition.DistanceTo(nearestPlayer.GlobalPosition);
+            if (distanceToPlayer > character.Perception)
+            {
+                continue;
+            }
+
+            // Puanlama sistemi:
+            // - Player'a olan mesafe (uzak = iyi)
+            // - Character'a olan mesafe (yakın = iyi)
             float distanceToSelf = coverPoint.GlobalPosition.DistanceTo(character.GlobalPosition);
-
-            if (distanceToTarget > character.Perception * 1.2f)
-            {
-                GD.Print($"[AI Debug] Cover point skipped - Too far: {distanceToTarget} > {character.Perception * 1.2f}");
-                continue;
-            }
-
-            Vector3 coverToTarget = (character.Target.GlobalPosition - coverPoint.GlobalPosition).Normalized();
-            float coverAngle = Mathf.Abs(coverToTarget.Dot(coverPoint.CoverNormal));
-
-            float distanceScore = 1.0f - (distanceToTarget / (character.Perception * 1.2f));
-            float angleScore = coverAngle;
-            float proximityPenalty = 0;
-
-            foreach (var occupiedCover in EnemyManager.Instance.OccupiedCovers)
-            {
-                float distanceToOther = coverPoint.GlobalPosition.DistanceTo(occupiedCover.Key.GlobalPosition);
-                if (distanceToOther < 4f)
-                    proximityPenalty += (4f - distanceToOther) * 0.25f;
-            }
-
-            float finalScore = (distanceScore + angleScore * 2) - proximityPenalty;
             
-            GD.Print($"[AI Debug] Cover point score - Distance: {distanceScore}, Angle: {angleScore}, Penalty: {proximityPenalty}, Final: {finalScore}");
-
-            if (finalScore > bestScore)
+            // Normalize edilmiş mesafeler (0-1 arası)
+            float normalizedPlayerDistance = distanceToPlayer / character.Perception;
+            float normalizedSelfDistance = distanceToSelf / character.Perception;
+            
+            // Puanlama: Player'a uzaklık önemli, kendine yakınlık daha az önemli
+            float score = (normalizedPlayerDistance * 2.0f) - (normalizedSelfDistance * 0.5f);
+            
+            if (score > bestScore)
             {
-                bestScore = finalScore;
+                bestScore = score;
                 bestCover = coverPoint;
+                GD.Print($"[AI Debug] Found better cover - Distance to player: {distanceToPlayer}, Distance to self: {distanceToSelf}, Score: {score}");
             }
         }
 
-        GD.Print($"[AI Debug] FindTacticalCover - Selected cover with score: {bestScore}");
-        return bestCover;
+        if (bestCover != null)
+        {
+            EnemyManager.Instance.RegisterCoverOccupation(bestCover, character);
+            return bestCover;
+        }
+
+        GD.Print("[AI Debug] No suitable cover found");
+        return null;
     }
 
     public async Task EnemyShoot()
@@ -212,7 +227,7 @@ public partial class EnemyAIController : Node
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                 }
             }
-            else if (_character.Perception/* .Stats.ActionPoints.GetValue() */ > 0)
+            else if (_character.actionPoints > 0)
             {
                 await EnemyShoot();
                 await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
@@ -232,67 +247,53 @@ public partial class EnemyAIController : Node
     public async Task HandleTactical()
     {
         PrepareForHandlingState();
-        GD.Print($"[AI Debug] HandleTactical started for {_character.Name}");
-        GD.Print($"[AI Debug] IsInCover: {_character.IsInCover}, ActionPoints: {_character.actionPoints}");
 
         try
         {
             bool canShoot = RenewTarget(_character);
-            
-            // Cover'da değilse veya cover state'i yanlış kalmışsa
+
+            // Not in cover or in cover but not in cover state
             if (!_character.IsInCover || _character.CharacterController._stateMachine.CurrentStateType != CharacterStateType.InCover)
             {
-                GD.Print($"[AI Debug] {_character.Name} not in cover - Finding tactical cover");
                 var tacticalCover = FindTacticalCover(_character);
                 
                 if (tacticalCover != null)
                 {
                     GD.Print($"[AI Debug] Cover found for {_character.Name} - Moving to cover");
-                    EnemyManager.Instance.RegisterCoverOccupation(tacticalCover, _character);
                     await MoveToGrid(tacticalCover, 15);
-                    
+                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+
                     _character.IsInCover = true;
                     _character.CharacterController.SetState(CharacterStateType.InCover, _character);
                     
-                    // Cover'a vardıktan sonra hedefi yenile ve ateş et
+                    // After moving to cover, renew target and shoot
                     if (RenewTarget(_character) && _character.actionPoints > 0)
-                    {
-                        GD.Print($"[AI Debug] {_character.Name} can shoot after moving to cover");
                         await EnemyShoot();
-                    }
+                    
                 }
             }
-            // Cover'daysa ve ateş edemiyorsa
+            // In cover and cannot shoot
             else if (!canShoot)
             {
-                GD.Print($"[AI Debug] {_character.Name} in cover but cannot shoot - Finding better cover");
                 var currentCover = _character.currentGrid;
                 var betterCover = FindTacticalCover(_character);
                 
                 if (betterCover != null)
                 {
-                    _character.IsInCover = false;
-                    _character.CharacterController.SetState(CharacterStateType.Moving, _character);
-                    
                     EnemyManager.Instance.UnregisterCoverOccupation(currentCover);
-                    EnemyManager.Instance.RegisterCoverOccupation(betterCover, _character);
                     await MoveToGrid(betterCover, 15);
+                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                     
                     _character.IsInCover = true;
                     _character.CharacterController.SetState(CharacterStateType.InCover, _character);
                     
                     if (RenewTarget(_character) && _character.actionPoints > 0)
-                    {
                         await EnemyShoot();
-                    }
                 }
             }
-            // Cover'daysa ve ateş edebiliyorsa
-            else if (_character.actionPoints > 0)
-            {
-                GD.Print($"[AI Debug] {_character.Name} in cover and can shoot");
+            // In Cover and can fire
+            else if (_character.actionPoints > 0 && canShoot)
                 await EnemyShoot();
-            }
         }
         catch (Exception e)
         {
@@ -365,24 +366,31 @@ public partial class EnemyAIController : Node
         {
             if (EnemyManager.Instance.LastShotGrid != null)
             {
-                var targetGrid = EnemyManager.Instance.LastShotGrid;
+                var shotGrid = EnemyManager.Instance.LastShotGrid;
+                var neighborGrids = GridManager.Instance.GetNeighborGrids(shotGrid);
                 
-                // Eğer hedef grid meşgulse veya bloklanmışsa, komşu gridlerden birini dene
-                if (targetGrid.IsOccupied || targetGrid.IsBlocked)
+                var availableNeighbors = neighborGrids
+                    .Where(g => g != null && !g.IsOccupied && !g.IsBlocked && 
+                            !EnemyManager.Instance.IsGridTargeted(g)) 
+                    .OrderBy(g => g.GlobalPosition.DistanceTo(_character.GlobalPosition))
+                    .ToList();
+
+                if (availableNeighbors.Any())
                 {
-                    GD.Print($"[AI Debug] {_character.Name} Alert - Target grid occupied, finding alternative");
-                    targetGrid = GridManager.Instance.FindAlternativeGrid(targetGrid, _character.GlobalPosition);
+                    var targetGrid = availableNeighbors.First();
+                    EnemyManager.Instance.RegisterTargetGrid(targetGrid);
                     
-                    if (targetGrid == null)
+                    try 
                     {
-                        GD.Print($"[AI Debug] {_character.Name} Alert - No alternative grid found");
-                        return;
+                        await MoveToGrid(targetGrid, 8);
+                        await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+                    }
+                    finally 
+                    {
+                        // Hareket başarılı olsun veya olmasın, hedef gridi temizle
+                        EnemyManager.Instance.UnregisterTargetGrid(targetGrid);
                     }
                 }
-
-                // Cover state kontrolü
-
-                await MoveToGrid(targetGrid, 8);
             }
         }
         catch (Exception e)

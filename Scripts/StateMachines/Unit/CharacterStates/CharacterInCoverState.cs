@@ -18,7 +18,7 @@ public class CharacterInCoverState : CharacterState
 
     public override CharacterStateType Process(Character character)
     {
-        if(character.IsMoving && !outCoverAnimationStarted)
+        if (character.IsMoving && !outCoverAnimationStarted)
         {
             outCoverAnimationStarted = true;
             coverExiting = true;
@@ -26,11 +26,12 @@ public class CharacterInCoverState : CharacterState
             return CharacterStateType.InCover;
         }
 
-        if(coverExiting && outCoverAnimationStarted)
+        if (coverExiting)
         {
-            // Animasyon bittiğinde Idle'a geç
-            if(!character.AnimatorController.IsAnimationPlaying("outcover"))
+            if (!character.AnimatorController.IsAnimationPlaying("outcover") || character.IsMoving)
             {
+                character.IsInCover = false;
+                character.Evasion -= 15;
                 return CharacterStateType.Idle;
             }
         }
@@ -40,9 +41,10 @@ public class CharacterInCoverState : CharacterState
 
     public override void Exit(Character character)
     {
+        base.Exit(character);
+        character.IsInCover = false;
+        character.Evasion -= 15;
         coverExiting = false;
         outCoverAnimationStarted = false;
-        character.IsInCover = false;
-        character.Evasion -= 15;//Stats.Evasion.RemoveModifier(15);
     }
 }
