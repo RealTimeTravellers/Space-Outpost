@@ -64,24 +64,29 @@ public partial class BattleHUD : Control
         }
     }
 
-    private static void OnMovePressed()
+    public void OnMovePressed()
     {
         if(GridManager.Instance.selectedCharacter.IsFriendly)
             GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
     }
 
-    private static void OnStandToEngagePressed()
+    public void OnReloadPressed()
+    {
+        GridManager.Instance.selectedCharacter.Reload();
+    }
+
+    public void OnStandToEngagePressed()
     {
         GridManager.Instance.selectedCharacter.StandToEngage();
     }
 
-    private static void OnSupressiveFirePressed()
+    public void OnSupressiveFirePressed()
     {
         CameraManager.AreaSelectionMode();
         GridManager.Instance.selectedCharacter.SupressiveFire();
     }
 
-    private void OnAttackModePressed()
+    public void OnAttackModePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
         if (character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0)

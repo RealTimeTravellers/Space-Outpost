@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 
 public partial class Gun : Node3D
 {
-    [Export] private GunData data;
+    [Export] public GunData data { get; private set; }
 
-    private int currentAmmo = 0;
+    [Export] public int currentAmmo { get; private set; } = 0;
 
 	[Export] private GpuParticles3D shootHitEffect;
 	[Export] private GpuParticles3D shootMissEffect;

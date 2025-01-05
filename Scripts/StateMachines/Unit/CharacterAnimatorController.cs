@@ -81,6 +81,9 @@ public partial class CharacterAnimatorController : Node
             case "hit":
                 _animationTree.Set("parameters/conditions/hit", true);
                 break;
+            case "reloading":
+                _animationTree.Set("parameters/conditions/reloading", true);
+                break;
             default:
                 GD.PrintErr($"Unknown animation requested: {animationName}");
                 break;

@@ -43,7 +43,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public bool IsFriendly { get; private set; } // will be set in ready according to subscene preference.
 	public int Health { get; private set; } = 8;
 	public int MaxHealth { get; private set; } = 8;
-	public int Damage { get; private set; }
+	public int Damage { get; private set; } = 7;
 	#endregion
 
 	#region ITactical Variables
@@ -65,7 +65,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	[Export] public int targetIndex = 0;
 	[Export] public Node3D ShoulderCamera {get; private set;}
 
-	[Export] private Gun gun;
+	[Export] public Gun gun;
 	[Export] ChracterAudio chracterAudioPlayer;
 
 	[Export] private Label3D HealthLabel;
@@ -116,6 +116,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			StatContainer = EnemyStatsFactory.CreateStatsForEnemyType(EnemyType);
 			Stats = new EnemyStats(EnemyType, StatContainer);
 			Health = Stats.Health.GetValue();
+			MaxHealth = Health;
 			/* Damage = Equipment.GetCurrentWeaponDamage();
 
 			// Enemy Equipment
@@ -465,9 +466,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		if (hit)
 		{
-			int baseDamage = 7;
+			Damage = 7;
 			bool isCritical = GD.Randf() <= Stats.CriticalHitChance.GetValue() / 100f;
-			int damage = isCritical ? baseDamage * 2 : baseDamage;
+			int damage = isCritical ? Damage * 2 : Damage;
 
 			if (isCritical)
 			{
@@ -512,6 +513,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			CharacterController.SetState(CharacterStateType.Hit, this);	
 			UpdateHealthText();
 		}
+	}
+
+	public void Reload()
+	{
+		if (gun.currentAmmo > gun.data.MagazineCapacity)
+			return;
+
+		CharacterController.SetState(CharacterStateType.Reloading, this);
 	}
 
 	#endregion
