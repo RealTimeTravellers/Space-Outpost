@@ -57,6 +57,7 @@ public partial class BattleHUD : Control
         {
             character.CharacterController.SetState(CharacterStateType.Shooting, character);
             characterAttackPanel.OnAimUIUpdate();
+            characterStatPanel.UpdateAmmoBox(character);
         }
     }
 

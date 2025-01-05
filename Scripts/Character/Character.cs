@@ -146,6 +146,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			if (!TurnManager.Instance.enemyCharacters.Contains(this))
 				TurnManager.Instance.enemyCharacters.Add(this);
+			if (!EnemyManager.Instance.allEnemies.Contains(this))
+				EnemyManager.Instance.allEnemies.Add(this);
 			HealthLabel.Modulate = new Color(1,0,0,1);
 		}
 
