@@ -6,13 +6,13 @@
 script = ExtResource("1_qxedp")
 PlayerType = 3
 UnitType = 1
-Health = 5
+Health = 6
 Armor = 3
-Accuracy = 50
+Accuracy = 60
 MovementRange = 6
 Morale = 18
 ActionPoints = 2
 Perception = 20
 Evasion = 10
-CriticalHitChance = 20
+CriticalHitChance = 19
 Cover = 0

@@ -20,6 +20,12 @@ public class TacticalState : EnemyState
             return;
         }
         await enemy.enemyController.HandleTactical();
+        nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
+        {
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
+        }
     }
 
     public override void Exit(Character enemy)

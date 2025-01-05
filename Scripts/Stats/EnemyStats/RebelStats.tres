@@ -14,5 +14,5 @@ Morale = 12
 ActionPoints = 2
 Perception = 20
 Evasion = 20
-CriticalHitChance = 30
+CriticalHitChance = 20
 Cover = 0

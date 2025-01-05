@@ -333,6 +333,22 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			EnemyManager.Instance.OnEnemyDeath(this);
 			enemyController.PrepareForDispose();
 		}
+		else
+		{
+			// Eğer ölen bir oyuncu karakteriyse, tüm düşmanların hedeflerini yenilemesi gerekiyor
+			foreach (var enemy in TurnManager.Instance.enemyCharacters)
+			{
+				if (enemy != null && enemy.Target == this)
+				{
+					enemy.Target = null;
+					enemy.enemyController.RenewTarget(enemy);
+				}
+			}
+		}
+
+		CharacterController._navAgent.AvoidanceEnabled = false;
+		CharacterController._navAgent.ProcessMode = ProcessModeEnum.Disabled;
+
 		
 		TurnManager.Instance.CharacterDied?.Invoke(this);
 		
@@ -542,7 +558,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
 			IsMoving = true;
-			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
+			await ToSignal(GetTree().CreateTimer(.85f), "timeout");
 		}
 
 		// Hedef pozisyonu ayarla
@@ -586,7 +602,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 	public void TakeCover()
 	{
-		CompleteAction(actionData.takeCoverCost);
+		//CompleteAction(actionData.takeCoverCost);
 		IsTakingCover = true;
 		endTurnState = EndTurnState.TakingCover;
 	}

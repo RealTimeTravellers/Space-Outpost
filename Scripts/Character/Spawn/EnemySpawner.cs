@@ -44,7 +44,7 @@ public partial class EnemySpawner : Node
             }
 
             var prefab = enemyPrefabMap[enemyType];
-            var spawnedEnemy = prefab.Instantiate<Character>();  // Doğrudan Character olarak instantiate
+            var spawnedEnemy = prefab.Instantiate<Character>(); 
             AddChild(spawnedEnemy);
             spawnedEnemy.Name = $"{enemyType}";
             

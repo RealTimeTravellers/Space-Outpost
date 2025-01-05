@@ -97,4 +97,87 @@ public partial class GridManager : Node
 
         return null;
     }
+
+    public Godot.Collections.Array<GridObject> GetNeighborGrids(GridObject grid, int radius = 1)
+    {
+        var neighbors = new Godot.Collections.Array<GridObject>();
+        var gridPos = grid.GlobalPosition;
+        
+        // Check all 4 directions
+        Vector3[] offsets = {
+            new Vector3(1, 0, 0),   
+            new Vector3(-1, 0, 0), 
+            new Vector3(0, 0, 1),   
+            new Vector3(0, 0, -1),  
+        };
+
+        foreach (var offset in offsets)
+        {
+            var checkPos = gridPos + offset;
+            var neighborGrid = GetGridObjectFromWorldPosition(checkPos);
+            if (neighborGrid != null)
+            {
+                neighbors.Add(neighborGrid);
+            }
+        }
+        
+        return neighbors;
+    }
+
+    public bool IsValidGrid(Vector3 position)
+    {
+        var grid = GetGridObjectFromWorldPosition(position);
+        return grid != null && !grid.IsOccupied && !grid.IsBlocked;
+    }
+
+    public GridObject GetClosestGrid(Vector3 position)
+    {
+        return gridList
+            .OrderBy(g => g.GlobalPosition.DistanceTo(position))
+            .FirstOrDefault();
+    }
+
+    public List<GridObject> GetPathToTarget(GridObject start, GridObject target, int maxSteps = 10)
+    {
+        var path = new List<GridObject>();
+        var current = start;
+        var steps = 0;
+        
+        while (current != target && steps < maxSteps)
+        {
+            var nextGrid = GetNextGridInPath(current, target);
+            if (nextGrid == null) break;
+            
+            path.Add(nextGrid);
+            current = nextGrid;
+            steps++;
+        }
+        
+        return path;
+    }
+
+    public GridObject FindAlternativeGrid(GridObject targetGrid, Vector3 fromPosition)
+    {
+        var neighbors = GetNeighborGrids(targetGrid)
+            .Where(g => !g.IsOccupied && !g.IsBlocked)
+            .OrderBy(g => g.GlobalPosition.DistanceTo(fromPosition));
+        
+        return neighbors.FirstOrDefault();
+    }
+
+    private GridObject GetNextGridInPath(GridObject current, GridObject target)
+    {
+        var directionToTarget = (target.GlobalPosition - current.GlobalPosition).Normalized();
+        var nextPos = current.GlobalPosition + new Vector3(
+            Mathf.Round(directionToTarget.X),
+            0,
+            Mathf.Round(directionToTarget.Z)
+        );
+        
+        var nextGrid = GetGridObjectFromWorldPosition(nextPos);
+        if (nextGrid != null && !nextGrid.IsOccupied && !nextGrid.IsBlocked)
+            return nextGrid;
+            
+        return FindAlternativeGrid(current, target.GlobalPosition);
+    }
 }

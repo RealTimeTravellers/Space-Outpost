@@ -25,7 +25,6 @@ public partial class CharacterSpawner : Node
         {
             var instance = prefab.Instantiate<Node3D>();
             var character = instance.GetNode<Character>(".");
-            GD.Print($"Adding prefab for PlayerType: {character.PlayerType}");
             characterPrefabMap.Add(character.PlayerType, prefab);
             instance.QueueFree();
         }
@@ -53,7 +52,6 @@ public partial class CharacterSpawner : Node
                 character.GlobalPosition = spawnPosition;
                 character.currentGrid = grid;
                 grid.IsOccupied = true;
-                GD.Print($"Spawned {playerType} at position {spawnPosition} on grid {grid.Position}");
             }
             else
             {

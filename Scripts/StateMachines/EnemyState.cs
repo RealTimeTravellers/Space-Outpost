@@ -56,6 +56,4 @@ public class EnemyState : BaseState<AIState>
 
         return character.enemyController._stateMachine.CurrentState;
     }
-
-    
 }

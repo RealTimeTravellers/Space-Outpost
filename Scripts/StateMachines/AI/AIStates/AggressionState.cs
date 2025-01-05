@@ -1,6 +1,8 @@
-using System.Linq;
-using Godot;
 using System.Threading.Tasks;
+using Godot;
+using System.Linq;
+using System;
+
 public class AggressionState : EnemyState
 {
     public override void Enter(Character enemy)
@@ -21,6 +23,12 @@ public class AggressionState : EnemyState
             return;
         }
         await enemy.enemyController.HandleAggression();
+        nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
+        {
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
+        }
     }
 
     public override void Exit(Character enemy)
