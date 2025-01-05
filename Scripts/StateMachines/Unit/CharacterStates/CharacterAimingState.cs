@@ -66,7 +66,6 @@ public class CharacterAimingState : CharacterState
     public override void Exit(Character character)
     {
         base.Exit(character);
-        CameraManager.ReturnCameraToTactical();
         CameraManager.Instance.AimingMode = false;
     }
 }

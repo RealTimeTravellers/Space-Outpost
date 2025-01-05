@@ -42,6 +42,7 @@ public class CharacterShootingState : CharacterState
         // If shooting animation is finished, go to aiming state
         if (_hasShot && !character.AnimatorController.IsAnimationPlaying("shooting"))
         {
+            CameraManager.ReturnCameraToTactical();
             return CharacterStateType.Aiming; 
         }
         return CharacterStateType.Shooting;

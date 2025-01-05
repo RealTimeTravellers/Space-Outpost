@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=76 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://o7kei7hnormi" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health_Bar.svg" id="5_q0uqj"]
 [ext_resource type="Texture2D" uid="uid://cr23xplkamx20" path="res://Visual Assets/Sprites/UI/HUD/Button_PreviousPlayer.svg" id="6_bx4f5"]
 [ext_resource type="Texture2D" uid="uid://druxqvlpgev64" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 2_Default.svg" id="6_pb7fc"]
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD/CharacterAttackPanelHUD.cs" id="7_akcqn"]
 [ext_resource type="Texture2D" uid="uid://dtoj27mwfjh7j" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 2_Active.svg" id="7_gnh5m"]
 [ext_resource type="Texture2D" uid="uid://bibumyonh1lpn" path="res://Visual Assets/Sprites/UI/HUD/Icon_PreviousPlayer.svg" id="7_w27xi"]
 [ext_resource type="Texture2D" uid="uid://ck57kixyvv4sl" path="res://Visual Assets/Sprites/UI/TeamSelect/Loadout.svg" id="8_llwxe"]
@@ -36,6 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://dskqys0ho5p3b" path="res://Visual Assets/Sprites/UI/TeamSelect/RightButton.svg" id="29_cmcgi"]
 [ext_resource type="Texture2D" uid="uid://cxccaj7aypdcs" path="res://Visual Assets/Sprites/UI/HUD/Button_Menu.svg" id="34_4x4tk"]
 [ext_resource type="Texture2D" uid="uid://bhj32v8fhfvkm" path="res://Visual Assets/Sprites/UI/TeamSelect/Unit_Selected.svg" id="35_10vnc"]
+[ext_resource type="Texture2D" uid="uid://b8sf8hhdxhrjj" path="res://Visual Assets/Sprites/UI/HUD/BulletCount.svg" id="36_2fuk0"]
 [ext_resource type="Texture2D" uid="uid://cdck3vc5tgh6d" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Hover.svg" id="36_3gsbf"]
 [ext_resource type="Script" path="res://Scripts/UI/GUI/GameMenuGUI.cs" id="36_lxhhc"]
 [ext_resource type="Texture2D" uid="uid://bj7epcl1j10qu" path="res://Visual Assets/Sprites/UI/MainMenu/MenuButton_Selected.svg" id="37_7ab5t"]
@@ -110,7 +112,7 @@ texture = ExtResource("16_3bwcb")
 texture = ExtResource("5_q0uqj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fwu0b"]
-texture = ExtResource("6_bx4f5")
+texture = ExtResource("8_yp7m8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1pk21"]
 texture = ExtResource("29_cmcgi")
@@ -139,7 +141,7 @@ texture = ExtResource("35_10vnc")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hiqga"]
 texture = ExtResource("34_4x4tk")
 
-[node name="Battle HUD" type="Control" node_paths=PackedStringArray("DamageLabel", "AccuracyLabel", "CriticalHitChanceLabel", "EvasionLabel", "fireButton", "GameMenuScene", "loggingPanel")]
+[node name="Battle HUD" type="Control" node_paths=PackedStringArray("GameMenuScene", "loggingPanel", "characterStatPanel", "characterAttackPanel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,13 +150,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_hljih")
-DamageLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Damage")
-AccuracyLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/HitChance")
-CriticalHitChanceLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/CritChance")
-EvasionLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Evasion")
-fireButton = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/Fire Button")
 GameMenuScene = NodePath("GUIMenuContainer")
 loggingPanel = NodePath("LogPanelContainer")
+characterStatPanel = NodePath("CharacterStatsContainer")
+characterAttackPanel = NodePath("Action Panel")
 
 [node name="GUIMenuContainer" type="PanelContainer" parent="."]
 process_mode = 3
@@ -260,7 +259,7 @@ mouse_filter = 2
 texture = ExtResource("8_llwxe")
 expand_mode = 1
 
-[node name="Action Panel" type="Panel" parent="."]
+[node name="Action Panel" type="Panel" parent="." node_paths=PackedStringArray("DamageLabel", "AccuracyLabel", "CriticalHitChanceLabel", "EvasionLabel", "fireButton")]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -270,6 +269,12 @@ anchor_right = 0.6
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 0
+script = ExtResource("7_akcqn")
+DamageLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Damage")
+AccuracyLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/HitChance")
+CriticalHitChanceLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/CritChance")
+EvasionLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Evasion")
+fireButton = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/Fire Button")
 
 [node name="MarginContainer" type="MarginContainer" parent="Action Panel"]
 layout_mode = 1
@@ -326,11 +331,6 @@ size_flags_horizontal = 3
 [node name="Evasion" type="Label" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="PanelContainer" type="PanelContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox"]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone"]
 visible = false
@@ -395,7 +395,7 @@ texture = ExtResource("8_sdoh6")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Stand To Engage Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+[node name="Reload Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -404,7 +404,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_yk8ew")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_jpq3v")
 theme_override_styles/normal = SubResource("StyleBoxTexture_r5kh3")
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Stand To Engage Button"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Reload Button"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.2
@@ -415,7 +415,7 @@ texture = ExtResource("11_bx6or")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Supressive Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+[node name="Stand and Engage Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -424,7 +424,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_k2x3s")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_5h1lj")
 theme_override_styles/normal = SubResource("StyleBoxTexture_hvr4u")
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Supressive Fire Button"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Stand and Engage Button"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.2
@@ -435,7 +435,7 @@ texture = ExtResource("14_tp2vp")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Overwatch Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
+[node name="Suppressive Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -445,7 +445,7 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_j7ir1")
 theme_override_styles/hover = SubResource("StyleBoxTexture_q0yph")
 theme_override_styles/normal = SubResource("StyleBoxTexture_25hli")
 
-[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Overwatch Button"]
+[node name="TextureRect" type="TextureRect" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Suppressive Fire Button"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.2
@@ -650,7 +650,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 15
 
-[node name="CharacterStatsContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("StatPanel", "HealthBar", "ArmorBar", "EvasionBar", "AccuracyBar", "DamageBar", "CriticalHitChanceBar")]
+[node name="CharacterStatsContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("StatPanel", "HealthBar", "ArmorBar", "EvasionBar", "AccuracyBar", "DamageBar", "CriticalHitChanceBar", "ammoBoxContainer")]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -666,6 +666,8 @@ EvasionBar = NodePath("VBoxContainer/CharacterStats/VBoxContainer/Evasion/StatCo
 AccuracyBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Accuracy/StatContainer/HBoxContainer/ProgressBar")
 DamageBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Damage/StatContainer/HBoxContainer/ProgressBar")
 CriticalHitChanceBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Crit/StatContainer/HBoxContainer/ProgressBar")
+ammoIcon = ExtResource("36_2fuk0")
+ammoBoxContainer = NodePath("VBoxContainer/AmmoContainer/AmmoPanel/AmmoCount")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CharacterStatsContainer"]
 layout_mode = 2
@@ -712,6 +714,33 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 13
 text = "Primary Weapon"
+
+[node name="AmmoContainer" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+
+[node name="TextureRect" type="TextureRect" parent="CharacterStatsContainer/VBoxContainer/AmmoContainer"]
+layout_mode = 2
+texture = ExtResource("14_l8fur")
+expand_mode = 2
+
+[node name="AmmoPanel" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/AmmoContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/AmmoContainer/AmmoPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.7
+theme_override_font_sizes/font_size = 16
+text = "Ammo:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="AmmoCount" type="HBoxContainer" parent="CharacterStatsContainer/VBoxContainer/AmmoContainer/AmmoPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
 
 [node name="WeaponStats" type="PanelContainer" parent="CharacterStatsContainer/VBoxContainer"]
 self_modulate = Color(1, 1, 1, 0)
@@ -1033,8 +1062,9 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Left" to="." method="OnLeftArrowPressed"]
 [connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Attack Mode Button" to="." method="OnAttackModePressed"]
 [connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Move" to="." method="OnMovePressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Stand To Engage Button" to="." method="OnStandToEngagePressed"]
-[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Supressive Fire Button" to="." method="OnSupressiveFirePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Reload Button" to="." method="OnReloadPressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Stand and Engage Button" to="." method="OnStandToEngagePressed"]
+[connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Suppressive Fire Button" to="." method="OnSupressiveFirePressed"]
 [connection signal="pressed" from="Action Panel/MarginContainer/FireDetailsZone/Action HBox/Right" to="." method="OnRigtArrowPressed"]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/LeftCharacterSwitch" to="CharacterContainer" method="OnPreviousCharacter"]
 [connection signal="pressed" from="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection/FirstCharacter" to="CharacterContainer" method="OnCharacterButtonPressed" binds= [0]]

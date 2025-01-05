@@ -10,8 +10,6 @@ public partial class CharacterAnimatorController : Node
 
     public override void _Ready()
     {
-        _character = GetParent<Character>();
-        _characterController = _character.GetNode<CharacterController>("CharacterController");
         _stateMachine = _characterController._stateMachine;
 
         var askerNode = GetNode<Node3D>("Asker");
@@ -28,7 +26,7 @@ public partial class CharacterAnimatorController : Node
         }
     }
 
-    private void ResetAllAnimationStates()
+    public void ResetAllAnimationStates()
     {
         _animationTree.Set("parameters/conditions/idle", false);
         _animationTree.Set("parameters/conditions/moving", false);
@@ -36,7 +34,9 @@ public partial class CharacterAnimatorController : Node
         _animationTree.Set("parameters/conditions/incover", false);
         _animationTree.Set("parameters/conditions/outcover", false);
         _animationTree.Set("parameters/conditions/aiming", false);
+        _animationTree.Set("parameters/conditions/hit", false);
         _animationTree.Set("parameters/conditions/death", false);
+        _animationTree.Set("parameters/conditions/reloading", false);
     }
 
     private void HandleStateChanged(CharacterStateType oldState, CharacterStateType newState)
@@ -77,6 +77,12 @@ public partial class CharacterAnimatorController : Node
                 break;
             case "death":
                 _animationTree.Set("parameters/conditions/death", true);
+                break;
+            case "hit":
+                _animationTree.Set("parameters/conditions/hit", true);
+                break;
+            case "reloading":
+                _animationTree.Set("parameters/conditions/reloading", true);
                 break;
             default:
                 GD.PrintErr($"Unknown animation requested: {animationName}");

@@ -146,6 +146,7 @@ public partial class TurnManager : Node
 
     private async void EndPlayerTurn()
     {
+        await Task.Delay(100);
         foreach (Character enemy in enemyCharacters.Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death))
         {
             enemy.CompletedTurn = false;
@@ -171,8 +172,9 @@ public partial class TurnManager : Node
         MissionManager.Instance.RecordTurnComplete();
     }
 
-    private void EndEnemyTurn()
+    private async void EndEnemyTurn()
     {
+        await Task.Delay(100);
         foreach (Character enemy in enemyCharacters.Where(e => e != null && e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death))
         {
             enemy.CompletedTurn = false;
