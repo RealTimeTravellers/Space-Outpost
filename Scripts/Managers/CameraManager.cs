@@ -46,10 +46,7 @@ public partial class CameraManager : Node
 
     public static void ReturnCameraToTactical()
     {
-        if (Instance.AimingMode)
-        {
-            Instance.MainCameraSet.GlobalTransform = Instance._tacticalTransform;
-        }
+        Instance.MainCameraSet.GlobalTransform = Instance._tacticalTransform;
         Instance.AimingMode = false;
     }
 

@@ -18,15 +18,13 @@ public partial class CharacterStatPanelHUD : Control
 
     public override void _Ready()
     {
-        if (StatPanel != null)  // Add null check
-        {
-            GridManager.Instance.SelectionChanged += UpdateCharacterUI;
-            StatPanel.Visible = false;
-        }
-        else
-        {
-            GD.PrintErr("StatPanel not assigned in CharacterStatPanelHUD");
-        }
+        GridManager.Instance.SelectionChanged += UpdateCharacterUI;
+        StatPanel.Visible = false;
+    }
+
+    public override void _ExitTree()
+    {
+        GridManager.Instance.SelectionChanged -= UpdateCharacterUI;
     }
 
     public void UpdateCharacterUI(GridObject gridObject)
@@ -57,7 +55,7 @@ public partial class CharacterStatPanelHUD : Control
         CriticalHitChanceBar.MaxValue = 40;
     }
 
-    private void UpdateAmmoBox(Character character)
+    public void UpdateAmmoBox(Character character)
     {
         foreach (Node child in ammoBoxContainer.GetChildren())
         {

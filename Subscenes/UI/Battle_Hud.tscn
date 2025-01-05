@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=3 uid="uid://drnju42qvcxpj"]
+[gd_scene load_steps=76 format=3 uid="uid://drnju42qvcxpj"]
 
 [ext_resource type="Script" path="res://Scripts/UI/BattleHUD.cs" id="1_hljih"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="1_l26u0"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://o7kei7hnormi" path="res://Visual Assets/Sprites/UI/HUD/CharacterName&Health_Bar.svg" id="5_q0uqj"]
 [ext_resource type="Texture2D" uid="uid://cr23xplkamx20" path="res://Visual Assets/Sprites/UI/HUD/Button_PreviousPlayer.svg" id="6_bx4f5"]
 [ext_resource type="Texture2D" uid="uid://druxqvlpgev64" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 2_Default.svg" id="6_pb7fc"]
+[ext_resource type="Script" path="res://Scripts/UI/BattleHUD/CharacterAttackPanelHUD.cs" id="7_akcqn"]
 [ext_resource type="Texture2D" uid="uid://dtoj27mwfjh7j" path="res://Visual Assets/Sprites/UI/HUD/Actions_Button 2_Active.svg" id="7_gnh5m"]
 [ext_resource type="Texture2D" uid="uid://bibumyonh1lpn" path="res://Visual Assets/Sprites/UI/HUD/Icon_PreviousPlayer.svg" id="7_w27xi"]
 [ext_resource type="Texture2D" uid="uid://ck57kixyvv4sl" path="res://Visual Assets/Sprites/UI/TeamSelect/Loadout.svg" id="8_llwxe"]
@@ -140,7 +141,7 @@ texture = ExtResource("35_10vnc")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hiqga"]
 texture = ExtResource("34_4x4tk")
 
-[node name="Battle HUD" type="Control" node_paths=PackedStringArray("DamageLabel", "AccuracyLabel", "CriticalHitChanceLabel", "EvasionLabel", "fireButton", "GameMenuScene", "loggingPanel")]
+[node name="Battle HUD" type="Control" node_paths=PackedStringArray("GameMenuScene", "loggingPanel", "characterStatPanel", "characterAttackPanel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -149,13 +150,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_hljih")
-DamageLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Damage")
-AccuracyLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/HitChance")
-CriticalHitChanceLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/CritChance")
-EvasionLabel = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Evasion")
-fireButton = NodePath("Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/Fire Button")
 GameMenuScene = NodePath("GUIMenuContainer")
 loggingPanel = NodePath("LogPanelContainer")
+characterStatPanel = NodePath("CharacterStatsContainer")
+characterAttackPanel = NodePath("Action Panel")
 
 [node name="GUIMenuContainer" type="PanelContainer" parent="."]
 process_mode = 3
@@ -261,7 +259,7 @@ mouse_filter = 2
 texture = ExtResource("8_llwxe")
 expand_mode = 1
 
-[node name="Action Panel" type="Panel" parent="."]
+[node name="Action Panel" type="Panel" parent="." node_paths=PackedStringArray("DamageLabel", "AccuracyLabel", "CriticalHitChanceLabel", "EvasionLabel", "fireButton")]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -271,6 +269,12 @@ anchor_right = 0.6
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 0
+script = ExtResource("7_akcqn")
+DamageLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Damage")
+AccuracyLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/HitChance")
+CriticalHitChanceLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer/CritChance")
+EvasionLabel = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2/Evasion")
+fireButton = NodePath("MarginContainer/FireDetailsZone/FireButtonZone/Fire Button")
 
 [node name="MarginContainer" type="MarginContainer" parent="Action Panel"]
 layout_mode = 1
@@ -327,11 +331,6 @@ size_flags_horizontal = 3
 [node name="Evasion" type="Label" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="PanelContainer" type="PanelContainer" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone/MarginContainer/Tempbox"]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/FireButtonZone"]
 visible = false

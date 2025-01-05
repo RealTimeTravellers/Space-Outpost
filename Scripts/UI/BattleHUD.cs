@@ -3,14 +3,10 @@ using System;
 
 public partial class BattleHUD : Control
 {
-    [Export] public Label DamageLabel;
-    [Export] public Label AccuracyLabel;
-    [Export] public Label CriticalHitChanceLabel;
-    [Export] public Label EvasionLabel;
-    [Export] public Button fireButton;
     [Export] public Control GameMenuScene;
     [Export] public LoggingPanelHUD loggingPanel;
-
+    [Export] public CharacterStatPanelHUD characterStatPanel;
+    [Export] public CharacterAttackPanelHUD characterAttackPanel;
     public override void _Ready()
     {
         MissionManager.Instance.InitializeLogger(loggingPanel);
@@ -60,7 +56,7 @@ public partial class BattleHUD : Control
             character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
         {
             character.CharacterController.SetState(CharacterStateType.Shooting, character);
-            OnAimUIUpdate();
+            characterAttackPanel.OnAimUIUpdate();
         }
     }
 
@@ -73,6 +69,7 @@ public partial class BattleHUD : Control
     public void OnReloadPressed()
     {
         GridManager.Instance.selectedCharacter.Reload();
+        characterStatPanel.UpdateAmmoBox(GridManager.Instance.selectedCharacter);
     }
 
     public void OnStandToEngagePressed()
@@ -93,47 +90,6 @@ public partial class BattleHUD : Control
             return;
 
         character.ToggleAim();
-        OnAimUIUpdate();
-    }
-
-    private void OnAimUIUpdate()
-    {
-        if (CameraManager.Instance.AimingMode)
-        {
-            fireButton.Visible = true;
-            UpdateAttackPanel(true);
-        }
-        else
-        {
-            fireButton.Visible = false;
-            UpdateAttackPanel(false);
-        }
-    }
-
-    private void UpdateAttackPanel(bool isAiming)
-    {
-        if (isAiming)
-        {
-            var character = GridManager.Instance.selectedCharacter;
-            var target = character.Target;
-            var armorValue = target.Stats.Armor.GetValue();
-            // Base damage
-            int baseDamage = 7; 
-            
-            int minDamage = Mathf.Max(1, baseDamage - armorValue);
-            int maxDamage = baseDamage;
-            
-            DamageLabel.Text = $"Damage: {minDamage} - {maxDamage}";
-            AccuracyLabel.Text = "Accuracy: " + (character.Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue()).ToString();
-            CriticalHitChanceLabel.Text = "Crit Chance: " + character.Stats.CriticalHitChance.GetValue().ToString();
-            EvasionLabel.Text = "Evasion: " + target.Stats.Evasion.GetValue().ToString();
-        }
-        else
-        {
-            DamageLabel.Text = "";
-            AccuracyLabel.Text = "";
-            CriticalHitChanceLabel.Text = "";
-            EvasionLabel.Text = "";
-        }
+        characterAttackPanel.OnAimUIUpdate();
     }
 }
