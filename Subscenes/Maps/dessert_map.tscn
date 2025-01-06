@@ -14290,6 +14290,131 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 36)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 36)
 
 [node name="Map Environment" type="Node3D" parent="."]
-visible = false
 
 [node name="Col_Level" parent="Map Environment" instance=ExtResource("1_cbnm4")]
+
+[node name="Hit Boxes" type="Node3D" parent="."]
+
+[node name="Trash GPU Hit BOX" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.0757, 0.7, -8.50803)
+size = Vector3(3.84863, 1.4, 2)
+
+[node name="Trash GPU Hit BOX2" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.2807, 0.7, -13.4479)
+size = Vector3(3.84863, 1.4, 2)
+
+[node name="Trash GPU Hit BOX3" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.92725, 0.7, -3.78289)
+size = Vector3(3.84863, 1.4, 2)
+
+[node name="Trash GPU Hit BOX4" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.95747, 0.7, -37.2921)
+size = Vector3(3.84863, 1.4, 2)
+
+[node name="Trash GPU Hit BOX5" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2641, 0.7, 34.236)
+size = Vector3(3.84863, 1.4, 2)
+
+[node name="Trash GPU Hit BOX6" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.7004, 0.7, 17.5264)
+size = Vector3(3.84863, 1.4, 2)
+
+[node name="Barrier GPU Hit Box" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.62742, 0.598625, -8.08312)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box2" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.9802, 0.598625, -1.82994)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box3" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5338, 0.598625, 4.27517)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box4" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.3755, 0.598625, 10.717)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box5" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.9971, 0.598625, 15.9584)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box6" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8442, 0.598625, 24.7535)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box7" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5352, 0.598625, 24.2462)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box8" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6178, 0.598625, 25.1889)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box9" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7719, 0.598625, 46.1135)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box10" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7799, 0.598625, -34.7999)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box11" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.908283, 0.598625, -15.2776)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box12" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7184, 0.598625, -24.1573)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="Barrier GPU Hit Box13" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.2591, 0.598625, -32.5831)
+size = Vector3(2.59741, 0.987305, 0.760193)
+
+[node name="House GPU Hit Box" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.3253, 0.944275, 16.8132)
+size = Vector3(4.9259, 3.88855, 3.74146)
+
+[node name="House GPU Hit Box2" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.29633, 1.7468, 20.0848)
+size = Vector3(6.78561, 5.49359, 10.2847)
+
+[node name="House GPU Hit Box3" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.7237, 1.7468, -1.68512)
+size = Vector3(10.5001, 5.49359, 6.73218)
+
+[node name="House GPU Hit Box4" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8524, 1.74679, -18.7545)
+size = Vector3(10.2454, 5.49359, 6.56781)
+
+[node name="House GPU Hit Box5" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4761, 1.74679, 8.44183)
+size = Vector3(7.01808, 5.49359, 8.26352)
+
+[node name="House GPU Hit Box6" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.7217, 1.74679, 10.7071)
+size = Vector3(5.17066, 5.49359, 4.04659)
+
+[node name="House GPU Hit Box7" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.6525, 1.74679, 13.6124)
+size = Vector3(5.17066, 5.49359, 2.55552)
+
+[node name="House GPU Hit Box8" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.6177, 2.0999, 10.7282)
+size = Vector3(2.53064, 6.1998, 3.93255)
+
+[node name="House GPU Hit Box9" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4268, 2.0999, 0.955182)
+size = Vector3(13.4261, 6.1998, 5.04586)
+
+[node name="House GPU Hit Box10" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.4877, 2.0999, -2.33117)
+size = Vector3(6.92887, 6.1998, 5.04586)
+
+[node name="House GPU Hit Box11" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.5809, 2.0999, 21.9296)
+size = Vector3(9.94401, 6.1998, 6.71824)
+
+[node name="House GPU Hit Box12" type="GPUParticlesCollisionBox3D" parent="Hit Boxes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.56657, 2.0999, 37.8776)
+size = Vector3(8.47807, 6.1998, 5.30053)
