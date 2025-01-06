@@ -159,7 +159,7 @@ public partial class GridManager : Node
     public GridObject FindAlternativeGrid(GridObject targetGrid, Vector3 fromPosition)
     {
         var neighbors = GetNeighborGrids(targetGrid)
-            .Where(g => !g.IsOccupied && !g.IsBlocked)
+            .Where(g => !g.IsOccupied && !g.IsBlocked && !EnemyManager.Instance.IsGridTargeted(g))
             .OrderBy(g => g.GlobalPosition.DistanceTo(fromPosition));
         
         return neighbors.FirstOrDefault();

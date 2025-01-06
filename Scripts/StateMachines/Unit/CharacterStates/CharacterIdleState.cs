@@ -5,6 +5,7 @@ public class CharacterIdleState : CharacterState
     public override void Enter(Character character)
     {
         base.Enter(character);
+        character.IsInCover = false;
         character.CharacterController._stateMachine.RequestAnimation("idle");
     }
 

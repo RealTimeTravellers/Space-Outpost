@@ -107,7 +107,7 @@ public partial class EnemyAIController : Node
             var limitedTargetPos = _character.GlobalPosition + direction * maxDistance;
             var closestGrid = GridManager.Instance.GetClosestGrid(limitedTargetPos);
             
-            if (closestGrid == null || closestGrid.IsOccupied || closestGrid.IsBlocked)
+            if (closestGrid == null || closestGrid.IsOccupied || closestGrid.IsBlocked || EnemyManager.Instance.IsGridTargeted(closestGrid))
             {
                 targetGrid = GridManager.Instance.FindAlternativeGrid(closestGrid, _character.GlobalPosition);
                 if (targetGrid == null) return;
@@ -116,12 +116,16 @@ public partial class EnemyAIController : Node
                 targetGrid = closestGrid;
         }
 
+        if (targetGrid.HasCover && targetGrid.coverType != CoverType.None)
+            EnemyManager.Instance.RegisterCoverOccupation(targetGrid, _character);
+        
+        EnemyManager.Instance.RegisterTargetGrid(targetGrid);
         await _character.Move(targetGrid);
+        EnemyManager.Instance.UnregisterTargetGrid(targetGrid);
     }
 
     public GridObject FindTacticalCover(Character character)
     {
-        GD.Print($"[AI Debug] FindTacticalCover - Starting for {character.Name}");
         
         var coverPoints = EnemyManager.Instance.coverGrids;
         if (coverPoints == null || coverPoints.Count == 0)
@@ -154,16 +158,16 @@ public partial class EnemyAIController : Node
                 continue;
             }
 
-            // Puanlama sistemi:
-            // - Player'a olan mesafe (uzak = iyi)
-            // - Character'a olan mesafe (yakın = iyi)
+            // How to choose cover:
+            // - Distance to player (far = good)
+            // - Distance to self (near = good)
             float distanceToSelf = coverPoint.GlobalPosition.DistanceTo(character.GlobalPosition);
             
-            // Normalize edilmiş mesafeler (0-1 arası)
+            // Normalized distances (0-1)
             float normalizedPlayerDistance = distanceToPlayer / character.Perception;
             float normalizedSelfDistance = distanceToSelf / character.Perception;
             
-            // Puanlama: Player'a uzaklık önemli, kendine yakınlık daha az önemli
+            // Scoring: Player distance is more important, self distance is less important
             float score = (normalizedPlayerDistance * 2.0f) - (normalizedSelfDistance * 0.5f);
             
             if (score > bestScore)
@@ -177,24 +181,36 @@ public partial class EnemyAIController : Node
         if (bestCover != null)
         {
             EnemyManager.Instance.RegisterCoverOccupation(bestCover, character);
-            return bestCover;
         }
-
-        GD.Print("[AI Debug] No suitable cover found");
-        return null;
+        else
+        {
+            bestCover = character.QueryForCover();
+            if (bestCover != null)
+                EnemyManager.Instance.RegisterCoverOccupation(bestCover, character);
+        }
+        return bestCover;
     }
 
     public async Task EnemyShoot()
     {
         _character.CharacterController.SetState(CharacterStateType.Aiming, _character);
         await ToSignal(GetTree().CreateTimer(.8f), "timeout");
+        
         if (_character.Target != null)
         {
             _character.CharacterController.SetState(CharacterStateType.Shooting, _character);
-            await ToSignal(GetTree().CreateTimer(.1f), "timeout");
+            await ToSignal(GetTree().CreateTimer(.3f), "timeout");
+            
+            // Önce Idle'a geç
             _character.CharacterController.SetState(CharacterStateType.Idle, _character);
+            await ToSignal(GetTree().CreateTimer(.2f), "timeout");
+            
+            // Sonra cover durumunu kontrol et
+            if (_character.IsInCover)
+                _character.CharacterController.SetState(CharacterStateType.InCover, _character);
         }
     }
+
 
     public void PrepareForHandlingState()
     {
@@ -244,6 +260,10 @@ public partial class EnemyAIController : Node
         }
     }
 
+    /// <summary>
+    /// This is the tactical state of the enemy.
+    /// </summary>
+    /// <returns></returns>
     public async Task HandleTactical()
     {
         PrepareForHandlingState();
@@ -280,15 +300,29 @@ public partial class EnemyAIController : Node
                 
                 if (betterCover != null)
                 {
-                    EnemyManager.Instance.UnregisterCoverOccupation(currentCover);
-                    await MoveToGrid(betterCover, 15);
-                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+                    // Önce cover'dan çık ve idle'a geç
+                    _character.CharacterController.SetState(CharacterStateType.Idle, _character);
+                    _character.IsInCover = false;
+                    await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
                     
+                    // Cover kaydını kaldır
+                    EnemyManager.Instance.UnregisterCoverOccupation(currentCover);
+                    
+                    // Hareket et
+                    await MoveToGrid(betterCover, 15);
+                    
+                    // Yeni cover'a gir
+                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                     _character.IsInCover = true;
                     _character.CharacterController.SetState(CharacterStateType.InCover, _character);
+                    EnemyManager.Instance.RegisterCoverOccupation(betterCover, _character);
                     
+                    // Hedefi yenile ve ateş et
                     if (RenewTarget(_character) && _character.actionPoints > 0)
+                    {
+                        await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
                         await EnemyShoot();
+                    }
                 }
             }
             // In Cover and can fire
@@ -325,6 +359,10 @@ public partial class EnemyAIController : Node
         }
     }
 
+    /// <summary>
+    /// This is the flee state of the enemy.
+    /// </summary>
+    /// <returns></returns>
     public async Task HandleFlee()
     {
         PrepareForHandlingState();
@@ -358,6 +396,11 @@ public partial class EnemyAIController : Node
             _character.CompleteAction(2);
         }
     }
+
+    /// <summary>
+    /// This is the alert state of the enemy.
+    /// </summary>
+    /// <returns></returns>
     public async Task HandleAlert()
     {
         PrepareForHandlingState();
@@ -378,18 +421,9 @@ public partial class EnemyAIController : Node
                 if (availableNeighbors.Any())
                 {
                     var targetGrid = availableNeighbors.First();
-                    EnemyManager.Instance.RegisterTargetGrid(targetGrid);
                     
-                    try 
-                    {
-                        await MoveToGrid(targetGrid, 8);
-                        await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-                    }
-                    finally 
-                    {
-                        // Hareket başarılı olsun veya olmasın, hedef gridi temizle
-                        EnemyManager.Instance.UnregisterTargetGrid(targetGrid);
-                    }
+                    await MoveToGrid(targetGrid, 8);
+                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                 }
             }
         }

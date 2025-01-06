@@ -16,6 +16,7 @@ public partial class CharacterController : Node
         base._Ready();
         _stateMachine = new CharacterStateMachine();
         _stateMachine.OnStateChanged += OnStateChanged;
+        _navAgent.AvoidanceEnabled = true;
 
         _character.Velocity = Vector3.Zero;
         SetState(CharacterStateType.Idle, _character);
