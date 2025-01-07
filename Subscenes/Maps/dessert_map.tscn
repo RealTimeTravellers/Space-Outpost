@@ -47,7 +47,7 @@ navigation_mesh = SubResource("NavigationMesh_m1xmy")
 [node name="CharacterSpawner" type="Node" parent="Map Environment/NavigationRegion3D" node_paths=PackedStringArray("CharacterSpawnPoints")]
 script = ExtResource("6_3wxye")
 CharacterPrefabs = Array[PackedScene]([ExtResource("7_t7fur"), ExtResource("8_mnnqu"), ExtResource("9_a24av"), ExtResource("10_ow2px"), ExtResource("11_dyr8v")])
-CharacterSpawnPoints = [NodePath("Spawn1"), null, null]
+CharacterSpawnPoints = [NodePath("Spawn1"), NodePath("Spawn2"), NodePath("Spawn3")]
 
 [node name="Spawn1" type="Node3D" parent="Map Environment/NavigationRegion3D/CharacterSpawner" node_paths=PackedStringArray("Grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 78, 0, 29)
