@@ -47,7 +47,7 @@ public partial class CharacterController : Node
         if (_stateMachine.CurrentStateType == CharacterStateType.Moving)
         {
             var nextPos = _navAgent.GetNextPathPosition();
-            _currentVelocity = _character.GlobalPosition.DirectionTo(_finalDestination) * _movementSpeed;
+            _currentVelocity = _character.GlobalPosition.DirectionTo(nextPos) * _movementSpeed;
             
             if (_navAgent.AvoidanceEnabled)
                 _navAgent.SetVelocity(_currentVelocity);
@@ -75,6 +75,8 @@ public partial class CharacterController : Node
         _navAgent.NeighborDistance = 5.0f;  // Diğer ajanları algılama mesafesi
         _navAgent.MaxNeighbors = 10;
         _navAgent.AvoidanceEnabled = true;
+
+        
     }
 
     private void UpdateNavigation()
@@ -85,19 +87,17 @@ public partial class CharacterController : Node
         var nextPos = _navAgent.GetNextPathPosition();
         if (nextPos != Vector3.Zero)
         {
-            nextPos.Y = _character.GlobalPosition.Y;
+            // Velocity'yi nextPos'a doğru ayarla
+            Vector3 direction = (_character.GlobalPosition.DirectionTo(nextPos));
+            _character.Velocity = direction * _movementSpeed;
             
-            // Hedef noktaya olan mesafeyi kontrol et
-            var distanceToTarget = _character.GlobalPosition.DistanceTo(_finalDestination);
-            if (distanceToTarget > _navAgent.TargetDesiredDistance)
-            {
-                var lookAtTarget = new Vector3(_finalDestination.X, _character.GlobalPosition.Y, _finalDestination.Z);
-                _character.LookAt(lookAtTarget, Vector3.Up);
-                _character.RotateY(Mathf.Pi);
-                
-                _character.Velocity = _safeVelocity;
-                _character.MoveAndSlide();
-            }
+            // Karakterin yönünü hedef noktaya çevir
+            var lookAtTarget = new Vector3(nextPos.X, _character.GlobalPosition.Y, nextPos.Z);
+            _character.LookAt(lookAtTarget, Vector3.Up);
+            _character.RotateY(Mathf.Pi);
+            
+            // MoveAndSlide ile hareketi uygula
+            _character.MoveAndSlide();
         }
     }
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dskhe15gw6po"]
+[gd_scene load_steps=13 format=3 uid="uid://bnwve8kx2axss"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_83mcq"]
 [ext_resource type="Resource" uid="uid://b0e0ffdgmwpvx" path="res://Data/Chracter Action Data/EnemyCharacterActionData.tres" id="2_5edq3"]
@@ -67,6 +67,7 @@ _navAgent = NodePath("NavigationAgent3D")
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
 target_desired_distance = 0.3
 avoidance_enabled = true
+avoidance_mask = 9
 
 [node name="EnemyAIController" type="Node3D" parent="." node_paths=PackedStringArray("_character")]
 script = ExtResource("5_pn6hp")

@@ -18,11 +18,12 @@ public partial class EnemyManager : Node
     private Dictionary<GridObject, bool> targetedGrids = new Dictionary<GridObject, bool>();
 
     public event Action SpecialEnemyDied;
+    public event Action<Character> EnemyReinforcementSpawned;
     public bool ShotFired { get; private set; }
     public GridObject LastShotGrid { get; private set; }
 
     private bool preparingForReinforcements = false;
-
+    public EnemySpawner enemySpawner;
     private EnemyManager()
     {
         Instance = this;
@@ -101,5 +102,10 @@ public partial class EnemyManager : Node
             preparingForReinforcements = false;
             SpecialEnemyDied?.Invoke();
         }
+    }
+
+    public void OnEnemyReinforcementSpawned(Character enemy)
+    {
+        EnemyReinforcementSpawned?.Invoke(enemy);
     }
 }
