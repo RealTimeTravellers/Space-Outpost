@@ -4,6 +4,7 @@ public partial class EnemySpawner : Node
 {
     [Export] public Godot.Collections.Array<PackedScene> EnemyPrefabs { get; private set; }
     [Export] public Godot.Collections.Array<Node3D> SpawnPoints { get; private set; }
+    [Export] public NavigationRegion3D _navigationRegion;
     private Dictionary<EnemyType, PackedScene> enemyPrefabMap = new();
 
     public override void _Ready()
@@ -47,7 +48,7 @@ public partial class EnemySpawner : Node
             var spawnedEnemy = prefab.Instantiate<Character>(); 
             AddChild(spawnedEnemy);
             spawnedEnemy.Name = $"{enemyType}";
-            
+            spawnedEnemy.CharacterController._navigationRegion = _navigationRegion;
             spawnedEnemy.GlobalPosition = spawnPoint.GlobalPosition;
             spawnedEnemy.currentGrid = grid;
             grid.IsOccupied = true;

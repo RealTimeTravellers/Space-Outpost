@@ -334,9 +334,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			enemyController.PrepareForDispose();
 		}
 
-		CharacterController._navAgent.AvoidanceEnabled = false;
 		CharacterController._navAgent.ProcessMode = ProcessModeEnum.Disabled;
-
 		
 		TurnManager.Instance.CharacterDied?.Invoke(this);
 		
@@ -582,7 +580,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			if (IsFriendly && CompletedTurn) // only friendly turn ends
 				break;
 			
-			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+			CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
+			await ToSignal(GetTree().CreateTimer(0.15f), "timeout");
 		}
 
 		// move to target grid
