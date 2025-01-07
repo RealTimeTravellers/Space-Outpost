@@ -545,8 +545,19 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		
 		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
+			GD.Print("[Debug] Move - Character is in cover, starting exit sequence");
 			IsMoving = true;
-			await ToSignal(GetTree().CreateTimer(.9f), "timeout");
+			// Bu satırı kaldıralım: CharacterController._stateMachine.RequestAnimation("outcover");
+			await ToSignal(GetTree().CreateTimer(.5f), "timeout");
+			
+			GD.Print("[Debug] Move - Waiting for Idle state");
+			while (CharacterController._stateMachine.CurrentStateType != CharacterStateType.Idle)
+			{
+				GD.Print($"[Debug] Current state: {CharacterController._stateMachine.CurrentStateType}");
+				await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+			}
+			
+			//CharacterController.SetState(CharacterStateType.Moving, this);
 		}
 
 		// Hedef pozisyonu ayarla

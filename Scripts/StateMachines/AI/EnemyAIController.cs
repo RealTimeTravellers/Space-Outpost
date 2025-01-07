@@ -194,20 +194,12 @@ public partial class EnemyAIController : Node
     public async Task EnemyShoot()
     {
         _character.CharacterController.SetState(CharacterStateType.Aiming, _character);
-        await ToSignal(GetTree().CreateTimer(.8f), "timeout");
+        await ToSignal(GetTree().CreateTimer(1f), "timeout");
         
         if (_character.Target != null)
         {
             _character.CharacterController.SetState(CharacterStateType.Shooting, _character);
             await ToSignal(GetTree().CreateTimer(.3f), "timeout");
-            
-            // Önce Idle'a geç
-            _character.CharacterController.SetState(CharacterStateType.Idle, _character);
-            await ToSignal(GetTree().CreateTimer(.2f), "timeout");
-            
-            // Sonra cover durumunu kontrol et
-            if (_character.IsInCover)
-                _character.CharacterController.SetState(CharacterStateType.InCover, _character);
         }
     }
 
@@ -279,17 +271,13 @@ public partial class EnemyAIController : Node
                 
                 if (tacticalCover != null)
                 {
-                    GD.Print($"[AI Debug] Cover found for {_character.Name} - Moving to cover");
                     await MoveToGrid(tacticalCover, 15);
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 
-                    _character.IsInCover = true;
-                    _character.CharacterController.SetState(CharacterStateType.InCover, _character);
                     
                     // After moving to cover, renew target and shoot
                     if (RenewTarget(_character) && _character.actionPoints > 0)
                         await EnemyShoot();
-                    
                 }
             }
             // In cover and cannot shoot
@@ -299,28 +287,17 @@ public partial class EnemyAIController : Node
                 var betterCover = FindTacticalCover(_character);
                 
                 if (betterCover != null)
-                {
-                    // Önce cover'dan çık ve idle'a geç
-                    _character.CharacterController.SetState(CharacterStateType.Idle, _character);
-                    _character.IsInCover = false;
-                    await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
-                    
-                    // Cover kaydını kaldır
+                {                  
                     EnemyManager.Instance.UnregisterCoverOccupation(currentCover);
                     
-                    // Hareket et
                     await MoveToGrid(betterCover, 15);
-                    
-                    // Yeni cover'a gir
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-                    _character.IsInCover = true;
-                    _character.CharacterController.SetState(CharacterStateType.InCover, _character);
+                    
                     EnemyManager.Instance.RegisterCoverOccupation(betterCover, _character);
                     
-                    // Hedefi yenile ve ateş et
                     if (RenewTarget(_character) && _character.actionPoints > 0)
                     {
-                        await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+                        await ToSignal(GetTree().CreateTimer(.1f), "timeout");
                         await EnemyShoot();
                     }
                 }

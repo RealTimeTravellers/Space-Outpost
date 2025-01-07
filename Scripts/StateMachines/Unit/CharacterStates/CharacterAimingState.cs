@@ -54,12 +54,16 @@ public class CharacterAimingState : CharacterState
 
     public override CharacterStateType CheckState(Character character)
     {
-        // Aim modu kapatıldıysa idle'a dön
-        if (!CameraManager.Instance.AimingMode && character.IsFriendly || 
-            character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0 || 
-            character.actionPoints <= 0 )
+        if (character.IsFriendly && character.CharacterController._stateMachine.PreviousStateType == CharacterStateType.Shooting)
+        {
+            if (!CameraManager.Instance.AimingMode)
+                return CharacterStateType.Idle;
+        }
+        else if (!character.IsFriendly && character.CharacterController._stateMachine.PreviousStateType == CharacterStateType.Shooting)
+        {
             return CharacterStateType.Idle;
-            
+        }
+        
         return CharacterStateType.Aiming;
     }
 
