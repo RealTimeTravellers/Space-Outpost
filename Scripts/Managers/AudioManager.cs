@@ -30,7 +30,7 @@ public partial class AudioManager : Node
             PlayMenuMusic();
     }
 
-    public override async void _Process(double delta)
+    public override void _Process(double delta)
     {
         if (playingCombatMusic)
         {
@@ -51,7 +51,7 @@ public partial class AudioManager : Node
 
     private void OnGameStateChanged(GameState oldstate, GameState currentstate)
     {
-        if (currentstate == GameState.Battle)
+        if (currentstate == GameState.InsideBuilding || currentstate == GameState.Desert)
             PlayCombatMusic();
         else if (currentstate == GameState.Menu)
             PlayMenuMusic();

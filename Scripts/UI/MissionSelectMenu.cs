@@ -76,7 +76,10 @@ public partial class MissionSelectMenu : Control
         if (selectedMissionIndex != -1)
         {
             MissionManager.Instance.SetMissionDetails(selectedMissionDataCard);
-            GameManager.ChangeGameState(GameState.MissionSelect, GameState.Battle);
+            if(selectedMissionDataCard.missionNameLabel == "Space Interior")
+                GameManager.ChangeGameState(GameState.MissionSelect, GameState.InsideBuilding);
+            else if(selectedMissionDataCard.missionNameLabel == "Space Compound")
+                GameManager.ChangeGameState(GameState.MissionSelect, GameState.Desert);
         }
     }
 

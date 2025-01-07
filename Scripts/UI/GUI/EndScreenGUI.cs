@@ -49,6 +49,9 @@ public partial class EndScreenGUI : Control
 
     public void OnEndMissionClicked()
     {
-        GameManager.ChangeGameState(GameState.Battle, GameState.End);
+        if (GameManager.Instance.gameState == GameState.InsideBuilding)
+            GameManager.ChangeGameState(GameState.InsideBuilding, GameState.End);
+        else if (GameManager.Instance.gameState == GameState.Desert)
+            GameManager.ChangeGameState(GameState.Desert, GameState.End);
     }
 }

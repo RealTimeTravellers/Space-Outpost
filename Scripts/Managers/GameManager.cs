@@ -9,7 +9,8 @@ public enum GameState
 	// GamePlay Modes will be added here
     TeamSelect,
 	MissionSelect,
-    Battle,
+    InsideBuilding,
+	Desert,
     // GamePlay Modes End
 	Settings,
 	End
@@ -30,6 +31,13 @@ public partial class GameManager : Node
 	private Node settingsNode;
 	private Node endScreenNode;
 	public event Action<bool> OnSettingsVisibilityChanged;
+	/// <summary>
+	/// Scene 0 is team selection.
+	/// Scene 1 is battle 1, inside_building.tscn.
+	/// Scene 2 is mission select.
+	/// Scene 3 is mission end scene.
+	/// Scene 4 is battle 2, dessert.tscn.
+	/// </summary>
 	[Export] private PackedScene[] gameScenes;
 
 	public Node currentSceneRoot;
@@ -161,8 +169,12 @@ public partial class GameManager : Node
 				ToggleSettingsPanel(false);
 				break;
 				
-			case GameState.Battle:
+			case GameState.InsideBuilding:
 				newScene = ResourceLoader.Load<PackedScene>(gameScenes[1].ResourcePath).Instantiate();
+				break;
+
+			case GameState.Desert:
+				newScene = ResourceLoader.Load<PackedScene>(gameScenes[4].ResourcePath).Instantiate();
 				break;
 
 			case GameState.End:
