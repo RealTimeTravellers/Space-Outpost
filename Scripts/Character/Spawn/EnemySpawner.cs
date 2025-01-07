@@ -61,7 +61,8 @@ public partial class EnemySpawner : Node
             if (grid.IsOccupied || grid.IsBlocked) 
                 continue;
 
-            SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy);
+            var enemy = SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy);
+            enemy.ApplyHologramEffect();
         }
     }
 

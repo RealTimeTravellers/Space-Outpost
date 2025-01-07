@@ -47,6 +47,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	public int Damage { get; private set; } = 7;
 	#endregion
 
+	#region Visual Variables (shader test)
+	public MeshInstance3D _meshInstance;
+	public ShaderMaterial _originalMaterial;
+	public ShaderMaterial _hologramMaterial;
+	#endregion
+
 	#region ITactical Variables
 	public bool IsTakingCover { get ; private set ; }
 	public bool IsMoving { get; set; }
@@ -724,5 +730,37 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		SearchForEnemies(true);
 	}
+	#endregion
+
+	#region Debug
+	public async void ApplyHologramEffect()
+    {
+		GD.Print("Applying hologram effect");
+		await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+
+		/*
+
+        _meshInstance = GetNode<MeshInstance3D>("CharacterMesh");
+        _originalMaterial = (ShaderMaterial)_meshInstance.GetSurfaceOverrideMaterial(0);
+        
+        // Hologram shader'ını yükle
+        _hologramMaterial = GD.Load<ShaderMaterial>("res://Scripts/Shaders/hologram_shader.gdshader");
+        
+        // Geçiş animasyonu
+        float duration = 1.0f;
+        float elapsed = 0.0f;
+        
+        while (elapsed < duration)
+        {
+            elapsed += (float)GetProcessDeltaTime();
+            float t = elapsed / duration;
+            _hologramMaterial.SetShaderParameter("transition", t);
+            await ToSignal(GetTree(), "process_frame");
+        }
+        
+        // Orijinal materiale geri dön
+        _meshInstance.SetSurfaceOverrideMaterial(0, _originalMaterial);
+		*/
+    }
 	#endregion
 }
