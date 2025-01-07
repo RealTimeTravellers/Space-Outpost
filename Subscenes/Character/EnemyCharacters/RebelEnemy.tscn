@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bgde4qgxoplq0"]
+[gd_scene load_steps=13 format=3 uid="uid://cf7inbd3j6102"]
 
 [ext_resource type="Script" path="res://Scripts/Character/Character.cs" id="1_ky3vo"]
 [ext_resource type="Resource" uid="uid://b0e0ffdgmwpvx" path="res://Data/Chracter Action Data/EnemyCharacterActionData.tres" id="2_hckc8"]
@@ -64,6 +64,8 @@ _character = NodePath("..")
 _navAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
+target_desired_distance = 0.3
+avoidance_enabled = true
 
 [node name="EnemyAIController" type="Node3D" parent="." node_paths=PackedStringArray("_character")]
 script = ExtResource("5_bjuvv")
@@ -77,30 +79,30 @@ _characterController = NodePath("../CharacterController")
 [node name="Asker" parent="AnimatorController" instance=ExtResource("7_kbnnn")]
 
 [node name="Skeleton3D" parent="AnimatorController/Asker" index="0"]
-bones/0/position = Vector3(0.000184521, 0.986857, -0.0142897)
-bones/0/rotation = Quaternion(-0.0610773, -0.0343502, 0.0262076, 0.997197)
-bones/1/rotation = Quaternion(0.00683954, 0.0207488, -0.0129574, 0.999677)
-bones/2/rotation = Quaternion(0.0130646, 0.00654207, -0.00461176, 0.999883)
-bones/3/rotation = Quaternion(0.0131267, 0.00656964, -0.00459927, 0.999882)
-bones/4/rotation = Quaternion(0.0610048, 0.0402638, 0.0163161, 0.997192)
-bones/5/rotation = Quaternion(0.030364, -0.0722268, 0.0185284, 0.996754)
-bones/8/rotation = Quaternion(0.213854, 0.146167, -0.0314965, 0.965355)
-bones/9/rotation = Quaternion(-0.0215388, -0.000988261, 0.706807, 0.707078)
-bones/10/rotation = Quaternion(-0.123584, -0.887322, -0.0189028, 0.443881)
-bones/32/rotation = Quaternion(0.254085, -0.220441, -0.139512, 0.931334)
-bones/33/rotation = Quaternion(-0.0186761, 0.000831768, -0.754711, 0.655791)
-bones/34/rotation = Quaternion(0.273658, 0.333177, 0.156787, 0.888551)
-bones/55/rotation = Quaternion(0.105032, 0.0322655, 0.992737, -0.0489992)
-bones/56/rotation = Quaternion(-0.0649843, -0.0849873, -0.025434, 0.993935)
-bones/57/rotation = Quaternion(0.428, -0.0839099, 0.0146156, 0.899757)
-bones/58/rotation = Quaternion(0.270445, -0.0409514, 0.011515, 0.961795)
-bones/60/rotation = Quaternion(-0.135892, -0.0498034, 0.987215, 0.0667766)
-bones/61/rotation = Quaternion(-0.189286, 0.0747882, -0.00171576, 0.979068)
-bones/62/rotation = Quaternion(0.602155, 0.14861, 0.007041, 0.784395)
-bones/63/rotation = Quaternion(0.291768, 0.045, -0.0097228, 0.955381)
+bones/0/position = Vector3(0.0248558, 0.956992, -0.000539169)
+bones/0/rotation = Quaternion(0.0330707, 0.363001, 0.0570722, 0.929451)
+bones/1/rotation = Quaternion(0.0497714, 0.116038, -0.0536265, 0.990546)
+bones/2/rotation = Quaternion(0.0200302, 0.0349243, -0.0199213, 0.998991)
+bones/3/rotation = Quaternion(0.019171, 0.0349909, -0.019019, 0.999023)
+bones/4/rotation = Quaternion(0.0707746, 0.0343843, 0.0141318, 0.996799)
+bones/5/rotation = Quaternion(0.109213, 0.476456, 0.000346452, 0.872389)
+bones/8/rotation = Quaternion(0.208668, 0.15482, -0.0670639, 0.963323)
+bones/9/rotation = Quaternion(-0.0226886, -0.000932452, 0.744535, 0.667198)
+bones/10/rotation = Quaternion(-0.171753, -0.875796, -0.0178979, 0.450735)
+bones/32/rotation = Quaternion(0.253909, -0.220203, -0.139454, 0.931447)
+bones/33/rotation = Quaternion(-0.0186599, 0.000832583, -0.754067, 0.656532)
+bones/34/rotation = Quaternion(0.298968, 0.33487, 0.130944, 0.883931)
+bones/55/rotation = Quaternion(0.0831076, 0.201753, 0.97084, 0.0992931)
+bones/56/rotation = Quaternion(-0.190762, 0.0246678, -0.0157626, 0.9812)
+bones/57/rotation = Quaternion(0.446578, 0.169397, -0.0341205, 0.8779)
+bones/58/rotation = Quaternion(0.270445, -0.0413654, 0.0113924, 0.961779)
+bones/60/rotation = Quaternion(-0.346707, 0.0451957, 0.933412, 0.0805888)
+bones/61/rotation = Quaternion(-0.314922, 0.0299039, -0.00975121, 0.948596)
+bones/62/rotation = Quaternion(0.706613, 0.0243379, 0.0297604, 0.706555)
+bones/63/rotation = Quaternion(0.301223, 0.04692, -0.00851004, 0.952361)
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="AnimatorController/Asker/Skeleton3D" index="1"]
-transform = Transform3D(0.354576, 0.879418, 0.317646, 0.889609, -0.421881, 0.174962, 0.287874, 0.220543, -0.931928, -0.158548, 1.20352, 0.214185)
+transform = Transform3D(0.576807, 0.444611, -0.685284, 0.80742, -0.437617, 0.395683, -0.123966, -0.781545, -0.611408, 0.179932, 1.11786, 0.264017)
 bone_name = "mixamorig_RightHand"
 bone_idx = 34
 
