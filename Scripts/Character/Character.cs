@@ -36,6 +36,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float VisualRange { get; private set; } = 35; 
 	public bool IsInCover { get; set; } = false;
+	public bool IsSpecialEnemy { get; set; }
 	public event Action<int> ActionCompleted;
 	public event Action<int, int> HealthChanged;
 
@@ -332,6 +333,11 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			EnemyManager.Instance.OnEnemyDeath(this);
 			enemyController.PrepareForDispose();
+
+			if (IsSpecialEnemy)
+            {
+                EnemyManager.Instance.OnSpecialEnemyDeath();
+            }
 		}
 
 		CharacterController._navAgent.ProcessMode = ProcessModeEnum.Disabled;

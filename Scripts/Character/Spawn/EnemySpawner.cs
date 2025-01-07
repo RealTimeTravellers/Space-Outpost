@@ -4,13 +4,21 @@ public partial class EnemySpawner : Node
 {
     [Export] public Godot.Collections.Array<PackedScene> EnemyPrefabs { get; private set; }
     [Export] public Godot.Collections.Array<Node3D> SpawnPoints { get; private set; }
+    [Export] public Godot.Collections.Array<Node3D> ReinforcementSpawnPoints { get; private set; }
     [Export] public NavigationRegion3D _navigationRegion;
     private Dictionary<EnemyType, PackedScene> enemyPrefabMap = new();
 
     public override void _Ready()
     {
         PrepareEnemyMap();
-        SpawnEnemies();
+        SpawnStartingEnemies();
+        EnemyManager.Instance.SpecialEnemyDied += SpawnEnemyReinforcements;
+    }
+
+    private void ExitTree()
+    {
+        if (EnemyManager.Instance != null)
+            EnemyManager.Instance.SpecialEnemyDied -= SpawnEnemyReinforcements;
     }
 
     private void PrepareEnemyMap()
@@ -30,7 +38,7 @@ public partial class EnemySpawner : Node
         }
     }
 
-    private void SpawnEnemies()
+    private void SpawnStartingEnemies()
     {
         foreach (var spawnPoint in SpawnPoints)
         {
@@ -38,21 +46,43 @@ public partial class EnemySpawner : Node
             var enemyType = enemySpawnPoint.EnemyType;
             var grid = enemySpawnPoint.Grid;
 
-            if (!enemyPrefabMap.ContainsKey(enemyType))
-            {
-                GD.PrintErr($"No prefab found for EnemyType: {enemyType}, using Rebel instead");
-                enemyType = EnemyType.Rebel;
-            }
-
-            var prefab = enemyPrefabMap[enemyType];
-            var spawnedEnemy = prefab.Instantiate<Character>(); 
-            AddChild(spawnedEnemy);
-            spawnedEnemy.Name = $"{enemyType}";
-            spawnedEnemy.CharacterController._navigationRegion = _navigationRegion;
-            spawnedEnemy.GlobalPosition = spawnPoint.GlobalPosition;
-            spawnedEnemy.currentGrid = grid;
-            grid.IsOccupied = true;
-
+            SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy);
         }
+    }
+
+    private void SpawnEnemyReinforcements()
+    {
+        foreach (var spawnPoint in ReinforcementSpawnPoints)
+        {
+            var enemySpawnPoint = spawnPoint.GetNode<EnemySpawnPoint>(".");
+            var enemyType = enemySpawnPoint.EnemyType;
+            var grid = enemySpawnPoint.Grid;
+
+            if (grid.IsOccupied || grid.IsBlocked) 
+                continue;
+
+            SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy);
+        }
+    }
+
+    private Character SpawnEnemy(EnemyType enemyType, GridObject grid, Vector3 position, bool isSpecialEnemy = false)
+    {
+        if (!enemyPrefabMap.ContainsKey(enemyType))
+        {
+            GD.PrintErr($"No prefab found for EnemyType: {enemyType}, using Rebel instead");
+            enemyType = EnemyType.Rebel;
+        }
+
+        var prefab = enemyPrefabMap[enemyType];
+        var spawnedEnemy = prefab.Instantiate<Character>();
+        AddChild(spawnedEnemy);
+        spawnedEnemy.Name = $"{enemyType}";
+        spawnedEnemy.CharacterController._navigationRegion = _navigationRegion;
+        spawnedEnemy.IsSpecialEnemy = isSpecialEnemy;
+        spawnedEnemy.GlobalPosition = position;
+        spawnedEnemy.currentGrid = grid;
+        grid.IsOccupied = true;
+        
+        return spawnedEnemy;
     }
 }

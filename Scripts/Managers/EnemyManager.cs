@@ -17,13 +17,25 @@ public partial class EnemyManager : Node
     public Dictionary<GridObject, Character> OccupiedCovers { get; private set; } = new();
     private Dictionary<GridObject, bool> targetedGrids = new Dictionary<GridObject, bool>();
 
-
+    public event Action SpecialEnemyDied;
     public bool ShotFired { get; private set; }
     public GridObject LastShotGrid { get; private set; }
+
+    private bool preparingForReinforcements = false;
 
     private EnemyManager()
     {
         Instance = this;
+    }
+
+    public override void _Ready()
+    {
+        TurnManager.Instance.TurnChanged += OnEnemyTurnSummonReinforcements;
+    }
+
+    private void ExitTree()
+    {
+        TurnManager.Instance.TurnChanged -= OnEnemyTurnSummonReinforcements;
     }
 
     public void ReportShotFired(GridObject shotLocation)
@@ -75,5 +87,19 @@ public partial class EnemyManager : Node
     {
         if (targetedGrids.ContainsKey(grid))
             targetedGrids.Remove(grid);
+    }
+
+    public void OnSpecialEnemyDeath()
+    {
+        preparingForReinforcements = true;
+    }
+
+    public void OnEnemyTurnSummonReinforcements(bool isEnemyTurn)
+    {
+        if (preparingForReinforcements && !isEnemyTurn)
+        {
+            preparingForReinforcements = false;
+            SpecialEnemyDied?.Invoke();
+        }
     }
 }
