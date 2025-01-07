@@ -547,7 +547,6 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			GD.Print("[Debug] Move - Character is in cover, starting exit sequence");
 			IsMoving = true;
-			// Bu satırı kaldıralım: CharacterController._stateMachine.RequestAnimation("outcover");
 			await ToSignal(GetTree().CreateTimer(.5f), "timeout");
 			
 			GD.Print("[Debug] Move - Waiting for Idle state");
@@ -556,9 +555,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				GD.Print($"[Debug] Current state: {CharacterController._stateMachine.CurrentStateType}");
 				await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 			}
-			
-			//CharacterController.SetState(CharacterStateType.Moving, this);
+
 		}
+
+		IsMoving = true;
 
 		// Hedef pozisyonu ayarla
 		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
@@ -600,11 +600,21 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		//CompletedTurn = true;
 	}
 
-	public void TakeCover()
+	public void TakeCover(bool enterCover = true)
 	{
 		//CompleteAction(actionData.takeCoverCost);
 		IsTakingCover = true;
-		endTurnState = EndTurnState.TakingCover;
+		if (enterCover)
+		{
+			Stats.Evasion.AddModifier(15);
+			endTurnState = EndTurnState.TakingCover;
+		}
+		else
+		{
+			Stats.Evasion.RemoveModifier(15);
+			IsTakingCover = false;
+			endTurnState = EndTurnState.None;
+		}
 	}
 
 	public void StandToEngage()

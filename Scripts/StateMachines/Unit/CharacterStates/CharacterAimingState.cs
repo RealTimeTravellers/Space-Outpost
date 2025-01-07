@@ -64,10 +64,9 @@ public class CharacterAimingState : CharacterState
             if (!CameraManager.Instance.AimingMode)
             {
                 if (nearCover)
-                {
                     return CharacterStateType.InCover;
-                }
-                return CharacterStateType.Idle;
+                else
+                    return CharacterStateType.Idle;
             }
         }
         
@@ -77,6 +76,7 @@ public class CharacterAimingState : CharacterState
     public override void Exit(Character character)
     {
         base.Exit(character);
+        nearCover = false;
         CameraManager.Instance.AimingMode = false;
     }
 }

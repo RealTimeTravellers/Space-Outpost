@@ -11,11 +11,12 @@ public class CharacterInCoverState : CharacterState
     {
         MissionManager.Instance.RecordCoverUse();
         base.Enter(character);
+
         coverExiting = false;
         outCoverAnimationStarted = false;
         outCoverTimer = 0;
-        character.IsInCover = true;
-        character.Evasion += 15;
+
+        character.TakeCover(enterCover: true);
         character.CharacterController._stateMachine.RequestAnimation("incover");
     }
 
@@ -31,18 +32,11 @@ public class CharacterInCoverState : CharacterState
             return CharacterStateType.InCover;
         }
 
-        if (coverExiting && outCoverTimer >= OUT_COVER_ANIMATION_DURATION)
-        {
-            GD.Print("[Debug] Outcover animation completed, switching to Idle");
-            character.IsInCover = false;
-            character.Evasion -= 15;
-            character.CharacterController._stateMachine.RequestAnimation("idle");
-            return CharacterStateType.Idle;
-        }
-
         if (coverExiting)
         {
             outCoverTimer += 1/(float)Engine.GetFramesPerSecond();
+            if (outCoverTimer >= OUT_COVER_ANIMATION_DURATION)
+                return CharacterStateType.Idle;
         }
 
         return CharacterStateType.InCover;
@@ -51,10 +45,6 @@ public class CharacterInCoverState : CharacterState
     public override void Exit(Character character)
     {
         base.Exit(character);
-        // Exit'te flag'leri sıfırla
-        character.IsInCover = false;
-        character.Evasion -= 15;
-        coverExiting = false;
-        outCoverAnimationStarted = false;
+        character.TakeCover(enterCover: false);
     }
 }
