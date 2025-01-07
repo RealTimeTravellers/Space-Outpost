@@ -4,10 +4,13 @@ public partial class CharacterController : Node
 {
     public bool IsEnemyAlerted { get; set; } = false;
     public CharacterStateMachine _stateMachine {get; private set;}
-    [Export] private Character _character;
+    [Export] public Character _character;
     [Export] public NavigationAgent3D _navAgent {get; private set;}
     [Export] public NavigationRegion3D _navigationRegion;
     private CharacterStateType currentState;
+    public Vector3 _finalDestination;
+    public Vector3 _currentVelocity;
+    public Vector3 _safeVelocity;
 
     private bool _isActive = false;
     [Export] public float _alertSpeed = 3.0f;
@@ -22,18 +25,35 @@ public partial class CharacterController : Node
         AdjustNavigation();
 
         _character.Velocity = Vector3.Zero;
+        _safeVelocity = Vector3.Zero;
+
         SetState(CharacterStateType.Idle, _character);
     }
 
     public override void _Process(double delta)
     {
         if (_character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) return;
-
         ProcessPlayerState();
-        if (_stateMachine.CurrentStateType == CharacterStateType.Moving) 
-            UpdateNavigation();
-           
         base._Process(delta);
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+
+        if (NavigationServer3D.MapGetIterationId(_navAgent.GetNavigationMap()) == 0)
+            return;
+
+        if (_stateMachine.CurrentStateType == CharacterStateType.Moving)
+        {
+            var nextPos = _navAgent.GetNextPathPosition();
+            _currentVelocity = _character.GlobalPosition.DirectionTo(_finalDestination) * _movementSpeed;
+            
+            if (_navAgent.AvoidanceEnabled)
+                _navAgent.SetVelocity(_currentVelocity);
+                
+            UpdateNavigation();
+        }
     }
 
     public void AdjustNavigation()
@@ -44,20 +64,17 @@ public partial class CharacterController : Node
             if (rid.IsValid)
             {
                 _navAgent.SetNavigationMap(rid);
-                GD.Print($"Navigation map set for {_character.Name}");
             }
         }
 
-        // NavigationAgent3D ayarları
-        _navAgent.PathDesiredDistance = 0.2f;
-        _navAgent.AvoidancePriority = 1;
-        _navAgent.TargetDesiredDistance = 0.2f;
-        _navAgent.PathMaxDistance = 0.3f;
-        _navAgent.Radius = 0.4f;
+        // Temel NavigationAgent3D ayarları
+        _navAgent.PathDesiredDistance = 0.5f;
+        _navAgent.TargetDesiredDistance = 0.5f;
+        _navAgent.Radius = 0.6f;
         _navAgent.MaxSpeed = _movementSpeed;
-        _navAgent.NeighborDistance = 1.0f;
+        _navAgent.NeighborDistance = 5.0f;  // Diğer ajanları algılama mesafesi
+        _navAgent.MaxNeighbors = 10;
         _navAgent.AvoidanceEnabled = true;
-
     }
 
     private void UpdateNavigation()
@@ -65,33 +82,29 @@ public partial class CharacterController : Node
         if (_stateMachine.CurrentStateType == CharacterStateType.Death)
             return;
 
-        if (_navAgent.IsNavigationFinished())
-        {
-            _character.Velocity = Vector3.Zero;
-            SetState(CharacterStateType.Idle, _character);
-            return;
-        }
-
         var nextPos = _navAgent.GetNextPathPosition();
         if (nextPos != Vector3.Zero)
         {
-            var direction = (nextPos - _character.GlobalPosition).Normalized();
-            var currentSpeed = IsEnemyAlerted ? _alertSpeed : _movementSpeed;
-
-            var velocity = direction * currentSpeed;
-            _character.Velocity = velocity;
-
-            var lookAtTarget = new Vector3(nextPos.X, _character.GlobalPosition.Y, nextPos.Z);
-            if (!_character.GlobalPosition.IsEqualApprox(lookAtTarget))
+            nextPos.Y = _character.GlobalPosition.Y;
+            
+            // Hedef noktaya olan mesafeyi kontrol et
+            var distanceToTarget = _character.GlobalPosition.DistanceTo(_finalDestination);
+            if (distanceToTarget > _navAgent.TargetDesiredDistance)
             {
+                var lookAtTarget = new Vector3(_finalDestination.X, _character.GlobalPosition.Y, _finalDestination.Z);
                 _character.LookAt(lookAtTarget, Vector3.Up);
                 _character.RotateY(Mathf.Pi);
+                
+                _character.Velocity = _safeVelocity;
+                _character.MoveAndSlide();
             }
-
-            _character.MoveAndSlide();
         }
     }
 
+    private void OnVelocityComputed(Vector3 safeVelocity)
+    {
+        _safeVelocity = safeVelocity;
+    }
     
     private void ProcessPlayerState()
     {

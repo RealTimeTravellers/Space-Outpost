@@ -558,7 +558,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		IsMoving = true;
 
-		// Hedef pozisyonu ayarla
+		CharacterController._finalDestination = targetGrid.GlobalPosition;
 		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
 		
 		if (IsFriendly)
@@ -577,15 +577,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
-			if (IsFriendly && CompletedTurn) // only friendly turn ends
+			if (IsFriendly && CompletedTurn)
 				break;
-			
-			CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
-			await ToSignal(GetTree().CreateTimer(0.15f), "timeout");
+				
+			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
 
 		// move to target grid
-		GlobalPosition = targetGrid.GlobalPosition;
+		//GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
