@@ -64,6 +64,7 @@ public partial class EnemySpawner : Node
             var enemy = SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy);
             enemy.ApplyHologramEffect();
         }
+        await MissionManager.Instance.ShowMissionBriefing(MissionManager.Instance.logTexts.MissionReinforcementsArrived, true);
     }
 
     private Character SpawnEnemy(EnemyType enemyType, GridObject grid, Vector3 position, bool isSpecialEnemy = false)

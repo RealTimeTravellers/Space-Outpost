@@ -14,6 +14,8 @@ public class CharacterDeathState : CharacterState
             
             GD.Print("CharacterDeathState: Enter");
             character.CharacterController._stateMachine.RequestAnimation("death");
+
+            character.CharacterController._navAgent.AvoidanceEnabled = false;
             
             // Delay the Die() call until animation starts
             character.Die();
@@ -21,11 +23,7 @@ public class CharacterDeathState : CharacterState
     }
 
     public override CharacterStateType Process(Character character)
-    {
-        if (_deathProcessed)
-            return CharacterStateType.Death;
-            
-        //return base.Process(character);
+    {     
         return CharacterStateType.Death;
     }
 
