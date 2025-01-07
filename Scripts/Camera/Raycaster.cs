@@ -9,7 +9,7 @@ public partial class Raycaster : Node3D // random name idk
 
     public override void _Input(InputEvent @event)
     {
-        if (MouseOverUI && GameManager.Instance.gameState == GameState.Battle)
+        if (MouseOverUI && (GameManager.Instance.gameState == GameState.InsideBuilding || GameManager.Instance.gameState == GameState.Desert))
             SelectViaRaycast();
         base._Input(@event);
     }

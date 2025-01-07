@@ -94,7 +94,10 @@ public partial class GameMenuGUI : Control
 
     public void OnMainMenuButtonPressed()
     {
-        GameManager.ChangeGameState(GameState.Battle, GameState.Menu);
+        if(GameManager.Instance.gameState == GameState.InsideBuilding)
+            GameManager.ChangeGameState(GameState.InsideBuilding, GameState.Menu);
+        else if(GameManager.Instance.gameState == GameState.Desert)
+            GameManager.ChangeGameState(GameState.Desert, GameState.Menu);
         TeamSelectionManager.Instance.ResetParty();
     }
 }
