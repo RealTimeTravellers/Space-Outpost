@@ -29,28 +29,24 @@ public partial class BattleHUD : Control
 
     private static void OnLeftArrowPressed()
     {
-        if (CameraManager.Instance.AimingMode)
-            GridManager.Instance.selectedCharacter.ChangeTarget(true);
-        else
-        {
-            // TODO: add character swithing
-        }
+        Character character = GridManager.Instance.selectedCharacter;
+        if (character != null && character.IsFriendly && character.actionPoints > 0)
+            character.ChangeTarget(true);
     }
 
     private static void OnRigtArrowPressed()
     {
-        if (CameraManager.Instance.AimingMode)
-            GridManager.Instance.selectedCharacter.ChangeTarget(false);
-        else
-        {
-            // TODO: add character swithing
-        }
+        Character character = GridManager.Instance.selectedCharacter;
+        if (character != null && character.IsFriendly && character.actionPoints > 0)
+            character.ChangeTarget(false);
     }
 
     private void OnFirePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
         if (CameraManager.Instance.AimingMode && 
+            character != null &&
+            character.IsFriendly &&
             character.Target != null &&
             character.actionPoints/* Stats.ActionPoints.GetValue() */ > 0 &&
             character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
@@ -63,34 +59,42 @@ public partial class BattleHUD : Control
 
     public void OnMovePressed()
     {
-        if(GridManager.Instance.selectedCharacter.IsFriendly)
-            GridManager.Instance.selectedCharacter.Move(GridManager.Instance.selectedGrid);
+        Character character = GridManager.Instance.selectedCharacter;
+        if(character != null && character.IsFriendly && character.actionPoints > 0)
+            character.Move(GridManager.Instance.selectedGrid);
     }
 
     public void OnReloadPressed()
     {
-        GridManager.Instance.selectedCharacter.Reload();
-        characterStatPanel.UpdateAmmoBox(GridManager.Instance.selectedCharacter);
+        Character character = GridManager.Instance.selectedCharacter;
+        if(character != null && character.IsFriendly && character.actionPoints > 0)
+            character.Reload();
+        characterStatPanel.UpdateAmmoBox(character);
     }
 
     public void OnStandToEngagePressed()
     {
-        GridManager.Instance.selectedCharacter.StandToEngage();
+        Character character = GridManager.Instance.selectedCharacter;
+        if(character != null && character.IsFriendly && character.actionPoints > 0)
+            character.StandToEngage();
     }
 
     public void OnSupressiveFirePressed()
     {
+        Character character = GridManager.Instance.selectedCharacter;
         CameraManager.AreaSelectionMode();
-        GridManager.Instance.selectedCharacter.SupressiveFire();
+        if(character != null && character.IsFriendly && character.actionPoints > 0)
+            character.SupressiveFire();
     }
 
     public void OnAttackModePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        if (character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0)
-            return;
-
-        character.ToggleAim();
-        characterAttackPanel.OnAimUIUpdate();
+        if (character != null && character.IsFriendly && character.actionPoints > 0)
+        {
+            character.ToggleAim();
+            characterAttackPanel.OnAimUIUpdate();
+        }
     }
 }
+

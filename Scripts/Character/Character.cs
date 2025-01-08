@@ -300,6 +300,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			CameraManager.Instance.AimingMode = false;
 			CameraManager.ReturnCameraToTactical();
+			CharacterController.SetState(CharacterStateType.Idle, this);
 		}
 		else
 		{
@@ -329,6 +330,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		LookAt(Target.Position);
 		CameraManager.MoveToShoulder(this);
 		CameraManager.Instance.MainCameraSet.LookAt(Target.Position);
+		RotateY(Mathf.Pi);
 	}
 
 	public void Die()
@@ -482,7 +484,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		if (hit)
 		{
-			Damage = 7;
+			Damage = 5;
 			bool isCritical = GD.Randf() <= Stats.CriticalHitChance.GetValue() / 100f;
 			int damage = isCritical ? Damage * 2 : Damage;
 
