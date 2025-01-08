@@ -311,7 +311,7 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_20npu"]
 advance_mode = 2
-advance_condition = &"idle"
+advance_condition = &"incover"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pfroq"]
 advance_mode = 2

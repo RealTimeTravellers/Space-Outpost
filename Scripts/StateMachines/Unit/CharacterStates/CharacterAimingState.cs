@@ -3,6 +3,7 @@ using System.Linq;
 
 public class CharacterAimingState : CharacterState
 {
+    private bool nearCover;
     public override void Enter(Character character)
     {
         base.Enter(character);
@@ -12,6 +13,10 @@ public class CharacterAimingState : CharacterState
             character.ToggleAim(); 
             return;
         }
+
+        var nearestCover = character.QueryForCover();
+        nearCover = nearestCover != null && 
+            character.GlobalPosition.DistanceTo(nearestCover.GlobalPosition) <= 2f;
         
         character.enemiesInLos = character.QueryForEnemies(new Godot.Collections.Array<Character>(
             character.IsFriendly ? 
@@ -54,18 +59,24 @@ public class CharacterAimingState : CharacterState
 
     public override CharacterStateType CheckState(Character character)
     {
-        // Aim modu kapatıldıysa idle'a dön
-        if (!CameraManager.Instance.AimingMode && character.IsFriendly || 
-            character.actionPoints/* Stats.ActionPoints.GetValue() */ <= 0 || 
-            character.actionPoints <= 0 )
-            return CharacterStateType.Idle;
-            
+        if (character.CharacterController._stateMachine.PreviousStateType == CharacterStateType.Shooting)
+        {
+            if (!CameraManager.Instance.AimingMode)
+            {
+                if (nearCover)
+                    return CharacterStateType.InCover;
+                else
+                    return CharacterStateType.Idle;
+            }
+        }
+        
         return CharacterStateType.Aiming;
     }
 
     public override void Exit(Character character)
     {
         base.Exit(character);
+        nearCover = false;
         CameraManager.Instance.AimingMode = false;
     }
 }

@@ -14,13 +14,29 @@ public partial class EnemyManager : Node
     
     [Export] // Exported for testing
     public Godot.Collections.Array<Character> spottedEnemies;
+    public Dictionary<GridObject, Character> OccupiedCovers { get; private set; } = new();
+    private Dictionary<GridObject, bool> targetedGrids = new Dictionary<GridObject, bool>();
 
+    public event Action SpecialEnemyDied;
+    public event Action<Character> EnemyReinforcementSpawned;
     public bool ShotFired { get; private set; }
     public GridObject LastShotGrid { get; private set; }
 
+    private bool preparingForReinforcements = false;
+    public EnemySpawner enemySpawner;
     private EnemyManager()
     {
         Instance = this;
+    }
+
+    public override void _Ready()
+    {
+        TurnManager.Instance.TurnChanged += OnEnemyTurnSummonReinforcements;
+    }
+
+    private void ExitTree()
+    {
+        TurnManager.Instance.TurnChanged -= OnEnemyTurnSummonReinforcements;
     }
 
     public void ReportShotFired(GridObject shotLocation)
@@ -43,5 +59,53 @@ public partial class EnemyManager : Node
         // stops combat loop so music can end
         if (allEnemies.Count <= 0)
             AudioManager.Instance.combatEnded = true;
+    }
+
+    public void RegisterCoverOccupation(GridObject cover, Character character)
+    {
+        if (!OccupiedCovers.ContainsKey(cover))
+            OccupiedCovers[cover] = character;
+    }
+
+    public void UnregisterCoverOccupation(GridObject cover)
+    {
+        if (OccupiedCovers.ContainsKey(cover))
+            OccupiedCovers.Remove(cover);
+    }
+
+    public bool IsGridTargeted(GridObject grid)
+    {
+        return targetedGrids.ContainsKey(grid);
+    }
+
+    public void RegisterTargetGrid(GridObject grid)
+    {
+        if (!targetedGrids.ContainsKey(grid))
+            targetedGrids[grid] = true;
+    }
+
+    public void UnregisterTargetGrid(GridObject grid)
+    {
+        if (targetedGrids.ContainsKey(grid))
+            targetedGrids.Remove(grid);
+    }
+
+    public void OnSpecialEnemyDeath()
+    {
+        preparingForReinforcements = true;
+    }
+
+    public void OnEnemyTurnSummonReinforcements(bool isEnemyTurn)
+    {
+        if (preparingForReinforcements && !isEnemyTurn)
+        {
+            preparingForReinforcements = false;
+            SpecialEnemyDied?.Invoke();
+        }
+    }
+
+    public void OnEnemyReinforcementSpawned(Character enemy)
+    {
+        EnemyReinforcementSpawned?.Invoke(enemy);
     }
 }

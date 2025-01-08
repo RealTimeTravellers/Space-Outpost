@@ -12,7 +12,7 @@ public interface ITactical
     /// <summary>
     /// Keeps their head down, reduces change of being hit
     /// </summary>
-    public void TakeCover();
+    public void TakeCover(bool enterCover = true);
 
     /// <summary>
     /// Overwatch, stays in position and engeages once if enemy moves

@@ -5,6 +5,7 @@ public partial class CharacterSpawner : Node
 {
     [Export] public Godot.Collections.Array<PackedScene> CharacterPrefabs { get; private set; }
     [Export] public Godot.Collections.Array<Node3D> CharacterSpawnPoints { get; private set; }
+    [Export] public NavigationRegion3D _navigationRegion;
     private Dictionary<PlayerType, PackedScene> characterPrefabMap = new();
 
     public override void _Ready()
@@ -25,7 +26,6 @@ public partial class CharacterSpawner : Node
         {
             var instance = prefab.Instantiate<Node3D>();
             var character = instance.GetNode<Character>(".");
-            GD.Print($"Adding prefab for PlayerType: {character.PlayerType}");
             characterPrefabMap.Add(character.PlayerType, prefab);
             instance.QueueFree();
         }
@@ -48,12 +48,12 @@ public partial class CharacterSpawner : Node
                 AddChild(spawnedCharacter);
                 spawnedCharacter.Name = $"{teamMembers[i].Name}";
                 var character = spawnedCharacter.GetNode<Character>(".");
+                character.CharacterController._navigationRegion = _navigationRegion;
                 
                 // Önce pozisyonu ayarla
                 character.GlobalPosition = spawnPosition;
                 character.currentGrid = grid;
                 grid.IsOccupied = true;
-                GD.Print($"Spawned {playerType} at position {spawnPosition} on grid {grid.Position}");
             }
             else
             {

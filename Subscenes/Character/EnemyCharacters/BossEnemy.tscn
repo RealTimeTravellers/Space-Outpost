@@ -21,6 +21,7 @@ collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_83mcq")
 EnemyType = 5
+UnitType = 0
 AnimatorController = NodePath("AnimatorController")
 CharacterController = NodePath("CharacterController")
 enemyController = NodePath("EnemyAIController")
@@ -64,6 +65,9 @@ _character = NodePath("..")
 _navAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterController"]
+target_desired_distance = 0.3
+avoidance_enabled = true
+avoidance_mask = 9
 
 [node name="EnemyAIController" type="Node3D" parent="." node_paths=PackedStringArray("_character")]
 script = ExtResource("5_pn6hp")
@@ -141,5 +145,8 @@ transform = Transform3D(0.127622, 1.20399, -0.473408, -0.116035, -0.463136, -1.2
 
 [node name="Character Audio" parent="." instance=ExtResource("9_ghi34")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[connection signal="velocity_computed" from="CharacterController/NavigationAgent3D" to="CharacterController" method="OnVelocityComputed"]
+
 
 [editable path="AnimatorController/Asker"]

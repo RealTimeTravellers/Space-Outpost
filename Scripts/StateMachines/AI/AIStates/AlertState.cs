@@ -18,9 +18,16 @@ public class AlertState : EnemyState
             enemy.enemyController.SetState(nextState, enemy);
             return;
         }
-        await enemy.enemyController.HandleAlert();
-    }
 
+        await enemy.enemyController.HandleAlert();
+
+        nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
+        {
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
+        }
+    }
 
     public override void Exit(Character enemy)
     {

@@ -9,7 +9,24 @@ public partial class EnemyStatusPanelHUD : Control
     public override void _Ready()
     {
         TurnManager.Instance.CharacterDied += OnEnemyDeath;
+        EnemyManager.Instance.EnemyReinforcementSpawned += OnEnemySpawned;
         InitializeEnemiesAsync();
+    }
+
+    public override void _ExitTree()
+    {
+        if (TurnManager.Instance != null)
+            TurnManager.Instance.CharacterDied -= OnEnemyDeath;
+            
+        if (EnemyManager.Instance != null)
+            EnemyManager.Instance.EnemyReinforcementSpawned -= OnEnemySpawned;
+            
+        foreach (var node in enemyNodes.Values)
+        {
+            node.QueueFree();
+        }
+        enemyNodes.Clear();
+        base._ExitTree();
     }
 
     private async void InitializeEnemiesAsync()
@@ -40,6 +57,11 @@ public partial class EnemyStatusPanelHUD : Control
         RemoveEnemyStatus(enemy);
     }
 
+    private void OnEnemySpawned(Character enemy)
+    {
+        AddEnemyStatus(enemy);
+    }
+
     private void RemoveEnemyStatus(Character enemy)
     {
         if (enemyNodes.TryGetValue(enemy, out Node statusNode))
@@ -47,14 +69,5 @@ public partial class EnemyStatusPanelHUD : Control
             statusNode.QueueFree();
             enemyNodes.Remove(enemy);
         }
-    }
-
-    public override void _ExitTree()
-    {
-        foreach (var node in enemyNodes.Values)
-        {
-            node.QueueFree();
-        }
-        enemyNodes.Clear();
     }
 }

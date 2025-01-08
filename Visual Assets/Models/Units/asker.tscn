@@ -192,7 +192,6 @@ advance_mode = 2
 advance_condition = &"aiming"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c2vw0"]
-switch_mode = 1
 advance_mode = 2
 advance_condition = &"aiming"
 
@@ -202,9 +201,8 @@ advance_mode = 2
 advance_condition = &"idle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sfp4d"]
-switch_mode = 1
 advance_mode = 2
-advance_condition = &"idle"
+advance_condition = &"incover"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rivua"]
 advance_mode = 2

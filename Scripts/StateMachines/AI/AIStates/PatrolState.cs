@@ -20,6 +20,13 @@ public class PatrolState : EnemyState
         }
         
         await enemy.enemyController.HandlePatrol(enemy);
+
+        nextState = CheckState(enemy);
+        if (nextState != enemy.enemyController._stateMachine.CurrentState)
+        {
+            enemy.enemyController.SetState(nextState, enemy);
+            return;
+        }
     }
 
     public override void Exit(Character enemy)

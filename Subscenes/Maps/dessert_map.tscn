@@ -13,12 +13,12 @@
 [ext_resource type="PackedScene" uid="uid://dkf8egjjr1jvh" path="res://Subscenes/Character/PlayerCharacters/HeavyCharacter.tscn" id="10_ow2px"]
 [ext_resource type="PackedScene" uid="uid://yxc818gsv6nj" path="res://Subscenes/Character/PlayerCharacters/EngineerCharacter.tscn" id="11_dyr8v"]
 [ext_resource type="Script" path="res://Scripts/Character/Spawn/SpawnPoint.cs" id="12_mpu6i"]
-[ext_resource type="PackedScene" uid="uid://bnwve8kx2axss" path="res://Subscenes/Character/EnemyCharacters/BossEnemy.tscn" id="13_icf13"]
-[ext_resource type="PackedScene" uid="uid://cb3dfyw4rhave" path="res://Subscenes/Character/EnemyCharacters/CreeperEnemy.tscn" id="14_vlvrr"]
-[ext_resource type="PackedScene" uid="uid://bgde4qgxoplq0" path="res://Subscenes/Character/EnemyCharacters/RebelEnemy.tscn" id="15_8y84x"]
+[ext_resource type="PackedScene" uid="uid://dskhe15gw6po" path="res://Subscenes/Character/EnemyCharacters/BossEnemy.tscn" id="13_icf13"]
+[ext_resource type="PackedScene" uid="uid://dai31rnp6hwll" path="res://Subscenes/Character/EnemyCharacters/CreeperEnemy.tscn" id="14_vlvrr"]
+[ext_resource type="PackedScene" uid="uid://cf7inbd3j6102" path="res://Subscenes/Character/EnemyCharacters/RebelEnemy.tscn" id="15_8y84x"]
 [ext_resource type="PackedScene" uid="uid://s1uiqnct1m6s" path="res://Subscenes/Character/EnemyCharacters/ScavengerEnemy.tscn" id="16_b5f0b"]
 [ext_resource type="PackedScene" uid="uid://iudy158jrjek" path="res://Subscenes/Character/EnemyCharacters/SeperatistEnemy.tscn" id="17_kepkv"]
-[ext_resource type="PackedScene" uid="uid://b6fm3x8s5efga" path="res://Subscenes/Character/EnemyCharacters/TelepathEnemy.tscn" id="18_tfvp0"]
+[ext_resource type="PackedScene" uid="uid://dn55vesrbpexi" path="res://Subscenes/Character/EnemyCharacters/TelepathEnemy.tscn" id="18_tfvp0"]
 [ext_resource type="Script" path="res://Scripts/Character/Spawn/EnemySpawnPoint.cs" id="20_qid71"]
 [ext_resource type="PackedScene" uid="uid://drnju42qvcxpj" path="res://Subscenes/UI/Battle_Hud.tscn" id="21_gropy"]
 
@@ -48,10 +48,11 @@ coverGrids = [NodePath("../Grid Parent/Grid Object5"), NodePath("../Grid Parent/
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="Map Environment"]
 navigation_mesh = SubResource("NavigationMesh_m1xmy")
 
-[node name="CharacterSpawner" type="Node" parent="Map Environment/NavigationRegion3D" node_paths=PackedStringArray("CharacterSpawnPoints")]
+[node name="CharacterSpawner" type="Node" parent="Map Environment/NavigationRegion3D" node_paths=PackedStringArray("CharacterSpawnPoints", "_navigationRegion")]
 script = ExtResource("6_3wxye")
 CharacterPrefabs = Array[PackedScene]([ExtResource("7_t7fur"), ExtResource("8_mnnqu"), ExtResource("9_a24av"), ExtResource("10_ow2px"), ExtResource("11_dyr8v")])
 CharacterSpawnPoints = [NodePath("Spawn1"), NodePath("Spawn2"), NodePath("Spawn3")]
+_navigationRegion = NodePath("..")
 
 [node name="Spawn1" type="Node3D" parent="Map Environment/NavigationRegion3D/CharacterSpawner" node_paths=PackedStringArray("Grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 78, 0, 29)
@@ -68,10 +69,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89, 0, 28)
 script = ExtResource("12_mpu6i")
 Grid = NodePath("../../../../Grid Parent/Grid Object2383")
 
-[node name="EnemySpawner" type="Node" parent="Map Environment/NavigationRegion3D" node_paths=PackedStringArray("SpawnPoints")]
+[node name="EnemySpawner" type="Node" parent="Map Environment/NavigationRegion3D" node_paths=PackedStringArray("SpawnPoints", "ReinforcementSpawnPoints", "_navigationRegion")]
 script = ExtResource("7_y4ta6")
 EnemyPrefabs = Array[PackedScene]([ExtResource("13_icf13"), ExtResource("14_vlvrr"), ExtResource("15_8y84x"), ExtResource("16_b5f0b"), ExtResource("17_kepkv"), ExtResource("18_tfvp0")])
 SpawnPoints = [NodePath("EnemySpawn1"), NodePath("EnemySpawn2"), NodePath("EnemySpawn3"), NodePath("EnemySpawn4"), NodePath("EnemySpawn5"), NodePath("EnemySpawn6"), NodePath("EnemySpawn7")]
+ReinforcementSpawnPoints = []
+_navigationRegion = NodePath("..")
 
 [node name="EnemySpawn1" type="Node3D" parent="Map Environment/NavigationRegion3D/EnemySpawner" node_paths=PackedStringArray("Grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)

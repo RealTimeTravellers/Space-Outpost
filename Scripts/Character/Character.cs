@@ -36,6 +36,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	// only meaning full if there are civilians in the combat zone
 	[Export] public float VisualRange { get; private set; } = 35; 
 	public bool IsInCover { get; set; } = false;
+	public bool IsSpecialEnemy { get; set; }
 	public event Action<int> ActionCompleted;
 	public event Action<int, int> HealthChanged;
 
@@ -44,6 +45,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	public int Health { get; private set; } = 8;
 	public int MaxHealth { get; private set; } = 8;
 	public int Damage { get; private set; } = 7;
+	#endregion
+
+	#region Visual Variables (shader test)
+	public MeshInstance3D _meshInstance;
+	public ShaderMaterial _originalMaterial;
+	public ShaderMaterial _hologramMaterial;
 	#endregion
 
 	#region ITactical Variables
@@ -332,7 +339,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		{
 			EnemyManager.Instance.OnEnemyDeath(this);
 			enemyController.PrepareForDispose();
+
+			if (IsSpecialEnemy)
+            {
+                EnemyManager.Instance.OnSpecialEnemyDeath();
+            }
 		}
+
+		CharacterController._navAgent.ProcessMode = ProcessModeEnum.Disabled;
 		
 		TurnManager.Instance.CharacterDied?.Invoke(this);
 		
@@ -343,7 +357,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			currentGrid = null;
 		}
 
-		chracterAudioPlayer?.PlayDeathSound();
+		chracterAudioPlayer?.PlayDeathSound(IsFriendly);
 
 		if (!IsFriendly)
 			MissionManager.Instance.RecordEnemyKill();
@@ -393,9 +407,9 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				}
 			}
 
-			foreach (GridObject grid in sortedList)
+			foreach (GridObject grid in sortedList )
 			{
-				if (!grid.IsOccupied)
+				if (!grid.IsOccupied && !EnemyManager.Instance.OccupiedCovers.ContainsKey(grid))
 					return grid;
 			}
 		}
@@ -541,11 +555,22 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		
 		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
+			GD.Print("[Debug] Move - Character is in cover, starting exit sequence");
 			IsMoving = true;
-			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
+			await ToSignal(GetTree().CreateTimer(.5f), "timeout");
+			
+			GD.Print("[Debug] Move - Waiting for Idle state");
+			while (CharacterController._stateMachine.CurrentStateType != CharacterStateType.Idle)
+			{
+				GD.Print($"[Debug] Current state: {CharacterController._stateMachine.CurrentStateType}");
+				await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+			}
+
 		}
 
-		// Hedef pozisyonu ayarla
+		IsMoving = true;
+
+		CharacterController._finalDestination = targetGrid.GlobalPosition;
 		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
 		
 		if (IsFriendly)
@@ -564,11 +589,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		// Hareketin bitmesini bekle
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
-			if (IsFriendly && CompletedTurn) // only friendly turn ends
+			if (IsFriendly && CompletedTurn)
 				break;
-			
+				
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
+
 		// move to target grid
 		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
@@ -584,11 +610,21 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		//CompletedTurn = true;
 	}
 
-	public void TakeCover()
+	public void TakeCover(bool enterCover = true)
 	{
-		CompleteAction(actionData.takeCoverCost);
+		//CompleteAction(actionData.takeCoverCost);
 		IsTakingCover = true;
-		endTurnState = EndTurnState.TakingCover;
+		if (enterCover)
+		{
+			Stats.Evasion.AddModifier(15);
+			endTurnState = EndTurnState.TakingCover;
+		}
+		else
+		{
+			Stats.Evasion.RemoveModifier(15);
+			IsTakingCover = false;
+			endTurnState = EndTurnState.None;
+		}
 	}
 
 	public void StandToEngage()
@@ -694,5 +730,37 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		SearchForEnemies(true);
 	}
+	#endregion
+
+	#region Debug
+	public async void ApplyHologramEffect()
+    {
+		GD.Print("Applying hologram effect");
+		await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+
+		/*
+
+        _meshInstance = GetNode<MeshInstance3D>("CharacterMesh");
+        _originalMaterial = (ShaderMaterial)_meshInstance.GetSurfaceOverrideMaterial(0);
+        
+        // Hologram shader'ını yükle
+        _hologramMaterial = GD.Load<ShaderMaterial>("res://Scripts/Shaders/hologram_shader.gdshader");
+        
+        // Geçiş animasyonu
+        float duration = 1.0f;
+        float elapsed = 0.0f;
+        
+        while (elapsed < duration)
+        {
+            elapsed += (float)GetProcessDeltaTime();
+            float t = elapsed / duration;
+            _hologramMaterial.SetShaderParameter("transition", t);
+            await ToSignal(GetTree(), "process_frame");
+        }
+        
+        // Orijinal materiale geri dön
+        _meshInstance.SetSurfaceOverrideMaterial(0, _originalMaterial);
+		*/
+    }
 	#endregion
 }
