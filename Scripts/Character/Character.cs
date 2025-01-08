@@ -596,7 +596,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		// move to target grid
-		//GlobalPosition = targetGrid.GlobalPosition;
+		GlobalPosition = targetGrid.GlobalPosition;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		

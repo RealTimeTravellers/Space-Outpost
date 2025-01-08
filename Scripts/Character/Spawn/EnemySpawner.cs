@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System;
 public partial class EnemySpawner : Node
 {
     [Export] public Godot.Collections.Array<PackedScene> EnemyPrefabs { get; private set; }
@@ -7,9 +8,11 @@ public partial class EnemySpawner : Node
     [Export] public Godot.Collections.Array<Node3D> ReinforcementSpawnPoints { get; private set; }
     [Export] public NavigationRegion3D _navigationRegion;
     private Dictionary<EnemyType, PackedScene> enemyPrefabMap = new();
+    public Action<Character> EnemySpawned;
 
     public override void _Ready()
     {
+        EnemyManager.Instance.enemySpawner = this;
         PrepareEnemyMap();
         SpawnStartingEnemies();
         EnemyManager.Instance.SpecialEnemyDied += SpawnEnemyReinforcements;
@@ -46,11 +49,11 @@ public partial class EnemySpawner : Node
             var enemyType = enemySpawnPoint.EnemyType;
             var grid = enemySpawnPoint.Grid;
 
-            SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy);
+            SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy, false);
         }
     }
 
-    private void SpawnEnemyReinforcements()
+    private async void SpawnEnemyReinforcements()
     {
         foreach (var spawnPoint in ReinforcementSpawnPoints)
         {
@@ -61,12 +64,13 @@ public partial class EnemySpawner : Node
             if (grid.IsOccupied || grid.IsBlocked) 
                 continue;
 
-            var enemy = SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy);
+            var enemy = SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy, true);
             enemy.ApplyHologramEffect();
         }
+        await MissionManager.Instance.ShowMissionBriefing(MissionManager.Instance.logTexts.MissionReinforcementsArrived, true);
     }
 
-    private Character SpawnEnemy(EnemyType enemyType, GridObject grid, Vector3 position, bool isSpecialEnemy = false)
+    private Character SpawnEnemy(EnemyType enemyType, GridObject grid, Vector3 position, bool isSpecialEnemy = false, bool isReinforcement = false)
     {
         if (!enemyPrefabMap.ContainsKey(enemyType))
         {
@@ -83,6 +87,9 @@ public partial class EnemySpawner : Node
         spawnedEnemy.GlobalPosition = position;
         spawnedEnemy.currentGrid = grid;
         grid.IsOccupied = true;
+
+        if (isReinforcement)
+            EnemyManager.Instance.OnEnemyReinforcementSpawned(spawnedEnemy);
         
         return spawnedEnemy;
     }

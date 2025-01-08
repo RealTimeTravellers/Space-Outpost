@@ -9,6 +9,7 @@ public partial class BattleLogTexts : Resource
     [Export] public string MissionCiviliansCasualties = "Commander, civilians have been eliminated. Remember our purpose.";
     [Export] public string MissionCriticalHit = "Nice shot commander! We knew we could count on you.";
     [Export] public string MissionEnemyCriticalHit = "Commander, the enemy has dealt a critical blow. Exercise caution.";
+    [Export] public string MissionReinforcementsArrived = "Commander, enemy reinforcements have arried, proceed with caution.";
 
     [Export] public string CharacterHitLog { get; set; } = "{0} hit {1} for {2} damage!";
     [Export] public string CharacterMissedLog { get; set; } = "{0} missed the shot at {1}!";
