@@ -75,8 +75,6 @@ public partial class CharacterController : Node
         _navAgent.NeighborDistance = 5.0f;  // Diğer ajanları algılama mesafesi
         _navAgent.MaxNeighbors = 10;
         _navAgent.AvoidanceEnabled = true;
-
-        
     }
 
     private void UpdateNavigation()
