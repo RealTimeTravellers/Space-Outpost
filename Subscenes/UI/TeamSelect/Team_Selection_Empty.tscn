@@ -3,8 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://bc26p8v53vf3s" path="res://Visual Assets/Sprites/UI/TeamSelect/Unit_Add.svg" id="1_kij2m"]
 
 [node name="EmptyZone" type="PanelContainer"]
+self_modulate = Color(1, 1, 1, 0)
 offset_right = 161.0
 offset_bottom = 110.0
+size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -18,13 +20,19 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/EmptyZone"]
+z_index = 5
 custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
 texture = ExtResource("1_kij2m")
 expand_mode = 2
+stretch_mode = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/EmptyZone"]
 layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
 
 [node name="SoldierName" type="Label" parent="MarginContainer/EmptyZone/VBoxContainer"]
 layout_mode = 2

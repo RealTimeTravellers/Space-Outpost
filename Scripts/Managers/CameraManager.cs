@@ -71,13 +71,13 @@ public partial class CameraManager : Node
         // If i manage to do it through raycaster this may be needed.
     }
 
-        private void OnGameStateChanged(GameState current, GameState newState)
+    private void OnGameStateChanged(GameState current, GameState newState)
     {
         if (newState == GameState.TeamSelect)
         {
             TeamSelection = true;
-            MainCameraSet.GlobalPosition = new Vector3(0, 2.5f, 2.5f);
-            MainCameraSet.LookAt(new Vector3(0, 0, -2));
+            MainCameraSet.GlobalPosition = new Vector3(0, 0f, 2.5f);
+            MainCameraSet.LookAt(new Vector3(0, 2f, -2f));
         }
         else if (current == GameState.TeamSelect)
         {

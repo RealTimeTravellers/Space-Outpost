@@ -12,6 +12,7 @@ public partial class TeamSelectionController : Node
     [Export] public Godot.Collections.Array<Node3D> classModels;
     [Export] public Godot.Collections.Array<ClassInfo> classInfoList;
     [Export] public Godot.Collections.Array<StatContainer> statContainers;
+    [Export] public Godot.Collections.Array<Node3D> classGunModels;
     public List<PartySelection> partyMembers = new();
     [Export] public TeamSelectionMenu teamSelectionHUD;
     [Export] public TeamSelectionAnimatorController teamSelectionAnimatorController;

@@ -24,7 +24,9 @@ public partial class CharacterUIUnitCard : Control
 
     private void OnRemovePressed()
     {
+        GD.Print($"[Debug] Remove button pressed for slot {slotIndex}");
         teamSelectionMenu.RemovePartyMember(this, slotIndex);
+        GD.Print($"[Debug] After RemovePartyMember call");
         QueueFree();
     }
 }
