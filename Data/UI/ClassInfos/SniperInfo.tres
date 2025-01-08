@@ -8,6 +8,7 @@
 [resource]
 script = ExtResource("1_afmi3")
 UnitType = 1
+WeaponDisplayType = 1
 DetailsText = "Sniper"
 DescriptionText = "High ranged unit able to deal massive damage from a distance. "
 ClassIcon = ExtResource("1_wu4nm")

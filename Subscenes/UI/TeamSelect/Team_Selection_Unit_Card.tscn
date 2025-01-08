@@ -1,30 +1,33 @@
-[gd_scene load_steps=8 format=3 uid="uid://c5mbw3v6f60ah"]
+[gd_scene load_steps=9 format=3 uid="uid://c5mbw3v6f60ah"]
 
 [ext_resource type="Script" path="res://Scripts/UI/Data/CharacterUIUnitCard.cs" id="1_uyput"]
 [ext_resource type="Texture2D" uid="uid://bhj32v8fhfvkm" path="res://Visual Assets/Sprites/UI/TeamSelect/Unit_Selected.svg" id="2_dcf5d"]
 [ext_resource type="Texture2D" uid="uid://dmp7d6885or1x" path="res://Visual Assets/Sprites/UI/TeamSelect/Unit_Tools.svg" id="2_iqkme"]
-[ext_resource type="Texture2D" uid="uid://cim8ms1lr3s4q" path="res://Visual Assets/Sprites/UI/TeamSelect/delete.svg" id="3_d331e"]
+[ext_resource type="Texture2D" uid="uid://c2yx1jbeeex6s" path="res://Visual Assets/Sprites/UI/TeamSelect/Icon_X-Close.svg" id="4_hk4b8"]
+[ext_resource type="Texture2D" uid="uid://bapkdicf2am4n" path="res://Visual Assets/Sprites/UI/TeamSelect/SoldierList_İtem-Selected.svg" id="5_fllxl"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pw58u"]
-texture = ExtResource("3_d331e")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u8unb"]
+texture = ExtResource("4_hk4b8")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_705d5"]
-texture = ExtResource("3_d331e")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n3xg4"]
+texture = ExtResource("4_hk4b8")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ev3y2"]
-texture = ExtResource("3_d331e")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_013m8"]
+texture = ExtResource("4_hk4b8")
 
 [node name="UnitCard" type="PanelContainer" node_paths=PackedStringArray("unitIcon", "abilityIcon", "abilityIcon2", "unitName", "unitClass")]
+self_modulate = Color(1, 1, 1, 0)
 z_index = 2
 offset_right = 255.0
 offset_bottom = 100.0
 size_flags_horizontal = 3
+mouse_filter = 1
 script = ExtResource("1_uyput")
-unitIcon = NodePath("MarginContainer/VBoxContainer/UnitDetails/TextureRect/MarginContainer/UnitIcon")
-abilityIcon = NodePath("MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/MarginContainer/AbilityIcons/TextureRect/Ability1")
-abilityIcon2 = NodePath("MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/MarginContainer/AbilityIcons/TextureRect2/Ability2")
-unitName = NodePath("MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/SoldierName")
-unitClass = NodePath("MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/ClassName")
+unitIcon = NodePath("MarginContainer/VBoxContainer/UnitDetails/MarginContainer/UnitIcon")
+abilityIcon = NodePath("MarginContainer/VBoxContainer/UnitDetails/AbilityIcons/TextureRect/Ability1")
+abilityIcon2 = NodePath("MarginContainer/VBoxContainer/UnitDetails/AbilityIcons/TextureRect2/Ability2")
+unitName = NodePath("MarginContainer/VBoxContainer/UnitDetails/Names/SoldierName")
+unitClass = NodePath("MarginContainer/VBoxContainer/UnitDetails/Names/ClassName")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -35,97 +38,103 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="UnitDetails" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/UnitDetails"]
 layout_mode = 2
-texture = ExtResource("2_dcf5d")
-expand_mode = 2
-stretch_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/UnitDetails/TextureRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_bottom = -14.0
-grow_horizontal = 2
-grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="UnitIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/TextureRect/MarginContainer"]
+[node name="UnitIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/MarginContainer"]
+z_index = 5
+custom_minimum_size = Vector2(80, 40)
 layout_mode = 2
+expand_mode = 3
+stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/UnitDetails"]
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-
-[node name="SoldierName" type="Label" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer"]
-layout_mode = 2
-text = "Anderson"
-
-[node name="ClassName" type="Label" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer"]
-layout_mode = 2
-text = "Medic"
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_right = 5
-
-[node name="AbilityIcons" type="HBoxContainer" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/MarginContainer"]
+[node name="AbilityIcons" type="HBoxContainer" parent="MarginContainer/VBoxContainer/UnitDetails"]
 layout_mode = 2
 size_flags_stretch_ratio = 0.5
 theme_override_constants/separation = 20
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/MarginContainer/AbilityIcons"]
-custom_minimum_size = Vector2(0, 40)
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/AbilityIcons"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 texture = ExtResource("2_iqkme")
-expand_mode = 2
+expand_mode = 5
+stretch_mode = 5
 
-[node name="Ability1" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/MarginContainer/AbilityIcons/TextureRect"]
+[node name="Ability1" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/AbilityIcons/TextureRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.75
+offset_right = 4.75
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 3
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/AbilityIcons"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture = ExtResource("2_iqkme")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="Ability2" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/AbilityIcons/TextureRect2"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+expand_mode = 3
+stretch_mode = 3
 
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/MarginContainer/AbilityIcons"]
+[node name="Names" type="VBoxContainer" parent="MarginContainer/VBoxContainer/UnitDetails"]
 layout_mode = 2
-texture = ExtResource("2_iqkme")
-expand_mode = 2
+size_flags_horizontal = 3
 
-[node name="Ability2" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails/VBoxContainer/MarginContainer/AbilityIcons/TextureRect2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails"]
-self_modulate = Color(1, 0, 0, 1)
+[node name="SoldierName" type="Label" parent="MarginContainer/VBoxContainer/UnitDetails/Names"]
 layout_mode = 2
+size_flags_vertical = 3
+text = "Anderson"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="ClassName" type="Label" parent="MarginContainer/VBoxContainer/UnitDetails/Names"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Medic"
+horizontal_alignment = 1
+
+[node name="Delete" type="TextureRect" parent="MarginContainer/VBoxContainer/UnitDetails"]
+layout_mode = 2
+size_flags_stretch_ratio = 0.5
 texture = ExtResource("2_dcf5d")
-stretch_mode = 2
+expand_mode = 3
+stretch_mode = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/UnitDetails/TextureRect2"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/UnitDetails/Delete"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_right = -5.0
-offset_bottom = -14.0
+offset_left = 0.000999928
+offset_right = 0.0219955
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 15
@@ -133,13 +142,25 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/UnitDetails/TextureRect2/MarginContainer"]
-z_index = 2
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/UnitDetails/Delete/MarginContainer"]
+z_index = 15
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 focus_mode = 0
-theme_override_styles/hover = SubResource("StyleBoxTexture_pw58u")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_705d5")
-theme_override_styles/normal = SubResource("StyleBoxTexture_ev3y2")
+theme_override_styles/hover = SubResource("StyleBoxTexture_u8unb")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_n3xg4")
+theme_override_styles/normal = SubResource("StyleBoxTexture_013m8")
+icon_alignment = 1
 expand_icon = true
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/UnitDetails/TextureRect2/MarginContainer/Button" to="." method="OnRemovePressed"]
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -5
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_fllxl")
+expand_mode = 3
+stretch_mode = 6
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/UnitDetails/Delete/MarginContainer/Button" to="." method="OnRemovePressed"]
