@@ -1,12 +1,12 @@
 [gd_scene load_steps=21 format=3 uid="uid://bdkgdtprsx7l7"]
 
 [ext_resource type="Script" path="res://Scripts/UI/TeamSelectionMenu.cs" id="1_ha2lc"]
-[ext_resource type="PackedScene" uid="uid://c5mbw3v6f60ah" path="res://Subscenes/UI/TeamSelection/Team_Selection_Unit_Card.tscn" id="2_1xvdx"]
+[ext_resource type="PackedScene" uid="uid://c5mbw3v6f60ah" path="res://Subscenes/UI/TeamSelect/Team_Selection_Unit_Card.tscn" id="2_1xvdx"]
 [ext_resource type="Texture2D" uid="uid://bvikwtk5ar24k" path="res://Visual Assets/Sprites/UI/TeamSelect/MissionSummary.svg" id="2_cisjn"]
 [ext_resource type="Texture2D" uid="uid://ck57kixyvv4sl" path="res://Visual Assets/Sprites/UI/TeamSelect/Loadout.svg" id="3_67w8r"]
-[ext_resource type="PackedScene" uid="uid://i13gxbfa7s0b" path="res://Subscenes/UI/TeamSelection/Team_Selection_Empty.tscn" id="3_f1lrf"]
+[ext_resource type="PackedScene" uid="uid://i13gxbfa7s0b" path="res://Subscenes/UI/TeamSelect/Team_Selection_Empty.tscn" id="3_f1lrf"]
 [ext_resource type="Texture2D" uid="uid://dt0hap0yha77h" path="res://Visual Assets/Sprites/UI/TeamSelect/SecondaryButton.svg" id="4_ai7as"]
-[ext_resource type="PackedScene" uid="uid://5744h8ko4nu6" path="res://Subscenes/UI/TeamSelection/Team_Selection_Stat_Card.tscn" id="4_snaot"]
+[ext_resource type="PackedScene" uid="uid://5744h8ko4nu6" path="res://Subscenes/UI/TeamSelect/Team_Selection_Stat_Card.tscn" id="4_snaot"]
 [ext_resource type="Texture2D" uid="uid://dskqys0ho5p3b" path="res://Visual Assets/Sprites/UI/TeamSelect/RightButton.svg" id="5_8nk3u"]
 [ext_resource type="Texture2D" uid="uid://bv244ruum0807" path="res://Visual Assets/Sprites/UI/TeamSelect/SoldierDetails.svg" id="6_nig77"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="7_3gf72"]
@@ -48,6 +48,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_ha2lc")
 characterDescriptionLabel = NodePath("ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer/VBoxContainer/MarginContainer/DescriptionText")
 characterClassLabel = NodePath("ClassInfoContainer/MarginContainer/VBoxContainer/DescriptionPanel/MarginContainer/VBoxContainer/DetailsText")
@@ -251,13 +252,15 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_ujkvh")
 text = "Squad +"
 
 [node name="PartyDetailsContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0.572549)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.8
+anchor_left = 0.7
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="PartyDetailsContainer"]
 layout_mode = 2
