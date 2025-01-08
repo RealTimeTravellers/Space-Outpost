@@ -112,10 +112,10 @@ public partial class MissionManager : Node
 
     private async void OnGameStateChanged(GameState current, GameState newState)
     {
-        if (current != GameState.Battle)
+        if (current != GameState.InsideBuilding || current != GameState.Desert)
             ResetStatistics();
 
-        if (newState == GameState.Battle)
+        if (newState == GameState.InsideBuilding || newState == GameState.Desert)
             await ShowMissionBriefing(MissionIntroBriefing, true);
     }
 
