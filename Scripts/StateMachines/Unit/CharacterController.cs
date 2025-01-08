@@ -70,10 +70,11 @@ public partial class CharacterController : Node
         // Temel NavigationAgent3D ayarları
         _navAgent.PathDesiredDistance = 0.5f;
         _navAgent.TargetDesiredDistance = 0.5f;
-        _navAgent.Radius = 0.6f;
+        _navAgent.Radius = 0.4f;
         _navAgent.MaxSpeed = _movementSpeed;
-        _navAgent.NeighborDistance = 5.0f;  // Diğer ajanları algılama mesafesi
-        _navAgent.MaxNeighbors = 10;
+        _navAgent.NeighborDistance = 3.0f;  // Diğer ajanları algılama mesafesi
+        _navAgent.MaxNeighbors = 5;
+        _navAgent.PathMaxDistance = 3.0f;
         _navAgent.AvoidanceEnabled = true;
     }
 
@@ -85,17 +86,25 @@ public partial class CharacterController : Node
         var nextPos = _navAgent.GetNextPathPosition();
         if (nextPos != Vector3.Zero)
         {
-            // Velocity'yi nextPos'a doğru ayarla
-            Vector3 direction = (_character.GlobalPosition.DirectionTo(nextPos));
-            _character.Velocity = direction * _movementSpeed;
+            // Final hedefe olan mesafeyi kontrol et
+            var distanceToFinal = _character.GlobalPosition.DistanceTo(_finalDestination);
             
-            // Karakterin yönünü hedef noktaya çevir
-            var lookAtTarget = new Vector3(nextPos.X, _character.GlobalPosition.Y, nextPos.Z);
-            _character.LookAt(lookAtTarget, Vector3.Up);
-            _character.RotateY(Mathf.Pi);
-            
-            // MoveAndSlide ile hareketi uygula
-            _character.MoveAndSlide();
+            if (distanceToFinal > _navAgent.TargetDesiredDistance)
+            {
+                // Velocity'yi nextPos ve final hedef arasında dengele
+                Vector3 toNext = _character.GlobalPosition.DirectionTo(nextPos);
+                Vector3 toFinal = _character.GlobalPosition.DirectionTo(_finalDestination);
+                Vector3 blendedDirection = (toNext + toFinal * 0.5f).Normalized();
+                
+                _character.Velocity = blendedDirection * _movementSpeed;
+                
+                // Karakterin yönünü final hedefe çevir
+                var lookAtTarget = new Vector3(_finalDestination.X, _character.GlobalPosition.Y, _finalDestination.Z);
+                _character.LookAt(lookAtTarget, Vector3.Up);
+                _character.RotateY(Mathf.Pi);
+                
+                _character.MoveAndSlide();
+            }
         }
     }
 
