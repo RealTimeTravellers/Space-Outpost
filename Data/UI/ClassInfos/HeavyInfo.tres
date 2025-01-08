@@ -8,6 +8,7 @@
 [resource]
 script = ExtResource("1_7de7p")
 UnitType = 4
+WeaponDisplayType = 1
 DetailsText = "Heavy"
 DescriptionText = "Heavy weapons unit capable of dealing with large amount of enemies. Special ability allows for controlling the battlefield."
 ClassIcon = ExtResource("1_h1po2")

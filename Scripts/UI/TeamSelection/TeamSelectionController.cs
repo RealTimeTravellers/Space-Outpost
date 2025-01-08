@@ -22,8 +22,10 @@ public partial class TeamSelectionController : Node
         teamSelectionHUD.OnPartyMemberAdded += AddPartyMember;
         teamSelectionHUD.OnPartyMemberRemoved += RemovePartyMember;
         teamSelectionHUD.OnCharacterChanged += ChangeModel;
+        teamSelectionAnimatorController.onTurnAnimationComplete += RevealWeapon;
 
         UpdateModelVisibility();
+        UpdateWeaponVisibility();
         teamSelectionAnimatorController.PlayTurnAnimation(classModels[currentModelIndex]);
         teamSelectionHUD.LoadClassDetails(classInfoList[currentModelIndex]);
         teamSelectionHUD.LoadClassStatDetails(classInfoList[currentModelIndex].UnitType);
@@ -34,6 +36,7 @@ public partial class TeamSelectionController : Node
         teamSelectionHUD.OnPartyMemberAdded -= AddPartyMember;
         teamSelectionHUD.OnPartyMemberRemoved -= RemovePartyMember;
         teamSelectionHUD.OnCharacterChanged -= ChangeModel;
+        teamSelectionAnimatorController.onTurnAnimationComplete -= RevealWeapon;
         base._ExitTree();
     }
     
@@ -41,6 +44,7 @@ public partial class TeamSelectionController : Node
     {
         currentModelIndex = (currentModelIndex + direction + classModels.Count) % classModels.Count;
         UpdateModelVisibility();
+        UpdateWeaponVisibility();
         teamSelectionAnimatorController.PlayTurnAnimation(classModels[currentModelIndex]);
         teamSelectionHUD.LoadClassDetails(classInfoList[currentModelIndex]);
         teamSelectionHUD.LoadClassStatDetails(classInfoList[currentModelIndex].UnitType);
@@ -48,9 +52,21 @@ public partial class TeamSelectionController : Node
     
     private void UpdateModelVisibility()
     {
-        for (int i = 0; i < classModels.Count; i++){
-
+        for (int i = 0; i < classModels.Count; i++)
+        {
             classModels[i].Visible = i == currentModelIndex;
+        }
+    }
+
+    private void RevealWeapon()
+    {
+        classGunModels[currentModelIndex].Visible = true;
+    }
+
+    private void UpdateWeaponVisibility(){
+        for (int i = 0; i < classModels.Count; i++)
+        {
+            classGunModels[i].Visible = i == currentModelIndex && classInfoList[i].WeaponDisplayType == WeaponDisplayType.WithWeapon;
         }
     }
 
