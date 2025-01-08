@@ -350,13 +350,17 @@ theme_override_constants/separation = 5
 [node name="Left" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
+tooltip_text = "Change Target"
+focus_mode = 0
 icon = ExtResource("1_l26u0")
 
 [node name="Attack Mode Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+tooltip_text = "Aim"
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_qkhfb")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_nom10")
 theme_override_styles/normal = SubResource("StyleBoxTexture_acsxx")
@@ -374,10 +378,12 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Move" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+tooltip_text = "Move"
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_r3sjy")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_hjefy")
 theme_override_styles/normal = SubResource("StyleBoxTexture_hlyqh")
@@ -396,10 +402,12 @@ expand_mode = 3
 stretch_mode = 5
 
 [node name="Reload Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+tooltip_text = "Reload"
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_yk8ew")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_jpq3v")
 theme_override_styles/normal = SubResource("StyleBoxTexture_r5kh3")
@@ -416,10 +424,12 @@ expand_mode = 3
 stretch_mode = 5
 
 [node name="Stand and Engage Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+tooltip_text = "Pass"
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_k2x3s")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_5h1lj")
 theme_override_styles/normal = SubResource("StyleBoxTexture_hvr4u")
@@ -436,10 +446,11 @@ expand_mode = 3
 stretch_mode = 5
 
 [node name="Suppressive Fire Button" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+tooltip_text = "Suppressive Fire"
 focus_mode = 0
 theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_j7ir1")
 theme_override_styles/hover = SubResource("StyleBoxTexture_q0yph")
@@ -459,6 +470,8 @@ stretch_mode = 5
 [node name="Right" type="Button" parent="Action Panel/MarginContainer/FireDetailsZone/Action HBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
+tooltip_text = "Change Target"
+focus_mode = 0
 icon = ExtResource("2_50qdf")
 
 [node name="CharacterContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("NameLabel", "HealthBar", "NextCharacterButton", "PreviousCharacterButton", "CharacterButtons")]
@@ -530,6 +543,7 @@ size_flags_vertical = 3
 [node name="LeftCharacterSwitch" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Left Unit"
 focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_fwu0b")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1pk21")
@@ -550,6 +564,7 @@ expand_mode = 1
 [node name="FirstCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Switch Unit"
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
 
@@ -569,6 +584,7 @@ vertical_alignment = 1
 [node name="SecondCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Switch Unit"
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
 
@@ -588,6 +604,7 @@ vertical_alignment = 1
 [node name="ThirdCharacter" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Switch Unit"
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_bggi3")
 
@@ -607,6 +624,7 @@ vertical_alignment = 1
 [node name="RightCharacterSwitch" type="Button" parent="CharacterContainer/VBoxContainer/CharacterSelectionPanel/CharacterSelection"]
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Next Unit"
 focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_fwu0b")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1pk21")

@@ -13,11 +13,13 @@ public partial class CharacterAttackPanelHUD : Control
         if (CameraManager.Instance.AimingMode)
         {
             fireButton.Visible = true;
+            fireButton.MouseFilter = Control.MouseFilterEnum.Stop;
             UpdateAttackPanel(true);
         }
         else
         {
             fireButton.Visible = false;
+            fireButton.MouseFilter = Control.MouseFilterEnum.Ignore;
             UpdateAttackPanel(false);
         }
     }

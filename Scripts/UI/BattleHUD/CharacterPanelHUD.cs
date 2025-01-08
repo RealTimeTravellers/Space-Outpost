@@ -59,6 +59,12 @@ public partial class CharacterPanelHUD : Node
 		var playerCharacters = TurnManager.Instance.playerCharacters;
 		if (playerCharacters.Count == 0) return;
 
+		var currentChar = GridManager.Instance.selectedCharacter;
+		if (currentChar?.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
+		{
+			currentChar.ToggleAim();
+		}
+
 		if (currentCharacterIndex < 0 || currentCharacterIndex >= playerCharacters.Count)
 			currentCharacterIndex = 0;
 		else
@@ -74,6 +80,12 @@ public partial class CharacterPanelHUD : Node
 	{
 		var playerCharacters = TurnManager.Instance.playerCharacters;
 		if (playerCharacters.Count == 0) return;
+
+		var currentChar = GridManager.Instance.selectedCharacter;
+		if (currentChar?.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
+		{
+			currentChar.ToggleAim();
+		}
 
 		if (currentCharacterIndex < 0 || currentCharacterIndex >= playerCharacters.Count)
 			currentCharacterIndex = 0;

@@ -7,16 +7,35 @@ public partial class TeamSelectionAnimatorController : Node
 {
     [Export] private float turnAnimationDuration = 3.0f;
     private AnimationTree currentAnimationTree;
+    private bool isAnimating = false;
     public Action onTurnAnimationComplete;
 
     public async void PlayTurnAnimation(Node3D model)
     {
-        currentAnimationTree = model.GetNode<AnimationTree>("AnimationTree");
-        SetToTurn(currentAnimationTree);
-        await Task.Delay(TimeSpan.FromSeconds(turnAnimationDuration));
-        ResetAnimationState(currentAnimationTree);
-        await SetOnTurnAnimationComplete();
-    }
+        if (isAnimating) return;
+        
+        try 
+        {
+            isAnimating = true;
+            currentAnimationTree = model.GetNode<AnimationTree>("AnimationTree");
+            if (currentAnimationTree == null || currentAnimationTree.IsQueuedForDeletion()) return;
+            
+            SetToTurn(currentAnimationTree);
+            await Task.Delay(TimeSpan.FromSeconds(turnAnimationDuration));
+            
+            if (currentAnimationTree == null || currentAnimationTree.IsQueuedForDeletion()) return;
+            ResetAnimationState(currentAnimationTree);
+            await SetOnTurnAnimationComplete();
+        }
+        catch (ObjectDisposedException)
+        {
+            GD.PrintErr("Animation tree was disposed during animation");
+        }
+        finally
+        {
+            isAnimating = false;
+        }
+}
 
     private void SetToIdle(AnimationTree animTree)
     {
@@ -32,6 +51,8 @@ public partial class TeamSelectionAnimatorController : Node
 
     private void ResetAnimationState(AnimationTree animTree)
     {
+        if (animTree == null || animTree.IsQueuedForDeletion()) return;
+        
         animTree.Set("parameters/conditions/idle", false);
         animTree.Set("parameters/conditions/turn", false);
     }
