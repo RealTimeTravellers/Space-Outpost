@@ -434,7 +434,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => e != this)) 
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
-			if (distance < Perception/* Stats.Perception.GetValue() */) // is in identification range
+			if (distance < Stats.Perception.GetValue()) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
@@ -443,8 +443,10 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				
 				if (!wallHit.NonEmpty)
 				{
-					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(4), true);
-					if (characterHit.NonEmpty)
+					uint targetLayer = IsFriendly ? 5u : 4u; 
+					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(targetLayer), true);
+					
+					if (characterHit.NonEmpty && characterHit.Collider == enemy)
 					{
 						enemiesWithLos.Add(enemy);
 					}
