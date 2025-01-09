@@ -238,12 +238,22 @@ public partial class EnemyAIController : Node
         {
             float distanceToTarget = _character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition);
 
-            if (distanceToTarget > _character.Perception/* .Stats.Perception.GetValue() */)
+            // Human için Tactical state kontrolü
+            if (_character.UnitType != UnitType.Alien && distanceToTarget <= _character.Perception *2)
             {
-                var grid = GridManager.Instance.GetGridObjectFromWorldPosition(_character.Target.GlobalPosition);
+                _character.enemyController._stateMachine.ChangeState(AIState.Tactical, _character);
+                return;
+            }
+
+            // Hedefe yaklaş ve ateş et
+            if (distanceToTarget > _character.Perception)
+            {
+                var targetPos = _character.Target.GlobalPosition;
+                var grid = GridManager.Instance.GetGridObjectFromWorldPosition(targetPos);
+                
                 if (grid != null)
                 {
-                    await MoveToGrid(grid, 10);
+                    await MoveToGrid(grid, 18);
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                 }
             }
@@ -288,6 +298,12 @@ public partial class EnemyAIController : Node
             if (!_character.IsInCover || _character.CharacterController._stateMachine.CurrentStateType != CharacterStateType.InCover)
             {
                 var tacticalCover = FindTacticalCover(_character);
+
+                if (tacticalCover == null || _character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition) > _character.Perception *2)
+                {
+                    _character.enemyController._stateMachine.ChangeState(AIState.Aggression, _character);
+                    return;
+                }
                 
                 if (tacticalCover != null)
                 {

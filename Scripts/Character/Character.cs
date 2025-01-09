@@ -597,14 +597,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				
 			timeoutTimer += 0.1f;
 			
-			// Eğer navigation bitip tekrar başladıysa timer'ı sıfırla
 			if (wasNavigationFinished && !CharacterController._navAgent.IsNavigationFinished())
 			{
 				timeoutTimer = 0f;
 			}
 			
-			// 1.5 saniye timeout kontrolü
-			if (timeoutTimer >= 5f)
+			if (timeoutTimer >= 6f)
 			{
 				GlobalPosition = targetGrid.GlobalPosition;
 				break;
@@ -614,13 +612,8 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
 
-		// Son pozisyon kontrolü
-		var distanceToTarget = GlobalPosition.DistanceTo(targetGrid.GlobalPosition);
-		if (distanceToTarget > 0.5f)
-		{
-			GlobalPosition = targetGrid.GlobalPosition;
-		}
-
+		GlobalPosition = targetGrid.GlobalPosition;
+		wasNavigationFinished = true;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
