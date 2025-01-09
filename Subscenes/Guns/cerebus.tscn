@@ -29,7 +29,8 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 
 [node name="Supp Hit Effect" parent="." instance=ExtResource("6_nlalo")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
-amount = 8
+amount = 9
 
 [node name="Supp Miss Effect" parent="." instance=ExtResource("7_kvf5q")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
+amount = 9
