@@ -17,4 +17,5 @@ public partial class BattleLogTexts : Resource
     [Export] public string CharacterCriticalHitLog { get; set; } = "{0} landed a critical hit on {1}!";
     [Export] public string TurnStartLog { get; set; } = "{0}'s turn has started.";
     [Export] public string TurnEndLog { get; set; } = "{0}'s turn has ended.";
+    [Export] public string CharacterNoEnemiesInSightLog { get; set; } = "{0} has no enemies in sight.";
 }

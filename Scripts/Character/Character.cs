@@ -304,8 +304,21 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 		else
 		{
-			CameraManager.Instance.AimingMode = true;
+			var potentialEnemies = QueryForEnemies(new Godot.Collections.Array<Character>(
+				IsFriendly ? 
+				TurnManager.Instance.enemyCharacters.Where(e => 
+					e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death).ToList() : 
+				TurnManager.Instance.playerCharacters.Where(e => 
+					e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death).ToList()
+			));
+
+			if (potentialEnemies.Count == 0){
+				MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterNoEnemiesInSightLog, IsFriendly, this.Name);
+				return;
+			}
+				
 			CharacterController.SetState(CharacterStateType.Aiming, this);
+			CameraManager.Instance.AimingMode = true;
 		}
 	}
 

@@ -8,12 +8,6 @@ public class CharacterAimingState : CharacterState
     {
         base.Enter(character);
 
-        if (!EnemyInSight(character))
-        {
-            character.ToggleAim(); 
-            return;
-        }
-
         var nearestCover = character.QueryForCover();
         nearCover = nearestCover != null && 
             character.GlobalPosition.DistanceTo(nearestCover.GlobalPosition) <= 2f;
@@ -61,6 +55,7 @@ public class CharacterAimingState : CharacterState
     {
         if (character.CharacterController._stateMachine.PreviousStateType == CharacterStateType.Shooting)
         {
+            CameraManager.ReturnCameraToTactical();
             if (!CameraManager.Instance.AimingMode)
             {
                 if (nearCover)

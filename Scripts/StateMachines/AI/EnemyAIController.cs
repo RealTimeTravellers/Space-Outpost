@@ -82,16 +82,28 @@ public partial class EnemyAIController : Node
 
         character.SearchForEnemies();
         
-        if (character.Target == null || character.Target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death)
-            if (character.enemiesInLos.Count > 0)
-                character.Target = character.enemiesInLos.FirstOrDefault();
-            else
-                character.Target = GetNearestPlayer(character.GlobalPosition);
+        // Önce enemiesInLos'u kontrol et
+        if (character.enemiesInLos.Count > 0)
+        {
+            character.Target = character.enemiesInLos.FirstOrDefault();
+        }
+        else
+        {
+            character.Target = GetNearestPlayer(character.GlobalPosition);
+        }
+
+        // Target null check
+        if (character.Target == null || 
+            character.Target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death)
+        {
+            return false;
+        }
 
         float distanceToTarget = character.GlobalPosition.DistanceTo(character.Target.GlobalPosition);
         bool canShoot = distanceToTarget <= character.Perception;
         
-        GD.Print($"[AI Debug] {character.Name} renewed target: {character.Target.Name}, Can shoot: {canShoot}");
+        GD.Print($"[AI Debug] {character.Name} renewed target: {character.Target.Name}, " +
+                $"Distance: {distanceToTarget}, Perception: {character.Perception}, Can shoot: {canShoot}");
         return canShoot;
     }
 
@@ -264,7 +276,15 @@ public partial class EnemyAIController : Node
         {
             bool canShoot = RenewTarget(_character);
 
-            // Not in cover or in cover but not in cover state
+            // Eğer cover'daysa ve ateş edebiliyorsa, hemen ateş et
+            if (_character.IsInCover && canShoot && _character.actionPoints > 0)
+            {
+                await EnemyShoot();
+                await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+                return;
+            }
+
+            // Cover'da değilse veya ateş edemiyorsa cover ara
             if (!_character.IsInCover || _character.CharacterController._stateMachine.CurrentStateType != CharacterStateType.InCover)
             {
                 var tacticalCover = FindTacticalCover(_character);
@@ -274,13 +294,15 @@ public partial class EnemyAIController : Node
                     await MoveToGrid(tacticalCover, 15);
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 
-                    
-                    // After moving to cover, renew target and shoot
+                    // Yeni cover'dan ateş kontrolü
                     if (RenewTarget(_character) && _character.actionPoints > 0)
+                    {
                         await EnemyShoot();
+                        await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+                    }
                 }
             }
-            // In cover and cannot shoot
+            // Cover'daysa ama ateş edemiyorsa daha iyi cover ara
             else if (!canShoot)
             {
                 var currentCover = _character.currentGrid;
@@ -289,11 +311,8 @@ public partial class EnemyAIController : Node
                 if (betterCover != null)
                 {                  
                     EnemyManager.Instance.UnregisterCoverOccupation(currentCover);
-                    
                     await MoveToGrid(betterCover, 15);
                     await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-                    
-                    EnemyManager.Instance.RegisterCoverOccupation(betterCover, _character);
                     
                     if (RenewTarget(_character) && _character.actionPoints > 0)
                     {
@@ -302,9 +321,6 @@ public partial class EnemyAIController : Node
                     }
                 }
             }
-            // In Cover and can fire
-            else if (_character.actionPoints > 0 && canShoot)
-                await EnemyShoot();
         }
         catch (Exception e)
         {

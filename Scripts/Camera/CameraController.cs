@@ -8,6 +8,7 @@ public partial class CameraController : Node3D
     [Export] float cameraSpeed = 5f;
     [Export] float zoomSpeed = 0.1f;
     [Export] private float multiplier = 2f;
+    [Export] float rotationSpeed = 1f;
 
     public override void _Process(double delta)
     {
@@ -45,6 +46,11 @@ public partial class CameraController : Node3D
             this.Position += cameraSpeed * Vector3.Forward * delta * multiplier;
         else if (Input.IsActionPressed("Move Backward"))
             this.Position += cameraSpeed * Vector3.Back * delta * multiplier;
+        
+        if (Input.IsActionPressed("Rotate Left"))
+            RotateY(rotationSpeed * delta);
+        else if (Input.IsActionPressed("Rotate Right"))
+            RotateY(-rotationSpeed * delta);
         
         if (!CameraManager.Instance.AimingMode)
             CameraManager.Instance.TacticalCameraPostion.Position = Position;
