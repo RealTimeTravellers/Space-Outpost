@@ -38,13 +38,13 @@ public partial class CharacterAttackPanelHUD : Control
             var target = character.Target;
             var armorValue = target.Stats.Armor.GetValue();
             // Base damage
-            int baseDamage = 5; 
+            var selectedGun = character.gun;
             
-            int minDamage = Mathf.Max(1, baseDamage - armorValue);
-            int maxDamage = baseDamage;
+            int minDamage = selectedGun.data.MinDamage;
+            int maxDamage = selectedGun.data.MaxDamage;
             
             DamageLabel.Text = $"Damage: {minDamage} - {maxDamage}";
-            AccuracyLabel.Text = "Accuracy: " + (character.Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue()).ToString();
+            AccuracyLabel.Text = "Accuracy: " + (character.Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue()).ToString() + selectedGun.data.Accuracy;
             CriticalHitChanceLabel.Text = "Crit Chance: " + character.Stats.CriticalHitChance.GetValue().ToString();
             EvasionLabel.Text = "Evasion: " + target.Stats.Evasion.GetValue().ToString();
         }
