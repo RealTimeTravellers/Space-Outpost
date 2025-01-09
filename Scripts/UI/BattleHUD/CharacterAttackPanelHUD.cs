@@ -1,5 +1,11 @@
 using Godot;
 
+public enum FireType
+{
+    Attack,
+    SuppressiveFire,
+}
+
 public partial class CharacterAttackPanelHUD : Control
 {
     [Export] public Label DamageLabel;
@@ -32,7 +38,7 @@ public partial class CharacterAttackPanelHUD : Control
             var target = character.Target;
             var armorValue = target.Stats.Armor.GetValue();
             // Base damage
-            int baseDamage = 7; 
+            int baseDamage = 5; 
             
             int minDamage = Mathf.Max(1, baseDamage - armorValue);
             int maxDamage = baseDamage;

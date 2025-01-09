@@ -7,6 +7,7 @@ public partial class BattleHUD : Control
     [Export] public LoggingPanelHUD loggingPanel;
     [Export] public CharacterStatPanelHUD characterStatPanel;
     [Export] public CharacterAttackPanelHUD characterAttackPanel;
+    private FireType currentFireType = FireType.Attack;
     public override void _Ready()
     {
         MissionManager.Instance.InitializeLogger(loggingPanel);
@@ -51,7 +52,10 @@ public partial class BattleHUD : Control
             character.actionPoints/* Stats.ActionPoints.GetValue() */ > 0 &&
             character.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Aiming)
         {
-            character.CharacterController.SetState(CharacterStateType.Shooting, character);
+            if(currentFireType == FireType.Attack && character.gun.currentAmmo > 0)
+                character.CharacterController.SetState(CharacterStateType.Shooting, character);
+            else if(currentFireType == FireType.SuppressiveFire && character.gun.currentAmmo > 2)
+                character.CharacterController.SetState(CharacterStateType.SuppressiveShooting, character);
             characterAttackPanel.OnAimUIUpdate();
             characterStatPanel.UpdateAmmoBox(character);
         }
@@ -82,9 +86,12 @@ public partial class BattleHUD : Control
     public void OnSupressiveFirePressed()
     {
         Character character = GridManager.Instance.selectedCharacter;
-        CameraManager.AreaSelectionMode();
-        if(character != null && character.IsFriendly && character.actionPoints > 0)
-            character.SupressiveFire();
+        if (character != null && character.IsFriendly && character.actionPoints > 0)
+        {
+            character.ToggleAim();
+            currentFireType = FireType.SuppressiveFire;
+            characterAttackPanel.OnAimUIUpdate();
+        }
     }
 
     public void OnAttackModePressed()
@@ -93,6 +100,7 @@ public partial class BattleHUD : Control
         if (character != null && character.IsFriendly && character.actionPoints > 0)
         {
             character.ToggleAim();
+            currentFireType = FireType.Attack;
             characterAttackPanel.OnAimUIUpdate();
         }
     }

@@ -53,7 +53,8 @@ public class CharacterAimingState : CharacterState
 
     public override CharacterStateType CheckState(Character character)
     {
-        if (character.CharacterController._stateMachine.PreviousStateType == CharacterStateType.Shooting)
+        if (character.CharacterController._stateMachine.PreviousStateType == CharacterStateType.Shooting ||
+            character.CharacterController._stateMachine.PreviousStateType == CharacterStateType.SuppressiveShooting)
         {
             CameraManager.ReturnCameraToTactical();
             if (!CameraManager.Instance.AimingMode)

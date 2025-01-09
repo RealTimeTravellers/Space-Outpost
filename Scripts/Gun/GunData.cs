@@ -14,6 +14,7 @@ public partial class GunData : Resource
 
     [Export] public Array<AudioStream> readySounds;
     [Export] public Array<AudioStream> ShootSounds;
+    [Export] public Array<AudioStream> SuppressiveShootSounds;
     [Export] public Array<AudioStream> emptySounds;
     [Export] public Array<AudioStream> reloadSounds;
 

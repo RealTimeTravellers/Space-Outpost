@@ -45,6 +45,9 @@ public partial class CharacterAnimatorController : Node
         
         string stateName = newState.ToString().ToLowerInvariant();
         GD.Print($"[Animation] State changed to: {stateName}");
+
+        if (stateName == "suppressiveshooting")
+            stateName = "shooting";
         
         // State değişiminde animasyon isteğini tetikle
         HandleAnimationRequested(stateName);
