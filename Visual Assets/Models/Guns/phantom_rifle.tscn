@@ -3,4 +3,4 @@
 [ext_resource type="PackedScene" uid="uid://bc4pn28oafuhm" path="res://Visual Assets/Models/Guns/Laser Rifle/Gun_4.fbx" id="1_2tvwd"]
 
 [node name="Phantom" instance=ExtResource("1_2tvwd")]
-transform = Transform3D(-0.6, 0, -5.24537e-08, 0, 0.6, 0, 5.24537e-08, 0, -0.6, 0, 0, 0)
+transform = Transform3D(-0.55, 0, -8.30477e-08, 0, 0.55, 0, 8.30477e-08, 0, -0.55, 0, 0, 0)

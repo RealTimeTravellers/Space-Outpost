@@ -31,6 +31,7 @@ public partial class TeamSelectionController : Node
         teamSelectionAnimatorController.PlayTurnAnimation(classModels[currentModelIndex]);
         teamSelectionHUD.LoadClassDetails(classInfoList[currentModelIndex]);
         teamSelectionHUD.LoadClassStatDetails(classInfoList[currentModelIndex].UnitType);
+        teamSelectionHUD.UpdateWeaponStats(currentGunIndex);
     }
 
     public override void _ExitTree()

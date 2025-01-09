@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bdkgdtprsx7l7"]
+[gd_scene load_steps=27 format=3 uid="uid://bdkgdtprsx7l7"]
 
 [ext_resource type="Script" path="res://Scripts/UI/TeamSelectionMenu.cs" id="1_ha2lc"]
 [ext_resource type="PackedScene" uid="uid://c5mbw3v6f60ah" path="res://Subscenes/UI/TeamSelect/Team_Selection_Unit_Card.tscn" id="2_1xvdx"]
@@ -43,6 +43,8 @@ texture = ExtResource("5_8nk3u")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hy1ie"]
 texture = ExtResource("5_8nk3u")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aate5"]
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qr200"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3gify"]
@@ -75,6 +77,7 @@ WeaponStatsList = NodePath("GunSwitchContainer/MarginContainer/WeaponBox/WeaponS
 WeaponStat = ExtResource("5_i5626")
 
 [node name="StatContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0.588235)
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.24
@@ -110,6 +113,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 7.0
 
 [node name="ClassInfoContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0.588235)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.333
@@ -367,13 +371,14 @@ texture_normal = ExtResource("8_uqayv")
 stretch_mode = 0
 
 [node name="GunSwitchContainer" type="PanelContainer" parent="."]
-self_modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0.411765)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.35
 anchor_right = 0.65
 anchor_bottom = 0.3
 grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_aate5")
 
 [node name="MarginContainer" type="MarginContainer" parent="GunSwitchContainer"]
 layout_mode = 2
@@ -431,6 +436,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="TextureRect" type="TextureRect" parent="GunSwitchContainer"]
+self_modulate = Color(1, 1, 1, 0.588235)
 z_index = -5
 layout_mode = 2
 mouse_filter = 2

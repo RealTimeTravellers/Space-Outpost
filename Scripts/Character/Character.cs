@@ -486,7 +486,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (target == null || target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death || actionPoints <= 0) return;
 		// Calculate hit chance based on attacker's accuracy
 
-		float hitChance = Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue();
+		float hitChance = Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue() + gun.data.Accuracy;
 		hitChance = Mathf.Clamp(hitChance, 10f, 95f);
 		bool hit = GD.Randf() <= hitChance / 100f;
 

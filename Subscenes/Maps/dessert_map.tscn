@@ -81,30 +81,35 @@ _navigationRegion = NodePath("..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
 script = ExtResource("20_qid71")
 EnemyType = 2
+GunType = 1
 Grid = NodePath("../../../../Grid Parent/Grid Object2656")
 
 [node name="EnemySpawn2" type="Node3D" parent="Map Environment/NavigationRegion3D/EnemySpawner" node_paths=PackedStringArray("Grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 12)
 script = ExtResource("20_qid71")
 EnemyType = 2
+GunType = 1
 Grid = NodePath("../../../../Grid Parent/Grid Object2779")
 
 [node name="EnemySpawn3" type="Node3D" parent="Map Environment/NavigationRegion3D/EnemySpawner" node_paths=PackedStringArray("Grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 48)
 script = ExtResource("20_qid71")
 EnemyType = 4
+GunType = 1
 Grid = NodePath("../../../../Grid Parent/Grid Object2698")
 
 [node name="EnemySpawn4" type="Node3D" parent="Map Environment/NavigationRegion3D/EnemySpawner" node_paths=PackedStringArray("Grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 36)
 script = ExtResource("20_qid71")
 EnemyType = 3
+GunType = 1
 Grid = NodePath("../../../../Grid Parent/Grid Object1567")
 
 [node name="EnemySpawn5" type="Node3D" parent="Map Environment/NavigationRegion3D/EnemySpawner" node_paths=PackedStringArray("Grid")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, -18)
 script = ExtResource("20_qid71")
 EnemyType = 2
+GunType = 1
 Grid = NodePath("../../../../Grid Parent/Grid Object3675")
 
 [node name="EnemySpawn6" type="Node3D" parent="Map Environment/NavigationRegion3D/EnemySpawner" node_paths=PackedStringArray("Grid")]
