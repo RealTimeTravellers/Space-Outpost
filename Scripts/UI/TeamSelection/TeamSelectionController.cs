@@ -17,11 +17,13 @@ public partial class TeamSelectionController : Node
     [Export] public TeamSelectionMenu teamSelectionHUD;
     [Export] public TeamSelectionAnimatorController teamSelectionAnimatorController;
     public int currentModelIndex { get; private set; } = 0;
+    public int currentGunIndex { get; private set; } = 0;
     public override void _Ready()
     {
         teamSelectionHUD.OnPartyMemberAdded += AddPartyMember;
         teamSelectionHUD.OnPartyMemberRemoved += RemovePartyMember;
         teamSelectionHUD.OnCharacterChanged += ChangeModel;
+        teamSelectionHUD.OnGunChanged += ChangeGun;
         teamSelectionAnimatorController.onTurnAnimationComplete += RevealWeapon;
 
         UpdateModelVisibility();
@@ -36,6 +38,7 @@ public partial class TeamSelectionController : Node
         teamSelectionHUD.OnPartyMemberAdded -= AddPartyMember;
         teamSelectionHUD.OnPartyMemberRemoved -= RemovePartyMember;
         teamSelectionHUD.OnCharacterChanged -= ChangeModel;
+        teamSelectionHUD.OnGunChanged -= ChangeGun;
         teamSelectionAnimatorController.onTurnAnimationComplete -= RevealWeapon;
         base._ExitTree();
     }
@@ -76,12 +79,21 @@ public partial class TeamSelectionController : Node
             classInfoList[currentModelIndex].UnitType,
             TeamSelectionManager.Instance.GetPartyMembers().Count,
             classInfoList[currentModelIndex],
-            Name
+            Name,
+            (GunType)currentGunIndex
         );
     }
 
     public void RemovePartyMember(int slotIndex)
     {
         TeamSelectionManager.Instance.RemovePartyMember(slotIndex);
+    }
+
+    private void ChangeGun(int direction)
+    {
+        currentGunIndex = (currentGunIndex + direction + GunManager.Instance.gunModels.Count) % GunManager.Instance.gunModels.Count;
+        classModels[currentModelIndex].GetNode<TeamSelectCharacter>(".").gun.SetGun((GunType)currentGunIndex);
+        teamSelectionHUD.UpdateGunIcon(GunManager.Instance.gunData[currentGunIndex].Icon);
+        teamSelectionHUD.UpdateWeaponStats(currentGunIndex);
     }
 }

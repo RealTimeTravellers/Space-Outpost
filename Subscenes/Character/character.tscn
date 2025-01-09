@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="6_ktjjd"]
 [ext_resource type="PackedScene" uid="uid://chb7julp82npg" path="res://Visual Assets/Models/Units/asker.tscn" id="7_bu17e"]
 [ext_resource type="PackedScene" uid="uid://bg6omebyib8fj" path="res://Subscenes/Audio Player/Enemy_audio_player.tscn" id="8_ktyxe"]
-[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/cerebus.tscn" id="8_ru33l"]
+[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/Gun.tscn" id="8_ru33l"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
 

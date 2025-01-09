@@ -32,9 +32,9 @@ public partial class TeamSelectionManager : Node
             ResetParty();
     }
 
-    public void AddPartyMember(PlayerType unitType, int slotIndex, ClassInfo classInfo, string name)
+    public void AddPartyMember(PlayerType unitType, int slotIndex, ClassInfo classInfo, string name, GunType gunType)
     {
-        partyMembers.Add(new PartySelection(slotIndex, unitType, classInfo, name));
+        partyMembers.Add(new PartySelection(slotIndex, unitType, classInfo, name, gunType));
     }
 
     public void RemovePartyMember(int slotIndex)

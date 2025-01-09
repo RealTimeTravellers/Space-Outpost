@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterController.cs" id="4_lcm6e"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="5_obgjx"]
 [ext_resource type="PackedScene" uid="uid://0u254e6s6p5v" path="res://Visual Assets/Models/Units/asker_heavy.tscn" id="6_c7is7"]
-[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/cerebus.tscn" id="7_7bs06"]
+[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/Gun.tscn" id="7_7bs06"]
 [ext_resource type="PackedScene" uid="uid://bg6omebyib8fj" path="res://Subscenes/Audio Player/Enemy_audio_player.tscn" id="8_3oxgv"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
@@ -25,7 +25,7 @@ CharacterController = NodePath("CharacterController")
 IsFriendly = true
 actionData = ExtResource("2_yqh5b")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
-gun = NodePath("AnimatorController/Asker/Skeleton3D/BoneAttachment3D/Cerebus")
+gun = NodePath("AnimatorController/Asker/Skeleton3D/BoneAttachment3D/Gun")
 chracterAudioPlayer = NodePath("Character Audio")
 HealthLabel = NodePath("Health Text")
 SelectionSprite = NodePath("Selection Sprite")
@@ -85,17 +85,17 @@ _characterController = NodePath("../CharacterController")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 
 [node name="Skeleton3D" parent="AnimatorController/Asker" index="0"]
-bones/1/position = Vector3(0.0554558, 0.960946, 0.0199161)
-bones/1/rotation = Quaternion(-0.0560575, -0.0566154, 0.0233874, 0.996547)
-bones/2/rotation = Quaternion(0.00462399, 0.0255881, -0.0216839, 0.999427)
-bones/3/rotation = Quaternion(0.0129502, 0.0069537, -0.00634938, 0.999872)
+bones/1/position = Vector3(0.0446792, 0.960876, 0.00431228)
+bones/1/rotation = Quaternion(-0.0639976, -0.0356959, 0.0267924, 0.996952)
+bones/2/rotation = Quaternion(0.00962466, 0.0169439, -0.0195769, 0.999618)
+bones/3/rotation = Quaternion(0.0129646, 0.00635249, -0.00450759, 0.999886)
 bones/4/rotation = Quaternion(0.0129067, 0.00694282, -0.00545194, 0.999878)
-bones/5/rotation = Quaternion(0.0554738, 0.0460521, 0.017801, 0.997239)
-bones/6/rotation = Quaternion(0.0122366, -0.0839288, 0.0146316, 0.996289)
-bones/8/rotation = Quaternion(-0.670492, -0.317811, 0.548154, -0.38596)
-bones/9/rotation = Quaternion(0.23767, 0.164899, 0.122425, 0.949386)
-bones/10/rotation = Quaternion(-0.0593031, -0.00164279, 0.590876, 0.804578)
-bones/11/rotation = Quaternion(-0.147069, -0.907344, 0.00289435, 0.393813)
+bones/5/rotation = Quaternion(0.0602465, 0.0543542, 0.0201056, 0.9965)
+bones/6/rotation = Quaternion(0.0486416, -0.0335764, 0.0008422, 0.998251)
+bones/8/rotation = Quaternion(-0.671804, -0.316455, 0.547092, -0.386298)
+bones/9/rotation = Quaternion(0.238663, 0.184499, 0.0678727, 0.950996)
+bones/10/rotation = Quaternion(-0.0635996, -0.00157435, 0.633684, 0.770972)
+bones/11/rotation = Quaternion(-0.189427, -0.907987, 0.0112517, 0.373564)
 bones/12/rotation = Quaternion(0.181158, -0.0498233, 0.101047, 0.976979)
 bones/13/rotation = Quaternion(0.017809, -0.0308219, 0.194211, 0.980314)
 bones/14/rotation = Quaternion(-0.12928, -0.0118662, 0.186953, 0.973753)
@@ -106,9 +106,9 @@ bones/20/rotation = Quaternion(0.529882, -0.0860676, -0.190771, 0.821841)
 bones/21/rotation = Quaternion(0.522136, 0.00287346, -0.144627, 0.840505)
 bones/22/rotation = Quaternion(0.255518, 0.00800282, -0.00423779, 0.966762)
 bones/24/rotation = Quaternion(0.678852, -0.324674, 0.478112, 0.452941)
-bones/25/rotation = Quaternion(0.255944, -0.293211, -0.136657, 0.910958)
-bones/26/rotation = Quaternion(-0.160647, 0.00246401, -0.732475, 0.661564)
-bones/27/rotation = Quaternion(0.207584, 0.486348, -0.0124778, 0.848657)
+bones/25/rotation = Quaternion(0.259314, -0.294155, -0.145942, 0.908256)
+bones/26/rotation = Quaternion(-0.160649, 0.00246395, -0.732482, 0.661556)
+bones/27/rotation = Quaternion(0.245405, 0.488574, -0.00128995, 0.837299)
 bones/28/rotation = Quaternion(0.423495, -0.163242, 0.0968119, 0.885794)
 bones/29/rotation = Quaternion(-0.27589, -0.0740687, -0.109282, 0.95208)
 bones/30/rotation = Quaternion(-0.329142, -0.056281, 0.149915, 0.930604)
@@ -118,21 +118,21 @@ bones/34/rotation = Quaternion(0.565433, -0.0275275, 0.0999798, 0.818249)
 bones/36/rotation = Quaternion(0.423609, 0.069451, 0.156357, 0.889542)
 bones/37/rotation = Quaternion(0.761312, -0.00655002, 0.169598, 0.625778)
 bones/38/rotation = Quaternion(0.705199, -0.00805262, 0.0796783, 0.704472)
-bones/40/rotation = Quaternion(0.0991894, 0.0921328, 0.990614, -0.0188683)
-bones/41/rotation = Quaternion(-0.216702, -0.084283, 0.00493401, 0.97258)
-bones/42/rotation = Quaternion(0.481412, -0.0189313, 0.0363481, 0.875536)
-bones/43/rotation = Quaternion(0.352807, 0.00140689, -0.000244264, 0.935695)
-bones/45/rotation = Quaternion(-0.144649, -0.0401623, 0.9837, 0.0989853)
-bones/46/rotation = Quaternion(-0.210657, 0.069397, -0.0300704, 0.97463)
-bones/47/rotation = Quaternion(0.580422, 0.0469514, 0.0413958, 0.811907)
-bones/48/rotation = Quaternion(0.364349, -0.000612285, -0.000851811, 0.931262)
+bones/40/rotation = Quaternion(0.0983558, 0.0884347, 0.991045, -0.0183098)
+bones/41/rotation = Quaternion(-0.197419, -0.066668, 0.0040538, 0.978041)
+bones/42/rotation = Quaternion(0.460855, -0.0175351, 0.0370391, 0.886529)
+bones/43/rotation = Quaternion(0.350303, 0.0015819, -0.000464061, 0.936635)
+bones/45/rotation = Quaternion(-0.145954, -0.0389379, 0.984131, 0.0931037)
+bones/46/rotation = Quaternion(-0.225513, 0.0831409, -0.0329554, 0.970127)
+bones/47/rotation = Quaternion(0.585578, 0.0512709, 0.0357099, 0.808204)
+bones/48/rotation = Quaternion(0.363198, -0.000692765, -0.000749437, 0.931711)
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="AnimatorController/Asker/Skeleton3D" index="1"]
-transform = Transform3D(0.0445482, 0.918122, 0.393785, 0.960226, -0.148114, 0.236704, 0.275649, 0.367578, -0.888203, -0.0888291, 1.22228, 0.271048)
+transform = Transform3D(0.0737107, 0.951816, 0.297679, 0.951063, -0.156905, 0.266196, 0.300077, 0.26349, -0.916803, -0.0891955, 1.22334, 0.255389)
 bone_name = "mixamorig_RightHand"
 bone_idx = 27
 
-[node name="Cerebus" parent="AnimatorController/Asker/Skeleton3D/BoneAttachment3D" instance=ExtResource("7_7bs06")]
+[node name="Gun" parent="AnimatorController/Asker/Skeleton3D/BoneAttachment3D" instance=ExtResource("7_7bs06")]
 transform = Transform3D(-0.287787, 0.955979, 0.0572757, -0.0584089, 0.0421737, -0.997402, -0.955912, -0.290384, 0.0437005, 0.0131963, 0.164462, 0.00718556)
 
 [node name="Character Audio" parent="." instance=ExtResource("8_3oxgv")]

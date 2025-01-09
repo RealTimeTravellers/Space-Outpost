@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://iks1ghetu043"]
+
+[ext_resource type="PackedScene" uid="uid://7wsqp7vv7x5m" path="res://Visual Assets/Models/Guns/Assault Rifle/Gun_2.FBX" id="1_7b776"]
+
+[node name="Cerebus" instance=ExtResource("1_7b776")]
+transform = Transform3D(0.999999, 0.00102175, -0.000635644, -0.00102139, 0.999999, 0.000558415, 0.000636224, -0.000557754, 1, 0, 0, 0)

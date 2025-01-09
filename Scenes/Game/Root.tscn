@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://77qkpxdiae0u"]
+[gd_scene load_steps=17 format=3 uid="uid://77qkpxdiae0u"]
 
 [ext_resource type="PackedScene" uid="uid://byqw1oqs82ord" path="res://Subscenes/Managers/game_manager.tscn" id="1_87e0o"]
 [ext_resource type="PackedScene" uid="uid://cbhkfpor6datm" path="res://Subscenes/Configs/settings.tscn" id="2_aa3yh"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://ckfic5h3ptlig" path="res://Subscenes/Maps/dessert_map.tscn" id="9_oir4j"]
 [ext_resource type="Script" path="res://Scripts/Managers/TeamSelectionManager.cs" id="11_rimfl"]
 [ext_resource type="PackedScene" path="res://Scenes/Game/Mission Manager.tscn" id="12_xbffx"]
+[ext_resource type="PackedScene" uid="uid://b1u81hbwih87t" path="res://Scenes/Game/Gun Manager.tscn" id="16_6hlo5"]
 
 [node name="Root" type="Node3D"]
 
@@ -40,3 +41,5 @@ transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707106, 0, -0.707106, 0.707106, 
 script = ExtResource("11_rimfl")
 
 [node name="MissionManager" parent="." instance=ExtResource("12_xbffx")]
+
+[node name="GunManager" parent="." instance=ExtResource("16_6hlo5")]

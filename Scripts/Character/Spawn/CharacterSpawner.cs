@@ -49,6 +49,7 @@ public partial class CharacterSpawner : Node
                 spawnedCharacter.Name = $"{teamMembers[i].Name}";
                 var character = spawnedCharacter.GetNode<Character>(".");
                 character.CharacterController._navigationRegion = _navigationRegion;
+                character.gun.SetGun(teamMembers[i].GunType);
                 
                 // Önce pozisyonu ayarla
                 character.GlobalPosition = spawnPosition;

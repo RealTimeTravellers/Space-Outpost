@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://baot3vjhyh8l6"]
+
+[ext_resource type="PackedScene" uid="uid://bc4pn28oafuhm" path="res://Visual Assets/Models/Guns/Laser Rifle/Gun_4.fbx" id="1_2tvwd"]
+
+[node name="Phantom" instance=ExtResource("1_2tvwd")]
+transform = Transform3D(-0.6, 0, -5.24537e-08, 0, 0.6, 0, 5.24537e-08, 0, -0.6, 0, 0, 0)

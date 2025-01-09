@@ -6,8 +6,10 @@ using System.Runtime.CompilerServices;
 public partial class Gun : Node3D
 {
     [Export] public GunData data { get; private set; }
+    [Export] public Node3D gunModelParent { get; private set; }
 
     [Export] public int currentAmmo { get; private set; } = 0;
+    private int _currentGunIndex = 0;
 
 	[Export] private GpuParticles3D shootHitEffect;
 	[Export] private GpuParticles3D shootMissEffect;
@@ -124,5 +126,21 @@ public partial class Gun : Node3D
         // guns are unlimited ammo
         currentAmmo = data.MagazineCapacity;
         PlaySound(GunActionState.Reload);
+    }
+
+    public void SetGun(GunType gunType)
+    {
+        int index = (int)gunType;
+
+        // Clean old model
+        if (gunModelParent.GetChildCount() > 0)
+            gunModelParent.GetChild(0).QueueFree();
+        
+        // Add new model
+        var newModel = GunManager.Instance.gunModels[index].Instantiate();
+        gunModelParent.AddChild(newModel);
+        
+        // Set gun data
+        data = GunManager.Instance.gunData[index];
     }
 }

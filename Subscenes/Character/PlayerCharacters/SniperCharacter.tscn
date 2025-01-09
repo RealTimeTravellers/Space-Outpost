@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://sk4gltyhmbp4" path="res://Visual Assets/Sprites/circle-512.png" id="3_vx8y5"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterController.cs" id="4_6lice"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="5_1unyd"]
-[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/cerebus.tscn" id="7_hm2yd"]
+[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/Gun.tscn" id="7_hm2yd"]
 [ext_resource type="PackedScene" uid="uid://bg6omebyib8fj" path="res://Subscenes/Audio Player/Enemy_audio_player.tscn" id="8_2jxg2"]
 [ext_resource type="PackedScene" uid="uid://uwl57hi56rjq" path="res://Visual Assets/Models/Units/asker_sniper.tscn" id="8_3p53w"]
 
@@ -25,7 +25,7 @@ CharacterController = NodePath("CharacterController")
 IsFriendly = true
 actionData = ExtResource("2_07hv2")
 ShoulderCamera = NodePath("Shoulder Camera Pos")
-gun = NodePath("AnimatorController/Asker/Skeleton3D/BoneAttachment3D/Cerebus")
+gun = NodePath("AnimatorController/Asker/Skeleton3D/BoneAttachment3D/Gun")
 chracterAudioPlayer = NodePath("Character Audio")
 HealthLabel = NodePath("Health Text")
 SelectionSprite = NodePath("Selection Sprite")
@@ -85,42 +85,42 @@ _characterController = NodePath("../CharacterController")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 
 [node name="Skeleton3D" parent="AnimatorController/Asker" index="0"]
-bones/0/position = Vector3(0.0414051, 0.876887, -0.00711488)
-bones/0/rotation = Quaternion(-0.00495174, -0.328451, 0.0373301, 0.94377)
-bones/1/rotation = Quaternion(0.0848917, -0.0565637, -0.00346045, 0.994777)
-bones/2/rotation = Quaternion(0.0170605, -0.015667, -0.00125793, 0.999731)
-bones/3/rotation = Quaternion(0.016796, -0.0147067, 0.00159691, 0.99975)
-bones/4/rotation = Quaternion(0.0108951, -0.0420511, -0.00608184, 0.999038)
-bones/5/rotation = Quaternion(0.0561088, -0.489856, -0.00341978, 0.86999)
+bones/0/position = Vector3(0.0294861, 0.862798, -0.013072)
+bones/0/rotation = Quaternion(0.00574338, 0.302047, 0.0564552, 0.951603)
+bones/1/rotation = Quaternion(0.0946752, 0.0629719, -0.0430973, 0.992579)
+bones/2/rotation = Quaternion(0.0153832, 0.0276547, -0.0178703, 0.999339)
+bones/3/rotation = Quaternion(0.0153569, 0.0276358, -0.0170312, 0.999355)
+bones/4/rotation = Quaternion(0.00229014, 0.0325839, 0.01248, 0.999389)
+bones/5/rotation = Quaternion(0.0888188, 0.441489, 0.000439382, 0.89286)
 bones/7/rotation = Quaternion(0.484513, 0.473725, -0.365831, 0.637965)
-bones/8/rotation = Quaternion(0.579357, 0.0901617, 0.00598679, 0.81005)
-bones/9/rotation = Quaternion(-0.0524329, 0.0508827, 0.716268, 0.69399)
-bones/10/rotation = Quaternion(-0.203006, -0.864974, -0.0245031, 0.458266)
+bones/8/rotation = Quaternion(0.567328, 0.0872341, -0.0103937, 0.818792)
+bones/9/rotation = Quaternion(-0.054455, 0.0487054, 0.743892, 0.664294)
+bones/10/rotation = Quaternion(-0.22966, -0.84793, -0.046714, 0.475488)
 bones/11/rotation = Quaternion(0.461196, 0.280321, 0.261461, 0.800223)
 bones/12/rotation = Quaternion(0.243216, -0.0635385, 0.414995, 0.874407)
 bones/13/rotation = Quaternion(0.0289685, -0.16326, 0.324229, 0.931334)
 bones/15/rotation = Quaternion(0.443006, -0.504405, 0.323506, 0.666832)
-bones/16/rotation = Quaternion(0.589473, -0.0695947, -0.215051, 0.77552)
-bones/17/rotation = Quaternion(-0.0387328, -0.050265, -0.752988, 0.654968)
-bones/18/rotation = Quaternion(0.268415, 0.317819, 0.0776439, 0.906044)
+bones/16/rotation = Quaternion(0.589356, -0.0693606, -0.214858, 0.775683)
+bones/17/rotation = Quaternion(-0.0387451, -0.050244, -0.753226, 0.654695)
+bones/18/rotation = Quaternion(0.261949, 0.326211, 0.0442658, 0.907199)
 bones/19/rotation = Quaternion(0.089131, -0.372541, -0.0664098, 0.921335)
 bones/20/rotation = Quaternion(0.17319, 0.0579535, -0.357972, 0.915698)
 bones/21/rotation = Quaternion(0.299239, 0.243918, -0.46363, 0.797501)
-bones/23/rotation = Quaternion(0.106126, 0.150694, 0.982027, -0.0406317)
-bones/24/rotation = Quaternion(-0.311745, -0.07137, 0.0747199, 0.944531)
-bones/25/rotation = Quaternion(0.596903, -0.104189, -0.0525092, 0.793785)
-bones/26/rotation = Quaternion(0.280805, -0.053661, 0.0159987, 0.95813)
-bones/28/rotation = Quaternion(-0.0995175, 0.211627, 0.968604, 0.0843591)
-bones/29/rotation = Quaternion(-0.394945, -0.0675147, -0.0375636, 0.91545)
-bones/30/rotation = Quaternion(0.669797, -0.0766309, 0.0402328, 0.737483)
-bones/31/rotation = Quaternion(0.299833, 0.0576198, -0.017166, 0.952096)
+bones/23/rotation = Quaternion(0.102314, 0.261373, 0.953449, 0.11023)
+bones/24/rotation = Quaternion(-0.281885, -0.00977262, 0.0600167, 0.957519)
+bones/25/rotation = Quaternion(0.484358, 0.251195, -0.0533981, 0.836329)
+bones/26/rotation = Quaternion(0.288576, -0.054525, 0.0162162, 0.955766)
+bones/28/rotation = Quaternion(-0.330247, 0.0851199, 0.936934, 0.0764677)
+bones/29/rotation = Quaternion(-0.395685, -0.0228648, -0.0612684, 0.916055)
+bones/30/rotation = Quaternion(0.754809, -0.0618667, -0.000749546, 0.653021)
+bones/31/rotation = Quaternion(0.303898, 0.0578371, -0.0173207, 0.95079)
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="AnimatorController/Asker/Skeleton3D" index="1"]
-transform = Transform3D(-0.0223821, 0.479873, 0.877053, 0.915728, -0.342188, 0.210595, 0.401175, 0.807855, -0.431774, -0.294279, 1.06646, 0.101023)
+transform = Transform3D(0.348487, 0.752989, -0.558179, 0.935187, -0.319419, 0.152964, -0.0631125, -0.575307, -0.815499, 0.172537, 1.07429, 0.300191)
 bone_name = "mixamorig_RightHand"
 bone_idx = 18
 
-[node name="Cerebus" parent="AnimatorController/Asker/Skeleton3D/BoneAttachment3D" instance=ExtResource("7_hm2yd")]
+[node name="Gun" parent="AnimatorController/Asker/Skeleton3D/BoneAttachment3D" instance=ExtResource("7_hm2yd")]
 transform = Transform3D(0.378815, 1.13662, -0.0678068, -0.233766, 0.00769448, -1.17698, -1.11438, 0.384759, 0.223847, 0.0225726, 0.220564, 0.0169453)
 
 [node name="Character Audio" parent="." instance=ExtResource("8_2jxg2")]
