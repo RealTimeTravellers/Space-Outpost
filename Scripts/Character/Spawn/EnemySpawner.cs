@@ -49,7 +49,7 @@ public partial class EnemySpawner : Node
             var enemyType = enemySpawnPoint.EnemyType;
             var grid = enemySpawnPoint.Grid;
 
-            SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy, false);
+            SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy, enemySpawnPoint.GunType, false);
         }
     }
 
@@ -64,13 +64,13 @@ public partial class EnemySpawner : Node
             if (grid.IsOccupied || grid.IsBlocked) 
                 continue;
 
-            var enemy = SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy, true);
+            var enemy = SpawnEnemy(enemyType, grid, spawnPoint.GlobalPosition, enemySpawnPoint.IsSpecialEnemy, enemySpawnPoint.GunType, true);
             enemy.ApplyHologramEffect();
         }
         await MissionManager.Instance.ShowMissionBriefing(MissionManager.Instance.logTexts.MissionReinforcementsArrived, true);
     }
 
-    private Character SpawnEnemy(EnemyType enemyType, GridObject grid, Vector3 position, bool isSpecialEnemy = false, bool isReinforcement = false)
+    private Character SpawnEnemy(EnemyType enemyType, GridObject grid, Vector3 position, bool isSpecialEnemy = false, GunType gunType = GunType.Cerebus, bool isReinforcement = false)
     {
         if (!enemyPrefabMap.ContainsKey(enemyType))
         {
@@ -87,6 +87,7 @@ public partial class EnemySpawner : Node
         spawnedEnemy.GlobalPosition = position;
         spawnedEnemy.currentGrid = grid;
         grid.IsOccupied = true;
+        spawnedEnemy.gun.SetGun(gunType);
 
         if (isReinforcement)
             EnemyManager.Instance.OnEnemyReinforcementSpawned(spawnedEnemy);

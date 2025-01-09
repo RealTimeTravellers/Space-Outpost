@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bdkgdtprsx7l7"]
+[gd_scene load_steps=27 format=3 uid="uid://bdkgdtprsx7l7"]
 
 [ext_resource type="Script" path="res://Scripts/UI/TeamSelectionMenu.cs" id="1_ha2lc"]
 [ext_resource type="PackedScene" uid="uid://c5mbw3v6f60ah" path="res://Subscenes/UI/TeamSelect/Team_Selection_Unit_Card.tscn" id="2_1xvdx"]
@@ -8,9 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://dt0hap0yha77h" path="res://Visual Assets/Sprites/UI/TeamSelect/SecondaryButton.svg" id="4_ai7as"]
 [ext_resource type="PackedScene" uid="uid://5744h8ko4nu6" path="res://Subscenes/UI/TeamSelect/Team_Selection_Stat_Card.tscn" id="4_snaot"]
 [ext_resource type="Texture2D" uid="uid://dskqys0ho5p3b" path="res://Visual Assets/Sprites/UI/TeamSelect/RightButton.svg" id="5_8nk3u"]
+[ext_resource type="PackedScene" uid="uid://vvenxf7nxhdm" path="res://Subscenes/UI/TeamSelect/Team_Selection_Weapon_Stat.tscn" id="5_i5626"]
 [ext_resource type="Texture2D" uid="uid://bv244ruum0807" path="res://Visual Assets/Sprites/UI/TeamSelect/SoldierDetails.svg" id="6_nig77"]
 [ext_resource type="Texture2D" uid="uid://d1vuum3ilwxvv" path="res://Visual Assets/Sprites/UI/Left triangle.svg" id="7_3gf72"]
 [ext_resource type="Texture2D" uid="uid://cqr8pq4ihev71" path="res://Visual Assets/Sprites/UI/Right Triangle.png" id="8_uqayv"]
+[ext_resource type="Texture2D" uid="uid://o4dr7sg4illo" path="res://Visual Assets/Sprites/UI/MainMenu/MainMenu_Bg.svg" id="12_nmv07"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_px67q"]
 texture = ExtResource("4_ai7as")
@@ -41,7 +43,15 @@ texture = ExtResource("5_8nk3u")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hy1ie"]
 texture = ExtResource("5_8nk3u")
 
-[node name="TeamSelectionHUD" type="Control" node_paths=PackedStringArray("characterDescriptionLabel", "characterClassLabel", "characterClassNameLabel", "characterClassIcon", "characterClassIcon2", "characterAbilityIcon", "characterAbilityIcon2", "partyContainer", "statContainer")]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aate5"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qr200"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3gify"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hx7tm"]
+
+[node name="TeamSelectionHUD" type="Control" node_paths=PackedStringArray("characterDescriptionLabel", "characterClassLabel", "characterClassNameLabel", "characterClassIcon", "characterClassIcon2", "characterAbilityIcon", "characterAbilityIcon2", "partyContainer", "statContainer", "gunBox", "WeaponStatsList")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,8 +72,12 @@ partySelectionCard = ExtResource("2_1xvdx")
 partySelectionEmptyCard = ExtResource("3_f1lrf")
 statContainer = NodePath("StatContainer/MarginContainer/VBoxContainer/StatContainer")
 statBoxScene = ExtResource("4_snaot")
+gunBox = NodePath("GunSwitchContainer/MarginContainer/WeaponBox/WeaponIcon/MarginContainer/Gun Icon")
+WeaponStatsList = NodePath("GunSwitchContainer/MarginContainer/WeaponBox/WeaponStats")
+WeaponStat = ExtResource("5_i5626")
 
 [node name="StatContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0.588235)
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.24
@@ -99,6 +113,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 7.0
 
 [node name="ClassInfoContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0.588235)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.333
@@ -355,8 +370,84 @@ size_flags_horizontal = 3
 texture_normal = ExtResource("8_uqayv")
 stretch_mode = 0
 
+[node name="GunSwitchContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0.411765)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.35
+anchor_right = 0.65
+anchor_bottom = 0.3
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_aate5")
+
+[node name="MarginContainer" type="MarginContainer" parent="GunSwitchContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="WeaponBox" type="VBoxContainer" parent="GunSwitchContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GunSwitchContainer/MarginContainer/WeaponBox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 20
+text = "GUNS"
+horizontal_alignment = 1
+
+[node name="WeaponIcon" type="HBoxContainer" parent="GunSwitchContainer/MarginContainer/WeaponBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Switch Weapon Left" type="Button" parent="GunSwitchContainer/MarginContainer/WeaponBox/WeaponIcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_qr200")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3gify")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hx7tm")
+icon = ExtResource("7_3gf72")
+icon_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="GunSwitchContainer/MarginContainer/WeaponBox/WeaponIcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="Gun Icon" type="TextureRect" parent="GunSwitchContainer/MarginContainer/WeaponBox/WeaponIcon/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+expand_mode = 1
+
+[node name="Switch Weapon Right" type="Button" parent="GunSwitchContainer/MarginContainer/WeaponBox/WeaponIcon"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_hx7tm")
+icon = ExtResource("8_uqayv")
+icon_alignment = 1
+
+[node name="WeaponStats" type="VBoxContainer" parent="GunSwitchContainer/MarginContainer/WeaponBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="GunSwitchContainer"]
+self_modulate = Color(1, 1, 1, 0.588235)
+z_index = -5
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("12_nmv07")
+expand_mode = 3
+stretch_mode = 6
+
 [connection signal="pressed" from="ClassInfoContainer/MarginContainer/VBoxContainer/SquadButtons/Squad" to="." method="AddPartyMember"]
 [connection signal="pressed" from="PartyDetailsContainer/MarginContainer/VBoxContainer/CancelButton" to="." method="OnCancelPressed"]
 [connection signal="pressed" from="PartyDetailsContainer/MarginContainer/VBoxContainer/SelectMissionButton" to="." method="OnSelectMissionPressed"]
 [connection signal="pressed" from="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer/LeftArrow" to="." method="OnLeftArrowPressed"]
 [connection signal="pressed" from="CharacterSelectContainer/MarginContainer2/MarginContainer/HBoxContainer/RightArrow" to="." method="OnRightArrowPressed"]
+[connection signal="pressed" from="GunSwitchContainer/MarginContainer/WeaponBox/WeaponIcon/Switch Weapon Left" to="." method="OnPreviousGunPressed"]
+[connection signal="pressed" from="GunSwitchContainer/MarginContainer/WeaponBox/WeaponIcon/Switch Weapon Right" to="." method="OnNextGunPressed"]

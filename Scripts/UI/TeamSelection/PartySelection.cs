@@ -10,12 +10,14 @@ public class PartySelection
     public PlayerType UnitType { get; set; }
     public ClassInfo ClassInfo { get; set; }
     public string Name { get; set; }
+    public GunType GunType { get; set; }  
 
-    public PartySelection(int slotIndex, PlayerType unitType, ClassInfo classInfo, string name)
+    public PartySelection(int slotIndex, PlayerType unitType, ClassInfo classInfo, string name, GunType gunType)
     {
         SlotIndex = slotIndex;
         UnitType = unitType;
         ClassInfo = classInfo;
         Name = name;
+        GunType = gunType;
     }
 }

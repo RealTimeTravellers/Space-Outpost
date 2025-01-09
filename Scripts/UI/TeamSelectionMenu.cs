@@ -66,12 +66,22 @@ public partial class TeamSelectionMenu : Control
     private StatContainer statContainerInstance;
     #endregion
 
+    #region Gun Selection
+    [Export] public TextureRect gunBox;
+    public Action<int> OnGunChanged;
+    [Export] public Control WeaponStatsList;
+    [Export] public PackedScene WeaponStat;
+    public int currentGunIndex { get; private set; } = 0;
+    #endregion
+
     public override void _Ready()
     {
         partySelectionEmptyCardInstance = partySelectionEmptyCard.Instantiate();
         partyContainer.AddChild(partySelectionEmptyCardInstance);
         if (TeamSelectionManager.Instance.partyMembers.Any())
             RepopulatePartyUI();
+        
+        UpdateGunIcon(GunManager.Instance.gunData[currentGunIndex].Icon);
     }
 
     public void OnSelectMissionPressed()
@@ -202,5 +212,33 @@ public partial class TeamSelectionMenu : Control
             }
         }
     }
-    
+
+    private void OnNextGunPressed() => OnGunChanged?.Invoke(1);
+    private void OnPreviousGunPressed() => OnGunChanged?.Invoke(-1);
+    public void UpdateGunIcon(Texture2D icon) => gunBox.Texture = icon;
+    public void UpdateWeaponStats(int gunIndex)
+    {
+        foreach (var child in WeaponStatsList.GetChildren())
+            child.QueueFree();
+
+        var gunData = GunManager.Instance.gunData[gunIndex];
+        AddWeaponStat("Gun Name", gunData.Name);
+        AddWeaponStat("Min Damage", gunData.MinDamage.ToString());
+        AddWeaponStat("Max Damage", gunData.MaxDamage.ToString());
+        AddWeaponStat("Accuracy", gunData.Accuracy.ToString());
+        AddWeaponStat("Magazine Size", gunData.MagazineCapacity.ToString());
+    }
+
+    private void AddWeaponStat(string name, string value)
+    {
+        var statInstance = WeaponStat.Instantiate<HBoxContainer>();
+        
+        var nameLabel = statInstance.GetNode<Label>("Name");
+        var valueLabel = statInstance.GetNode<Label>("Value");
+        
+        nameLabel.Text = name;
+        valueLabel.Text = value;
+        
+        WeaponStatsList.AddChild(statInstance);
+    }
 }

@@ -1,0 +1,12 @@
+[gd_scene load_steps=6 format=3 uid="uid://b1u81hbwih87t"]
+
+[ext_resource type="Script" path="res://Scripts/Managers/GunManager.cs" id="1_2xqho"]
+[ext_resource type="PackedScene" uid="uid://iks1ghetu043" path="res://Visual Assets/Models/Guns/cerebus_rifle.tscn" id="2_dtp1w"]
+[ext_resource type="PackedScene" uid="uid://baot3vjhyh8l6" path="res://Visual Assets/Models/Guns/phantom_rifle.tscn" id="3_df58o"]
+[ext_resource type="Resource" uid="uid://cwr02fuuyynlc" path="res://Data/Guns/cerebus_data.tres" id="4_aywbw"]
+[ext_resource type="Resource" uid="uid://di2kxxowsmknh" path="res://Data/Guns/phantom_data.tres" id="5_n2rql"]
+
+[node name="GunManager" type="Node"]
+script = ExtResource("1_2xqho")
+gunModels = Array[PackedScene]([ExtResource("2_dtp1w"), ExtResource("3_df58o")])
+gunData = Array[Resource]([ExtResource("4_aywbw"), ExtResource("5_n2rql")])

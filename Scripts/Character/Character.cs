@@ -486,7 +486,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (target == null || target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death || actionPoints <= 0) return;
 		// Calculate hit chance based on attacker's accuracy
 
-		float hitChance = Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue();
+		float hitChance = Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue() + gun.data.Accuracy;
 		hitChance = Mathf.Clamp(hitChance, 10f, 95f);
 		bool hit = GD.Randf() <= hitChance / 100f;
 
@@ -499,7 +499,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		if (hit)
 		{
-			Damage = 5;
+			Damage = gun.GetDamage();
 			bool isCritical = GD.Randf() <= Stats.CriticalHitChance.GetValue() / 100f;
 			int damage = isCritical ? Damage * 2 : Damage;
 
@@ -649,12 +649,55 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		endTurnState = EndTurnState.StandToEngage;
 	}
 
-	public void SupressiveFire()
+	public async Task SuppressiveFire(Character target)
 	{
-		// TODO: apply supressive fire protocol
-		// TODO: empty guns' magazine
-		CompleteAction(actionData.supressiveFireCost);
-		endTurnState = EndTurnState.SupressiveFire;
+		// safe
+		if (target == null || target.CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death || actionPoints <= 0) return;
+		// Calculate hit chance based on attacker's accuracy
+
+		float hitChance = Stats.Accuracy.GetValue() - target.Stats.Evasion.GetValue();
+		hitChance = Mathf.Clamp(hitChance, 10f, 95f);
+		bool hit = GD.Randf() <= hitChance / 100f;
+
+		MissionManager.Instance.RecordShot(hit);
+
+		Vector3 direction = (target.Position - Position).Normalized();
+		if (!IsFriendly)
+			direction = -direction; // Reverse is needed why ?_
+		
+
+		if (hit)
+		{
+			Damage = gun.GetDamage()*2;
+			bool isCritical = GD.Randf() <= Stats.CriticalHitChance.GetValue() / 100f;
+			int damage = isCritical ? Damage * 2 : Damage;
+
+			if (isCritical)
+			{
+				MissionManager.Instance.RecordCriticalHit();
+				MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterCriticalHitLog, !IsFriendly, Name, target.Name);
+			}
+
+			int armorValue = target.Stats.Armor.GetValue();
+			int armorReduction = GD.RandRange(1, armorValue);
+			int finalDamage = Mathf.Max(1, damage - armorReduction);
+			
+			target.TakeDamage(finalDamage);
+			MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterHitLog, !IsFriendly, Name, target.Name, finalDamage);
+		}
+		else
+		{
+			MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterMissedLog, !IsFriendly, Name, target.Name);
+		}
+
+		gun.SuppressiveFire(hit);
+
+		await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+
+		CharacterController._stateMachine.RequestAnimation("idle");
+		await ToSignal(GetTree().CreateTimer(0.3f), "timeout");
+		
+		CompleteAction(2);
 	}
 	#endregion
 

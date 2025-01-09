@@ -17,6 +17,7 @@ public partial class ClassInfo : Resource
 {
     [Export] public PlayerType UnitType { get; set; } = PlayerType.Soldier;
     [Export] public WeaponDisplayType WeaponDisplayType { get; set; } = WeaponDisplayType.NoWeapon;
+    [Export] public GunType DefaultGunType { get; set; } = GunType.Cerebus;
     [Export] public string DetailsText { get; set; } = "";
     [Export] public string DescriptionText { get; set; } = "";
     [Export] public Texture2D ClassIcon { get; set; }

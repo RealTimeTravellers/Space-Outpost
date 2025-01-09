@@ -14,6 +14,7 @@ public enum CharacterStateType
     Aiming,
     Shooting,
     Death,
+    SuppressiveShooting,
 }
 
 public class CharacterStateMachine
@@ -37,6 +38,7 @@ public class CharacterStateMachine
             { CharacterStateType.Shooting, new CharacterShootingState() },
             { CharacterStateType.Death, new CharacterDeathState() },
             { CharacterStateType.Hit, new CharacterHitState() },
+            { CharacterStateType.SuppressiveShooting, new CharacterSuppressiveShootingState() },
         };
 
         CurrentStateType = CharacterStateType.Idle;

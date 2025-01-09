@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://vvenxf7nxhdm"]
+
+[node name="WeaponStat" type="HBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+vertical_alignment = 1

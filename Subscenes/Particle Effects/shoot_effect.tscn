@@ -5,7 +5,7 @@
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_f1o2g"]
 particle_flag_align_y = true
 direction = Vector3(0, 0, 1)
-spread = 2.0
+spread = 1.0
 initial_velocity_min = 45.0
 initial_velocity_max = 45.0
 gravity = Vector3(0, 0, 0)

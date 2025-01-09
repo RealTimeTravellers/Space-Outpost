@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/StateMachines/AI/EnemyAIController.cs" id="5_dakxj"]
 [ext_resource type="Script" path="res://Scripts/StateMachines/Unit/CharacterAnimatorController.cs" id="6_2miie"]
 [ext_resource type="PackedScene" uid="uid://dlhh8isy223jk" path="res://Visual Assets/Models/Units/enemy_seperatist.tscn" id="7_ctbk1"]
-[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/cerebus.tscn" id="8_loxdw"]
+[ext_resource type="PackedScene" uid="uid://8o52jedk86cn" path="res://Subscenes/Guns/Gun.tscn" id="8_loxdw"]
 [ext_resource type="PackedScene" uid="uid://bg6omebyib8fj" path="res://Subscenes/Audio Player/Enemy_audio_player.tscn" id="9_6dhrw"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_t5xya"]
