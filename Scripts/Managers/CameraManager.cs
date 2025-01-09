@@ -50,8 +50,10 @@ public partial class CameraManager : Node
     public static void MoveToShoulder(Character character)
     {
         if (!character.IsFriendly) return;
-
-        Instance._tacticalTransform = Instance.MainCameraSet.GlobalTransform;
+        
+        if (!Instance.AimingMode)
+            Instance._tacticalTransform = Instance.MainCameraSet.GlobalTransform;
+        
         Instance.MainCameraSet.GlobalTransform = character.ShoulderCamera.GlobalTransform;
         Instance.AimingMode = true;
     }

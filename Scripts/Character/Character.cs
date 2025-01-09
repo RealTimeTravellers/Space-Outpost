@@ -304,8 +304,21 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 		else
 		{
-			CameraManager.Instance.AimingMode = true;
+			var potentialEnemies = QueryForEnemies(new Godot.Collections.Array<Character>(
+				IsFriendly ? 
+				TurnManager.Instance.enemyCharacters.Where(e => 
+					e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death).ToList() : 
+				TurnManager.Instance.playerCharacters.Where(e => 
+					e.CharacterController._stateMachine.CurrentStateType != CharacterStateType.Death).ToList()
+			));
+
+			if (potentialEnemies.Count == 0){
+				MissionManager.Instance.AddCharacterLog(MissionManager.Instance.logTexts.CharacterNoEnemiesInSightLog, IsFriendly, this.Name);
+				return;
+			}
+				
 			CharacterController.SetState(CharacterStateType.Aiming, this);
+			CameraManager.Instance.AimingMode = true;
 		}
 	}
 
@@ -434,17 +447,19 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => e != this)) 
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
-			if (distance < Perception/* Stats.Perception.GetValue() */) // is in identification range
+			if (distance < Stats.Perception.GetValue()) // is in identification range
 			{
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
 
-				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), false);
+				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(1), false);
 				
 				if (!wallHit.NonEmpty)
 				{
-					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(4), true);
-					if (characterHit.NonEmpty)
+					uint targetLayer = IsFriendly ? 5u : 4u; 
+					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(targetLayer), true);
+					
+					if (characterHit.NonEmpty && characterHit.Collider == enemy)
 					{
 						enemiesWithLos.Add(enemy);
 					}
@@ -546,32 +561,24 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 	#region ITactical Implementations
 	public async Task Move(GridObject targetGrid)
 	{
-		if (targetGrid == null || /* Stats.ActionPoints.GetValue() */ actionPoints <= 0 || CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) 
+		if (targetGrid == null || actionPoints <= 0 || CharacterController._stateMachine.CurrentStateType == CharacterStateType.Death) 
 			return;
 
 		bool secondMovement = currentGrid.Position.DistanceTo(targetGrid.Position) > this.FirstMovementRange;
-		GD.Print("second? " + secondMovement);
-
-		// Grid işlemleri
 		currentGrid?.ClearOccupied();
 		
 		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
-			GD.Print("[Debug] Move - Character is in cover, starting exit sequence");
 			IsMoving = true;
 			await ToSignal(GetTree().CreateTimer(.5f), "timeout");
 			
-			GD.Print("[Debug] Move - Waiting for Idle state");
 			while (CharacterController._stateMachine.CurrentStateType != CharacterStateType.Idle)
 			{
-				GD.Print($"[Debug] Current state: {CharacterController._stateMachine.CurrentStateType}");
 				await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 			}
-
 		}
 
 		IsMoving = true;
-
 		CharacterController._finalDestination = targetGrid.GlobalPosition;
 		CharacterController._navAgent.TargetPosition = targetGrid.GlobalPosition;
 		
@@ -579,37 +586,43 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 			TurnManager.Instance.StartPlayerMovement(this);
 		
 		CharacterController.SetState(CharacterStateType.Moving, this);
-		
-		/*
-		if (IsFriendly)
-		{
-			TurnManager.Instance.StartPlayerMovement(this);
-			CharacterController.SetState(CharacterStateType.Moving, this);
-		}
-		*/
 
-		// Hareketin bitmesini bekle
+		float timeoutTimer = 0f;
+		bool wasNavigationFinished = false;
+		
 		while (!CharacterController._navAgent.IsNavigationFinished())
 		{
 			if (IsFriendly && CompletedTurn)
 				break;
 				
+			timeoutTimer += 0.1f;
+			
+			if (wasNavigationFinished && !CharacterController._navAgent.IsNavigationFinished())
+			{
+				timeoutTimer = 0f;
+			}
+			
+			if (timeoutTimer >= 6f)
+			{
+				GlobalPosition = targetGrid.GlobalPosition;
+				break;
+			}
+			
+			wasNavigationFinished = CharacterController._navAgent.IsNavigationFinished();
 			await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
 		}
 
-		// move to target grid
 		GlobalPosition = targetGrid.GlobalPosition;
+		wasNavigationFinished = true;
 		currentGrid = targetGrid;
 		currentGrid.SetOccupied(this);
 		
-		// move completed
 		if (secondMovement)
-			CompleteAction(/* actionData.moveCost *  */2);
+			CompleteAction(2);
 		else 
 			CompleteAction(actionData.moveCost);
 
 		IsMoving = false;
-		//CompletedTurn = true;
 	}
 
 	public void TakeCover(bool enterCover = true)
