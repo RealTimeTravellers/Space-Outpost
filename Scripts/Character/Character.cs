@@ -444,7 +444,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 
 		Godot.Collections.Array<Character> enemiesWithLos = new();
 
-		    foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => e != this)) 
+		foreach (Character enemy in enemies.Select(v => (Character)v).Where(e => e != this)) 
 		{
 			float distance = enemy.Position.DistanceTo(this.Position);
 			if (distance < Stats.Perception.GetValue()) // is in identification range

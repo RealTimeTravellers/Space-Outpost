@@ -74,6 +74,20 @@ public partial class GameManager : Node
 	{
 		gameState = GameState.Menu;
 		GameStateChanged += OnGameStateChanged;
+		
+		// Get the real screen resolution
+		var primaryScreen = DisplayServer.GetPrimaryScreen();
+		var screenSize = DisplayServer.ScreenGetSize(primaryScreen);
+		
+		// Set the window size to the screen resolution
+		DisplayServer.WindowSetSize(screenSize);
+		
+		// Center the window
+		DisplayServer.WindowSetPosition(Vector2I.Zero);
+		
+		// Maximize the window
+		DisplayServer.WindowSetMode(DisplayServer.WindowMode.Maximized);
+
 	}
 
 	public override void _ExitTree()

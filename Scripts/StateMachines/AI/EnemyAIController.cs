@@ -119,13 +119,11 @@ public partial class EnemyAIController : Node
             var limitedTargetPos = _character.GlobalPosition + direction * maxDistance;
             var closestGrid = GridManager.Instance.GetClosestGrid(limitedTargetPos);
             
-            if (closestGrid == null || closestGrid.IsOccupied || closestGrid.IsBlocked || EnemyManager.Instance.IsGridTargeted(closestGrid))
+            while (closestGrid == null || closestGrid.IsOccupied || closestGrid.IsBlocked || EnemyManager.Instance.IsGridTargeted(closestGrid))
             {
                 targetGrid = GridManager.Instance.FindAlternativeGrid(closestGrid, _character.GlobalPosition);
-                if (targetGrid == null) return;
             }
-            else
-                targetGrid = closestGrid;
+            targetGrid = closestGrid;
         }
 
         if (targetGrid.HasCover && targetGrid.coverType != CoverType.None)
@@ -166,6 +164,17 @@ public partial class EnemyAIController : Node
 
             float distanceToPlayer = coverPoint.GlobalPosition.DistanceTo(nearestPlayer.GlobalPosition);
             if (distanceToPlayer > character.Perception)
+            {
+                continue;
+            }
+
+            // Check if there is an obstacle between the cover point and the player
+            // If there is an obstacle, then the cover is valid
+            var ObstacleHit = PhysicsCasts.CastLine(character, 
+                                                coverPoint.GlobalPosition + new Vector3(0, 1, 0), 
+                                                nearestPlayer.GlobalPosition + new Vector3(0, 1, 0), 
+                                                PhysicsCasts.GetCollisionMask(1), false);
+            if (!ObstacleHit.NonEmpty)
             {
                 continue;
             }
@@ -286,55 +295,47 @@ public partial class EnemyAIController : Node
         {
             bool canShoot = RenewTarget(_character);
 
-            // Eğer cover'daysa ve ateş edebiliyorsa, hemen ateş et
-            if (_character.IsInCover && canShoot && _character.actionPoints > 0)
+            // Eğer cover'daysa ve ateş edebiliyorsa
+            if (_character.IsInCover && canShoot)
             {
-                await EnemyShoot();
-                await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+                // Animasyon için yeterli süre ver
+                await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
+                
+                if (_character.actionPoints > 0)
+                {
+                    await EnemyShoot();
+                    await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
+                }
                 return;
             }
 
-            // Cover'da değilse veya ateş edemiyorsa cover ara
-            if (!_character.IsInCover || _character.CharacterController._stateMachine.CurrentStateType != CharacterStateType.InCover)
+            // Cover'da değilse veya ateş edemiyorsa
+            var tacticalCover = FindTacticalCover(_character);
+            
+            // Cover bulunamadıysa veya çok uzaktaysa aggressive moda geç
+            if (tacticalCover == null || 
+                _character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition) > _character.Perception * 2)
             {
-                var tacticalCover = FindTacticalCover(_character);
-
-                if (tacticalCover == null || _character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition) > _character.Perception *2)
-                {
-                    _character.enemyController._stateMachine.ChangeState(AIState.Aggression, _character);
-                    return;
-                }
-                
-                if (tacticalCover != null)
-                {
-                    await MoveToGrid(tacticalCover, 15);
-                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-
-                    // Yeni cover'dan ateş kontrolü
-                    if (RenewTarget(_character) && _character.actionPoints > 0)
-                    {
-                        await EnemyShoot();
-                        await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-                    }
-                }
+                _character.enemyController._stateMachine.ChangeState(AIState.Aggression, _character);
+                return;
             }
-            // Cover'daysa ama ateş edemiyorsa daha iyi cover ara
-            else if (!canShoot)
+
+            // Cover'a git
+            if (_character.currentGrid != tacticalCover)
             {
-                var currentCover = _character.currentGrid;
-                var betterCover = FindTacticalCover(_character);
+                if (_character.IsInCover)
+                {
+                    EnemyManager.Instance.UnregisterCoverOccupation(_character.currentGrid);
+                }
                 
-                if (betterCover != null)
-                {                  
-                    EnemyManager.Instance.UnregisterCoverOccupation(currentCover);
-                    await MoveToGrid(betterCover, 15);
-                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-                    
-                    if (RenewTarget(_character) && _character.actionPoints > 0)
-                    {
-                        await ToSignal(GetTree().CreateTimer(.1f), "timeout");
-                        await EnemyShoot();
-                    }
+                await MoveToGrid(tacticalCover, 15);
+                await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
+
+                // Yeni pozisyondan ateş kontrolü
+                if (RenewTarget(_character) && _character.actionPoints > 0)
+                {
+                    await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
+                    await EnemyShoot();
                 }
             }
         }

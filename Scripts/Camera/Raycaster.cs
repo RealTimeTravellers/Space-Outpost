@@ -27,7 +27,7 @@ public partial class Raycaster : Node3D // random name idk
             var from =  CameraManager.Instance.MainCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
             var to = from +  CameraManager.Instance.MainCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * rayLength;
 
-            CastHit hit = PhysicsCasts.CastLine(this, from, to, PhysicsCasts.GetCollisionMask(4, 5), true);
+            CastHit hit = PhysicsCasts.CastLine(this, from, to, PhysicsCasts.GetCollisionMask(4), true);
 
             if(hit.NonEmpty)
             {
