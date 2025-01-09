@@ -439,7 +439,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
 
-				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(10), false);
+				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(1), false);
 				
 				if (!wallHit.NonEmpty)
 				{
