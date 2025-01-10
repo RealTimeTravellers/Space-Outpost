@@ -28,6 +28,7 @@ public class CharacterReloadingState : CharacterState
     {
         if (isReloadingAnimationStarted && !isReloadingAnimationFinished)
         {
+            CameraManager.ReturnCameraToTactical();
             reloadingAnimationTimer += (float)character.GetProcessDeltaTime();
             
             if (reloadingAnimationTimer >= RELOADING_ANIMATION_DURATION)

@@ -18,7 +18,7 @@ public partial class TeamSelectionController : Node
     [Export] public TeamSelectionAnimatorController teamSelectionAnimatorController;
     public int currentModelIndex { get; private set; } = 0;
     public int currentGunIndex { get; private set; } = 0;
-    public override void _Ready()
+    public override async void _Ready()
     {
         teamSelectionHUD.OnPartyMemberAdded += AddPartyMember;
         teamSelectionHUD.OnPartyMemberRemoved += RemovePartyMember;
@@ -28,10 +28,12 @@ public partial class TeamSelectionController : Node
 
         UpdateModelVisibility();
         UpdateWeaponVisibility();
-        teamSelectionAnimatorController.PlayTurnAnimation(classModels[currentModelIndex]);
+
         teamSelectionHUD.LoadClassDetails(classInfoList[currentModelIndex]);
         teamSelectionHUD.LoadClassStatDetails(classInfoList[currentModelIndex].UnitType);
         teamSelectionHUD.UpdateWeaponStats(currentGunIndex);
+
+        await teamSelectionAnimatorController.PlayTurnAnimation(classModels[currentModelIndex]);
     }
 
     public override void _ExitTree()
@@ -44,14 +46,16 @@ public partial class TeamSelectionController : Node
         base._ExitTree();
     }
     
-    private void ChangeModel(int direction)
+    private async void ChangeModel(int direction)
     {
         currentModelIndex = (currentModelIndex + direction + classModels.Count) % classModels.Count;
         UpdateModelVisibility();
         UpdateWeaponVisibility();
-        teamSelectionAnimatorController.PlayTurnAnimation(classModels[currentModelIndex]);
         teamSelectionHUD.LoadClassDetails(classInfoList[currentModelIndex]);
         teamSelectionHUD.LoadClassStatDetails(classInfoList[currentModelIndex].UnitType);
+        
+        await teamSelectionAnimatorController.PlayTurnAnimation(classModels[currentModelIndex]);
+
     }
     
     private void UpdateModelVisibility()

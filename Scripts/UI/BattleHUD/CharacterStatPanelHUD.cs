@@ -12,6 +12,8 @@ public partial class CharacterStatPanelHUD : Control
     [Export] public ProgressBar CriticalHitChanceBar;
 
     [Export] public Texture2D ammoIcon;
+    [Export] public TextureRect weaponIcon;
+    [Export] public Label weaponName;
     [Export] public Control ammoBoxContainer;
 
     private Character selectedCharacter;
@@ -53,6 +55,7 @@ public partial class CharacterStatPanelHUD : Control
         AccuracyBar.MaxValue = 100;
         DamageBar.MaxValue = 10;
         CriticalHitChanceBar.MaxValue = 40;
+        weaponIcon.Texture = character.gun.data.Icon;
     }
 
     public void UpdateAmmoBox(Character character)

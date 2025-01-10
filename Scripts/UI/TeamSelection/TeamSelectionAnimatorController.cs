@@ -5,37 +5,28 @@ using Godot;
 
 public partial class TeamSelectionAnimatorController : Node
 {
-    [Export] private float turnAnimationDuration = 3.0f;
+    [Export] private float turnAnimationDuration = 0.9f;
     private AnimationTree currentAnimationTree;
-    private bool isAnimating = false;
     public Action onTurnAnimationComplete;
-
-    public async void PlayTurnAnimation(Node3D model)
+    public override void _Ready()
     {
-        if (isAnimating) return;
         
-        try 
+    }
+
+    public async Task PlayTurnAnimation(Node3D model)
+    {      
+        currentAnimationTree = model.GetNode<AnimationTree>("AnimationTree");
+        if (currentAnimationTree == null || currentAnimationTree.IsQueuedForDeletion()) return;
+        
+        SetToTurn(currentAnimationTree);
+        await Task.Delay(TimeSpan.FromSeconds(turnAnimationDuration));
+
+        if (currentAnimationTree != null && !currentAnimationTree.IsQueuedForDeletion())
         {
-            isAnimating = true;
-            currentAnimationTree = model.GetNode<AnimationTree>("AnimationTree");
-            if (currentAnimationTree == null || currentAnimationTree.IsQueuedForDeletion()) return;
-            
-            SetToTurn(currentAnimationTree);
-            await Task.Delay(TimeSpan.FromSeconds(turnAnimationDuration));
-            
-            if (currentAnimationTree == null || currentAnimationTree.IsQueuedForDeletion()) return;
             ResetAnimationState(currentAnimationTree);
-            await SetOnTurnAnimationComplete();
+            onTurnAnimationComplete?.Invoke();
         }
-        catch (ObjectDisposedException)
-        {
-            GD.PrintErr("Animation tree was disposed during animation");
-        }
-        finally
-        {
-            isAnimating = false;
-        }
-}
+    }
 
     private void SetToIdle(AnimationTree animTree)
     {

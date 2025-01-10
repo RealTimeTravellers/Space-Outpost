@@ -362,6 +362,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		}
 
 		CharacterController._navAgent.ProcessMode = ProcessModeEnum.Disabled;
+		CharacterController._navAgent.AvoidanceEnabled = false;
 		
 		TurnManager.Instance.CharacterDied?.Invoke(this);
 		
@@ -570,7 +571,7 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		if (CharacterController._stateMachine.CurrentStateType == CharacterStateType.InCover)
 		{
 			IsMoving = true;
-			await ToSignal(GetTree().CreateTimer(.5f), "timeout");
+			await ToSignal(GetTree().CreateTimer(.8f), "timeout");
 			
 			while (CharacterController._stateMachine.CurrentStateType != CharacterStateType.Idle)
 			{
@@ -631,12 +632,14 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 		IsTakingCover = true;
 		if (enterCover)
 		{
+			IsInCover = true;
 			Stats.Evasion.AddModifier(15);
 			endTurnState = EndTurnState.TakingCover;
 		}
 		else
 		{
 			Stats.Evasion.RemoveModifier(15);
+			IsInCover = false;
 			IsTakingCover = false;
 			endTurnState = EndTurnState.None;
 		}
