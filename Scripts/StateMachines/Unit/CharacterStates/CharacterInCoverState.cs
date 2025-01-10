@@ -45,6 +45,7 @@ public class CharacterInCoverState : CharacterState
     public override void Exit(Character character)
     {
         base.Exit(character);
+        coverExiting = false;
         character.TakeCover(enterCover: false);
     }
 }

@@ -205,8 +205,19 @@ public partial class EnemyAIController : Node
 
     public async Task EnemyShoot()
     {
+        if (_character.Target == null)
+        {
+            GD.Print($"[AI Debug] {_character.Name} has no target to shoot");
+            return;
+        }
+
+        var originalTarget = _character.Target;
         _character.CharacterController.SetState(CharacterStateType.Aiming, _character);
         await ToSignal(GetTree().CreateTimer(1f), "timeout");
+
+        if (_character.Target == null)
+            _character.Target = originalTarget;
+        
         
         if (_character.Target != null)
         {
@@ -297,9 +308,15 @@ public partial class EnemyAIController : Node
             // Cover'da değilse veya ateş edemiyorsa cover ara
             if (!_character.IsInCover || _character.CharacterController._stateMachine.CurrentStateType != CharacterStateType.InCover)
             {
+                if (_character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition) > _character.Perception *2)
+                {
+                    _character.enemyController._stateMachine.ChangeState(AIState.Aggression, _character);
+                    return;
+                }
+
                 var tacticalCover = FindTacticalCover(_character);
 
-                if (tacticalCover == null || _character.GlobalPosition.DistanceTo(_character.Target.GlobalPosition) > _character.Perception *2)
+                if (tacticalCover == null)
                 {
                     _character.enemyController._stateMachine.ChangeState(AIState.Aggression, _character);
                     return;

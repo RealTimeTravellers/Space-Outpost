@@ -668,7 +668,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 15
 
-[node name="CharacterStatsContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("StatPanel", "HealthBar", "ArmorBar", "EvasionBar", "AccuracyBar", "DamageBar", "CriticalHitChanceBar", "ammoBoxContainer")]
+[node name="CharacterStatsContainer" type="PanelContainer" parent="." node_paths=PackedStringArray("StatPanel", "HealthBar", "ArmorBar", "EvasionBar", "AccuracyBar", "DamageBar", "CriticalHitChanceBar", "weaponIcon", "weaponName", "ammoBoxContainer")]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -685,6 +685,8 @@ AccuracyBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Accuracy/StatCon
 DamageBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Damage/StatContainer/HBoxContainer/ProgressBar")
 CriticalHitChanceBar = NodePath("VBoxContainer/WeaponStats/VBoxContainer/Crit/StatContainer/HBoxContainer/ProgressBar")
 ammoIcon = ExtResource("36_2fuk0")
+weaponIcon = NodePath("VBoxContainer/WeaponIcon/TextureRect/MarginContainer/WeaponIcon")
+weaponName = NodePath("VBoxContainer/WeaponIcon/TextureRect/MarginContainer/WeaponName")
 ammoBoxContainer = NodePath("VBoxContainer/AmmoContainer/AmmoPanel/AmmoCount")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CharacterStatsContainer"]
@@ -707,11 +709,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 10
+theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect/MarginContainer"]
+[node name="WeaponName" type="Label" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -719,10 +722,10 @@ theme_override_font_sizes/font_size = 13
 text = "Cerberus"
 vertical_alignment = 2
 
-[node name="TextureRect" type="TextureRect" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect/MarginContainer"]
+[node name="WeaponIcon" type="TextureRect" parent="CharacterStatsContainer/VBoxContainer/WeaponIcon/TextureRect/MarginContainer"]
 layout_mode = 2
 texture = ExtResource("15_g2rbs")
-expand_mode = 3
+expand_mode = 1
 stretch_mode = 5
 flip_h = true
 

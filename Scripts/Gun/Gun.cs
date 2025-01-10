@@ -125,6 +125,9 @@ public partial class Gun : Node3D
     {
         // guns are unlimited ammo
         currentAmmo = data.MagazineCapacity;
+        if (GameManager.Instance.gameState == GameState.TeamSelect)
+            return;
+            
         PlaySound(GunActionState.Reload);
     }
 
@@ -142,5 +145,6 @@ public partial class Gun : Node3D
         
         // Set gun data
         data = GunManager.Instance.gunData[index];
+        Reload();
     }
 }

@@ -9,6 +9,11 @@ public class CharacterIdleState : CharacterState
         character.CharacterController._stateMachine.RequestAnimation("idle");
     }
 
+    public override CharacterStateType Process(Character character)
+    {
+        return CheckState(character);
+    }
+
     public override CharacterStateType CheckState(Character character)
     {
         if (character.Velocity.Length() > 0.1f && !character.CharacterController._navAgent.IsNavigationFinished())

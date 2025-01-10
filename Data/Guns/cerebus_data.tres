@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=8 format=3 uid="uid://cwr02fuuyynlc"]
 
 [ext_resource type="AudioStream" uid="uid://b3s1ig8fbvopt" path="res://Sound Assets/Guns/Firing/machine-gun-129929.mp3" id="1_6adjl"]
-[ext_resource type="Texture2D" uid="uid://cx65wq8poxfd7" path="res://Visual Assets/Sprites/UI/TeamSelect/cerebusicon.png" id="1_ffpov"]
+[ext_resource type="Texture2D" uid="uid://be04sbtd2snhq" path="res://Visual Assets/Sprites/UI/TeamSelect/cerebusiconremoved.png" id="1_lypfy"]
 [ext_resource type="Script" path="res://Scripts/Gun/GunData.cs" id="1_w8cdg"]
 [ext_resource type="AudioStream" uid="uid://cam44yu1n3bn6" path="res://Sound Assets/Guns/Suppressive Firing/suppressive fire.mp3" id="2_ammli"]
 [ext_resource type="AudioStream" uid="uid://b424fx8t5t73l" path="res://Sound Assets/Guns/Empty/empty-gun-shot-6209.mp3" id="2_nr0cy"]
@@ -21,4 +21,4 @@ ShootSounds = Array[AudioStream]([ExtResource("1_6adjl")])
 SuppressiveShootSounds = Array[AudioStream]([ExtResource("2_ammli")])
 emptySounds = Array[AudioStream]([ExtResource("2_nr0cy")])
 reloadSounds = Array[AudioStream]([ExtResource("4_x461o")])
-Icon = ExtResource("1_ffpov")
+Icon = ExtResource("1_lypfy")
