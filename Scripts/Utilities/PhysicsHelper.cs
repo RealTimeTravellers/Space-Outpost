@@ -18,7 +18,7 @@ public readonly struct CastHit
 	public readonly CollisionObject3D Collider { get; }
 	public readonly uint ColliderId { get; }
 	//public readonly int /*Shape3D*/ Shape { get; }
-	public readonly Rid rid; // its a ulong, low-end ID
+	public readonly Rid Rid { get; } // its a ulong, low-end ID
 	public readonly string ColliderOwnerName { get; }
 
 	// NOTE: collision result keys:
@@ -33,7 +33,7 @@ public readonly struct CastHit
 		Collider = (CollisionObject3D) intersectResult["collider"];
 		ColliderId = (uint) intersectResult["collider_id"];
 		//Shape = (int) intersectResult["shape"];
-		rid = (Rid) intersectResult["rid"];
+		Rid = (Rid) intersectResult["rid"];
 		ColliderOwnerName = Collider.Name;
 	}
 
@@ -46,7 +46,7 @@ public readonly struct CastHit
 		Collider = null;
 		ColliderId = 0;
 		//Shape = 0;
-		rid = new Rid();
+		Rid = new Rid();
 		ColliderOwnerName = "";
 	}
 }
