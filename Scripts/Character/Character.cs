@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BZ.Physics;
 
 public partial class Character : CharacterBody3D, ICombat, ITactical
 {
@@ -453,12 +454,12 @@ public partial class Character : CharacterBody3D, ICombat, ITactical
 				var enemyPos = enemy.GlobalPosition + new Vector3(0, 1f, 0);
 				var thisPos = this.GlobalPosition + new Vector3(0, 1f, 0);
 
-				CastHit wallHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(1), false);
+				CastHit wallHit = this.CastLine3D(thisPos, enemyPos, PhysicsHelper.GetCollisionMask(1), false);
 				
 				if (!wallHit.NonEmpty)
 				{
 					uint targetLayer = IsFriendly ? 5u : 4u; 
-					CastHit characterHit = PhysicsCasts.CastLine(this, thisPos, enemyPos, PhysicsCasts.GetCollisionMask(targetLayer), true);
+					CastHit characterHit = this.CastLine3D(thisPos, enemyPos, PhysicsHelper.GetCollisionMask(targetLayer), true);
 					
 					if (characterHit.NonEmpty && characterHit.Collider == enemy)
 					{

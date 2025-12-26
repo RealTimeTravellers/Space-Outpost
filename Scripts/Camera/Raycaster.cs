@@ -1,4 +1,5 @@
 using Godot;
+using BZ.Physics;
 
 public partial class Raycaster : Node3D // random name idk
 {
@@ -27,19 +28,19 @@ public partial class Raycaster : Node3D // random name idk
             var from =  CameraManager.Instance.MainCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
             var to = from +  CameraManager.Instance.MainCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * rayLength;
 
-            CastHit hit = PhysicsCasts.CastLine(this, from, to, PhysicsCasts.GetCollisionMask(4, 5), true);
+            CastHit hit = this.CastLine3D(from, to, PhysicsHelper.GetCollisionMask(4, 5), true);
 
             if(hit.NonEmpty)
             {
                 // character
-                if (hit.Collider.CollisionLayer == PhysicsCasts.GetCollisionMask(4))
+                if (hit.Collider.CollisionLayer == PhysicsHelper.GetCollisionMask(4))
                 {
                     Character selected = hit.Collider as Character;
                     GridManager.Instance.selectedCharacter = selected;
                     GridManager.Instance.previousGrid = null;
                     ChangeGridSelection(selected.currentGrid);
                 }
-                else if (hit.Collider.CollisionLayer == PhysicsCasts.GetCollisionMask(5)) // grid
+                else if (hit.Collider.CollisionLayer == PhysicsHelper.GetCollisionMask(5)) // grid
                 {
                     if((GridObject) hit.Collider.GetParent() == GridManager.Instance.selectedGrid) // deselect
                         ChangeGridSelection(null);
